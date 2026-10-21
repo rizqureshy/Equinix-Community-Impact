@@ -14,13 +14,20 @@
         try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
+        var weather = null;
+        try { weather = localStorage.getItem('impact-weather'); } catch (e) {}
+        if (!weather) { var m = new Date().getMonth(); weather = m >= 8 && m <= 10 ? 'autumn-sun' : m === 11 || m <= 1 ? 'winter' : m <= 4 ? 'spring' : 'autumn-sun'; }
+        document.documentElement.dataset.weather = weather;
       })();
     </script>
-    <script type="module" crossorigin src="./assets/main-Cxlmizft.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-Dbi-SEWO.css">
+    <script type="module" crossorigin src="./assets/main-CUlrmlOX.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-DOQ4GjXW.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="weather-light" id="weather-light" aria-hidden="true"></div>
+    <div class="weather-particles" id="weather-particles" aria-hidden="true"></div>
+    <div class="weather-rain" id="weather-rain" aria-hidden="true" hidden></div>
 
     <header class="site-header">
       <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start"><img class="wordmark-logo" src="brand/equinix-logo-horizontal.svg" alt="" width="124" height="13" decoding="async" /></a>
@@ -660,6 +667,13 @@
 
     <footer class="site-footer">
       <img class="footer-logo" src="brand/equinix-logo-vertical.svg" alt="Equinix" width="124" height="60" loading="lazy" decoding="async" />
+      <fieldset class="weather-switch" id="weather-switch">
+        <legend>Season and weather on the page</legend>
+        <button type="button" class="weather-btn" data-weather="autumn-sun" aria-pressed="false">Autumn sun</button>
+        <button type="button" class="weather-btn" data-weather="autumn-rain" aria-pressed="false">Autumn rain</button>
+        <button type="button" class="weather-btn" data-weather="winter" aria-pressed="false">Winter light</button>
+        <button type="button" class="weather-btn" data-weather="spring" aria-pressed="false">Spring</button>
+      </fieldset>
       <p>Internal prototype for Equinix CRO colleagues. The community model, images and films are illustrative and AI generated. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
     </footer>
 

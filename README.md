@@ -15,7 +15,7 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no smooth scrolling, the camera cutting between stops instead of travelling.
+Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no smooth scrolling, the camera cutting between stops instead of travelling, no leaves or rain. The season and weather switch is in the footer; the page opens in the season the date suggests.
 
 ## Test
 
@@ -35,11 +35,12 @@ The browser checks block every request that leaves the local host, then exercise
 ```text
 impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
-  styles/                 tokens.css, base.css, sections.css
+  styles/                 tokens.css, base.css, sections.css, weather.css
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
     router.js             hash routes: #/community, #/chapter/<topic>, #/story/<id>, #/promises and others
+    weather.js            season and weather: light wash, leaves, rain, the footer switch
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)

@@ -152,6 +152,7 @@ try {
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
+  await wait(1600); // let the smooth scroll finish before scrolling by hand
   // The ledger: the row at the reading line is current and its proof shows
   await p.evaluate(() => {
     const r = document.querySelectorAll('.ledger-row')[3].getBoundingClientRect();
@@ -197,6 +198,17 @@ try {
   const copy = await p.evaluate(() => document.body.innerText);
   check(!copy.includes('—'), 'page copy has no em dashes');
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
+  // Season and weather: set from the date, switchable, remembered, quiet
+  const w0 = await p.evaluate(() => document.documentElement.dataset.weather);
+  check(w0 === 'autumn-sun', 'the page opens in the season of the date', w0);
+  check(await p.evaluate(() => getComputedStyle(document.querySelector('#weather-light')).mixBlendMode === 'multiply' && document.querySelector('#weather-rain').hidden), 'a diffused light sits over the page and there is no rain in the sun');
+  await p.evaluate(() => document.querySelector('.site-footer').scrollIntoView());
+  await wait(800);
+  await p.locator('[data-weather="autumn-rain"]').click();
+  await wait(600);
+  check(await p.evaluate(() => document.documentElement.dataset.weather === 'autumn-rain' && !document.querySelector('#weather-rain').hidden && localStorage.getItem('impact-weather') === 'autumn-rain'), 'rain can be chosen and is remembered');
+  check(await p.evaluate(() => document.querySelectorAll('.weather-particle').length <= 4), 'never more than a few leaves at once');
+  await p.locator('[data-weather="autumn-sun"]').click();
   check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (sections)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (sections)', p.errors.slice(0, 3).join(' | '));
@@ -228,6 +240,8 @@ try {
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
   check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
   check(await p.evaluate(() => [...document.querySelectorAll('video.film')].every((v) => v.paused)), 'films stay paused with reduced motion');
+  await wait(2500);
+  check(await p.evaluate(() => document.querySelectorAll('.weather-particle').length === 0 && getComputedStyle(document.querySelector('#weather-particles')).display === 'none'), 'no leaves fall with reduced motion');
   await waitScene(p);
   await p.locator('.journey-dot[data-go="3"]').dispatchEvent('click');
   await wait(600);

@@ -8,6 +8,7 @@ import { createStore, topicTarget } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
 import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
+import { createWeather } from './weather.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -180,6 +181,7 @@ async function loadScene() {
       motion: () => store.get().motion,
       onReady: () => {
         stage.dataset.sceneState = 'ready';
+        scene.setWeather(weather.kind);
         showStep(activeStep);
         scene.setDrift(playing && store.get().motion);
       },
@@ -195,6 +197,23 @@ async function loadScene() {
     stage.dataset.sceneState = 'fallback';
   }
 }
+
+// Season and weather: a wash of light, a leaf now and then, and the model's light follows
+const weatherButtons = $$('[data-weather]');
+const weather = createWeather({
+  light: $('#weather-light'),
+  particles: $('#weather-particles'),
+  rain: $('#weather-rain'),
+  motion: () => store.get().motion,
+  onChange: (kind) => {
+    weatherButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.weather === kind)));
+    scene?.setWeather(kind);
+  },
+});
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-weather]');
+  if (b) weather.set(b.dataset.weather);
+});
 
 // Load the scene once the community is within reach; pause everything when it leaves
 const near = new IntersectionObserver(
@@ -327,6 +346,7 @@ setupMotionToggle($('[data-motion-toggle]'), {
     store.set({ motion: on });
     buildScroll();
     syncVideos();
+    weather.motionChanged();
   },
 });
 
@@ -572,4 +592,5 @@ window.__impact = {
   goToStep,
   startTour,
   stopTour,
+  weather,
 };
