@@ -40,24 +40,28 @@
   margin-top: var(--s-6);
 }
 
-/* ---- The community journey -------------------------------------------------- */
+/* ---- The community explorer ------------------------------------------------ */
 .journey {
-  position: relative;
+  padding: var(--s-9) 0 var(--s-8);
 }
-.journey-pin {
+.explorer {
   position: relative;
-  height: 100svh;
-  min-height: 640px;
+  height: min(86svh, 920px);
+  min-height: 560px;
+  margin: var(--s-7) var(--gutter) 0;
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
+  outline: none;
+}
+.explorer:focus-visible {
+  box-shadow: var(--shadow-card), 0 0 0 3px var(--focus);
 }
 .stage {
   position: absolute;
   inset: 0;
   overflow: hidden;
   background: radial-gradient(120% 80% at 50% 70%, #ffffff 0%, var(--bg-soft) 70%, #ededf0 100%);
-  /* Framed as a product shot while the hero is in view; expands on scroll. */
-  clip-path: inset(var(--inset-y, 0) var(--inset-x, 0) round var(--inset-r, 0));
-  transition: clip-path var(--d1) linear;
 }
 .stage-still,
 .scene-host {
@@ -174,17 +178,19 @@
 .hero-stats {
   position: absolute;
   z-index: 4;
-  left: 50%;
-  bottom: 28px;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
+  top: 84px;
+  right: 20px;
+  display: grid;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
-  opacity: var(--stats-opacity, 1);
+  opacity: 0;
   transition: opacity var(--d2);
   pointer-events: none;
+}
+.explorer[data-step='-1'] .hero-stats {
+  opacity: 1;
 }
 .stat {
   display: grid;
@@ -213,8 +219,6 @@
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  opacity: var(--ui-opacity, 0);
-  transition: opacity var(--d2);
 }
 .journey-cards {
   position: absolute;
@@ -242,6 +246,12 @@
 .journey-card[hidden] {
   display: none;
 }
+.journey-card--intro {
+  width: min(460px, calc(100% - 2 * var(--gutter)));
+}
+.journey-card .actions {
+  margin-top: var(--s-4);
+}
 @keyframes card-in {
   from {
     opacity: 0;
@@ -268,19 +278,65 @@
   font-size: var(--t-xs);
   color: var(--ink-3);
 }
-.journey-nav {
+.journey-bar {
   position: absolute;
-  right: var(--gutter);
-  bottom: 28px;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
   display: flex;
-  gap: 0;
-  padding: 2px;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
   border-radius: var(--radius-pill);
   background: var(--glass);
   border: 1px solid var(--glass-line);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(14px);
   pointer-events: auto;
+}
+.journey-nav {
+  display: flex;
+  gap: 0;
+}
+.bar-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--d1);
+}
+.bar-btn:hover {
+  background: rgb(0 0 0 / 0.06);
+}
+.bar-btn--play {
+  background: var(--ink);
+  color: #fff;
+}
+.bar-btn--play:hover {
+  background: #000;
+}
+.bar-sep {
+  width: 1px;
+  height: 22px;
+  margin: 0 6px;
+  background: var(--line-strong);
+}
+.bar-btn .icon-pause,
+.bar-btn .icon-muted {
+  display: none;
+}
+.bar-btn[aria-pressed='true'] .icon-play,
+.bar-btn[aria-pressed='true'] .icon-sound {
+  display: none;
+}
+.bar-btn[aria-pressed='true'] .icon-pause,
+.bar-btn[aria-pressed='true'] .icon-muted {
+  display: block;
 }
 .journey-dot {
   position: relative;
@@ -444,19 +500,67 @@
   list-style: none;
 }
 .number {
+  position: relative;
   display: grid;
   align-content: start;
   gap: var(--s-3);
   padding: var(--s-6);
+  padding-top: calc(var(--s-6) + 36px);
   border-radius: var(--radius-lg);
-  background: var(--bg-soft);
+  background: linear-gradient(160deg, #fbfbfd, var(--bg-soft));
+  overflow: hidden;
+}
+.number-thread {
+  position: absolute;
+  top: 18px;
+  left: var(--s-6);
+  width: 46%;
+  height: 40px;
+  color: var(--red);
+  overflow: visible;
+}
+.number--heat .number-thread {
+  color: var(--amber);
+}
+.number-thread path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s var(--ease) 0.2s;
+}
+.number-thread .number-bead {
+  opacity: 0;
+  transition: opacity var(--d2) 1.4s;
+}
+.number.is-in .number-thread path,
+:root[data-motion='off'] .number-thread path {
+  stroke-dashoffset: 0;
+}
+.number.is-in .number-thread .number-bead {
+  opacity: 1;
+}
+:root[data-motion='off'] .number-bead {
+  display: none;
 }
 .number-value {
-  font-size: clamp(2.4rem, 1.6rem + 3vw, 4.6rem);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  min-width: 0;
+  font-size: clamp(2.2rem, 1.1rem + 2.8vw, 4.4rem);
   line-height: 1;
   letter-spacing: -0.05em;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
+}
+.number-prefix,
+.number-suffix {
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+.number--heat .number-suffix {
+  color: var(--amber);
 }
 .number-label {
   color: var(--ink-2);
@@ -475,32 +579,57 @@
 }
 .promises {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min(360px, 80vw);
-  gap: var(--s-5);
-  margin: var(--s-8) calc(-1 * var(--gutter)) 0;
-  padding: 0 var(--gutter) var(--s-4);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s-4);
+  margin: var(--s-8) 0 0;
+  padding: 0;
   list-style: none;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--gutter);
-  scrollbar-width: none;
 }
 .promise {
-  scroll-snap-align: start;
-  display: grid;
-  align-content: start;
-  gap: var(--s-3);
-  min-height: 360px;
-  padding: var(--s-6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
   border-radius: var(--radius-lg);
   background: var(--bg);
   box-shadow: var(--shadow-card);
+  overflow: hidden;
+  isolation: isolate;
+}
+.promise-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  /* The photograph fades out through the white of the card */
+  -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 52%, transparent 100%);
+  transition: transform var(--d3) var(--ease);
+}
+.promise:hover .promise-art {
+  transform: scale(1.04);
+}
+.promise-body {
+  display: grid;
+  gap: var(--s-3);
+  flex: 1;
+  align-content: start;
+  margin-top: -18%;
+  padding: 0 var(--s-5) var(--s-5);
 }
 .promise-num {
-  font-size: var(--t-xl);
+  position: absolute;
+  top: var(--s-4);
+  left: var(--s-4);
+  z-index: 1;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(8px);
+  font-size: var(--t-sm);
   font-weight: 650;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   color: var(--red);
 }
 .promise-name {
@@ -512,6 +641,9 @@
   padding-top: var(--s-4);
   border-top: 1px solid var(--line);
   font-size: var(--t-sm);
+}
+.promise-body {
+  grid-template-rows: auto auto 1fr;
 }
 .promises-note {
   margin-top: var(--s-4);
@@ -800,6 +932,14 @@
 }
 
 /* ---- Small screens ------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .promises {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .promise {
+    min-height: 480px;
+  }
+}
 @media (max-width: 1000px) {
   .numbers {
     grid-template-columns: 1fr 1fr;
@@ -817,8 +957,25 @@
   .hero {
     padding-top: calc(var(--header-h) + 8vh);
   }
-  .journey-pin {
-    min-height: 560px;
+  .journey {
+    padding-top: var(--s-8);
+  }
+  .hero-stats {
+    display: none;
+  }
+  .explorer {
+    height: 78svh;
+    min-height: 520px;
+    margin-inline: 12px;
+  }
+  .promises {
+    grid-template-columns: 1fr;
+  }
+  .promise {
+    min-height: 0;
+  }
+  .promise-art {
+    aspect-ratio: 16 / 10;
   }
   .hero-stats {
     left: var(--gutter);
@@ -840,7 +997,7 @@
     left: var(--gutter);
     right: var(--gutter);
     top: auto;
-    bottom: 76px;
+    bottom: 88px;
     transform: none;
     width: auto;
     padding: var(--s-5);
@@ -854,11 +1011,11 @@
   .journey-summary {
     display: none;
   }
-  .journey-nav {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 16px;
+  .journey-bar {
+    bottom: 12px;
+  }
+  .journey-card--intro {
+    bottom: 88px;
   }
   .stage-note {
     display: none;

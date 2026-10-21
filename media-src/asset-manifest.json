@@ -845,5 +845,144 @@
         "usage": "Concept image for the community model building; the input to image-to-3D"
       }
     ]
+  },
+  "promises": {
+    "notes": "Five soft morning photographs in one shared style for the promise cards, built by scripts/build_media.py promises.",
+    "estimatedCredits": 13.75,
+    "items": [
+      {
+        "key": "promise-1",
+        "generationId": "29028d0d-0676-441a-b1ed-1071dc7228c4",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T19:57:53.213366Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 1024,
+          "height": 688
+        },
+        "promptFile": "media-src/promises/p1-infrastructure.txt",
+        "styleFile": "media-src/promises/style.txt",
+        "original": "media-src/promises/p1-infrastructure.png",
+        "web": "impact/public/media/promise-1-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph behind promise 1 (infrastructure)",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      },
+      {
+        "key": "promise-2",
+        "generationId": "93d0c661-d4c2-47db-969a-d368313dd713",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T19:58:16.209724Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 1024,
+          "height": 688
+        },
+        "promptFile": "media-src/promises/p2-power.txt",
+        "styleFile": "media-src/promises/style.txt",
+        "original": "media-src/promises/p2-power.png",
+        "web": "impact/public/media/promise-2-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph behind promise 2 (power)",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      },
+      {
+        "key": "promise-3",
+        "generationId": "9fefc24d-54b5-45df-b566-bb8ba4b0552b",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T19:58:36.518597Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 1024,
+          "height": 688
+        },
+        "promptFile": "media-src/promises/p3-jobs.txt",
+        "styleFile": "media-src/promises/style.txt",
+        "original": "media-src/promises/p3-jobs.png",
+        "web": "impact/public/media/promise-3-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph behind promise 3 (jobs)",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      },
+      {
+        "key": "promise-4",
+        "generationId": "d85cbfc6-51f6-4272-beff-f681c5c60018",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T19:59:00.21893Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 1024,
+          "height": 688
+        },
+        "promptFile": "media-src/promises/p4-nature.txt",
+        "styleFile": "media-src/promises/style.txt",
+        "original": "media-src/promises/p4-nature.png",
+        "web": "impact/public/media/promise-4-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph behind promise 4 (nature)",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      },
+      {
+        "key": "promise-5",
+        "generationId": "2740b0d2-4328-4e89-8f71-95755bf0d211",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T19:59:19.938429Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 1024,
+          "height": 688
+        },
+        "promptFile": "media-src/promises/p5-digital.txt",
+        "styleFile": "media-src/promises/style.txt",
+        "original": "media-src/promises/p5-digital.png",
+        "web": "impact/public/media/promise-5-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph behind promise 5 (digital)",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      }
+    ]
+  },
+  "audio": {
+    "notes": "The tour theme. Encoded by ffmpeg with 2 s and 3 s fades and loudness normalised to -20 LUFS (Opus 64 kbps and MP3 V4). The raw m4a is re-downloadable from resultUrl.",
+    "estimatedCredits": 3.75,
+    "items": [
+      {
+        "key": "community-theme",
+        "generationId": "f15796c2-3861-4bbc-91d0-db3d99cc348c",
+        "model": "Sonilo Music",
+        "jobType": "sonilo_music",
+        "createdAt": "2026-10-21T19:56:55.483586Z",
+        "settings": {
+          "duration": 120
+        },
+        "promptFile": "media-src/audio/community-theme.txt",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_195655_f15796c2-3861-4bbc-91d0-db3d99cc348c.m4a",
+        "web": "impact/public/media/audio/community-theme.{ogg,mp3}",
+        "estimatedCredits": 3.75,
+        "status": "selected",
+        "usage": "Music for the community tour; plays only after the visitor presses Play",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      }
+    ]
   }
 }

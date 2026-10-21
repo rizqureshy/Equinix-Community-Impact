@@ -1,0 +1,15 @@
+[
+  {
+    "created_at": "2026-10-21T19:56:55.483586Z",
+    "display_name": "Sonilo Music",
+    "id": "f15796c2-3861-4bbc-91d0-db3d99cc348c",
+    "job_type": "sonilo_music",
+    "min_result_url": null,
+    "params": {
+      "duration": 120,
+      "prompt": "Calm, thoughtful corporate ambient music for a quiet brand film: soft felt piano, warm sustained strings and a gentle synth pad, slow tempo around 70 bpm, major key, unhurried and hopeful, no drums, no vocals, no sudden changes, smooth and loopable, consistent dynamics throughout."
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_195655_f15796c2-3861-4bbc-91d0-db3d99cc348c.m4a",
+    "status": "completed"
+  }
+]

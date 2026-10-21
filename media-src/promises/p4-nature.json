@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-21T19:59:00.21893Z",
+    "display_name": "GPT Image 2.5",
+    "id": "d85cbfc6-51f6-4272-beff-f681c5c60018",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_195900_d85cbfc6-51f6-4272-beff-f681c5c60018_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "height": 688,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Soft, airy documentary photograph, high-key and light, pale muted palette with warm morning haze, shallow depth of field, calm and hopeful, lots of negative space, natural light, no text, no logos, no signage, no readable screens, photoreal, editorial. Subject: a quiet river bend with reeds and a wooden footbridge in morning mist, a line of planted native trees, water calm and clear.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_195900_d85cbfc6-51f6-4272-beff-f681c5c60018.png",
+    "status": "completed"
+  }
+]

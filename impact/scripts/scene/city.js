@@ -290,6 +290,9 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   const want = { pos: cur.pos.clone(), target: cur.target.clone(), shift: 0 };
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   let focus = 'overview';
+  let view = VIEWS.overview;
+  let drift = false;
+  let driftAngle = 0;
   let hovered = null;
   let visible = true;
   let ready = false;
@@ -356,12 +359,14 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     dirty = true;
   }
 
-  function setFocus(name, { instant = false } = {}) {
+  function setFocus(name, { instant = false, side = 0 } = {}) {
     const v = VIEWS[name] || VIEWS.overview;
     focus = name;
+    view = v;
+    driftAngle = 0;
     want.pos.copy(orbitPosition(v));
     want.target.set(...v.target);
-    want.shift = 0;
+    want.shift = side;
     revealThreads(threadsForFocus[name] || [], instant);
     for (const [id, el] of labels) el.classList.toggle('is-focus', id === name);
     if (instant) instantNext = true;
@@ -434,8 +439,13 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     if (!visible) return;
     const moving = motion();
 
+    // A slow orbit while the tour plays, so each stop keeps breathing
+    if (drift && moving) {
+      driftAngle += dt * 0.035;
+      want.pos.copy(orbitPosition({ ...view, az: view.az + driftAngle }));
+    }
     // Camera eases toward the wanted view; the cursor adds a gentle parallax
-    const k = instantNext ? 1 : 1 - Math.exp(-dt * 6);
+    const k = instantNext ? 1 : 1 - Math.exp(-dt * 2.6);
     const kp = instantNext ? 1 : 1 - Math.exp(-dt * 4);
     instantNext = false;
     pointer.x += (pointer.tx - pointer.x) * kp;
@@ -478,7 +488,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     placeLabels();
 
     const settled = cur.pos.distanceToSquared(want.pos) < 1e-4 && Math.abs(pointer.x - pointer.tx) < 1e-3 && Math.abs(pointer.y - pointer.ty) < 1e-3;
-    dirty = animating || !settled;
+    dirty = animating || !settled || (drift && moving);
     if (dirty) raf = requestAnimationFrame(frame);
   }
 
@@ -521,6 +531,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     setStops,
     setProgress,
     setFocus,
+    setDrift(on) {
+      drift = on;
+      if (!on) {
+        driftAngle = 0;
+        want.pos.copy(orbitPosition(view));
+      }
+      dirty = true;
+      tick();
+    },
     setVisible,
     resize,
     get focus() {

@@ -13,3 +13,5 @@ media-src/flight/*-last.png
 # large and re-downloadable via the result_url in each media-src/city/*.json
 media-src/city/*.png
 media-src/city/*.glb
+media-src/promises/*.png
+media-src/audio/*.src

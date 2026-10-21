@@ -1,23 +1,24 @@
 # Handover: Infrastructure for human possibility
 
-Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign on the branch `claude/community-redesign`, replacing the dark cinematic page, the separate 3D explorer and the fly-through film.
+Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign on the branch `claude/community-redesign`, replacing the dark cinematic page, the separate 3D explorer and the fly-through film. Updated the same day with your edits: the community became an independent explorer with a playing tour and music, the promises gained photographs, the numbers were reset, and the story dialog scrolls with the wheel.
 
 ## What was built
 
 A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Lenis. Light, calm and Apple-like: generous white space, Inter Tight, one saturated colour (Equinix red) for the thread and small accents, amber for recovered heat.
 
 - **Hero:** "Infrastructure for human possibility." rises into place over white, with the lede and two actions. Below it the community appears as a framed product shot that opens to full bleed as you scroll.
-- **The community, travelling with you:** a real 3D model of seven buildings (hospital, research centre, learning centre, homes, high street shops, aquatic centre, Equinix data center) on a white plinth. The section pins for about seven screens. The camera travels between six stops (the five chapter places, then the data center); at each stop the model shifts aside and a glass card slides in on the alternating side with the chapter number, the human moment, the lead story summary and a button that opens the full story. The thread for that place draws in red, the aquatic centre's in amber, and at the data center every thread shows at once. Labels float above each building; clicking a label, a building or a dot travels to that stop. The scroll settles on the nearest stop when it rests. The cursor adds a gentle parallax.
-- **The technique** follows the reference video ("Stay a little longer"): a live 3D model that reacts to cursor and scroll, reframed per section, rather than a film. Only the technique was taken; the design is our own.
-- **Fallbacks:** a rendered still of the community shows until the model is ready and wherever WebGL is unavailable. With reduced motion or "Pause motion" there is no pinning or smooth scrolling; the dots and labels still change the stop and the model shows connections instantly.
+- **The community, yours to explore:** a real 3D model of seven buildings (hospital, research centre, learning centre, homes, high street shops, aquatic centre, Equinix data center) on a white plinth, framed as a product shot in the flow of the page. It no longer depends on scrolling. Six stops are chosen with the dots, the previous and next arrows, the arrow keys, a label or a click on a building; the camera travels to each with a slow, cinematic ease, the model shifts aside and a glass card slides in on the alternating side with the chapter number, the human moment, the lead story summary and a button that opens the full story. The thread for that place draws in red, the aquatic centre's in amber, and at the data center every thread shows at once. The cursor adds a gentle parallax. From the overview, three headline figures sit as quiet pills.
+- **Play the tour:** the Play control (in the bar and on the opening card) visits the stops one after another, about nine seconds each, with a slow orbit at each stop and a calm corporate theme (piano, strings, soft pad) that fades in and out. Any choice pauses the tour; so does scrolling away or hiding the tab. A mute control is remembered between visits. Music only starts from a click, never on its own.
+- **The technique** follows the reference video ("Stay a little longer"): a live 3D model that reacts to cursor and input, reframed per stop, rather than a film. Only the technique was taken; the design is our own.
+- **Fallbacks:** a rendered still of the community shows until the model is ready and wherever WebGL is unavailable. With reduced motion or "Pause motion" the camera cuts between stops instead of travelling, there is no orbit, and the controls still work.
 - **Statement:** "Equinix is not a visitor in these places…" lights up word by word.
 - **Five chapters:** headline, moment, a rounded film, then the story with the connection, the two sets of contributions and the scoped figure, plus links to the other stories in the chapter.
-- **In numbers:** four headline figures that count up, each with scope and source.
-- **Five promises:** the U.S. Community Principles as a card rail.
+- **In numbers:** four headline figures that count up, each with scope and source. The prefix and suffix (the $, M and +) sit as smaller red marks so the numerals never overflow, and a short thread draws across each tile as it arrives, carrying a travelling bead (amber for heat).
+- **Five promises:** the U.S. Community Principles as five tall cards, all visible at once on desktop, each with a soft morning photograph that fades through the white of the card into the promise, its text and a proof point. The photographs were generated for this round in one shared style.
 - **People:** film, leadership quote, roles and Kayla's path.
 - **Story gallery:** 11 cards in a swipeable rail, with filters, an empty state and copy actions.
 - **Sources:** Achieved, Happening now, Committed, plus the source directory.
-- **Story dialog:** a modal panel (full screen on mobile) with focus handling, copy actions and sources.
+- **Story dialog:** a modal panel (full screen on mobile) with focus handling, copy actions and sources. The mouse wheel scrolls the open story while the page behind stays put.
 
 ## Creative direction
 
@@ -53,7 +54,9 @@ Generation ran through the Higgsfield CLI after a browser sign-in (the connector
 | 7 stills | GPT Image 2.5 (high, 1:1, 2k) | Building concept images in one shared style (`media-src/city/style.txt`) | 19.25 |
 | 7 models | Tripo H3.1 image to 3D (detailed geometry and texture, PBR) | The seven buildings | 63 |
 | 7 models, unused | Tripo H3.1 | Duplicates: the first hospital job's wait hung past its limit and its id was lost; a batch of five creates reported nothing and was re-run, but had in fact been accepted. The results exist in the workspace and were not downloaded | 63 |
-| **This round** | | | **145.25 of the 250 allowed** (916 → 770.75 credits) |
+| 1 track, 120 s | Sonilo Music | The calm corporate theme for the tour (`media-src/audio/community-theme.txt`), normalised and faded for the web as Opus and MP3 | 3.75 |
+| 5 stills | GPT Image 2.5 (high, 3:2) | Soft photographs for the five promises in one shared style (`media-src/promises/style.txt`) | 13.75 |
+| **This round** | | | **162.75 of the 250 allowed** (916 → 753.25 credits) |
 
 Earlier rounds spent 212 credits on the stills and films that remain in use (chapter and people films, story images). Every output is recorded in `media-src/asset-manifest.json` (the `city` section for this round) with its generation id, model, settings, prompt file, status and use.
 
@@ -82,18 +85,19 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 **Checks run**
 
 - **Unit tests (`npm test`):** 17 pass (content model, routing including the old link aliases, state, sharing).
-- **Browser checks (`npm run test:e2e`):** 54 pass in headless Chromium with software WebGL.
+- **Browser checks (`npm run test:e2e`):** 62 pass in headless Chromium with software WebGL.
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
-  - **Community:** the headline is usable on arrival; the section pins for a long scroll; the model renders; the still is in place before it; scrolling to a stop frames its place, card and label; dots and labels move between stops; a story opens from a card with its URL and focus handling; Back and Forward work.
-  - **Sections:** chapter and alias routes land where expected; navigation marks the current section; copy works with a fallback when the clipboard is denied; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
-  - **Reduced motion:** no smooth scrolling or pinning, films paused, stops still change by control, the toggle works.
+  - **Community:** the headline is usable on arrival; the explorer sits in the page flow with its own controls; the model renders; the still is in place before it; moving to a stop frames its place, card and label; dots, arrows, labels and the keyboard move between stops; previous from the first stop returns to the overview; the tour starts, moves on and plays music, mute is remembered, and choosing a place pauses it; a story opens from a card with its URL and focus handling; Back and Forward work.
+  - **Sections:** chapter and alias routes land where expected; navigation marks the current section; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
+  - **Reduced motion:** no smooth scrolling, films paused, stops still change by control, the toggle works.
   - **Mobile:** no sideways scroll, the journey card fits the screen, stories open full width.
   - **No WebGL:** the still is shown and the controls still work.
-- **Screenshots inspected:** hero, product-shot frame, overview, several stops, the data center stop, at 1440 px; hero and a stop at 390 px; each building from four angles before and after compression.
+- **Screenshots inspected:** hero, the explorer at the overview and several stops, numbers and promises at 1440 px; the explorer, a stop and the promises at 390 px; each building from four angles before and after compression; the five promise photographs as a contact sheet.
 
 **Not yet checked**
 
-- **Real-GPU performance:** frame rate, LCP and CLS on real hardware. Software rendering here is not representative. Mitigations: lazy model load, pixel ratio capped at 1.75 (1 on low-core devices), rendering only while visible and while something moves, 5.4 MB of models in total.
+- **Real-GPU performance:** frame rate, LCP and CLS on real hardware. Software rendering here is not representative. Mitigations: lazy model load, pixel ratio capped at 1.75 (1 on low-core devices), rendering only while visible and while something moves, 5.4 MB of models in total. The music (about 1 MB as Opus, 2 MB as MP3) loads only when the tour is played.
+- **Audio on real devices:** the theme's level and loop were checked by ear only through the waveform; listen on speakers and headphones before sharing.
 - **Screen readers, Safari, Firefox, tablet widths.**
 
 ## Known limitations and next steps

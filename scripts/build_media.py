@@ -26,9 +26,12 @@ STILLS = {
 }
 WIDTHS = (1200, 640)
 
+# Soft photographs behind the five promises (media-src/promises)
+PROMISES = {f'promise-{i}': f'p{i}-{n}.png' for i, n in enumerate(['infrastructure', 'power', 'jobs', 'nature', 'digital'], 1)}
 
-def still(name, src, crop):
-    im = Image.open(SRC / src).convert('RGB')
+
+def still(name, src, crop, folder=SRC):
+    im = Image.open(folder / src).convert('RGB')
     if crop:
         w, h = im.size
         im = im.crop((int(crop[0] * w), int(crop[1] * h), int(crop[2] * w), int(crop[3] * h)))
@@ -67,6 +70,9 @@ if __name__ == '__main__':
     for key, (src, crop) in STILLS.items():
         if not only or key in only:
             still(key, src, crop)
+    for key, src in PROMISES.items():
+        if not only or key in only or 'promises' in only:
+            still(key, src, None, ROOT / 'media-src' / 'promises')
     for c in CLIPS:
         if not only or c in only:
             clip(c)

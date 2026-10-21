@@ -1,4 +1,4 @@
-// Main page wiring: the pinned community journey, scroll choreography,
+// Main page wiring: the community explorer and its tour, scroll choreography,
 // story dialog, gallery and copy actions. Three.js loads lazily, only when
 // the community comes near the viewport and WebGL is available.
 import { gsap } from 'gsap';
@@ -21,48 +21,142 @@ const notify = createToast($('#toast'));
 setupCopy(notify, (id) => storyURL(id));
 
 // ---------------------------------------------------------------------------
-// The community: stage, scene and journey
+// The community: an explorer with six stops and a tour that plays
 // ---------------------------------------------------------------------------
 const steps = journeySteps();
 const stage = $('#stage');
-const pin = $('.journey-pin');
+const explorer = $('#explorer');
 const journey = $('.journey');
 const cards = $$('.journey-card');
 const dots = $$('.journey-dot');
+const playButtons = $$('[data-play]');
+const muteButton = $('[data-mute]');
+const theme = $('#theme');
 const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-const INTRO = 0.1; // share of the pin spent opening the product shot to full bleed
+const TOUR_DWELL = 9000; // ms at each stop while the tour plays
 let scene = null;
 let sceneLoading = false;
-let activeStep = -1;
+let activeStep = -1; // -1 is the overview
+let playing = false;
+let tourTimer = 0;
+let muted = false;
+try {
+  muted = localStorage.getItem('impact-sound') === 'off';
+} catch {}
 
 function showStep(i) {
-  if (i === activeStep) return;
   activeStep = i;
-  cards.forEach((c, j) => {
-    c.hidden = j !== i;
+  explorer.dataset.step = String(i);
+  cards.forEach((c) => {
+    c.hidden = Number(c.dataset.step) !== i;
   });
-  dots.forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
-}
-showStep(0);
-
-function framing(open) {
-  // Product-shot frame while the hero is in view, full bleed once pinned
-  const inset = 1 - clamp(open);
-  stage.style.setProperty('--inset-y', `${inset * 4}vh`);
-  stage.style.setProperty('--inset-x', `${inset * 5}vw`);
-  stage.style.setProperty('--inset-r', `${inset * 28}px`);
+  dots.forEach((d) => d.setAttribute('aria-current', String(Number(d.dataset.go) === i)));
+  const place = i < 0 ? 'overview' : steps[i].place;
+  scene?.setFocus(place, { instant: !store.get().motion, side: i < 0 ? 0 : i % 2 === 0 ? -1 : 1 });
 }
 
-function onJourneyProgress(p) {
-  framing(p / INTRO);
-  pin.style.setProperty('--stats-opacity', String(1 - clamp(p / (INTRO * 0.7))));
-  const jp = clamp((p - INTRO) / (1 - INTRO));
-  const x = jp * steps.length;
-  const step = x < 0.55 ? -1 : Math.min(steps.length - 1, Math.floor(x - 0.55));
-  pin.style.setProperty('--ui-opacity', String(clamp((x - 0.3) / 0.25)));
-  if (step >= 0) showStep(step);
-  scene?.setProgress(jp, { side: step < 0 ? 0 : step % 2 === 0 ? -1 : 1 });
+/** Move to a stop. User moves stop the tour; the tour's own moves do not. */
+function goToStep(i, { byTour = false } = {}) {
+  const next = Math.max(-1, Math.min(steps.length - 1, i));
+  if (!byTour) stopTour();
+  if (next === activeStep) return;
+  showStep(next);
 }
+function stepBy(dir) {
+  goToStep(activeStep + dir);
+}
+function goToPlace(place) {
+  const i = steps.findIndex((s) => s.place === place);
+  if (i >= 0) goToStep(i);
+}
+
+// The tour: one stop after another, around and around, with music
+function setPlayingUI() {
+  for (const b of playButtons) {
+    b.setAttribute('aria-pressed', String(playing));
+    if (b.classList.contains('bar-btn')) b.setAttribute('aria-label', playing ? 'Pause the tour' : 'Play the tour');
+    else b.textContent = playing ? 'Pause the tour' : 'Play the tour';
+  }
+  explorer.classList.toggle('is-playing', playing);
+}
+function startTour() {
+  if (playing) return;
+  playing = true;
+  setPlayingUI();
+  scene?.setDrift(store.get().motion);
+  fadeMusic(true);
+  const advance = () => {
+    const next = activeStep >= steps.length - 1 ? -1 : activeStep + 1;
+    goToStep(next, { byTour: true });
+    tourTimer = setTimeout(advance, next < 0 ? TOUR_DWELL * 0.7 : TOUR_DWELL);
+  };
+  tourTimer = setTimeout(advance, activeStep < 0 ? 1200 : TOUR_DWELL);
+}
+function stopTour() {
+  if (!playing) return;
+  playing = false;
+  clearTimeout(tourTimer);
+  setPlayingUI();
+  scene?.setDrift(false);
+  fadeMusic(false);
+}
+function toggleTour() {
+  playing ? stopTour() : startTour();
+}
+
+let fadeTimer = 0;
+/** Fade the theme in or out over a fixed time, whatever the frame rate. */
+function fadeMusic(on) {
+  if (!theme) return;
+  clearInterval(fadeTimer);
+  const target = on && !muted ? 0.55 : 0;
+  if (target > 0) {
+    if (theme.preload === 'none') theme.preload = 'auto';
+    theme.play().catch(() => {});
+  }
+  const from = theme.volume;
+  const started = performance.now();
+  const length = 700;
+  fadeTimer = setInterval(() => {
+    const t = Math.min(1, (performance.now() - started) / length);
+    theme.volume = from + (target - from) * t;
+    if (t === 1) {
+      clearInterval(fadeTimer);
+      if (target === 0) theme.pause();
+    }
+  }, 40);
+}
+function setMuted(on) {
+  muted = on;
+  muteButton.setAttribute('aria-pressed', String(on));
+  muteButton.setAttribute('aria-label', on ? 'Unmute the music' : 'Mute the music');
+  try {
+    localStorage.setItem('impact-sound', on ? 'off' : 'on');
+  } catch {}
+  if (playing) fadeMusic(!on);
+}
+setMuted(muted);
+setPlayingUI();
+showStep(-1);
+
+// Controls
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) return goToStep(Number(go.dataset.go));
+  const dir = e.target.closest('[data-step-dir]');
+  if (dir) return stepBy(Number(dir.dataset.stepDir));
+  if (e.target.closest('[data-play]')) return toggleTour();
+  if (e.target.closest('[data-mute]')) return setMuted(!muted);
+});
+for (const [place, el] of labels) el.addEventListener('click', () => goToPlace(place));
+explorer.addEventListener('keydown', (e) => {
+  if (e.target !== explorer && e.target.closest('.journey-card')) return;
+  if (e.key === 'ArrowRight') stepBy(1);
+  else if (e.key === 'ArrowLeft') stepBy(-1);
+  else if (e.key === ' ' && e.target === explorer) toggleTour();
+  else return;
+  e.preventDefault();
+});
 
 function supportsWebGL2() {
   try {
@@ -86,9 +180,8 @@ async function loadScene() {
       motion: () => store.get().motion,
       onReady: () => {
         stage.dataset.sceneState = 'ready';
-        if (journeyTrigger) onJourneyProgress(journeyTrigger.progress);
-        else scene.setFocus(steps[activeStep]?.place || 'overview', { instant: true });
-        ScrollTrigger.refresh();
+        showStep(activeStep);
+        scene.setDrift(playing && store.get().motion);
       },
       onFail: (err) => {
         console.warn('Community scene unavailable', err);
@@ -97,14 +190,13 @@ async function loadScene() {
       onSelect: (place) => goToPlace(place),
     });
     if (!scene) stage.dataset.sceneState = 'fallback';
-    else scene.setStops(steps.map((s) => s.place));
   } catch (err) {
     console.warn('Community scene unavailable', err);
     stage.dataset.sceneState = 'fallback';
   }
 }
 
-// Load the scene once the community is within reach
+// Load the scene once the community is within reach; pause everything when it leaves
 const near = new IntersectionObserver(
   (entries) => {
     if (entries.some((e) => e.isIntersecting)) {
@@ -115,45 +207,29 @@ const near = new IntersectionObserver(
   { rootMargin: '120% 0px' },
 );
 near.observe(journey);
-const inView = new IntersectionObserver((entries) => scene?.setVisible(entries.some((e) => e.isIntersecting)), { rootMargin: '10% 0px' });
-inView.observe(journey);
-
-/** Scroll position at which step `i` is in view (motion on and pinned). */
-function stepScrollY(i) {
-  if (!journeyTrigger) return journey.getBoundingClientRect().top + scrollY;
-  const jp = (i + 1) / steps.length;
-  return journeyTrigger.start + (INTRO + (1 - INTRO) * jp) * (journeyTrigger.end - journeyTrigger.start);
-}
-function goToStep(i) {
-  if (journeyTrigger) scrollToY(stepScrollY(i));
-  else {
-    showStep(i);
-    scene?.setFocus(steps[i].place);
-    if (!isInView(journey)) scrollToY(journey.getBoundingClientRect().top + scrollY);
-  }
-}
-function goToPlace(place) {
-  const i = steps.findIndex((s) => s.place === place);
-  if (i >= 0) goToStep(i);
-}
-dots.forEach((d) => d.addEventListener('click', () => goToStep(Number(d.dataset.go))));
-for (const [place, el] of labels) el.addEventListener('click', () => goToPlace(place));
+const inView = new IntersectionObserver(
+  (entries) => {
+    const visible = entries.some((e) => e.isIntersecting);
+    scene?.setVisible(visible);
+    if (!visible) stopTour();
+  },
+  { rootMargin: '10% 0px' },
+);
+inView.observe(explorer);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopTour();
+});
 
 // ---------------------------------------------------------------------------
 // Scroll choreography (built only when motion is on)
 // ---------------------------------------------------------------------------
 let scrollTriggers = [];
-let journeyTrigger = null;
 
 function buildScroll() {
   teardownScroll();
   if (!store.get().motion) {
     $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
-    framing(1);
-    pin.style.setProperty('--ui-opacity', '1');
-    pin.style.setProperty('--stats-opacity', '0');
-    if (activeStep < 0) showStep(0);
-    scene?.setFocus(steps[activeStep].place, { instant: true });
+    scene?.setFocus(activeStep < 0 ? 'overview' : steps[activeStep].place, { instant: true });
     return;
   }
 
@@ -175,46 +251,6 @@ function buildScroll() {
       },
     }),
   );
-
-  // The community pins and the camera travels through six stops, settling
-  // on the nearest stop when the scroll rests (snap pattern adapted from the
-  // 21st.dev Sticky Content Wrapper reference).
-  framing(0);
-  const stopProgress = [0, ...steps.map((_, i) => INTRO + (1 - INTRO) * ((i + 1) / steps.length))];
-  journeyTrigger = ScrollTrigger.create({
-    trigger: journey,
-    start: 'top top',
-    end: `+=${(steps.length + 1) * 100}%`,
-    pin: pin,
-    pinSpacing: true,
-    scrub: 0.4,
-    anticipatePin: 1,
-    invalidateOnRefresh: true,
-    onUpdate: (self) => onJourneyProgress(self.progress),
-  });
-  scrollTriggers.push(journeyTrigger);
-  onJourneyProgress(0);
-
-  // When the scroll rests inside the journey, settle on the nearest stop
-  // (snapping is done through Lenis so the page never locks).
-  let restTimer = 0;
-  lenis.on('scroll', () => {
-    clearTimeout(restTimer);
-    restTimer = setTimeout(settleOnStop, 140);
-  });
-  function settleOnStop() {
-    if (!journeyTrigger || performance.now() < programmaticUntil || store.get().story) return;
-    const t = journeyTrigger;
-    const span = t.end - t.start;
-    const p = (scrollY - t.start) / span;
-    if (p < -0.02 || p > 1.02) return;
-    let best = stopProgress[0];
-    for (const sp of stopProgress) if (Math.abs(sp - p) < Math.abs(best - p)) best = sp;
-    const target = t.start + best * span;
-    if (Math.abs(target - scrollY) < 2) return;
-    programmaticUntil = performance.now() + 900;
-    lenis.scrollTo(target, { duration: 0.7, force: true, lock: true });
-  }
 
   // Statement: each word lights up in turn
   const words = $$('.statement-text .w');
@@ -241,7 +277,6 @@ function lenisRaf(time) {
 function teardownScroll() {
   scrollTriggers.forEach((t) => t.kill());
   scrollTriggers = [];
-  journeyTrigger = null;
   if (lenis) {
     gsap.ticker.remove(lenisRaf);
     lenis.destroy();
@@ -315,7 +350,6 @@ const dialog = createStoryDialog({
 
 function scrollToSection(section, { instant = false } = {}) {
   if (section === 'top') return scrollToY(0, { instant });
-  if (section === 'journey' && journeyTrigger) return scrollToY(journeyTrigger.start + INTRO * (journeyTrigger.end - journeyTrigger.start), { instant });
   const el = document.getElementById(anchorFor(section));
   if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
 }
@@ -414,22 +448,21 @@ const counter = new IntersectionObserver(
       counter.unobserve(e.target);
       if (!store.get().motion) continue;
       const el = e.target;
-      const { count, decimals, prefix, suffix } = el.dataset;
+      const { count, decimals } = el.dataset;
       const obj = { v: 0 };
       gsap.to(obj, {
         v: Number(count),
         duration: 1.8,
         ease: 'power3.out',
         onUpdate: () => {
-          const n = Number(decimals) ? obj.v.toFixed(Number(decimals)) : Math.round(obj.v).toLocaleString('en-GB');
-          el.textContent = `${prefix}${n}${suffix}`;
+          el.textContent = Number(decimals) ? obj.v.toFixed(Number(decimals)) : Math.round(obj.v).toLocaleString('en-GB');
         },
       });
     }
   },
   { threshold: 0.6 },
 );
-$$('.number-value').forEach((n) => counter.observe(n));
+$$('.number-digits').forEach((n) => counter.observe(n));
 
 // ---------------------------------------------------------------------------
 // Story gallery: filters and rail buttons
@@ -486,5 +519,10 @@ window.__impact = {
   get step() {
     return activeStep;
   },
+  get playing() {
+    return playing;
+  },
   goToStep,
+  startTour,
+  stopTour,
 };

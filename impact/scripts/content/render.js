@@ -55,21 +55,37 @@ export function journeySteps() {
 
 export function journeyHTML() {
   const steps = journeySteps();
-  return `<div class="journey-cards">${steps
-    .map(
-      (s, i) => `<article class="journey-card${i % 2 ? ' journey-card--right' : ''}" data-step="${i}" ${i ? 'hidden' : ''} aria-labelledby="journey-${s.id}">
+  const card = (s, i) => `<article class="journey-card${i % 2 ? ' journey-card--right' : ''}" data-step="${i}" hidden aria-labelledby="journey-${s.id}">
       <p class="eyebrow">${s.number} <span class="muted">${esc(s.label)}</span></p>
       <h3 class="title--md" id="journey-${s.id}">${esc(s.placeName)}</h3>
       <p class="journey-moment">${esc(s.moment)}</p>
       <p class="journey-summary muted">${esc(s.summary)}</p>
       <p class="journey-thread"><span class="thread-swatch${s.heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${s.heat ? 'Recovered heat' : s.id === 'datacenter' ? 'Where every thread begins' : 'Connected to the data center'}</p>
       ${s.story ? `<a class="btn btn--primary btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">Open the story</a>` : `<a class="btn btn--primary btn--small" href="#/promises">Our five promises</a>`}
-    </article>`,
-    )
-    .join('')}</div>
-  <nav class="journey-nav" aria-label="Places">${steps
-    .map((s, i) => `<button type="button" class="journey-dot" data-go="${i}" aria-label="${esc(s.placeName)}" aria-current="${i === 0}"><i></i><span>${esc(s.placeName)}</span></button>`)
-    .join('')}</nav>`;
+    </article>`;
+  return `<div class="journey-cards">
+    <article class="journey-card journey-card--intro" data-step="-1" aria-labelledby="journey-intro">
+      <p class="eyebrow">The community</p>
+      <h3 class="title--md" id="journey-intro">Six places. One thread.</h3>
+      <p class="journey-moment">A data center is part of the community around it. Follow the thread from the hospital to the aquatic centre, or let the tour play.</p>
+      <div class="actions">
+        <button type="button" class="btn btn--primary btn--small" data-play>Play the tour</button>
+        <button type="button" class="btn btn--link btn--small" data-go="0">Start at the hospital</button>
+      </div>
+    </article>
+    ${steps.map(card).join('')}
+  </div>
+  <div class="journey-bar" role="group" aria-label="Tour controls">
+    <button type="button" class="bar-btn" data-step-dir="-1" aria-label="Previous place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <nav class="journey-nav" aria-label="Places">${steps
+      .map((s, i) => `<button type="button" class="journey-dot" data-go="${i}" aria-label="${esc(s.placeName)}" aria-current="false"><i></i><span>${esc(s.placeName)}</span></button>`)
+      .join('')}</nav>
+    <button type="button" class="bar-btn" data-step-dir="1" aria-label="Next place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="m5 2 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="bar-sep" aria-hidden="true"></span>
+    <button type="button" class="bar-btn bar-btn--play" data-play aria-pressed="false" aria-label="Play the tour"><svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2.2v9.6L11.4 7Z" fill="currentColor"/></svg><svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2.5h2.4v9H3.5zM8.1 2.5h2.4v9H8.1z" fill="currentColor"/></svg></button>
+    <button type="button" class="bar-btn" data-mute aria-pressed="false" aria-label="Mute the music"><svg class="icon-sound" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="M10 4.5a3.5 3.5 0 0 1 0 5M11.6 2.6a6 6 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><svg class="icon-muted" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="m10 5 3 4m0-4-3 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+  </div>
+  <audio id="theme" loop preload="none" aria-hidden="true"><source src="media/audio/community-theme.ogg" type="audio/ogg; codecs=opus"><source src="media/audio/community-theme.mp3" type="audio/mpeg"></audio>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -219,18 +235,24 @@ export function collectionHTML() {
 // ---------------------------------------------------------------------------
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
+/** Soft photographs behind each promise (AI generated, illustrative). */
+const PROMISE_ART = ['promise-1', 'promise-2', 'promise-3', 'promise-4', 'promise-5'];
+
 export function principlesHTML() {
   return `<ol class="promises">${principles
     .map(
       (p, i) => `<li class="promise" data-reveal style="--i:${i}">
-        <span class="promise-num">${String(i + 1).padStart(2, '0')}</span>
-        <h3 class="promise-name">${esc(p.name)}</h3>
-        <p class="promise-text muted">${esc(p.promise)}</p>
-        <p class="promise-proof"><span class="visually-hidden">Example: </span>${esc(p.proof)}</p>
+        <img class="promise-art" src="media/${PROMISE_ART[i]}-640.webp" srcset="media/${PROMISE_ART[i]}-640.webp 640w, media/${PROMISE_ART[i]}-1200.webp 1200w" sizes="(min-width: 1100px) 20vw, (min-width: 700px) 45vw, 90vw" alt="" loading="lazy" decoding="async" width="1200" height="800">
+        <div class="promise-body">
+          <span class="promise-num">${String(i + 1).padStart(2, '0')}</span>
+          <h3 class="promise-name">${esc(p.name)}</h3>
+          <p class="promise-text muted">${esc(p.promise)}</p>
+          <p class="promise-proof"><span class="visually-hidden">Example: </span>${esc(p.proof)}</p>
+        </div>
       </li>`,
     )
     .join('')}</ol>
-  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
+  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. Photographs are illustrative and AI generated. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
 
 export const NUMBERS = [
@@ -241,10 +263,13 @@ export const NUMBERS = [
 ];
 
 export function numbersHTML() {
-  const fmt = (n) => `${n.prefix || ''}${n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB')}${n.suffix}`;
+  const digits = (n) => (n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB'));
+  // Each figure carries a short thread that draws in as it arrives
+  const thread = (i) => `<svg class="number-thread" viewBox="0 0 200 40" aria-hidden="true"><path d="M2 ${30 - (i % 2) * 8} C 60 ${(i % 2) * 20 + 4}, 120 ${38 - (i % 3) * 10}, 198 ${10 + (i % 2) * 12}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" pathLength="1"/><circle class="number-bead" r="4" fill="currentColor"><animateMotion dur="6s" repeatCount="indefinite" path="M2 ${30 - (i % 2) * 8} C 60 ${(i % 2) * 20 + 4}, 120 ${38 - (i % 3) * 10}, 198 ${10 + (i % 2) * 12}"/></circle></svg>`;
   return `<ul class="numbers">${NUMBERS.map(
-    (n) => `<li class="number" data-reveal>
-      <span class="number-value" data-count="${n.value}" data-decimals="${n.decimals}" data-prefix="${n.prefix || ''}" data-suffix="${n.suffix}">${fmt(n)}</span>
+    (n, i) => `<li class="number${i === 3 ? ' number--heat' : ''}" data-reveal>
+      ${thread(i)}
+      <span class="number-value" aria-label="${esc(`${n.prefix || ''}${digits(n)}${n.suffix}`)}">${n.prefix ? `<span class="number-prefix">${esc(n.prefix)}</span>` : ''}<span class="number-digits" data-count="${n.value}" data-decimals="${n.decimals}">${digits(n)}</span>${n.suffix ? `<span class="number-suffix">${esc(n.suffix)}</span>` : ''}</span>
       <span class="number-label">${esc(n.label)}</span>
       <span class="note">${esc(n.scope)}. <a href="${esc(sources[n.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[n.source].title)} (opens in a new tab)</span></a></span>
     </li>`,

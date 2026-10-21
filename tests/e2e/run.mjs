@@ -69,13 +69,16 @@ try {
   check(await p.locator('h1').isVisible(), 'headline and actions visible on arrival');
   await wait(2000);
   check(await p.evaluate(() => !!window.__impact.lenis), 'smooth scrolling active when motion is on');
-  check(await p.evaluate(() => document.querySelector('.journey').offsetHeight > innerHeight * 5), 'the community pins for a long scroll');
+  check(await p.evaluate(() => document.querySelector('.explorer').offsetHeight <= innerHeight && !!document.querySelector('.journey-bar')), 'the community is an explorer in the page flow with its own controls');
   await waitScene(p);
   check((await sceneState(p)) === 'ready', '3D community renders with WebGL', await sceneState(p));
+  // Keep the explorer centred so its controls never sit under the fixed header
+  await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
+  await wait(600);
   check(await p.evaluate(() => document.querySelector('.stage-still').complete && document.querySelector('.stage-still').naturalWidth > 0), 'a still of the community is in place before the model is ready');
   await p.evaluate(() => window.__impact.goToStep(2));
   await settled(p, 2);
-  check((await step(p)) === 2 && (await focus(p)) === 'learning', 'scrolling to a stop frames its place and card', `${await step(p)} ${await focus(p)}`);
+  check((await step(p)) === 2 && (await focus(p)) === 'learning', 'moving to a stop frames its place and card', `${await step(p)} ${await focus(p)}`);
   check(await p.locator('.journey-card:not([hidden]) h3').textContent() === 'Learning centre', 'the card for the stop is showing');
   check(await p.evaluate(() => document.querySelector('.place-label.is-focus')?.dataset.place === 'learning'), 'the place label is highlighted');
   await p.locator('.journey-dot[data-go="4"]').click();
@@ -87,6 +90,10 @@ try {
   await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click');
   await wait(4000);
   check(visiblePlace && (await focus(p)) === visiblePlace && (await step(p)) !== 4, 'place labels move to their stop', `${visiblePlace} ${await step(p)} ${await focus(p)}`);
+  const before = await step(p);
+  await p.locator('[data-step-dir="1"]').click();
+  await settled(p, before + 1);
+  check((await step(p)) === before + 1, 'next and previous move one stop', `${before} to ${await step(p)}`);
   await p.locator('.journey-dot[data-go="0"]').click();
   await settled(p, 0);
   const trigger = p.locator('.journey-card:not([hidden]) [data-story-trigger]');
@@ -106,6 +113,24 @@ try {
   await p.goBack();
   await wait(700);
   check(!(await isOpen(p)), 'browser back closes the story again');
+  // The tour: plays through the stops with music, pauses on any choice
+  await p.locator('[data-step-dir="-1"]').click();
+  await settled(p, -1);
+  check((await step(p)) === -1 && (await focus(p)) === 'overview', 'previous from the first stop returns to the overview');
+  await p.locator('.bar-btn[data-play]').click();
+  await wait(2800);
+  check(await p.evaluate(() => window.__impact.playing && document.querySelector('.bar-btn[data-play]').getAttribute('aria-pressed') === 'true'), 'the tour starts from the control bar');
+  check((await step(p)) === 0 && (await p.evaluate(() => !document.querySelector('#theme').paused)), 'the tour moves on and the music plays', `${await step(p)} paused=${await p.evaluate(() => document.querySelector('#theme').paused)}`);
+  await p.locator('[data-mute]').click();
+  await wait(1200);
+  check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === 'off'), 'mute silences the music and is remembered');
+  await p.locator('.journey-dot[data-go="3"]').click();
+  await wait(600);
+  check(await p.evaluate(() => !window.__impact.playing) && (await step(p)) === 3, 'choosing a place pauses the tour');
+  await p.locator('#explorer').focus();
+  await p.keyboard.press('ArrowRight');
+  await wait(400);
+  check((await step(p)) === 4, 'arrow keys move between places');
   check(p.external.length === 0, 'no requests leave the host (journey)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (journey)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (journey)', p.errors.slice(0, 3).join(' | '));
@@ -172,6 +197,11 @@ try {
   await p.locator('#drawer-content [data-copy="link"]').click();
   await wait(300);
   check(await p.locator('#drawer-content .manual-copy').isVisible(), 'clipboard failure offers the text to copy manually');
+  await p.mouse.move(720, 450);
+  await p.mouse.wheel(0, 600);
+  await wait(800);
+  const scrolled = await p.evaluate(() => Math.max(...['#story-drawer', '.drawer-panel', '.drawer-content'].map((s) => document.querySelector(s).scrollTop)));
+  check(scrolled > 100, 'the mouse wheel scrolls the open story', `${scrolled}px`);
   check(p.errors.length === 0, 'no JavaScript errors on direct link', p.errors.join(' | '));
   await p.context().close();
 
@@ -179,7 +209,7 @@ try {
   p = await open(browser, `${BASE}#/community`, { reducedMotion: 'reduce' });
   await wait(1500);
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
-  check(await p.evaluate(() => !window.__impact.lenis && document.querySelector('.journey').offsetHeight <= innerHeight + 2), 'no smooth scrolling or pinning with reduced motion');
+  check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
   check(await p.evaluate(() => [...document.querySelectorAll('video.film')].every((v) => v.paused)), 'films stay paused with reduced motion');
   await waitScene(p);
   await p.locator('.journey-dot[data-go="3"]').click();
@@ -195,10 +225,16 @@ try {
   p = await open(browser, BASE, phone);
   await wait(3000);
   check((await p.evaluate(() => document.documentElement.scrollWidth)) <= 390, 'no horizontal scroll at phone width');
+  await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'start' }));
   await p.evaluate(() => window.__impact.goToStep(1));
   await settled(p, 1);
-  const card = await p.evaluate(() => document.querySelector('.journey-card:not([hidden])').getBoundingClientRect());
-  check(card.top >= 0 && card.bottom <= 844 && card.width <= 390, 'journey card fits a phone screen', JSON.stringify(card));
+  const card = await p.evaluate(() => {
+    const c = document.querySelector('.journey-card:not([hidden])').getBoundingClientRect();
+    const e = document.querySelector('#explorer').getBoundingClientRect();
+    const b = document.querySelector('.journey-bar').getBoundingClientRect();
+    return { inside: c.top >= e.top && c.bottom <= b.top && c.width <= 390, c: [c.top, c.bottom], e: [e.top, e.bottom], bar: b.top };
+  });
+  check(card.inside, 'journey card fits a phone screen above the controls', JSON.stringify(card));
   await p.goto(`${BASE}#/story/3verest`);
   await wait(800);
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');

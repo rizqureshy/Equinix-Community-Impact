@@ -8,8 +8,7 @@
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ffffff'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
-    <link rel="preload" as="image" href="media/city/city-hero-1600.webp" fetchpriority="high" />
-    <script>
+        <script>
       (function () {
         var stored = null;
         try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
@@ -53,11 +52,16 @@
         </div>
       </section>
 
-      <!-- The community: a live 3D model that travels with the scroll -->
-      <section class="journey" id="community" data-section="journey" aria-label="The connected community">
-        <div class="journey-pin">
+      <!-- The community: a live 3D model to explore, with a tour that plays -->
+      <section class="journey" id="community" data-section="journey" aria-labelledby="community-title">
+        <div class="wrap center journey-head" data-reveal>
+          <p class="eyebrow">The community</p>
+          <h2 class="title" id="community-title">Follow the thread.</h2>
+          <p class="lede">Six places, one data center. Choose a place, click a building, or let the tour play.</p>
+        </div>
+        <div class="explorer" id="explorer" data-step="-1" tabindex="0" aria-label="Community model. Use the left and right arrow keys to move between places, and space to play or pause the tour.">
           <div class="stage" id="stage" data-scene-state="loading">
-            <img class="stage-still" src="media/city/city-hero-1600.webp" srcset="media/city/city-hero-1000.webp 1000w, media/city/city-hero-1600.webp 1600w" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
+            <img class="stage-still" src="media/city/city-hero-1600.webp" srcset="media/city/city-hero-1000.webp 1000w, media/city/city-hero-1600.webp 1600w" sizes="(min-width: 1100px) 90vw, 100vw" alt="" width="1600" height="1000" loading="lazy" decoding="async" />
             <div class="scene-host" id="scene-host"></div>
             <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
               <button type="button" class="place-label" data-place="hospital"><i class="place-dot" aria-hidden="true"></i><span>Hospital</span></button>
@@ -166,7 +170,7 @@
       <p>Internal prototype for Equinix CRO colleagues. The community model, images and films are illustrative and AI generated. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
     </footer>
 
-    <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title">
+    <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title" data-lenis-prevent>
       <div class="drawer-panel">
         <div class="drawer-bar">
           <span class="drawer-thread" aria-hidden="true"></span>

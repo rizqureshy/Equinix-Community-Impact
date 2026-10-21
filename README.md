@@ -1,6 +1,6 @@
 # Equinix: Infrastructure for human possibility
 
-An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model that travels with the scroll: six stops, each with its red thread (amber for recovered heat) and a sourced story about care, discovery, opportunity, community and responsible growth.
+An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model you explore, or let play as a tour with music: six stops, each with its red thread (amber for recovered heat) and a sourced story about care, discovery, opportunity, community and responsible growth.
 
 This is a prototype. The community is an illustrative composite; its buildings, images and films are AI generated and labelled as such. Facts come from the linked Equinix sources. See [HANDOVER.md](HANDOVER.md) for creative decisions, tool use, provenance, validation and open editorial items.
 
@@ -15,7 +15,7 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no pinning or smooth scrolling, the community shown as a still with the stops changed by the dots.
+Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no smooth scrolling, the camera cutting between stops instead of travelling.
 
 ## Test
 
@@ -35,7 +35,7 @@ impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
   styles/                 tokens.css, base.css, sections.css
   scripts/
-    app.js                wiring: pinned community journey, scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
+    app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
     router.js             hash routes: #/community, #/chapter/<topic>, #/story/<id>, #/promises and others
     story-dialog.js       toast, copy actions, story dialog and motion toggle
@@ -43,9 +43,11 @@ impact/                   Vite root: the experience
     content/stories.js    stories, sources, principles (edit content here)
     content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises, numbers, sources
     scene/city.js         the community model: loads the building GLBs, plinth, threads, camera stops, labels, interaction
-  public/media/           web-ready images, films, posters and the building models (media/city/*.glb)
+  public/media/           web-ready images, films, posters, the building models (media/city/*.glb) and the tour theme (media/audio)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
   city/                   building concept prompts and generation records (renders and raw GLBs are re-downloadable, not committed)
+  promises/               prompts and originals for the five promise photographs
+  audio/                  prompt and generation record for the tour theme
 scripts/build_media.py    rebuilds public/media images and films from the originals
 scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geometry, WebP textures)
 scripts/city_manifest.py  records the building pipeline in the asset manifest
