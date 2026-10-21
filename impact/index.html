@@ -4,13 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Infrastructure for human possibility | Equinix connected impact</title>
-    <meta name="description" content="Explore the connections between Equinix digital infrastructure and the care, discovery and opportunity that help communities thrive. Internal prototype for Equinix CRO colleagues." />
+    <meta name="description" content="A community connected by Equinix: the care, discovery and opportunity that digital infrastructure helps make possible. Internal prototype for Equinix CRO colleagues." />
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#0f0d0b" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0d0b'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
-    <link rel="preload" as="image" href="media/care-1200.webp" fetchpriority="high" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ffffff'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preload" as="image" href="media/city/city-hero-1600.webp" fetchpriority="high" />
     <script>
-      // Apply motion preference before first paint.
       (function () {
         var stored = null;
         try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
@@ -24,20 +23,15 @@
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header">
-      <span class="scroll-progress" aria-hidden="true"></span>
-      <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start">
-        <span class="wordmark-name">Equinix</span>
-        <span class="wordmark-sep" aria-hidden="true"></span>
-        <span class="wordmark-sub">Our connected impact</span>
-      </a>
+      <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start"><span>Equinix</span><span class="wordmark-sep" aria-hidden="true"></span></a>
       <nav class="site-nav" aria-label="Primary">
         <ul>
+          <li><a href="#/community">Community</a></li>
           <li><a href="#/chapter/care">Stories</a></li>
-          <li><a href="#/principles">Promises</a></li>
+          <li><a href="#/promises">Promises</a></li>
           <li><a href="#/people">People</a></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/sources">Sources</a></li>
-          <li><a href="flight.html" class="nav-3d">Fly-through</a></li>
         </ul>
       </nav>
       <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
@@ -46,128 +40,118 @@
     </header>
 
     <main id="main" tabindex="-1">
-      <!-- Hero: a reel of human moments behind giant type -->
+      <!-- Hero: calm headline, then the community as a product shot that comes alive -->
       <section class="hero" id="top" data-section="top" aria-labelledby="hero-title">
-        <div class="hero-reel" aria-hidden="true">
-          <img class="hero-poster" src="media/care-1200.webp" srcset="media/care-640.webp 640w, media/care-1200.webp 1200w" sizes="100vw" alt="" fetchpriority="high" />
-        </div>
-        <div class="hero-shade" aria-hidden="true"></div>
-        <div class="hero-inner">
-          <p class="eyebrow eyebrow--light">Equinix <span aria-hidden="true">|</span> Our connected impact</p>
-          <h1 class="hero-title" id="hero-title">
-            <span class="line"><span class="line-inner">Infrastructure for</span></span>
-            <span class="line"><span class="line-inner">human <em>possibility.</em></span></span>
-          </h1>
-          <div class="hero-foot">
-            <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
-            <div class="actions">
-              <a class="btn btn--primary btn--large" href="#/chapter/care">Discover the stories</a>
-              <a class="btn btn--ghost btn--large" href="flight.html">Fly through the community</a>
-            </div>
+        <div class="wrap--narrow center hero-copy">
+          <p class="eyebrow" data-reveal>Equinix <span class="muted">Our connected impact</span></p>
+          <h1 class="display" id="hero-title"><span class="line"><span class="line-inner">Infrastructure for</span></span><span class="line"><span class="line-inner">human possibility.</span></span></h1>
+          <p class="lede" data-reveal>Explore a community connected by Equinix, and the care, discovery and opportunity that digital infrastructure helps make possible.</p>
+          <div class="actions" data-reveal>
+            <a class="btn btn--primary btn--large" href="#/community">Explore the community</a>
+            <a class="btn btn--link btn--large" href="#/chapter/care">Read the stories</a>
           </div>
         </div>
-        <p class="hero-caption" aria-live="off"><span class="hero-caption-topic">Care</span> <span class="hero-caption-text">A care team reading a scan</span> <span class="hero-caption-note">Illustrative, AI generated</span></p>
-        <a class="scroll-cue" href="#/stories"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
       </section>
 
-      <!-- Statement revealed word by word -->
-      <section class="statement" id="stories" data-section="stories" aria-label="Our role">
+      <!-- The community: a live 3D model that travels with the scroll -->
+      <section class="journey" id="community" data-section="journey" aria-label="The connected community">
+        <div class="journey-pin">
+          <div class="stage" id="stage" data-scene-state="loading">
+            <img class="stage-still" src="media/city/city-hero-1600.webp" srcset="media/city/city-hero-1000.webp 1000w, media/city/city-hero-1600.webp 1600w" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
+            <div class="scene-host" id="scene-host"></div>
+            <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
+              <button type="button" class="place-label" data-place="hospital"><i class="place-dot" aria-hidden="true"></i><span>Hospital</span></button>
+              <button type="button" class="place-label" data-place="research"><i class="place-dot" aria-hidden="true"></i><span>Research centre</span></button>
+              <button type="button" class="place-label" data-place="learning"><i class="place-dot" aria-hidden="true"></i><span>Learning centre</span></button>
+              <button type="button" class="place-label" data-place="homes"><i class="place-dot" aria-hidden="true"></i><span>Homes and high street</span></button>
+              <button type="button" class="place-label" data-place="aquatic"><i class="place-dot place-dot--heat" aria-hidden="true"></i><span>Aquatic centre</span></button>
+              <button type="button" class="place-label place-label--dc" data-place="datacenter"><i class="place-dot" aria-hidden="true"></i><span>Equinix data center</span></button>
+            </div>
+            <p class="stage-note note">An illustrative community, not a real place or network. Each story refers to its named location.</p>
+          </div>
+          <!--@hero-stats-->
+          <div class="journey-ui">
+            <!--@journey-->
+          </div>
+        </div>
+      </section>
+
+      <!-- Statement -->
+      <section class="statement wrap--narrow center" id="statement" aria-label="Our role">
         <p class="statement-text" data-words>Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
       </section>
 
-      <!-- Story posters -->
-      <div class="posters" aria-label="Connected story chapters">
+      <!-- Chapters -->
+      <div id="stories" data-section="stories" aria-label="Connected story chapters">
         <!--@chapters-->
       </div>
 
-      <!-- Invitation to the separate 3D community -->
-      <section class="invite" id="community-3d" aria-labelledby="invite-title">
-        <div class="invite-media">
-          <video class="film" muted playsinline loop preload="none" poster="media/clip-community-poster.jpg" aria-label="A slow drift around an architectural model of a small community.">
-            <source src="media/clip-community.webm" type="video/webm" />
-            <source src="media/clip-community.mp4" type="video/mp4" />
-          </video>
-        </div>
-        <div class="invite-shade" aria-hidden="true"></div>
-        <div class="invite-copy wrap">
-          <p class="eyebrow eyebrow--light">Explore in 3D</p>
-          <h2 class="section-title section-title--xl" id="invite-title">Step inside the connected <em>community.</em></h2>
-          <p class="section-lede">Fly from a hospital to a research lab, a school, a neighbourhood and a public pool, and follow the red thread back to the data center at its heart. Or explore the interactive model at your own pace.</p>
-          <div class="actions">
-            <a class="btn btn--primary btn--large" href="flight.html">Fly through the community</a>
-            <a class="btn btn--ghost btn--large" href="explore.html">Explore the interactive model</a>
-          </div>
-          <p class="invite-note">Illustrative model and film, AI generated. Not a real place or network.</p>
-        </div>
-      </section>
-
       <!-- Numbers -->
       <section class="impact" id="impact" aria-labelledby="impact-title">
-        <div class="wrap">
+        <div class="wrap center" data-reveal>
           <p class="eyebrow">In numbers</p>
-          <h2 class="section-title" id="impact-title">What connection adds&nbsp;up&nbsp;to.</h2>
-          <!--@numbers-->
+          <h2 class="title" id="impact-title">What connection adds up to.</h2>
         </div>
+        <div class="wrap"><!--@numbers--></div>
       </section>
 
-      <!-- Principles as stacking cards -->
-      <section class="principles" id="principles" data-section="principles" aria-labelledby="principles-title">
-        <div class="wrap">
+      <!-- Promises -->
+      <section class="promises-section" id="promises" data-section="promises" aria-labelledby="promises-title">
+        <div class="wrap center" data-reveal>
           <p class="eyebrow">Part of the community</p>
-          <h2 class="section-title" id="principles-title">Five promises to the places we call&nbsp;home.</h2>
-          <p class="section-lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
-          <!--@principles-->
+          <h2 class="title" id="promises-title">Five promises to the places we call home.</h2>
+          <p class="lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
         </div>
+        <div class="wrap"><!--@principles--></div>
       </section>
 
       <!-- People -->
       <section class="people" id="people" data-section="people" aria-labelledby="people-title">
-        <div class="people-film">
-          <video class="film" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
-            <source src="media/clip-people.webm" type="video/webm" />
-            <source src="media/clip-people.mp4" type="video/mp4" />
-          </video>
-          <div class="people-shade" aria-hidden="true"></div>
-          <div class="people-head wrap">
-            <p class="eyebrow eyebrow--light">The people behind the connections</p>
-            <h2 class="section-title section-title--xl" id="people-title">Our people are part of the&nbsp;story.</h2>
-            <blockquote class="pull-quote">
-              <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
-              <footer>Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
-            </blockquote>
-          </div>
-          <p class="poster-note">Illustrative film, AI generated. Not a real Equinix employee or site.</p>
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">The people behind the connections</p>
+          <h2 class="title" id="people-title">Our people are part of the story.</h2>
         </div>
         <div class="wrap people-grid">
-          <ul class="roles-list">
-            <li><h3>Operations teams</h3><p>Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
-            <li><h3>Customer and CRO teams</h3><p>The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
-            <li><h3>Heat export engineers</h3><p>The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
-            <li><h3>Volunteers and ambassadors</h3><p>More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
-          </ul>
-          <aside class="people-story">
-            <p class="eyebrow">Kayla&rsquo;s path</p>
-            <p class="people-story-text">A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago.</p>
-            <a class="btn btn--ghost btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a>
-          </aside>
+          <figure class="frame people-frame" data-reveal>
+            <video class="film" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
+              <source src="media/clip-people.webm" type="video/webm" />
+              <source src="media/clip-people.mp4" type="video/mp4" />
+            </video>
+            <figcaption class="note">Illustrative film, AI generated. Not a real Equinix employee or site.</figcaption>
+          </figure>
+          <div class="people-copy" data-reveal>
+            <blockquote class="pull-quote">
+              <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
+              <footer class="note">Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
+            </blockquote>
+            <ul class="roles-list">
+              <li><h3>Operations teams</h3><p class="muted">Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
+              <li><h3>Customer and CRO teams</h3><p class="muted">The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
+              <li><h3>Heat export engineers</h3><p class="muted">The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
+              <li><h3>Volunteers and ambassadors</h3><p class="muted">More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
+            </ul>
+            <p class="people-story"><strong>Kayla&rsquo;s path.</strong> A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago. <a class="btn btn--link btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a></p>
+          </div>
         </div>
       </section>
 
       <!-- Story gallery -->
       <section class="collection" id="share" data-section="share" aria-labelledby="share-title">
-        <div class="wrap">
+        <div class="wrap center" data-reveal>
           <p class="eyebrow">Explore and carry it forward</p>
-          <h2 class="section-title" id="share-title">Find a story worth&nbsp;sharing.</h2>
-          <p class="section-lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
-          <!--@collection-->
+          <h2 class="title" id="share-title">Find a story worth sharing.</h2>
+          <p class="lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
         </div>
+        <div class="wrap"><!--@collection--></div>
       </section>
 
       <!-- Sources -->
       <section class="sources" id="sources" data-section="sources" aria-labelledby="sources-title">
-        <div class="wrap">
+        <div class="wrap center" data-reveal>
           <p class="eyebrow">Sources and progress</p>
-          <h2 class="section-title" id="sources-title">What we have done, are doing and have committed&nbsp;to.</h2>
+          <h2 class="title" id="sources-title">What we have done, are doing and have committed to.</h2>
+        </div>
+        <div class="wrap">
           <!--@sources-->
           <p class="more-links">
             <a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">Equinix Sustainability Report<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -179,8 +163,7 @@
     </main>
 
     <footer class="site-footer">
-      <p class="footer-mark" aria-hidden="true">Infrastructure for human <em>possibility.</em></p>
-      <p class="footer-note">Internal prototype for Equinix CRO colleagues. The community scene, images and films are illustrative and AI generated. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
+      <p>Internal prototype for Equinix CRO colleagues. The community model, images and films are illustrative and AI generated. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
     </footer>
 
     <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title">

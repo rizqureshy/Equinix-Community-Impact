@@ -1,60 +1,67 @@
-/* Design tokens: dark cinematic. The palette is creative direction for the
-   prototype, not an official Equinix brand specification. The red values are
-   pending brand review. */
+/* Design tokens: clean, light, Apple-like. Creative direction for the
+   prototype, not an official Equinix brand specification. Replace the red
+   and the type with approved brand assets when supplied. */
 @import '@fontsource-variable/inter-tight';
-@import '@fontsource-variable/fraunces/opsz-italic.css';
 
 :root {
-  --bg: #0f0d0b;
-  --bg-2: #16130f;
-  --surface: #1e1a16;
-  --surface-2: #28231d;
-  --line: rgb(244 239 231 / 0.14);
-  --line-strong: rgb(244 239 231 / 0.28);
-  --text: #f4efe7;
-  --text-2: #c9c0b3;
-  --text-3: #a39a8d;
+  --bg: #ffffff;
+  --bg-soft: #f5f5f7;
+  --bg-deep: #0b0b0d;
+  --surface: #ffffff;
+  --line: rgb(0 0 0 / 0.08);
+  --line-strong: rgb(0 0 0 / 0.16);
+  --ink: #1d1d1f;
+  --ink-2: #515154;
+  --ink-3: #86868b;
   --red: #e31c25;
-  --red-glow: #ff3a3f;
-  --red-text: #ff6b66;
-  --amber: #e2a04a;
-  --focus: #8fb4ff;
+  --red-soft: #ff5a5f;
+  --amber: #e09a3c;
+  --focus: #0066cc;
+  --glass: rgb(255 255 255 / 0.72);
+  --glass-line: rgb(255 255 255 / 0.6);
 
-  --font-sans: 'Inter Tight Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font: 'Inter Tight Variable', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', ui-sans-serif, system-ui, sans-serif;
 
-  --step--1: clamp(0.84rem, 0.82rem + 0.1vw, 0.92rem);
-  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
-  --step-1: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
-  --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.3rem);
-  --step-3: clamp(2.2rem, 1.5rem + 3vw, 4.4rem);
-  --step-4: clamp(3rem, 1.4rem + 7.4vw, 10.5rem);
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-md: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --t-lg: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --t-xl: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+  --t-2xl: clamp(2.75rem, 1.6rem + 4.6vw, 6rem);
+  --t-3xl: clamp(3.25rem, 1.6rem + 7vw, 8.5rem);
 
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 5rem;
-  --space-9: 8rem;
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 5rem;
+  --s-9: 8rem;
+  --s-10: 12rem;
 
-  --gutter: clamp(16px, 4vw, 64px);
-  --radius: 10px;
-  --radius-lg: 22px;
-  --header-h: 68px;
+  --gutter: clamp(20px, 5vw, 88px);
+  --measure: 64rem;
+  --radius: 14px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+  --header-h: 56px;
 
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
-  --dur-1: 200ms;
-  --dur-2: 500ms;
-  --dur-3: 1100ms;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 40px -16px rgb(0 0 0 / 0.14);
+  --shadow-float: 0 24px 80px -24px rgb(0 0 0 / 0.28);
 
-  color-scheme: dark;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --d1: 220ms;
+  --d2: 520ms;
+  --d3: 1000ms;
+
+  color-scheme: light;
 }
 
 :root[data-motion='off'] {
-  --dur-1: 0ms;
-  --dur-2: 0ms;
-  --dur-3: 0ms;
+  --d1: 0ms;
+  --d2: 0ms;
+  --d3: 0ms;
 }

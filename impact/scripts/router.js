@@ -1,20 +1,23 @@
 // Hash routes, so the prototype works at any base path without server
 // configuration (GitHub Pages subpaths, Cloudflare Pages roots, local files).
 //   #/                     overview
-//   #/explore[/<topic>]    links from version one; redirected to explore.html
+//   #/community            the pinned community journey (section id `journey`,
+//                          since `community` is also a chapter topic)
 //   #/chapter/<topic>      a story chapter
 //   #/story/<id>           a story opened in the detail view
-//   #/stories | #/principles | #/people | #/share | #/sources
+//   #/stories | #/promises | #/people | #/share | #/sources
+//   #/explore and #/principles are older links, kept as aliases
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['stories', 'principles', 'people', 'share', 'sources']);
+const SECTIONS = new Set(['journey', 'stories', 'promises', 'people', 'share', 'sources']);
+const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises' };
 const TOPICS = new Set(topics.map((t) => t.id));
 
 export function parseHash(hash = '') {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const [head, arg] = parts;
   if (!head) return { section: 'top' };
-  if (head === 'explore') return TOPICS.has(arg) ? { section: 'explore', topic: arg } : { section: 'explore' };
+  if (ALIASES[head]) return TOPICS.has(arg) ? { section: ALIASES[head], topic: arg } : { section: ALIASES[head] };
   if (head === 'chapter' && TOPICS.has(arg)) return { section: arg, topic: arg };
   if (head === 'story' && getStory(arg)) return { story: arg, section: getStory(arg).topic, topic: getStory(arg).topic };
   if (SECTIONS.has(head)) return { section: head };
@@ -23,8 +26,8 @@ export function parseHash(hash = '') {
 
 export function hashFor({ section, topic, story } = {}) {
   if (story) return `#/story/${encodeURIComponent(story)}`;
-  if (section === 'explore') return topic ? `#/explore/${topic}` : '#/explore';
   if (TOPICS.has(section)) return `#/chapter/${section}`;
+  if (section === 'journey') return '#/community';
   if (SECTIONS.has(section)) return `#/${section}`;
   return '#/';
 }
@@ -37,5 +40,5 @@ export function storyURL(id, loc = window.location) {
 /** Element id to scroll to for a section. */
 export function anchorFor(section) {
   if (TOPICS.has(section)) return `chapter-${section}`;
-  return section;
+  return section === 'journey' ? 'community' : section;
 }

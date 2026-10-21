@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-21T18:09:24.140879Z",
+    "display_name": "GPT Image 2.5",
+    "id": "06e76b46-5bfc-4cf2-bcb7-c69c632a3e3a",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180924_06e76b46-5bfc-4cf2-bcb7-c69c632a3e3a_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "height": 2048,
+      "medias": [
+        {
+          "data": {
+            "id": "d29b6967-42c4-433e-8fde-090224779b8b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/d29b6967-42c4-433e-8fde-090224779b8b.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Clean architectural scale model of a single building, photographed as a product shot on a seamless pure white background, elevated three-quarter view from the front-left, soft even studio daylight, very soft shadow directly beneath. Materials: white and warm off-white plaster, pale natural oak, light grey slate roof, clear glass with soft reflections, a few small green trees and neat planting on a thin white base. Minimal, precise, Apple-like calm and refined. The whole building fully in frame with generous margin, nothing cropped. No text, no letters, no numbers, no logos, no signage, no people. Subject: a learning centre: a long single-storey timber-clad school with a tall gabled hall, big glazed doors onto a small sports court, and a tiny glass training pavilion beside it. Match the style, lighting, white background and scale-model craftsmanship of the reference image exactly.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180924_06e76b46-5bfc-4cf2-bcb7-c69c632a3e3a.png",
+    "status": "completed"
+  }
+]

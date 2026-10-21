@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-21T18:09:23.824634Z",
+    "display_name": "GPT Image 2.5",
+    "id": "2a7ef777-f3a6-42a2-9fd1-1c635d5b7ab3",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180923_2a7ef777-f3a6-42a2-9fd1-1c635d5b7ab3_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "height": 2048,
+      "medias": [
+        {
+          "data": {
+            "id": "b68905b0-46ae-45f5-8eaf-4924f4142c30",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/b68905b0-46ae-45f5-8eaf-4924f4142c30.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Clean architectural scale model of a single building, photographed as a product shot on a seamless pure white background, elevated three-quarter view from the front-left, soft even studio daylight, very soft shadow directly beneath. Materials: white and warm off-white plaster, pale natural oak, light grey slate roof, clear glass with soft reflections, a few small green trees and neat planting on a thin white base. Minimal, precise, Apple-like calm and refined. The whole building fully in frame with generous margin, nothing cropped. No text, no letters, no numbers, no logos, no signage, no people. Subject: a public aquatic centre with a curved timber barrel-vault roof and tall glass walls, with a glimpse of the pool inside, and a small paved forecourt. Match the style, lighting, white background and scale-model craftsmanship of the reference image exactly.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180923_2a7ef777-f3a6-42a2-9fd1-1c635d5b7ab3.png",
+    "status": "completed"
+  }
+]

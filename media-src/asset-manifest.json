@@ -538,5 +538,158 @@
       "promptFile": "media-src/flight/style.txt"
     }
   ],
-  "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1."
+  "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1.",
+  "city": {
+    "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model). Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
+    "estimatedCredits": 19.25,
+    "items": [
+      {
+        "key": "b1-hospital",
+        "generationId": "d8fb726a-cebc-4e89-98a9-f0755fc14b6d",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:08:18.617614Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b1-hospital.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b1-hospital.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b2-research",
+        "generationId": "c6766965-6cb5-4cac-a1c3-46dcd95c0bc8",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:23.071088Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b2-research.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b2-research.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b3-learning",
+        "generationId": "06e76b46-5bfc-4cf2-bcb7-c69c632a3e3a",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:24.140879Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b3-learning.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b3-learning.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b4-homes",
+        "generationId": "343aec45-3adc-4bdf-9a67-bbc79ae27ba0",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:24.551437Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b4-homes.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b4-homes.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b5-shops",
+        "generationId": "470b5130-1b49-4d5a-8ebe-d780926e3317",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:24.372479Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b5-shops.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b5-shops.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b6-aquatic",
+        "generationId": "2a7ef777-f3a6-42a2-9fd1-1c635d5b7ab3",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:23.824634Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b6-aquatic.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b6-aquatic.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b7-datacenter",
+        "generationId": "66e0cee6-854d-4abd-949b-28af4de1db24",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-21T18:09:23.65213Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b7-datacenter.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b7-datacenter.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      }
+    ]
+  }
 }

@@ -9,3 +9,7 @@ media-src/sources/
 media-src/flight/*.mp4
 media-src/flight/*-first.png
 media-src/flight/*-last.png
+# Community model pipeline: concept renders and raw image-to-3D output are
+# large and re-downloadable via the result_url in each media-src/city/*.json
+media-src/city/*.png
+media-src/city/*.glb

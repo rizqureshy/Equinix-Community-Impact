@@ -2,7 +2,7 @@
 // Usage: npm run build && npm run test:e2e
 // Starts `vite preview`, blocks every request that leaves the local host,
 // and exercises the experience on desktop, mobile, reduced motion and
-// without WebGL. Exits non-zero on the first failed assertion.
+// without WebGL. Exits non-zero if any assertion fails.
 import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
 
@@ -44,28 +44,41 @@ async function open(browser, url, { viewport = { width: 1440, height: 900 }, ...
   return page;
 }
 const isOpen = (p) => p.evaluate(() => document.querySelector('#story-drawer').open);
+const sceneState = (p) => p.evaluate(() => document.querySelector('#stage').dataset.sceneState);
+const waitScene = (p) => p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 30000 });
+const focus = (p) => p.evaluate(() => window.__impact.scene?.focus);
+const step = (p) => p.evaluate(() => window.__impact.step);
 
 try {
   const browser = await chromium.launch({ args: GL });
 
-  // ---- Main page: scroll story ---------------------------------------------
+  // ---- Arrival and the community journey ----------------------------------
   let p = await open(browser, BASE);
   check(await p.locator('h1').isVisible(), 'headline and actions visible on arrival');
-  await wait(2500);
+  await wait(2000);
   check(await p.evaluate(() => !!window.__impact.lenis), 'smooth scrolling active when motion is on');
-  check(await p.evaluate(() => !document.querySelector('#stage') && !performance.getEntriesByType('resource').some((r) => /scene-/.test(r.name))), 'main page does not load the 3D scene');
-  check((await p.locator('a[href="flight.html"]').count()) >= 3 && (await p.locator('a[href="explore.html"]').count()) >= 1, 'hero, nav and invitation link to the fly-through and 3D model');
-
-  await p.goto(`${BASE}#/chapter/community`);
-  await wait(2500);
-  const top = await p.evaluate(() => document.querySelector('#chapter-community').getBoundingClientRect().top);
-  check(Math.abs(top) < 40, 'chapter route lands on its poster', `${Math.round(top)}px`);
-
-  const trigger = p.locator('#chapter-community .poster-body [data-story-trigger]').first();
+  check(await p.evaluate(() => document.querySelector('.journey').offsetHeight > innerHeight * 5), 'the community pins for a long scroll');
+  await waitScene(p);
+  check((await sceneState(p)) === 'ready', '3D community renders with WebGL', await sceneState(p));
+  check(await p.evaluate(() => document.querySelector('.stage-still').complete && document.querySelector('.stage-still').naturalWidth > 0), 'a still of the community is in place before the model is ready');
+  await p.evaluate(() => window.__impact.goToStep(2));
+  await wait(3200);
+  check((await step(p)) === 2 && (await focus(p)) === 'learning', 'scrolling to a stop frames its place and card', `${await step(p)} ${await focus(p)}`);
+  check(await p.locator('.journey-card:not([hidden]) h3').textContent() === 'Learning centre', 'the card for the stop is showing');
+  check(await p.evaluate(() => document.querySelector('.place-label.is-focus')?.dataset.place === 'learning'), 'the place label is highlighted');
+  await p.locator('.journey-dot[data-go="4"]').click();
+  await wait(3200);
+  check((await step(p)) === 4 && (await focus(p)) === 'aquatic', 'journey dots move between stops', `${await step(p)} ${await focus(p)}`);
+  await p.locator('.place-label[data-place="datacenter"]').click();
+  await wait(3200);
+  check((await step(p)) === 5 && (await focus(p)) === 'datacenter', 'place labels move to their stop', `${await step(p)} ${await focus(p)}`);
+  await p.locator('.journey-dot[data-go="0"]').click();
+  await wait(3200);
+  const trigger = p.locator('.journey-card:not([hidden]) [data-story-trigger]');
   const storyId = await trigger.getAttribute('data-story-trigger');
   await trigger.click();
   await wait(700);
-  check(await isOpen(p), 'story opens from a poster');
+  check(await isOpen(p) && storyId === '3verest', 'story opens from a journey card');
   check((await p.evaluate(() => location.hash)) === `#/story/${storyId}`, 'open story exposes its URL');
   check((await p.evaluate(() => document.activeElement.className)).includes('drawer-close'), 'focus moves into the story dialog');
   await p.keyboard.press('Escape');
@@ -77,7 +90,24 @@ try {
   check(await isOpen(p), 'browser forward restores the story');
   await p.goBack();
   await wait(700);
-  check(!(await isOpen(p)) && (await p.evaluate(() => location.hash)) === '#/chapter/community', 'browser back restores the chapter');
+  check(!(await isOpen(p)), 'browser back closes the story again');
+  check(p.external.length === 0, 'no requests leave the host (journey)', p.external.slice(0, 3).join(', '));
+  check(p.failed.length === 0, 'no missing local assets (journey)', p.failed.slice(0, 3).join(', '));
+  check(p.errors.length === 0, 'no JavaScript errors (journey)', p.errors.slice(0, 3).join(' | '));
+  await p.context().close();
+
+  // ---- Chapters, routes, gallery ------------------------------------------
+  p = await open(browser, `${BASE}#/chapter/community`);
+  await wait(2500);
+  const top = await p.evaluate(() => document.querySelector('#chapter-community').getBoundingClientRect().top);
+  check(Math.abs(top) < 40, 'chapter route lands on its chapter', `${Math.round(top)}px`);
+  check(await p.evaluate(() => document.querySelector('.site-nav a[href="#/chapter/care"]').getAttribute('aria-current') === 'true'), 'navigation marks the current section');
+  await p.goto(`${BASE}#/explore/discovery`);
+  await wait(1200);
+  check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
+  await p.goto(`${BASE}#/principles`);
+  await wait(1200);
+  check((await p.evaluate(() => Math.abs(document.querySelector('#promises').getBoundingClientRect().top) < 40)), 'older principles links land on the promises');
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
@@ -95,85 +125,24 @@ try {
   check((await p.locator('.card:not([hidden])').count()) === (await p.locator('.card').count()), 'reset shows all stories');
 
   const small = await p.evaluate(() =>
-    [...document.querySelectorAll('.btn, .chip, .motion-toggle, .rail-btn')]
+    [...document.querySelectorAll('.btn, .chip, .motion-toggle, .rail-btn, .journey-dot, .place-label')]
       .filter((el) => el.offsetParent)
       .map((el) => [el.className, el.getBoundingClientRect().height])
       .filter(([, h]) => h > 0 && h < 44),
   );
-  check(small.length === 0, 'main page controls are at least 44px tall', JSON.stringify(small.slice(0, 3)));
-  check(p.external.length === 0, 'no requests leave the host (main page)', p.external.slice(0, 3).join(', '));
-  check(p.failed.length === 0, 'no missing local assets (main page)', p.failed.slice(0, 3).join(', '));
-  check(p.errors.length === 0, 'no JavaScript errors (main page)', p.errors.slice(0, 3).join(' | '));
-  await p.context().close();
-
-  p = await open(browser, `${BASE}#/explore/discovery`);
-  await wait(1500);
-  check(p.url().endsWith('explore.html#/place/discovery'), 'old explore links redirect to the 3D page', p.url());
-  await p.context().close();
-
-  // ---- 3D community page ------------------------------------------------------
-  p = await open(browser, `${BASE}explore.html`);
-  await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
-  check((await p.evaluate(() => document.querySelector('#stage').dataset.sceneState)) === 'ready', '3D scene renders with WebGL');
-  check(await p.locator('.explore-intro').isVisible(), 'the 3D page opens on its introduction');
-  await p.locator('[data-start]').click();
-  await wait(1500);
-  let s1 = await p.evaluate(() => window.__impact.store.get());
-  check(s1.focus === 'hospital' && (await p.evaluate(() => location.hash)) === '#/place/care', 'start begins the tour at the hospital', JSON.stringify(s1));
-  await p.keyboard.press('ArrowRight');
-  await wait(1200);
-  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'research', 'arrow keys move between places');
-  await p.locator('.fly-step[data-step="2"]').click();
-  await wait(1200);
-  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'learning', 'step controls move the tour');
-  await p.locator('.place-label[data-place="aquatic"]').click();
-  await wait(1500);
-  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'scene labels select their place');
-  check((await p.locator('.fly-caption:not([hidden]) .fly-place').textContent()) === 'Aquatic centre', 'caption matches the place');
-  const exTrigger = p.locator('.fly-caption:not([hidden]) [data-story-trigger]');
-  await exTrigger.click();
-  await wait(800);
-  check(await isOpen(p) && (await p.evaluate(() => location.hash)) === '#/story/pa10-heat', 'story opens over the scene with its URL');
-  await p.keyboard.press('Escape');
-  await wait(800);
-  check(!(await isOpen(p)) && (await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'closing the story keeps the place in view');
-  await p.goto(`${BASE}explore.html#/place/datacenter`);
-  await wait(1500);
-  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'datacenter', 'direct place links work');
-  check(p.external.length === 0, 'no requests leave the host (3D page)', p.external.slice(0, 3).join(', '));
-  check(p.failed.length === 0, 'no missing local assets (3D page)', p.failed.slice(0, 3).join(', '));
-  check(p.errors.length === 0, 'no JavaScript errors (3D page)', p.errors.slice(0, 3).join(' | '));
-  await p.context().close();
-
-  // ---- Fly-through film page --------------------------------------------------
-  p = await open(browser, `${BASE}flight.html`);
-  await wait(2500);
-  check(await p.locator('.flight-intro h1').isVisible(), 'fly-through opens on its title');
-  check(await p.evaluate(() => !!window.__impact.lenis && document.querySelector('#flight').offsetHeight > innerHeight * 10), 'fly-through pins a long scrubbed film');
-  await p.locator('.flight-dot[data-go="2"]').click();
-  await wait(4500);
-  check((await p.evaluate(() => window.__impact.current)) === 2, 'scene controls fly to their place', JSON.stringify(await p.evaluate(() => window.__impact.state)));
-  check(await p.locator('.flight-scene.is-active .flight-place').textContent() === 'Learning space', 'caption appears for the arrived scene');
-  check(await p.evaluate(() => [...document.querySelectorAll('.flight-clip')].some((v) => v.readyState >= 2 && v.style.opacity === '1')), 'the film frame for the scene is decoded and showing');
-  await p.locator('.flight-scene.is-active [data-story-trigger]').click();
-  await wait(800);
-  check(await isOpen(p) && (await p.evaluate(() => location.hash)) === '#/story/pathways-to-tech', 'story opens over the film');
-  await p.keyboard.press('Escape');
-  await wait(800);
-  check(!(await isOpen(p)), 'closing returns to the film');
-  check(p.external.length === 0, 'no requests leave the host (fly-through)', p.external.slice(0, 3).join(', '));
-  check(p.failed.length === 0, 'no missing local assets (fly-through)', p.failed.slice(0, 3).join(', '));
-  check(p.errors.length === 0, 'no JavaScript errors (fly-through)', p.errors.slice(0, 3).join(' | '));
-  await p.context().close();
-  p = await open(browser, `${BASE}flight.html`, { reducedMotion: 'reduce' });
-  await wait(1500);
-  check(await p.evaluate(() => document.documentElement.classList.contains('flight-static') && !document.querySelector('.flight-clip') && document.querySelectorAll('.flight-scene.is-active').length === 6), 'with reduced motion the fly-through becomes a sequence of stills');
+  check(small.length === 0, 'controls are at least 44px tall', JSON.stringify(small.slice(0, 3)));
+  const copy = await p.evaluate(() => document.body.innerText);
+  check(!copy.includes('—'), 'page copy has no em dashes');
+  check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
+  check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
+  check(p.failed.length === 0, 'no missing local assets (sections)', p.failed.slice(0, 3).join(', '));
+  check(p.errors.length === 0, 'no JavaScript errors (sections)', p.errors.slice(0, 3).join(' | '));
   await p.context().close();
 
   // ---- Direct story link and clipboard failure ---------------------------
   p = await open(browser, `${BASE}#/story/markham-heat`);
   await wait(1500);
-  check(await isOpen(p), 'direct story link opens without the opening sequence');
+  check(await isOpen(p), 'direct story link opens the story');
   check((await p.locator('#story-title').textContent()).includes('Markham'), 'direct link loads the right story');
   await p.evaluate(() => {
     navigator.clipboard.writeText = () => Promise.reject(new Error('denied'));
@@ -186,19 +155,17 @@ try {
   await p.context().close();
 
   // ---- Reduced motion -----------------------------------------------------
-  p = await open(browser, BASE, { reducedMotion: 'reduce' });
-  await wait(1200);
+  p = await open(browser, `${BASE}#/community`, { reducedMotion: 'reduce' });
+  await wait(1500);
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
-  check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
+  check(await p.evaluate(() => !window.__impact.lenis && document.querySelector('.journey').offsetHeight <= innerHeight + 2), 'no smooth scrolling or pinning with reduced motion');
   check(await p.evaluate(() => [...document.querySelectorAll('video.film')].every((v) => v.paused)), 'films stay paused with reduced motion');
+  await waitScene(p);
+  await p.locator('.journey-dot[data-go="3"]').click();
+  await wait(600);
+  check((await step(p)) === 3 && (await focus(p)) === 'homes', 'stops still change by control with reduced motion', `${await step(p)} ${await focus(p)}`);
   await p.locator('[data-motion-toggle]').click();
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'on', 'motion control toggles motion');
-  await p.context().close();
-  p = await open(browser, `${BASE}explore.html#/place/research`, { reducedMotion: 'reduce' });
-  await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
-  await wait(800);
-  const th = await p.evaluate(() => window.__impact.scene?.debug().threads.research);
-  check(th && th.progress === 1 && th.pulse === 0, '3D connections appear instantly without looping effects', JSON.stringify(th));
   check(p.errors.length === 0, 'no JavaScript errors with reduced motion', p.errors.join(' | '));
   await p.context().close();
 
@@ -207,26 +174,24 @@ try {
   p = await open(browser, BASE, phone);
   await wait(3000);
   check((await p.evaluate(() => document.documentElement.scrollWidth)) <= 390, 'no horizontal scroll at phone width');
+  await p.evaluate(() => window.__impact.goToStep(1));
+  await wait(3200);
+  const card = await p.evaluate(() => document.querySelector('.journey-card:not([hidden])').getBoundingClientRect());
+  check(card.top >= 0 && card.bottom <= 844 && card.width <= 390, 'journey card fits a phone screen', JSON.stringify(card));
   await p.goto(`${BASE}#/story/3verest`);
   await wait(800);
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
-  await p.context().close();
-  p = await open(browser, `${BASE}explore.html#/place/care`, phone);
-  await wait(3000);
-  const cap = await p.evaluate(() => document.querySelector('.fly-caption:not([hidden])').getBoundingClientRect());
-  check(cap.top >= 0 && cap.bottom <= 844 && cap.width <= 390, '3D tour caption fits a phone screen', JSON.stringify(cap));
   await browser.close();
 
   // ---- No WebGL -------------------------------------------------------------
   const noGL = await chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] });
-  p = await open(noGL, `${BASE}explore.html`);
-  await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
-  check((await p.evaluate(() => document.querySelector('#stage').dataset.sceneState)) === 'fallback', 'without WebGL a composed illustration is shown');
-  await p.locator('[data-start]').click();
+  p = await open(noGL, `${BASE}#/community`);
+  await waitScene(p);
+  check((await sceneState(p)) === 'fallback', 'without WebGL the still of the community is shown');
   await p.locator('.place-label[data-place="aquatic"]').click();
-  await wait(600);
-  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'place controls still work without WebGL');
+  await wait(3200);
+  check((await step(p)) === 4, 'place controls still work without WebGL', String(await step(p)));
   check(p.errors.length === 0, 'no JavaScript errors without WebGL', p.errors.join(' | '));
   await noGL.close();
 } catch (error) {

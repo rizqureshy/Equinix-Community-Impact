@@ -1,25 +1,16 @@
-// Main page wiring: state, routing, scroll choreography, story dialog,
-// gallery and copy actions. The 3D community lives on its own page
-// (explore.html), so Three.js never loads here.
+// Main page wiring: the pinned community journey, scroll choreography,
+// story dialog, gallery and copy actions. Three.js loads lazily, only when
+// the community comes near the viewport and WebGL is available.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { createStore, topicTarget } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
-import { topics } from './content/stories.js';
-import { CHAPTERS } from './content/render.js';
+import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
-
-// Links from the first version pointed at the explorer on this page.
-{
-  const route = parseHash(location.hash);
-  if (route.section === 'explore' && !route.story) {
-    location.replace(`explore.html${route.topic ? `#/place/${route.topic}` : ''}`);
-  }
-}
 
 const root = document.documentElement;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -30,15 +21,139 @@ const notify = createToast($('#toast'));
 setupCopy(notify, (id) => storyURL(id));
 
 // ---------------------------------------------------------------------------
+// The community: stage, scene and journey
+// ---------------------------------------------------------------------------
+const steps = journeySteps();
+const stage = $('#stage');
+const pin = $('.journey-pin');
+const journey = $('.journey');
+const cards = $$('.journey-card');
+const dots = $$('.journey-dot');
+const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
+const INTRO = 0.1; // share of the pin spent opening the product shot to full bleed
+let scene = null;
+let sceneLoading = false;
+let activeStep = -1;
+
+function showStep(i) {
+  if (i === activeStep) return;
+  activeStep = i;
+  cards.forEach((c, j) => {
+    c.hidden = j !== i;
+  });
+  dots.forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
+}
+showStep(0);
+
+function framing(open) {
+  // Product-shot frame while the hero is in view, full bleed once pinned
+  const inset = 1 - clamp(open);
+  stage.style.setProperty('--inset-y', `${inset * 4}vh`);
+  stage.style.setProperty('--inset-x', `${inset * 5}vw`);
+  stage.style.setProperty('--inset-r', `${inset * 28}px`);
+}
+
+function onJourneyProgress(p) {
+  framing(p / INTRO);
+  pin.style.setProperty('--stats-opacity', String(1 - clamp(p / (INTRO * 0.7))));
+  const jp = clamp((p - INTRO) / (1 - INTRO));
+  const x = jp * steps.length;
+  const step = x < 0.55 ? -1 : Math.min(steps.length - 1, Math.floor(x - 0.55));
+  pin.style.setProperty('--ui-opacity', String(clamp((x - 0.3) / 0.25)));
+  if (step >= 0) showStep(step);
+  scene?.setProgress(jp, { side: step < 0 ? 0 : step % 2 === 0 ? -1 : 1 });
+}
+
+function supportsWebGL2() {
+  try {
+    return !!document.createElement('canvas').getContext('webgl2');
+  } catch {
+    return false;
+  }
+}
+
+async function loadScene() {
+  if (scene || sceneLoading) return;
+  sceneLoading = true;
+  if (!supportsWebGL2()) {
+    stage.dataset.sceneState = 'fallback';
+    return;
+  }
+  try {
+    const { createCityScene } = await import('./scene/city.js');
+    scene = createCityScene($('#scene-host'), {
+      labels,
+      motion: () => store.get().motion,
+      onReady: () => {
+        stage.dataset.sceneState = 'ready';
+        if (journeyTrigger) onJourneyProgress(journeyTrigger.progress);
+        else scene.setFocus(steps[activeStep]?.place || 'overview', { instant: true });
+        ScrollTrigger.refresh();
+      },
+      onFail: (err) => {
+        console.warn('Community scene unavailable', err);
+        stage.dataset.sceneState = 'fallback';
+      },
+      onSelect: (place) => goToPlace(place),
+    });
+    if (!scene) stage.dataset.sceneState = 'fallback';
+    else scene.setStops(steps.map((s) => s.place));
+  } catch (err) {
+    console.warn('Community scene unavailable', err);
+    stage.dataset.sceneState = 'fallback';
+  }
+}
+
+// Load the scene once the community is within reach
+const near = new IntersectionObserver(
+  (entries) => {
+    if (entries.some((e) => e.isIntersecting)) {
+      near.disconnect();
+      loadScene();
+    }
+  },
+  { rootMargin: '120% 0px' },
+);
+near.observe(journey);
+const inView = new IntersectionObserver((entries) => scene?.setVisible(entries.some((e) => e.isIntersecting)), { rootMargin: '10% 0px' });
+inView.observe(journey);
+
+/** Scroll position at which step `i` is in view (motion on and pinned). */
+function stepScrollY(i) {
+  if (!journeyTrigger) return journey.getBoundingClientRect().top + scrollY;
+  const jp = (i + 1) / steps.length;
+  return journeyTrigger.start + (INTRO + (1 - INTRO) * jp) * (journeyTrigger.end - journeyTrigger.start);
+}
+function goToStep(i) {
+  if (journeyTrigger) scrollToY(stepScrollY(i));
+  else {
+    showStep(i);
+    scene?.setFocus(steps[i].place);
+    if (!isInView(journey)) scrollToY(journey.getBoundingClientRect().top + scrollY);
+  }
+}
+function goToPlace(place) {
+  const i = steps.findIndex((s) => s.place === place);
+  if (i >= 0) goToStep(i);
+}
+dots.forEach((d) => d.addEventListener('click', () => goToStep(Number(d.dataset.go))));
+for (const [place, el] of labels) el.addEventListener('click', () => goToPlace(place));
+
+// ---------------------------------------------------------------------------
 // Scroll choreography (built only when motion is on)
 // ---------------------------------------------------------------------------
 let scrollTriggers = [];
-const heroReel = $('.hero-reel');
+let journeyTrigger = null;
 
 function buildScroll() {
   teardownScroll();
   if (!store.get().motion) {
     $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
+    framing(1);
+    pin.style.setProperty('--ui-opacity', '1');
+    pin.style.setProperty('--stats-opacity', '0');
+    if (activeStep < 0) showStep(0);
+    scene?.setFocus(steps[activeStep].place, { instant: true });
     return;
   }
 
@@ -46,7 +161,8 @@ function buildScroll() {
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(lenisRaf);
 
-  // Hero: the reel drifts closer and the title lifts away
+  // Hero copy drifts up and fades as the community arrives
+  const heroCopy = $('.hero-copy');
   scrollTriggers.push(
     ScrollTrigger.create({
       trigger: '.hero',
@@ -54,13 +170,39 @@ function buildScroll() {
       end: 'bottom top',
       scrub: true,
       onUpdate: (self) => {
-        heroReel.style.setProperty('--hero-zoom', String(1 + self.progress * 0.15));
-        const inner = $('.hero-inner');
-        inner.style.transform = `translateY(${-self.progress * 18}vh)`;
-        inner.style.opacity = String(1 - self.progress * 1.4);
+        heroCopy.style.transform = `translateY(${-self.progress * 12}vh)`;
+        heroCopy.style.opacity = String(1 - self.progress * 1.6);
       },
     }),
   );
+
+  // The community pins and the camera travels through six stops, settling
+  // on the nearest stop when the scroll rests (snap pattern adapted from the
+  // 21st.dev Sticky Content Wrapper reference).
+  framing(0);
+  const stopProgress = [0, ...steps.map((_, i) => INTRO + (1 - INTRO) * ((i + 1) / steps.length))];
+  journeyTrigger = ScrollTrigger.create({
+    trigger: journey,
+    start: 'top top',
+    end: `+=${(steps.length + 1) * 100}%`,
+    pin: pin,
+    pinSpacing: true,
+    scrub: 0.4,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
+    snap: {
+      snapTo: stopProgress,
+      duration: { min: 0.25, max: 0.7 },
+      ease: 'power2.inOut',
+      delay: 0.08,
+      inertia: false,
+      onStart: () => lenis?.stop(),
+      onComplete: () => lenis?.start(),
+    },
+    onUpdate: (self) => onJourneyProgress(self.progress),
+  });
+  scrollTriggers.push(journeyTrigger);
+  onJourneyProgress(0);
 
   // Statement: each word lights up in turn
   const words = $$('.statement-text .w');
@@ -68,45 +210,14 @@ function buildScroll() {
     ScrollTrigger.create({
       trigger: '.statement',
       start: 'top 75%',
-      end: 'bottom 60%',
+      end: 'bottom 55%',
       scrub: true,
       onUpdate: (self) => {
         const lit = self.progress * words.length * 1.15;
-        words.forEach((w, i) => w.style.setProperty('--o', String(0.16 + 0.84 * clamp(lit - i))));
+        words.forEach((w, i) => w.style.setProperty('--o', String(clamp(lit - i))));
       },
     }),
   );
-
-  // Posters and the community invitation: films settle from a slight zoom
-  for (const media of $$('.poster-media, .invite-media')) {
-    const trigger = media.closest('.poster, .invite');
-    scrollTriggers.push(
-      ScrollTrigger.create({
-        trigger,
-        start: 'top bottom',
-        end: 'top top',
-        scrub: true,
-        onUpdate: (self) => media.style.setProperty('--zoom', String(1.22 - self.progress * 0.22)),
-      }),
-    );
-  }
-
-  // Promises: each card eases back as the next one stacks over it
-  const cards = $$('.stack-card');
-  cards.forEach((card, i) => {
-    const next = cards[i + 1];
-    if (!next) return;
-    const inner = $('.stack-inner', card);
-    scrollTriggers.push(
-      ScrollTrigger.create({
-        trigger: next,
-        start: 'top bottom',
-        end: 'top 30%',
-        scrub: true,
-        onUpdate: (self) => inner.style.setProperty('--s', String(1 - self.progress * 0.06)),
-      }),
-    );
-  });
 
   ScrollTrigger.refresh();
 }
@@ -118,17 +229,15 @@ function lenisRaf(time) {
 function teardownScroll() {
   scrollTriggers.forEach((t) => t.kill());
   scrollTriggers = [];
+  journeyTrigger = null;
   if (lenis) {
     gsap.ticker.remove(lenisRaf);
     lenis.destroy();
     lenis = null;
   }
-  $$('.stack-inner').forEach((el) => el.style.removeProperty('--s'));
-  $$('.poster-media, .invite-media').forEach((el) => el.style.removeProperty('--zoom'));
-  heroReel.style.removeProperty('--hero-zoom');
-  const inner = $('.hero-inner');
-  inner.style.transform = '';
-  inner.style.opacity = '';
+  const heroCopy = $('.hero-copy');
+  heroCopy.style.transform = '';
+  heroCopy.style.opacity = '';
 }
 
 let programmaticUntil = 0;
@@ -151,6 +260,19 @@ const isInView = (el) => {
     .map((w) => `<span class="w">${w}</span>`)
     .join(' ');
 }
+
+// Sections and cards fade up as they arrive
+const reveal = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('is-in');
+      reveal.unobserve(e.target);
+    }
+  },
+  { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+);
+$$('[data-reveal]').forEach((el) => reveal.observe(el));
 
 setupMotionToggle($('[data-motion-toggle]'), {
   initial: store.get().motion,
@@ -181,6 +303,7 @@ const dialog = createStoryDialog({
 
 function scrollToSection(section, { instant = false } = {}) {
   if (section === 'top') return scrollToY(0, { instant });
+  if (section === 'journey' && journeyTrigger) return scrollToY(journeyTrigger.start + INTRO * (journeyTrigger.end - journeyTrigger.start), { instant });
   const el = document.getElementById(anchorFor(section));
   if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
 }
@@ -228,25 +351,23 @@ const spy = new IntersectionObserver(
   },
   { rootMargin: '-45% 0px -50% 0px' },
 );
-$$('[data-section], .poster').forEach((s) => spy.observe(s));
+$$('[data-section], .chapter').forEach((s) => spy.observe(s));
 
 const navLinks = $$('.site-nav a');
 store.subscribe((s, prev) => {
   if (s.section === prev.section) return;
-  const group = topicTarget[s.section] ? 'chapter' : s.section;
+  const group = topicTarget[s.section] || s.section === 'stories' ? 'chapter' : s.section;
   for (const a of navLinks) {
     const h = a.getAttribute('href');
     const on = (group === 'chapter' && h.startsWith('#/chapter')) || h === `#/${s.section}`;
-    a.toggleAttribute('aria-current', on);
     if (on) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
   }
 });
 
 const header = $('.site-header');
 function onScroll() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  header.style.setProperty('--progress', String(max > 0 ? clamp(scrollY / max) : 0));
-  header.classList.toggle('is-scrolled', scrollY > innerHeight * 0.85);
+  header.classList.toggle('is-scrolled', scrollY > 40);
 }
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
@@ -257,9 +378,7 @@ onScroll();
 const visibleFilms = new Set();
 function syncVideos() {
   for (const v of $$('video.film')) {
-    // In the hero reel only the showing film plays.
-    const waiting = v.parentElement === heroReel && !v.classList.contains('is-active');
-    if (store.get().motion && visibleFilms.has(v) && !document.hidden && !waiting) {
+    if (store.get().motion && visibleFilms.has(v) && !document.hidden) {
       if (v.preload === 'none') v.preload = 'auto';
       v.play().catch(() => {});
     } else v.pause();
@@ -273,41 +392,7 @@ const filmObserver = new IntersectionObserver(
   { rootMargin: '10% 0px' },
 );
 document.addEventListener('visibilitychange', syncVideos);
-
-// Hero reel: human moments from each chapter, crossfading.
-const reel = topics.map((t) => ({ topic: t.label, film: CHAPTERS[t.id].film }));
-const REEL_CAPTIONS = ['A care team reading a scan', 'Researchers comparing notes', 'Students on their first tour', 'Neighbours on a new path', 'Morning swimmers'];
-let reelIndex = 0;
-let reelTimer = 0;
-function buildReel() {
-  reel.forEach((r, i) => {
-    const v = document.createElement('video');
-    v.className = 'film';
-    v.muted = true;
-    v.playsInline = true;
-    v.loop = true;
-    v.preload = i === 0 ? 'auto' : 'none';
-    v.poster = `media/${r.film}-poster.jpg`;
-    v.setAttribute('aria-hidden', 'true');
-    v.innerHTML = `<source src="media/${r.film}.webm" type="video/webm"><source src="media/${r.film}.mp4" type="video/mp4">`;
-    if (i === 0) v.classList.add('is-active');
-    heroReel.appendChild(v);
-  });
-  reelTimer = setInterval(advanceReel, 5200);
-}
-function advanceReel() {
-  if (!store.get().motion || document.hidden || !isInView($('.hero'))) return;
-  const vids = $$('video', heroReel);
-  vids[reelIndex].classList.remove('is-active');
-  reelIndex = (reelIndex + 1) % vids.length;
-  const next = vids[reelIndex];
-  next.preload = 'auto';
-  next.currentTime = 0;
-  next.classList.add('is-active');
-  syncVideos();
-  $('.hero-caption-topic').textContent = reel[reelIndex].topic;
-  $('.hero-caption-text').textContent = REEL_CAPTIONS[reelIndex];
-}
+$$('video.film').forEach((v) => filmObserver.observe(v));
 
 // Numbers count up once when they arrive.
 const counter = new IntersectionObserver(
@@ -373,12 +458,21 @@ document.addEventListener('click', (e) => {
 // ---------------------------------------------------------------------------
 // Start
 // ---------------------------------------------------------------------------
-buildReel();
-$$('video.film').forEach((v) => filmObserver.observe(v));
 buildScroll();
 applyRoute(parseHash(location.hash), { initial: true });
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
-addEventListener('pagehide', () => clearInterval(reelTimer));
 
 // Exposed for automated checks only.
-window.__impact = { store, get lenis() { return lenis; } };
+window.__impact = {
+  store,
+  get lenis() {
+    return lenis;
+  },
+  get scene() {
+    return scene;
+  },
+  get step() {
+    return activeStep;
+  },
+  goToStep,
+};

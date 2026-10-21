@@ -7,7 +7,7 @@ const topicTarget = Object.fromEntries(topics.map((t) => [t.id, t.sceneTarget]))
 export function createStore(initial = {}) {
   let state = {
     topic: topics[0].id,
-    section: 'top', // top | explore | <chapter id> | principles | people | share | sources
+    section: 'top', // top | journey | <chapter id> | stories | promises | people | share | sources
     focus: 'overview', // scene focus: overview or a place id
     story: null, // open story id
     motion: true,
@@ -37,7 +37,7 @@ export function createStore(initial = {}) {
 /** Which place the scene should show for a given state. */
 export function deriveFocus({ section, topic, story }) {
   if (story) return getStory(story)?.sceneTarget || 'overview';
-  if (section === 'explore') return topicTarget[topic] || 'overview';
+  if (section === 'journey') return topicTarget[topic] || 'overview';
   if (topicTarget[section]) return topicTarget[section];
   return 'overview';
 }

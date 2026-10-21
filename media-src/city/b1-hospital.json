@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-21T18:08:18.617614Z",
+    "display_name": "GPT Image 2.5",
+    "id": "d8fb726a-cebc-4e89-98a9-f0755fc14b6d",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180818_d8fb726a-cebc-4e89-98a9-f0755fc14b6d_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "height": 2048,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Clean architectural scale model of a single building, photographed as a product shot on a seamless pure white background, elevated three-quarter view from the front-left, soft even studio daylight, very soft shadow directly beneath. Materials: white and warm off-white plaster, pale natural oak, light grey slate roof, clear glass with soft reflections, a few small green trees and neat planting on a thin white base. Minimal, precise, Apple-like calm and refined. The whole building fully in frame with generous margin, nothing cropped. No text, no letters, no numbers, no logos, no signage, no people. Subject: a modest modern community hospital, two storeys, with a glass entrance canopy, a small rooftop garden and a sheltered ambulance bay.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_180818_d8fb726a-cebc-4e89-98a9-f0755fc14b6d.png",
+    "status": "completed"
+  }
+]

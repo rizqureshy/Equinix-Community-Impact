@@ -8,8 +8,12 @@ describe('router', () => {
   it('parses every route shape', () => {
     expect(parseHash('')).toEqual({ section: 'top' });
     expect(parseHash('#/')).toEqual({ section: 'top' });
-    expect(parseHash('#/explore')).toEqual({ section: 'explore' });
-    expect(parseHash('#/explore/discovery')).toEqual({ section: 'explore', topic: 'discovery' });
+    expect(parseHash('#/community')).toEqual({ section: 'journey' });
+    expect(parseHash('#/promises')).toEqual({ section: 'promises' });
+    // Older links keep working
+    expect(parseHash('#/explore')).toEqual({ section: 'journey' });
+    expect(parseHash('#/explore/discovery')).toEqual({ section: 'journey', topic: 'discovery' });
+    expect(parseHash('#/principles')).toEqual({ section: 'promises' });
     expect(parseHash('#/chapter/care')).toEqual({ section: 'care', topic: 'care' });
     expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'resources', topic: 'resources' });
     expect(parseHash('#/people')).toEqual({ section: 'people' });
@@ -18,11 +22,11 @@ describe('router', () => {
   it('falls back safely for unknown routes', () => {
     expect(parseHash('#/story/not-a-story')).toEqual({ section: 'top' });
     expect(parseHash('#/chapter/unknown')).toEqual({ section: 'top' });
-    expect(parseHash('#/explore/unknown')).toEqual({ section: 'explore' });
+    expect(parseHash('#/explore/unknown')).toEqual({ section: 'journey' });
   });
 
   it('round-trips hashes', () => {
-    for (const h of ['#/', '#/explore', '#/explore/care', '#/chapter/community', '#/story/3verest', '#/sources']) {
+    for (const h of ['#/', '#/community', '#/promises', '#/chapter/community', '#/story/3verest', '#/sources']) {
       expect(hashFor(parseHash(h))).toBe(h);
     }
   });
@@ -37,13 +41,14 @@ describe('router', () => {
   it('maps sections to anchors', () => {
     expect(anchorFor('care')).toBe('chapter-care');
     expect(anchorFor('people')).toBe('people');
+    expect(anchorFor('journey')).toBe('community');
   });
 });
 
 describe('state', () => {
   it('derives scene focus from section, topic and story', () => {
     expect(deriveFocus({ section: 'top' })).toBe('overview');
-    expect(deriveFocus({ section: 'explore', topic: 'discovery' })).toBe('research');
+    expect(deriveFocus({ section: 'journey', topic: 'discovery' })).toBe('research');
     expect(deriveFocus({ section: 'resources' })).toBe('aquatic');
     expect(deriveFocus({ section: 'share', story: 'efficient-operations' })).toBe('datacenter');
   });
