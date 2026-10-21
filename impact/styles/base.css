@@ -239,18 +239,17 @@ main:focus {
 .wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  padding-right: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  font-size: 0.8rem;
-  text-transform: uppercase;
+  padding: 8px 12px 8px 4px;
+  border-radius: var(--radius-pill);
 }
-.wordmark-sep {
-  width: 14px;
-  height: 1.5px;
-  background: var(--red);
+.wordmark-logo {
+  display: block;
+  width: auto;
+  height: 16px;
+}
+.wordmark:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 .site-nav ul {
   display: flex;
@@ -545,11 +544,18 @@ main:focus {
 }
 
 /* ---- Footer ---------------------------------------------------------------- */
+.footer-logo {
+  display: block;
+  width: 124px;
+  height: auto;
+  margin: 0 auto var(--s-5);
+}
 .site-footer {
   padding: var(--s-8) var(--gutter) var(--s-7);
   background: var(--bg-soft);
   color: var(--ink-2);
   font-size: var(--t-xs);
+  text-align: center;
 }
 .site-footer p {
   max-width: 70ch;

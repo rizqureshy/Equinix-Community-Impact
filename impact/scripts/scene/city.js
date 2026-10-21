@@ -8,7 +8,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 export const palette = {
-  red: new THREE.Color('#e31c25'),
+  red: new THREE.Color('#e91c24'),
   amber: new THREE.Color('#e09a3c'),
   plinth: new THREE.Color('#fbfbfc'),
   road: new THREE.Color('#e6e6ea'),

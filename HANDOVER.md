@@ -30,7 +30,7 @@ A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Le
 - The six-stop order follows the chapters (care, discovery, opportunity, community, resources) and ends on the data center, where every thread begins.
 - The headline is kept as briefed.
 - The data center model reads as a calm two-storey building with rooftop plant, in keeping with the scale-model style, rather than an industrial hall. A more recognisable data center would need a new concept image and conversion (about 12 credits).
-- Equinix red is approximated as `#e31c25`. The wordmark is plain text, and no logo is drawn. Replace with approved brand assets when supplied.
+- The red is the Equinix logo red `#E91C24` from the supplied brand files, used for the thread, the numbers' marks and small accents. The header carries the Equinix logo; the footer the vertical lockup.
 - **Motion:** scroll choreography only runs with motion on. The model pauses when it is off screen or the tab is hidden.
 
 ## Tool contributions
@@ -103,7 +103,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 
 ## Known limitations and next steps
 
-- **Brand assets:** replace the placeholder wordmark, type and red (`styles/tokens.css`).
+- **Brand assets:** the supplied Equinix logos are in `impact/public/brand/` (vertical lockup in the footer, fortress mark as the favicon). The slim header uses a horizontal arrangement assembled from the supplied vertical file (mark left, wordmark right, shared baseline); replace it with the official horizontal lockup if one exists. The red is now the logo red `#E91C24`. The type remains a placeholder until brand type is supplied.
 - **Documentary media:** approved photography of real people and facilities would strengthen every chapter.
 - **Data center character:** see Creative direction; a new concept would give a more recognisable building.
 - **Model fidelity:** buildings are simplified to about 56,000 triangles each. `scripts/build_city.sh` can raise `--simplify-ratio` for more detail at a larger download; the raw 65 MB models are re-downloadable from each `resultUrl` in the manifest.

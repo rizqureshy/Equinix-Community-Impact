@@ -1,6 +1,6 @@
 /* Design tokens: clean, light, Apple-like. Creative direction for the
-   prototype, not an official Equinix brand specification. Replace the red
-   and the type with approved brand assets when supplied. */
+   prototype. The red is the Equinix logo red from the supplied brand
+   files; the type is still a placeholder until brand type is supplied. */
 @import '@fontsource-variable/inter-tight';
 
 :root {
@@ -13,7 +13,7 @@
   --ink: #1d1d1f;
   --ink-2: #515154;
   --ink-3: #86868b;
-  --red: #e31c25;
+  --red: #e91c24;
   --red-soft: #ff5a5f;
   --amber: #e09a3c;
   --focus: #0066cc;
