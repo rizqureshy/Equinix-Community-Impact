@@ -15,13 +15,13 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-Add `?scene=off` to see the experience without the 3D scene. Use the "Pause motion" control, or the system reduced-motion setting, to see the static version without pinning or smooth scrolling.
+The 3D community is at `/explore.html`; add `?scene=off` there to see it without WebGL. Use the "Pause motion" control, or the system reduced-motion setting, to see the static version without pinning or smooth scrolling.
 
 ## Test
 
 ```bash
 npm test                          # unit tests: content model, routing, state, sharing
-npm run build && npm run test:e2e # 41 browser checks against the production build
+npm run build && npm run test:e2e # 52 browser checks against the production build
 node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs]   # screenshot helper
 ```
 
@@ -31,12 +31,15 @@ The browser checks block every request that leaves the local host, then exercise
 
 ```text
 impact/                   Vite root: the experience
-  index.html              page shell; content is pre-rendered into it at build time
+  index.html              the scroll story; content is pre-rendered into it at build time
+  explore.html            the separate 3D community tour
   styles/                 tokens.css, base.css, sections.css
   scripts/
     app.js                wiring: state, routing, scroll choreography (GSAP ScrollTrigger + Lenis), story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
-    router.js             hash routes: #/explore, #/chapter/<topic>, #/story/<id>
+    router.js             hash routes: #/chapter/<topic>, #/story/<id>, #/people and others
+    explore.js            the 3D community page: scene, tour, story dialog
+    story-dialog.js       shared toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
     content/render.js     HTML for posters, flythrough captions, story detail, gallery, promises, numbers, sources

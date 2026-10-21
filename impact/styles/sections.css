@@ -156,40 +156,13 @@
   animation: none;
 }
 
-/* ---- Flythrough: the model expands, then the camera tours the places ------- */
-.fly {
-  position: relative;
-  background: var(--bg);
-}
+/* ---- 3D community stage (explore.html) ---------------------------------- */
 .fly-pin {
   position: relative;
   height: 100svh;
   min-height: 560px;
   overflow: hidden;
   background: radial-gradient(120% 90% at 55% 60%, #2b241d 0%, #16120f 55%, var(--bg) 100%);
-}
-.fly-title {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.1em;
-  pointer-events: none;
-  font-size: clamp(2.4rem, 1rem + 5.6vw, 7.6rem);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 10px 50px rgb(0 0 0 / 0.55);
-}
-.fly-title-b {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.02em;
 }
 .stage {
   position: absolute;
@@ -1332,5 +1305,133 @@
   }
   .drawer-bar {
     padding-left: 18px;
+  }
+}
+
+/* ---- Invitation to the 3D community --------------------------------------- */
+.invite {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  color: #fff;
+}
+.invite-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  transform: scale(var(--zoom, 1));
+}
+.invite-media .film {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.invite-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, rgb(10 8 6 / 0.92) 0%, rgb(10 8 6 / 0.45) 45%, rgb(10 8 6 / 0.15) 75%),
+    linear-gradient(90deg, rgb(10 8 6 / 0.55) 0%, rgb(10 8 6 / 0) 60%);
+}
+.invite-copy {
+  padding-bottom: clamp(56px, 10vh, 120px);
+}
+.invite-copy .section-title em {
+  color: #fff;
+}
+.invite-note {
+  margin-top: var(--space-5);
+  font-size: 0.75rem;
+  color: rgb(255 255 255 / 0.7);
+}
+.nav-3d::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--red-glow);
+  box-shadow: 0 0 10px rgb(255 58 63 / 0.9);
+}
+
+/* ---- The separate 3D community page --------------------------------------- */
+.explore-page {
+  overflow: hidden;
+}
+.explore-page .fly-pin {
+  height: 100svh;
+}
+.fly-pin:has(> .explore-intro:not([hidden]))::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgb(10 8 6 / 0.85) 0%, rgb(10 8 6 / 0.2) 50%, rgb(10 8 6 / 0) 70%),
+    linear-gradient(90deg, rgb(10 8 6 / 0.7) 0%, rgb(10 8 6 / 0) 55%);
+}
+.explore-intro {
+  position: absolute;
+  z-index: 4;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(48px, 9vh, 110px);
+  max-width: 48rem;
+  color: #fff;
+}
+.explore-intro[hidden] {
+  display: none;
+}
+.explore-title {
+  font-size: clamp(2.6rem, 1.2rem + 5.4vw, 7.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  font-weight: 620;
+}
+.explore-title em {
+  display: block;
+}
+.explore-lede {
+  margin-top: var(--space-5);
+  max-width: 36rem;
+  font-size: var(--step-1);
+  line-height: 1.45;
+  color: rgb(255 255 255 / 0.88);
+}
+.explore-page .fly-ui {
+  z-index: 4;
+  grid-template-areas: 'cap steps' 'nav steps';
+}
+.explore-page .fly-ui:not(.is-touring) {
+  display: none;
+}
+.explore-page .fly-captions {
+  grid-area: cap;
+}
+.explore-page .fly-steps {
+  grid-area: steps;
+  align-self: end;
+}
+.tour-nav {
+  grid-area: nav;
+  display: flex;
+  gap: 8px;
+}
+.tour-nav .btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@media (max-width: 760px) {
+  .explore-page .fly-ui {
+    grid-template-areas: 'cap' 'nav' 'steps';
+  }
+  .tour-nav .btn {
+    flex: 1;
   }
 }

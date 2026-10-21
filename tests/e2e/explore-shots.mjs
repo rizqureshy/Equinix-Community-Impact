@@ -1,0 +1,25 @@
+// Screenshots of the 3D community page: intro, a tour stop, an open story.
+import { chromium } from 'playwright';
+const [,, base, out, w = '1440', h = '900'] = process.argv;
+const b = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const p = await b.newPage({ viewport: { width: +w, height: +h } });
+const errors = [];
+p.on('pageerror', (e) => errors.push(e.stack));
+p.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+await p.goto(`${base}explore.html`);
+await p.waitForTimeout(6000);
+await p.screenshot({ path: `${out}/ex-${w}-intro.png` });
+await p.locator('[data-start]').click();
+await p.waitForTimeout(3500);
+await p.screenshot({ path: `${out}/ex-${w}-step1.png` });
+await p.keyboard.press('ArrowRight');
+await p.keyboard.press('ArrowRight');
+await p.keyboard.press('ArrowRight');
+await p.keyboard.press('ArrowRight');
+await p.waitForTimeout(3500);
+await p.screenshot({ path: `${out}/ex-${w}-step5.png` });
+await p.locator('.fly-caption:not([hidden]) [data-story-trigger]').click();
+await p.waitForTimeout(1500);
+await p.screenshot({ path: `${out}/ex-${w}-story.png` });
+console.log(await p.evaluate(() => [location.hash, window.__impact.store.get()]), errors);
+await b.close();

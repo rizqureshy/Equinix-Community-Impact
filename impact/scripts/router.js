@@ -1,13 +1,13 @@
 // Hash routes, so the prototype works at any base path without server
 // configuration (GitHub Pages subpaths, Cloudflare Pages roots, local files).
 //   #/                     overview
-//   #/explore[/<topic>]    community explorer, optionally with a topic
+//   #/explore[/<topic>]    links from version one; redirected to explore.html
 //   #/chapter/<topic>      a story chapter
 //   #/story/<id>           a story opened in the detail view
-//   #/principles | #/people | #/share | #/sources
+//   #/stories | #/principles | #/people | #/share | #/sources
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['principles', 'people', 'share', 'sources']);
+const SECTIONS = new Set(['stories', 'principles', 'people', 'share', 'sources']);
 const TOPICS = new Set(topics.map((t) => t.id));
 
 export function parseHash(hash = '') {

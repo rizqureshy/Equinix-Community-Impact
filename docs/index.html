@@ -18,8 +18,10 @@
         document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
       })();
     </script>
-    <script type="module" crossorigin src="./assets/main-DmxB0y1L.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-Davx7gQm.css">
+    <script type="module" crossorigin src="./assets/main-AWCrq8PA.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/story-dialog-9MyxZutV.js">
+    <link rel="modulepreload" crossorigin href="./assets/gsap-CvDoa17S.js">
+    <link rel="stylesheet" crossorigin href="./assets/story-dialog-DeWCSX9F.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -33,12 +35,12 @@
       </a>
       <nav class="site-nav" aria-label="Primary">
         <ul>
-          <li><a href="#/explore">Explore</a></li>
           <li><a href="#/chapter/care">Stories</a></li>
           <li><a href="#/principles">Promises</a></li>
           <li><a href="#/people">People</a></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/sources">Sources</a></li>
+          <li><a href="explore.html" class="nav-3d">3D community</a></li>
         </ul>
       </nav>
       <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
@@ -62,85 +64,22 @@
           <div class="hero-foot">
             <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
             <div class="actions">
-              <a class="btn btn--primary btn--large" href="#/explore">Explore the connections</a>
-              <a class="btn btn--ghost btn--large" href="#/chapter/care">Discover the stories</a>
+              <a class="btn btn--primary btn--large" href="#/chapter/care">Discover the stories</a>
+              <a class="btn btn--ghost btn--large" href="explore.html">Explore the community in 3D</a>
             </div>
           </div>
         </div>
         <p class="hero-caption" aria-live="off"><span class="hero-caption-topic">Care</span> <span class="hero-caption-text">A care team reading a scan</span> <span class="hero-caption-note">Illustrative, AI generated</span></p>
-        <a class="scroll-cue" href="#/explore"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
-      </section>
-
-      <!-- Flythrough: the community expands to full screen, then the camera visits each place -->
-      <section class="fly" id="explore" data-section="explore" aria-labelledby="explore-title">
-        <div class="fly-pin">
-          <h2 class="fly-title" id="explore-title">
-            <span class="fly-title-a">See what</span>
-            <span class="fly-title-b">connection makes possible.</span>
-          </h2>
-          <div class="stage" id="stage" data-scene-state="loading">
-            <figure class="stage-fallback" aria-hidden="true">
-              <img src="media/community-model-1200.webp" srcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1130" loading="lazy" />
-            </figure>
-            <div class="scene-host" id="scene-host"></div>
-            <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
-              <button type="button" class="place-label" data-place="hospital"><span class="place-dot" aria-hidden="true"></span><span>Hospital</span></button>
-              <button type="button" class="place-label" data-place="research"><span class="place-dot" aria-hidden="true"></span><span>Research centre</span></button>
-              <button type="button" class="place-label" data-place="learning"><span class="place-dot" aria-hidden="true"></span><span>Learning space</span></button>
-              <button type="button" class="place-label" data-place="homes"><span class="place-dot" aria-hidden="true"></span><span>Homes</span></button>
-              <button type="button" class="place-label" data-place="aquatic"><span class="place-dot place-dot--heat" aria-hidden="true"></span><span>Aquatic centre</span></button>
-              <button type="button" class="place-label place-label--dc" data-place="datacenter"><span class="place-dot" aria-hidden="true"></span><span>Equinix data center</span></button>
-            </div>
-            <div class="stage-legend" aria-hidden="true">
-              <span><i class="legend-line"></i>Digital connection</span>
-              <span><i class="legend-line legend-line--heat"></i>Recovered heat</span>
-            </div>
-            <div class="fly-ui">
-              <div class="fly-captions"><div class="fly-caption" data-step="0" >
-      <p class="fly-kicker"><span>01 / 06</span> Care</p>
-      <h3 class="fly-place">Hospital</h3>
-      <p class="fly-moment">A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.</p>
-      <a class="btn btn--primary btn--small" href="#/story/3verest" data-story-trigger="3verest">Medical images, ready when the care team needs them</a>
-    </div><div class="fly-caption" data-step="1" hidden>
-      <p class="fly-kicker"><span>02 / 06</span> Discovery</p>
-      <h3 class="fly-place">Research centre</h3>
-      <p class="fly-moment">In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.</p>
-      <a class="btn btn--primary btn--small" href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Comparing notes across the world for every child with cancer</a>
-    </div><div class="fly-caption" data-step="2" hidden>
-      <p class="fly-kicker"><span>03 / 06</span> Opportunity</p>
-      <h3 class="fly-place">Learning space</h3>
-      <p class="fly-moment">A student walks into a data center for the first time and asks how it all works.</p>
-      <a class="btn btn--primary btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">From a school tour to a technician’s badge</a>
-    </div><div class="fly-caption" data-step="3" hidden>
-      <p class="fly-kicker"><span>04 / 06</span> Community</p>
-      <h3 class="fly-place">Homes and neighbourhood</h3>
-      <p class="fly-moment">In Minooka, Illinois, a public bike path runs along the data center site, and land is being donated for a future fire station.</p>
-      <a class="btn btn--primary btn--small" href="#/story/community-principles" data-story-trigger="community-principles">A neighbour that plans to stay for decades</a>
-    </div><div class="fly-caption" data-step="4" hidden>
-      <p class="fly-kicker"><span>05 / 06</span> Responsible growth</p>
-      <h3 class="fly-place">Aquatic centre</h3>
-      <p class="fly-moment">Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.</p>
-      <a class="btn btn--primary btn--small" href="#/story/pa10-heat" data-story-trigger="pa10-heat">Warm water for a neighbourhood pool in Saint-Denis</a>
-    </div><div class="fly-caption" data-step="5" hidden>
-      <p class="fly-kicker"><span>06 / 06</span> Every thread</p>
-      <h3 class="fly-place">Equinix data center</h3>
-      <p class="fly-moment">Private interconnection for care and research. Heat recovered for neighbours. People who keep it running, and who volunteer down the road.</p>
-      <a class="btn btn--primary btn--small" href="#/principles">Our five community promises</a>
-    </div></div>
-  <div class="fly-steps" role="group" aria-label="Places in the community"><button type="button" class="fly-step" data-step="0" aria-pressed="true"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Care</span></button><button type="button" class="fly-step" data-step="1" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Discovery</span></button><button type="button" class="fly-step" data-step="2" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Opportunity</span></button><button type="button" class="fly-step" data-step="3" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Community</span></button><button type="button" class="fly-step" data-step="4" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Responsible growth</span></button><button type="button" class="fly-step" data-step="5" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Every thread</span></button></div>
-            </div>
-            <p class="scene-caption">An illustrative composite, not a real place or network.<span class="caption-more"> Each story refers to its named location.</span></p>
-          </div>
-        </div>
+        <a class="scroll-cue" href="#/stories"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
       </section>
 
       <!-- Statement revealed word by word -->
-      <section class="statement" id="statement" aria-label="Our role">
+      <section class="statement" id="stories" data-section="stories" aria-label="Our role">
         <p class="statement-text" data-words>Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
       </section>
 
       <!-- Story posters -->
-      <div class="posters" id="stories" aria-label="Connected story chapters">
+      <div class="posters" aria-label="Connected story chapters">
         <section class="poster" id="chapter-care" data-chapter="care" aria-labelledby="chapter-care-title">
   <div class="poster-stage">
     <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-care-poster.jpg" aria-label="Two clinicians review a medical scan together on a monitor in a daylit reading room.">
@@ -297,6 +236,26 @@
   </article>
 </section>
       </div>
+
+      <!-- Invitation to the separate 3D community -->
+      <section class="invite" id="community-3d" aria-labelledby="invite-title">
+        <div class="invite-media">
+          <video class="film" muted playsinline loop preload="none" poster="media/clip-community-poster.jpg" aria-label="A slow drift around an architectural model of a small community.">
+            <source src="media/clip-community.webm" type="video/webm" />
+            <source src="media/clip-community.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="invite-shade" aria-hidden="true"></div>
+        <div class="invite-copy wrap">
+          <p class="eyebrow eyebrow--light">Explore in 3D</p>
+          <h2 class="section-title section-title--xl" id="invite-title">Step inside the connected <em>community.</em></h2>
+          <p class="section-lede">Visit a hospital, a research lab, a school, homes and a public pool, and follow the red thread from each one back to the data center at its heart.</p>
+          <div class="actions">
+            <a class="btn btn--primary btn--large" href="explore.html">Enter the 3D community</a>
+          </div>
+          <p class="invite-note">Illustrative model and film, AI generated. Not a real place or network.</p>
+        </div>
+      </section>
 
       <!-- Numbers -->
       <section class="impact" id="impact" aria-labelledby="impact-title">

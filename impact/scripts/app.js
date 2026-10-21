@@ -1,187 +1,33 @@
-// Application wiring: state, routing, scroll choreography, scene, story
-// dialog, gallery and copy actions.
+// Main page wiring: state, routing, scroll choreography, story dialog,
+// gallery and copy actions. The 3D community lives on its own page
+// (explore.html), so Three.js never loads here.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { createStore, topicTarget } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
-import { copyText, summaryText } from './clipboard.js';
-import { getStory, sources, topics } from './content/stories.js';
-import { storyDetailHTML, flySteps, CHAPTERS } from './content/render.js';
+import { topics } from './content/stories.js';
+import { CHAPTERS } from './content/render.js';
+import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
 
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-const root = document.documentElement;
-const systemReduce = matchMedia('(prefers-reduced-motion: reduce)');
-const params = new URLSearchParams(location.search);
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+// Links from the first version pointed at the explorer on this page.
+{
+  const route = parseHash(location.hash);
+  if (route.section === 'explore' && !route.story) {
+    location.replace(`explore.html${route.topic ? `#/place/${route.topic}` : ''}`);
+  }
+}
 
+const root = document.documentElement;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const store = createStore({ motion: root.dataset.motion !== 'off' });
-let scene = null;
 let lenis = null;
 
-// ---------------------------------------------------------------------------
-// Toast and copy actions
-// ---------------------------------------------------------------------------
-const toast = $('#toast');
-let toastTimer = 0;
-function notify(message, { error = false } = {}) {
-  toast.textContent = message;
-  toast.classList.toggle('is-error', error);
-  toast.classList.add('is-visible');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 3200);
-}
-
-function showManualCopy(button, text) {
-  let box = button.parentElement.querySelector('.manual-copy');
-  if (!box) {
-    box = document.createElement('textarea');
-    box.className = 'manual-copy';
-    box.readOnly = true;
-    box.rows = 4;
-    box.setAttribute('aria-label', 'Text to copy');
-    button.parentElement.appendChild(box);
-  }
-  box.value = text;
-  box.focus();
-  box.select();
-}
-
-document.addEventListener('click', async (event) => {
-  const button = event.target.closest('[data-copy]');
-  if (!button) return;
-  const story = getStory(button.dataset.story);
-  if (!story) return;
-  const link = storyURL(story.id);
-  const text = button.dataset.copy === 'link' ? link : summaryText(story, sources, link);
-  if (await copyText(text)) notify(button.dataset.copy === 'link' ? 'Story link copied.' : 'Story summary copied, with its source.');
-  else {
-    notify('Could not copy automatically. The text is selected below for you to copy.', { error: true });
-    showManualCopy(button, text);
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Scene: loaded after first paint; the page is fully usable without it
-// ---------------------------------------------------------------------------
-const stage = $('#stage');
-const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-
-function useFallback(reason) {
-  stage.dataset.sceneState = 'fallback';
-  stage.dataset.fallbackReason = reason;
-  if (scene) {
-    try {
-      scene.dispose();
-    } catch {
-      /* already gone */
-    }
-    scene = null;
-  }
-}
-
-async function startScene() {
-  if (params.get('scene') === 'off') return useFallback('disabled');
-  try {
-    const mod = await import('./scene/scene.js');
-    if (!mod.supportsWebGL2()) return useFallback('no-webgl2');
-    scene = mod.createScene($('#scene-host'), {
-      labels,
-      reducedMotion: !store.get().motion,
-      onSelect: selectPlace,
-      onHover: (id) => scene?.hoverLabel(id),
-      onFail: () => useFallback('context-lost'),
-    });
-    stage.dataset.sceneState = 'ready';
-    scene.setShift(0, { instant: true });
-    const s = store.get();
-    if (s.focus === 'overview') scene.enter();
-    else scene.setFocus(s.focus, { instant: true });
-  } catch (error) {
-    console.warn('Scene unavailable, showing illustration instead.', error);
-    useFallback('error');
-  }
-}
-
-const steps = flySteps();
-function selectPlace(place) {
-  const i = steps.findIndex((s) => s.target === place);
-  if (i >= 0) goToStep(i);
-}
-for (const [place, el] of labels) {
-  el.addEventListener('click', () => selectPlace(place));
-  el.addEventListener('mouseenter', () => scene?.hoverLabel(place));
-  el.addEventListener('mouseleave', () => scene?.hoverLabel(null));
-  el.addEventListener('focus', () => scene?.hoverLabel(place));
-  el.addEventListener('blur', () => scene?.hoverLabel(null));
-}
-
-// ---------------------------------------------------------------------------
-// Flythrough: expand the model, then one step per place
-// ---------------------------------------------------------------------------
-const EXPAND = 1; // viewport heights spent expanding the stage
-const STEP = 0.85; // viewport heights per place
-const flySection = $('#explore');
-const flyPin = $('.fly-pin');
-const captions = $$('.fly-caption');
-const stepButtons = $$('.fly-step');
-let flyTrigger = null;
-let currentStep = -1;
-
-function showStep(i, { fromScroll = false } = {}) {
-  if (i === currentStep) return;
-  currentStep = i;
-  captions.forEach((c, n) => (c.hidden = n !== i));
-  stepButtons.forEach((b, n) => b.setAttribute('aria-pressed', String(n === i)));
-  const step = steps[i];
-  if (!step) return;
-  // Keep the subject clear of the caption on wide screens.
-  scene?.setShift(innerWidth > 760 ? 0.14 : 0);
-  if (step.id === 'datacenter') store.set({ section: 'explore', focus: 'datacenter' });
-  else store.set({ section: 'explore', topic: step.id });
-  if (fromScroll) history.replaceState(null, '', step.id === 'datacenter' ? '#/explore' : hashFor({ section: 'explore', topic: step.id }));
-}
-
-/** Scroll position (px) at which a step is showing. */
-function stepY(i) {
-  if (!flyTrigger) return flySection.getBoundingClientRect().top + scrollY;
-  return flyTrigger.start + (EXPAND + i * STEP + STEP * 0.35) * innerHeight;
-}
-
-function goToStep(i) {
-  if (flyTrigger) scrollToY(stepY(i));
-  else {
-    if (!isInView(flySection)) scrollToY(stepY(i));
-    showStep(i);
-  }
-}
-stepButtons.forEach((b, i) => b.addEventListener('click', () => goToStep(i)));
-
-function setFlyProgress(p) {
-  const pos = p * (EXPAND + steps.length * STEP);
-  const e = clamp(pos / EXPAND);
-  const ease = 1 - Math.pow(1 - e, 3);
-  stage.style.setProperty('--inset-y', `${(1 - ease) * 18}vh`);
-  stage.style.setProperty('--inset-x', `${(1 - ease) * 24}vw`);
-  stage.style.setProperty('--inset-r', `${(1 - ease) * 28}px`);
-  $('.fly-title-a').style.transform = `translateX(${-ease * 60}vw)`;
-  $('.fly-title-b').style.transform = `translateX(${ease * 60}vw)`;
-  $('.fly-title').style.opacity = String(1 - ease);
-  stage.style.setProperty('--ui-opacity', String(clamp((e - 0.8) / 0.2)));
-  const at = (pos - EXPAND) / STEP;
-  stepButtons.forEach((b, i) => b.style.setProperty('--fill', String(clamp(at - i))));
-  if (e < 1) {
-    if (currentStep !== -1) {
-      currentStep = -1;
-      scene?.setShift(0);
-      store.set({ section: 'explore', focus: 'overview' });
-    }
-  } else showStep(clamp(Math.floor(at), 0, steps.length - 1), { fromScroll: true });
-}
+const notify = createToast($('#toast'));
+setupCopy(notify, (id) => storyURL(id));
 
 // ---------------------------------------------------------------------------
 // Scroll choreography (built only when motion is on)
@@ -191,16 +37,7 @@ const heroReel = $('.hero-reel');
 
 function buildScroll() {
   teardownScroll();
-  const on = store.get().motion;
-  root.classList.toggle('is-static', !on);
-  if (!on) {
-    stage.style.removeProperty('--inset-y');
-    stage.style.removeProperty('--inset-x');
-    stage.style.removeProperty('--inset-r');
-    stage.style.setProperty('--ui-opacity', '1');
-    $('.fly-title').style.opacity = '0';
-    stepButtons.forEach((b, i) => b.style.setProperty('--fill', i === Math.max(currentStep, 0) ? '1' : '0'));
-    if (currentStep < 0) showStep(0);
+  if (!store.get().motion) {
     $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
     return;
   }
@@ -225,17 +62,6 @@ function buildScroll() {
     }),
   );
 
-  // Flythrough: pinned while the stage expands and the camera tours
-  flyTrigger = ScrollTrigger.create({
-    trigger: flySection,
-    start: 'top top',
-    end: () => `+=${(EXPAND + steps.length * STEP) * innerHeight}`,
-    pin: flyPin,
-    onUpdate: (self) => setFlyProgress(self.progress),
-    onRefresh: (self) => setFlyProgress(self.progress),
-  });
-  scrollTriggers.push(flyTrigger);
-
   // Statement: each word lights up in turn
   const words = $$('.statement-text .w');
   scrollTriggers.push(
@@ -251,12 +77,12 @@ function buildScroll() {
     }),
   );
 
-  // Posters: the film settles from a slight zoom as the chapter arrives
-  for (const poster of $$('.poster')) {
-    const media = $('.poster-media', poster);
+  // Posters and the community invitation: films settle from a slight zoom
+  for (const media of $$('.poster-media, .invite-media')) {
+    const trigger = media.closest('.poster, .invite');
     scrollTriggers.push(
       ScrollTrigger.create({
-        trigger: poster,
+        trigger,
         start: 'top bottom',
         end: 'top top',
         scrub: true,
@@ -292,23 +118,23 @@ function lenisRaf(time) {
 function teardownScroll() {
   scrollTriggers.forEach((t) => t.kill());
   scrollTriggers = [];
-  flyTrigger = null;
   if (lenis) {
     gsap.ticker.remove(lenisRaf);
     lenis.destroy();
     lenis = null;
   }
   $$('.stack-inner').forEach((el) => el.style.removeProperty('--s'));
-  $$('.poster-media').forEach((el) => el.style.removeProperty('--zoom'));
+  $$('.poster-media, .invite-media').forEach((el) => el.style.removeProperty('--zoom'));
   heroReel.style.removeProperty('--hero-zoom');
   const inner = $('.hero-inner');
   inner.style.transform = '';
   inner.style.opacity = '';
 }
 
+let programmaticUntil = 0;
 function scrollToY(y, { instant = false } = {}) {
   programmaticUntil = performance.now() + (instant ? 300 : 1600);
-  if (lenis) lenis.scrollTo(y, { immediate: instant || !store.get().motion, duration: 1.4, force: true });
+  if (lenis) lenis.scrollTo(y, { immediate: instant, duration: 1.4, force: true });
   else scrollTo({ top: y, behavior: instant || !store.get().motion ? 'auto' : 'smooth' });
 }
 const isInView = (el) => {
@@ -326,127 +152,35 @@ const isInView = (el) => {
     .join(' ');
 }
 
-// ---------------------------------------------------------------------------
-// Motion preference
-// ---------------------------------------------------------------------------
-const motionToggle = $('[data-motion-toggle]');
-function applyMotion(on, { persist = false } = {}) {
-  root.dataset.motion = on ? 'on' : 'off';
-  motionToggle.setAttribute('aria-pressed', String(!on));
-  $('.motion-label', motionToggle).textContent = on ? 'Pause motion' : 'Play motion';
-  if (persist) {
-    try {
-      localStorage.setItem('impact-motion', on ? 'on' : 'off');
-    } catch {
-      /* storage unavailable: preference lasts for this visit */
-    }
-  }
-  const changed = store.get().motion !== on;
-  store.set({ motion: on });
-  if (changed) {
-    const y = scrollY;
+setupMotionToggle($('[data-motion-toggle]'), {
+  initial: store.get().motion,
+  onChange: (on) => {
+    store.set({ motion: on });
     buildScroll();
     syncVideos();
-    if (!on) scrollTo(0, Math.min(y, document.documentElement.scrollHeight));
-  }
-}
-motionToggle.addEventListener('click', () => applyMotion(!store.get().motion, { persist: true }));
-systemReduce.addEventListener('change', (e) => applyMotion(!e.matches));
-motionToggle.setAttribute('aria-pressed', String(!store.get().motion));
-$('.motion-label', motionToggle).textContent = store.get().motion ? 'Pause motion' : 'Play motion';
-
-// ---------------------------------------------------------------------------
-// Story detail: a modal dialog with focus restore
-// ---------------------------------------------------------------------------
-const drawer = $('#story-drawer');
-const drawerContent = $('#drawer-content');
-let returnFocus = null;
-let openedByPush = false;
-
-document.addEventListener('click', (e) => {
-  const trigger = e.target.closest('[data-story-trigger]');
-  if (trigger) {
-    returnFocus = trigger;
-    openedByPush = true;
-  }
-});
-
-function openStory(id) {
-  const story = getStory(id);
-  if (!story) return;
-  if (drawer.open && drawer.dataset.story === id) return;
-  drawerContent.innerHTML = storyDetailHTML(story);
-  drawer.dataset.story = id;
-  drawerContent.scrollTop = 0;
-  if (!drawer.open) {
-    returnFocus ||= document.activeElement;
-    lenis?.stop();
-    drawer.showModal();
-  }
-  $('.drawer-close', drawer).focus();
-  store.set({ story: id, focus: story.sceneTarget });
-}
-
-function finishClose() {
-  drawer.classList.remove('is-closing');
-  if (drawer.open) drawer.close();
-  delete drawer.dataset.story;
-  lenis?.start();
-  store.set({ story: null });
-  const target = returnFocus;
-  returnFocus = null;
-  if (target && target.isConnected) target.focus({ preventScroll: true });
-}
-
-function closeStory() {
-  if (!drawer.open) return;
-  if (store.get().motion) {
-    drawer.classList.add('is-closing');
-    setTimeout(finishClose, 190);
-  } else finishClose();
-}
-
-/** Visitor asked to close: step back through history if we added the entry. */
-function requestClose() {
-  if (openedByPush && parseHash(location.hash).story) {
-    openedByPush = false;
-    history.back();
-  } else {
-    history.replaceState(null, '', hashFor({ section: store.get().section, topic: store.get().topic }));
-    closeStory();
-  }
-}
-
-drawer.addEventListener('cancel', (e) => {
-  e.preventDefault();
-  requestClose();
-});
-$('[data-drawer-close]').addEventListener('click', requestClose);
-drawer.addEventListener('click', (e) => {
-  if (e.target === drawer) requestClose();
-});
-drawerContent.addEventListener(
-  'scroll',
-  () => {
-    const max = drawerContent.scrollHeight - drawerContent.clientHeight;
-    drawer.style.setProperty('--drawer-progress', `${max > 0 ? (drawerContent.scrollTop / max) * 100 : 100}%`);
   },
-  { passive: true },
-);
+});
 
 // ---------------------------------------------------------------------------
-// Routing
+// Story dialog and routing
 // ---------------------------------------------------------------------------
-let programmaticUntil = 0;
+const dialog = createStoryDialog({
+  drawer: $('#story-drawer'),
+  content: $('#drawer-content'),
+  motion: () => store.get().motion,
+  fallbackHash: () => hashFor({ section: store.get().section, topic: store.get().topic }),
+  onOpen: (story) => {
+    lenis?.stop();
+    store.set({ story: story.id });
+  },
+  onClose: () => {
+    lenis?.start();
+    store.set({ story: null });
+  },
+});
 
-function scrollToSection(section, topic, { instant = false } = {}) {
+function scrollToSection(section, { instant = false } = {}) {
   if (section === 'top') return scrollToY(0, { instant });
-  if (section === 'explore') {
-    const i = topic ? steps.findIndex((s) => s.id === topic) : 0;
-    scrollToY(stepY(Math.max(i, 0)), { instant });
-    if (!flyTrigger) showStep(Math.max(i, 0));
-    return;
-  }
   const el = document.getElementById(anchorFor(section));
   if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
 }
@@ -456,17 +190,17 @@ function applyRoute(route, { initial = false } = {}) {
   if (route.story) {
     if (initial) {
       store.set({ section: route.section, topic: route.topic });
-      scrollToSection(route.section, route.topic, { instant: true });
+      scrollToSection(route.section, { instant: true });
     }
-    openStory(route.story);
+    dialog.open(route.story);
     return;
   }
   const returning = !!prev.story;
-  if (drawer.open) closeStory();
+  if (dialog.isOpen) dialog.close();
   const patch = { section: route.section };
   if (route.topic) patch.topic = route.topic;
   store.set(patch);
-  if (!returning) scrollToSection(route.section, route.topic, { instant: initial });
+  if (!returning) scrollToSection(route.section, { instant: initial });
 }
 
 addEventListener('hashchange', () => applyRoute(parseHash(location.hash)));
@@ -475,24 +209,18 @@ document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#/"]');
   if (a && a.getAttribute('href') === location.hash && !a.dataset.storyTrigger) {
     e.preventDefault();
-    const r = parseHash(location.hash);
-    scrollToSection(r.section, r.topic);
+    scrollToSection(parseHash(location.hash).section);
   }
 });
 
-// ---------------------------------------------------------------------------
-// Section spy: the section in the middle of the viewport sets the state
-// ---------------------------------------------------------------------------
+// The section in the middle of the viewport sets the state.
 const spy = new IntersectionObserver(
   (entries) => {
     if (performance.now() < programmaticUntil || store.get().story) return;
     const hit = entries.filter((e) => e.isIntersecting).pop();
     if (!hit) return;
     const section = hit.target.dataset.chapter || hit.target.dataset.section;
-    if (section === store.get().section || section === 'explore') {
-      if (section === 'explore' && store.get().section !== 'explore') store.set({ section: 'explore' });
-      return;
-    }
+    if (section === store.get().section) return;
     const patch = { section };
     if (topicTarget[section]) patch.topic = section;
     store.set(patch);
@@ -502,26 +230,15 @@ const spy = new IntersectionObserver(
 );
 $$('[data-section], .poster').forEach((s) => spy.observe(s));
 
-// ---------------------------------------------------------------------------
-// Render from state
-// ---------------------------------------------------------------------------
 const navLinks = $$('.site-nav a');
 store.subscribe((s, prev) => {
-  if (scene) {
-    if (s.focus !== prev.focus) scene.setFocus(s.focus);
-    if (s.motion !== prev.motion) {
-      scene.setReducedMotion(!s.motion);
-      scene.setMotion(s.motion);
-    }
-  }
-  if (s.section !== prev.section) {
-    const group = topicTarget[s.section] ? 'chapter' : s.section;
-    for (const a of navLinks) {
-      const h = a.getAttribute('href');
-      const on = (group === 'chapter' && h.startsWith('#/chapter')) || h === `#/${s.section}`;
-      a.toggleAttribute('aria-current', on);
-      if (on) a.setAttribute('aria-current', 'true');
-    }
+  if (s.section === prev.section) return;
+  const group = topicTarget[s.section] ? 'chapter' : s.section;
+  for (const a of navLinks) {
+    const h = a.getAttribute('href');
+    const on = (group === 'chapter' && h.startsWith('#/chapter')) || h === `#/${s.section}`;
+    a.toggleAttribute('aria-current', on);
+    if (on) a.setAttribute('aria-current', 'true');
   }
 });
 
@@ -540,7 +257,9 @@ onScroll();
 const visibleFilms = new Set();
 function syncVideos() {
   for (const v of $$('video.film')) {
-    if (store.get().motion && visibleFilms.has(v) && !document.hidden) {
+    // In the hero reel only the showing film plays.
+    const waiting = v.parentElement === heroReel && !v.classList.contains('is-active');
+    if (store.get().motion && visibleFilms.has(v) && !document.hidden && !waiting) {
       if (v.preload === 'none') v.preload = 'auto';
       v.play().catch(() => {});
     } else v.pause();
@@ -553,9 +272,6 @@ const filmObserver = new IntersectionObserver(
   },
   { rootMargin: '10% 0px' },
 );
-function observeFilms() {
-  $$('video.film').forEach((v) => filmObserver.observe(v));
-}
 document.addEventListener('visibilitychange', syncVideos);
 
 // Hero reel: human moments from each chapter, crossfading.
@@ -588,6 +304,7 @@ function advanceReel() {
   next.preload = 'auto';
   next.currentTime = 0;
   next.classList.add('is-active');
+  syncVideos();
   $('.hero-caption-topic').textContent = reel[reelIndex].topic;
   $('.hero-caption-text').textContent = REEL_CAPTIONS[reelIndex];
 }
@@ -657,15 +374,11 @@ document.addEventListener('click', (e) => {
 // Start
 // ---------------------------------------------------------------------------
 buildReel();
-observeFilms();
+$$('video.film').forEach((v) => filmObserver.observe(v));
 buildScroll();
 applyRoute(parseHash(location.hash), { initial: true });
-
-const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 1200 }) : setTimeout(fn, 200));
-if (document.readyState === 'complete') idle(startScene);
-else addEventListener('load', () => idle(startScene), { once: true });
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 addEventListener('pagehide', () => clearInterval(reelTimer));
 
 // Exposed for automated checks only.
-window.__impact = { store, get scene() { return scene; }, topics, get lenis() { return lenis; } };
+window.__impact = { store, get lenis() { return lenis; } };

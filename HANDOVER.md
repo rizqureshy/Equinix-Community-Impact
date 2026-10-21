@@ -7,7 +7,8 @@ Prepared 21 October 2026 for Rizwan Qureshy. Second version: a dark cinematic re
 A single-page experience in `impact/`, built with Vite, Three.js (WebGLRenderer), GSAP ScrollTrigger and Lenis smooth scrolling. Content is pre-rendered into the HTML at build time.
 
 - **Hero:** a full-screen reel of human moments (care, discovery, opportunity, community, swimmers) crossfading behind giant type: "Infrastructure for human *possibility.*" The title rises into place on load and lifts away as you scroll.
-- **Scroll-to-expand flythrough:** the 3D community grows from a framed card to full screen as you scroll ("See what / connection makes possible." slides apart). Then the section stays pinned while scrolling flies the camera to each place: hospital, research centre, learning space, homes, aquatic centre, and finally the data center. Each stop draws its glowing red thread (amber for heat) and shows a caption with the human moment and a link to the story. Step controls and in-scene place buttons jump straight to any stop.
+- **The 3D community, on its own page (`explore.html`):** kept out of the main scroll at your request. It opens on an introduction, then a click-through tour visits each place: hospital, research centre, learning space, homes, aquatic centre, and finally the data center. Visitors move with Next and Previous, the step bar, arrow keys, the in-scene labels or by clicking a building. Each stop draws its glowing red thread (amber for heat), shows a caption, and opens its story over the scene. Shared links point back to the main page. Three.js loads only on this page.
+- **Invitation band:** on the main page, a full-screen film of the model with "Step inside the connected community." links to the 3D page, as do the hero and the header.
 - **Statement:** "Equinix is not a visitor in these places…" lights up word by word as you scroll.
 - **Five story posters:** each chapter is a full-screen film with a giant title and the human moment. The story panel then scrolls up over the film, carrying the connection, the two sets of contributions, the scoped figure and the story links.
 - **In numbers:** four headline figures that count up, each with its scope and a source link.
@@ -23,13 +24,13 @@ A single-page experience in `impact/`, built with Vite, Three.js (WebGLRenderer)
 
 **Choices worth noting**
 
-- You chose the dark cinematic mood and the scroll-driven flythrough.
+- You chose the dark cinematic mood. The scroll-driven flythrough was then moved to its own page, so the main page stays a pure scroll story.
 - The headline is kept as briefed.
 - The Community chapter is built on the U.S. Community Principles (Minooka, grid costs, local procurement), following your steer that Equinix is part of the community it serves.
 - Inter Tight (display and text) with Fraunces italic for accents, both bundled locally until approved Equinix type is supplied.
 - Equinix red is approximated as `#e31c25`, with brighter variants for glow and for small text on dark backgrounds. All are pending brand review. The wordmark is plain text, and no logo is drawn.
 - The three light opening studies from version one were retired with that design.
-- **Motion:** scroll choreography only runs with motion on. With reduced motion or "Pause motion", nothing is pinned or scroll-jacked, the flythrough becomes a tour you click through, and films stop.
+- **Motion:** scroll choreography only runs with motion on. With reduced motion or "Pause motion", smooth scrolling and scroll effects switch off and films stop. The 3D page shows connections instantly, without camera travel.
 
 ## Tool contributions
 
@@ -39,7 +40,7 @@ Searches across two rounds covered heroes, chapter navigation, drawers, tabs, im
 
 | Reference | Used for |
 | --- | --- |
-| Scroll media expansion hero (arunachalam/scroll-expansion-hero) | The flythrough opening: the stage grows from a card to full screen while the split title slides apart |
+| Scroll media expansion hero (arunachalam/scroll-expansion-hero) | Informed the flythrough, now retired; its full-bleed film treatment carries into the invitation band |
 | Scroll Gallery (soralabs/scroll-gallery) | Full-bleed poster chapters with scroll-driven settle and title over film |
 | Stacking Cards (danielpetho/stacking-cards) | The five promises stacking and easing back |
 | Scroll word reveal (motiondotdev) | The statement lighting up word by word |
@@ -108,10 +109,11 @@ Sources were checked on 21 October 2026. Your uploaded PDFs were used to confirm
 - **Unit tests (`npm test`):** 17 pass.
   - Content model: required fields, registered sources, metric scope, no em dashes, media files present, no "powering hospitals".
   - Routing, state and sharing.
-- **Browser checks (`npm run test:e2e`):** 41 pass in headless Chromium with software WebGL.
+- **Browser checks (`npm run test:e2e`):** 52 pass in headless Chromium with software WebGL.
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Loading:** the headline is usable before the scene loads.
-  - **Scene and tour:** explore routes fly to the right place and caption, step controls and in-scene place buttons move the tour, and chapter routes land on their poster. Smooth scrolling is active with motion on.
+  - **Main page:** the scene is not loaded, the 3D page is linked from the hero, nav and invitation, chapter routes land on their poster, and old explore links redirect to the 3D page.
+  - **3D page:** opens on its introduction; Start, arrow keys, the step bar and labels move the tour; captions match; stories open over the scene and closing keeps the place in view; direct place links work.
   - **Stories:** a story opens from the tour with its URL, focus moves into it, Escape and Back close it with focus restored, and Forward reopens it. Direct links work.
   - **Copy and filters:** copy works with a fallback when the clipboard is denied. Gallery filters work, with an empty state and reset.
   - **Accessibility and layout:** buttons are at least 44 px; place labels are 34 px with a 46 px hit area. Reduced motion turns off smooth scrolling, pinning and looping effects, shows connections instantly, and the tour still works by click. Mobile has no sideways scroll, the tour caption fits the screen, and stories open full width. Without WebGL the illustration is shown and controls still work.
@@ -131,6 +133,6 @@ Sources were checked on 21 October 2026. Your uploaded PDFs were used to confirm
 - **Documentary media:** approved photography of real people and facilities would strengthen every chapter. The page labels all current imagery as illustrative.
 - **Scene architecture:** buildings are procedural primitives. A modelled data center would add character.
 - **Asset sizes:** the 3D chunk is about 660 KB (180 KB gzipped) and loads after the page is usable. Seven films total about 5 MB and load only near the viewport.
-- **Scroll length:** the pinned tour adds about six screens of scrolling. Step controls and the header let visitors jump past it.
+
 - **Higgsfield access:** the CLI sign-in lived in this session's container. Future sessions need to sign in again.
 - **Repository visibility:** the repository is public. Uploaded PDFs and the sales slides are kept out of git (`media-src/sources/` is ignored). Decide hosting and access before enabling Pages.

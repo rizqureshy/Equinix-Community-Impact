@@ -32,12 +32,12 @@
       </a>
       <nav class="site-nav" aria-label="Primary">
         <ul>
-          <li><a href="#/explore">Explore</a></li>
           <li><a href="#/chapter/care">Stories</a></li>
           <li><a href="#/principles">Promises</a></li>
           <li><a href="#/people">People</a></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/sources">Sources</a></li>
+          <li><a href="explore.html" class="nav-3d">3D community</a></li>
         </ul>
       </nav>
       <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
@@ -61,56 +61,44 @@
           <div class="hero-foot">
             <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
             <div class="actions">
-              <a class="btn btn--primary btn--large" href="#/explore">Explore the connections</a>
-              <a class="btn btn--ghost btn--large" href="#/chapter/care">Discover the stories</a>
+              <a class="btn btn--primary btn--large" href="#/chapter/care">Discover the stories</a>
+              <a class="btn btn--ghost btn--large" href="explore.html">Explore the community in 3D</a>
             </div>
           </div>
         </div>
         <p class="hero-caption" aria-live="off"><span class="hero-caption-topic">Care</span> <span class="hero-caption-text">A care team reading a scan</span> <span class="hero-caption-note">Illustrative, AI generated</span></p>
-        <a class="scroll-cue" href="#/explore"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
-      </section>
-
-      <!-- Flythrough: the community expands to full screen, then the camera visits each place -->
-      <section class="fly" id="explore" data-section="explore" aria-labelledby="explore-title">
-        <div class="fly-pin">
-          <h2 class="fly-title" id="explore-title">
-            <span class="fly-title-a">See what</span>
-            <span class="fly-title-b">connection makes possible.</span>
-          </h2>
-          <div class="stage" id="stage" data-scene-state="loading">
-            <figure class="stage-fallback" aria-hidden="true">
-              <img src="media/community-model-1200.webp" srcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1130" loading="lazy" />
-            </figure>
-            <div class="scene-host" id="scene-host"></div>
-            <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
-              <button type="button" class="place-label" data-place="hospital"><span class="place-dot" aria-hidden="true"></span><span>Hospital</span></button>
-              <button type="button" class="place-label" data-place="research"><span class="place-dot" aria-hidden="true"></span><span>Research centre</span></button>
-              <button type="button" class="place-label" data-place="learning"><span class="place-dot" aria-hidden="true"></span><span>Learning space</span></button>
-              <button type="button" class="place-label" data-place="homes"><span class="place-dot" aria-hidden="true"></span><span>Homes</span></button>
-              <button type="button" class="place-label" data-place="aquatic"><span class="place-dot place-dot--heat" aria-hidden="true"></span><span>Aquatic centre</span></button>
-              <button type="button" class="place-label place-label--dc" data-place="datacenter"><span class="place-dot" aria-hidden="true"></span><span>Equinix data center</span></button>
-            </div>
-            <div class="stage-legend" aria-hidden="true">
-              <span><i class="legend-line"></i>Digital connection</span>
-              <span><i class="legend-line legend-line--heat"></i>Recovered heat</span>
-            </div>
-            <div class="fly-ui">
-              <!--@flythrough-->
-            </div>
-            <p class="scene-caption">An illustrative composite, not a real place or network.<span class="caption-more"> Each story refers to its named location.</span></p>
-          </div>
-        </div>
+        <a class="scroll-cue" href="#/stories"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
       </section>
 
       <!-- Statement revealed word by word -->
-      <section class="statement" id="statement" aria-label="Our role">
+      <section class="statement" id="stories" data-section="stories" aria-label="Our role">
         <p class="statement-text" data-words>Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
       </section>
 
       <!-- Story posters -->
-      <div class="posters" id="stories" aria-label="Connected story chapters">
+      <div class="posters" aria-label="Connected story chapters">
         <!--@chapters-->
       </div>
+
+      <!-- Invitation to the separate 3D community -->
+      <section class="invite" id="community-3d" aria-labelledby="invite-title">
+        <div class="invite-media">
+          <video class="film" muted playsinline loop preload="none" poster="media/clip-community-poster.jpg" aria-label="A slow drift around an architectural model of a small community.">
+            <source src="media/clip-community.webm" type="video/webm" />
+            <source src="media/clip-community.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="invite-shade" aria-hidden="true"></div>
+        <div class="invite-copy wrap">
+          <p class="eyebrow eyebrow--light">Explore in 3D</p>
+          <h2 class="section-title section-title--xl" id="invite-title">Step inside the connected <em>community.</em></h2>
+          <p class="section-lede">Visit a hospital, a research lab, a school, homes and a public pool, and follow the red thread from each one back to the data center at its heart.</p>
+          <div class="actions">
+            <a class="btn btn--primary btn--large" href="explore.html">Enter the 3D community</a>
+          </div>
+          <p class="invite-note">Illustrative model and film, AI generated. Not a real place or network.</p>
+        </div>
+      </section>
 
       <!-- Numbers -->
       <section class="impact" id="impact" aria-labelledby="impact-title">

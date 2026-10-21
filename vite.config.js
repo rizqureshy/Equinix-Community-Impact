@@ -37,6 +37,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),
+        explore: resolve(import.meta.dirname, 'impact/explore.html'),
       },
     },
   },
