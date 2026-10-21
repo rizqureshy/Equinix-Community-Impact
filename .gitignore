@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+# Uploaded reference documents (internal slides, PDF captures): kept locally, never committed
+media-src/sources/

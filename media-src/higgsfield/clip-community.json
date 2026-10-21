@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T04:38:40.074749Z",
+    "display_name": "Kling v3.0",
+    "id": "3f317a85-4536-48c9-9dd9-2f4e4ac1e0f2",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "0ee3ea38-9488-4cb2-a4c1-70666cbc0e78",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/0ee3ea38-9488-4cb2-a4c1-70666cbc0e78_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Very slow, smooth camera push-in and slight orbit around the architectural scale model. Soft window sunlight gently drifts across the model as if clouds pass. Nothing else moves. No new objects, no people, no text. Calm, premium, steady.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043840_3f317a85-4536-48c9-9dd9-2f4e4ac1e0f2.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043840_3f317a85-4536-48c9-9dd9-2f4e4ac1e0f2_thumbnail.webp"
+  }
+]

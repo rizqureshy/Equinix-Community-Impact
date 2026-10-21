@@ -1,0 +1,277 @@
+{
+  "generated": [
+    {
+      "key": "A-nb2",
+      "generationId": "d5b65aeb-c578-4f80-9b35-1f7fc76e6f0f",
+      "model": "Nano Banana 2",
+      "jobType": "nano_banana_flash",
+      "createdAt": "2026-10-21T04:34:01.427984Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "resolution": "2k",
+        "width": 2752,
+        "height": 1536
+      },
+      "promptFile": "media-src/higgsfield/study-A-community.prompt.txt",
+      "original": "media-src/higgsfield/A-nb2.png",
+      "estimatedCredits": 2,
+      "status": "rejected",
+      "usage": "Alternative opening study; rejected: rendered a \"Hospital\" text label and a flatter light",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "A-sd5",
+      "generationId": "af6a20d2-ec55-4d51-af0a-4ceb73c5ccea",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:34:01.734607Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "resolution": "2k",
+        "width": 2720,
+        "height": 1536,
+        "seed": 527155
+      },
+      "promptFile": "media-src/higgsfield/study-A-community.prompt.txt",
+      "original": "media-src/higgsfield/A-sd5.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Opening study A reference; scene fallback image (community-model-*.webp); clip-community start frame",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "care",
+      "generationId": "a2ba7305-3f2d-485d-afad-bb8a5443ac4c",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:24.758925Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 35882
+      },
+      "promptFile": "media-src/higgsfield/care.prompt.txt",
+      "original": "media-src/higgsfield/care.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Care chapter and story media (right half cropped; left half of source was empty)",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-community",
+      "generationId": "3f317a85-4536-48c9-9dd9-2f4e4ac1e0f2",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T04:38:40.074749Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "width": 1920,
+        "height": 1080,
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-community.prompt.txt",
+      "original": "media-src/higgsfield/clip-community.mp4",
+      "estimatedCredits": 8.75,
+      "status": "reserve",
+      "usage": "Not placed in the page; available as an opening film layer",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-people",
+      "generationId": "c1235f69-1eb5-41e9-82a8-7979104ae366",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T04:38:39.87883Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "width": 1920,
+        "height": 1080,
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-people.prompt.txt",
+      "original": "media-src/higgsfield/clip-people.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "People section ambient film",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-pool",
+      "generationId": "ae518e2a-f0bc-4d95-95df-4ff35a407c30",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T04:38:39.560075Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "width": 1920,
+        "height": 1080,
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-pool.prompt.txt",
+      "original": "media-src/higgsfield/clip-pool.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "Responsible growth chapter ambient film",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "community",
+      "generationId": "0409d5e3-9c9a-47e6-88c5-e294043de654",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:23.928947Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 791601
+      },
+      "promptFile": "media-src/higgsfield/community.prompt.txt",
+      "original": "media-src/higgsfield/community.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Digital inclusion story media",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "discovery",
+      "generationId": "d92ccbfc-c997-43b6-a878-847bb1238e70",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:25.439262Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 383517
+      },
+      "promptFile": "media-src/higgsfield/discovery.prompt.txt",
+      "original": "media-src/higgsfield/discovery.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Discovery chapter and story media",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "neighbourhood",
+      "generationId": "f399c835-7686-42ff-aa3d-bb8719a2b250",
+      "model": "Nano Banana 2",
+      "jobType": "nano_banana_flash",
+      "createdAt": "2026-10-21T04:57:15.395821Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2528,
+        "height": 1696
+      },
+      "promptFile": "media-src/higgsfield/neighbourhood.prompt.txt",
+      "original": "media-src/higgsfield/neighbourhood.png",
+      "estimatedCredits": 2,
+      "status": "selected",
+      "usage": "Community chapter and Community Principles story media",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "opportunity-v2",
+      "generationId": "e1d2fc0f-38ba-4fc1-94ae-eab7525282d7",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:36:42.035111Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 835703
+      },
+      "promptFile": "media-src/higgsfield/opportunity-v2.prompt.txt",
+      "original": "media-src/higgsfield/opportunity-v2.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Opportunity chapter and story media",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "opportunity",
+      "generationId": "24441d66-cae0-4e9c-8caf-805b8ebc72b6",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:24.256119Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 449972
+      },
+      "promptFile": "media-src/higgsfield/opportunity.prompt.txt",
+      "original": "media-src/higgsfield/opportunity.png",
+      "estimatedCredits": 2.5,
+      "status": "rejected",
+      "usage": "Students looked younger than the 14 to 18 programme age",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "people",
+      "generationId": "93a63b36-f2d6-47b8-b207-3cec043bbbf7",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:25.06536Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 450036
+      },
+      "promptFile": "media-src/higgsfield/people.prompt.txt",
+      "original": "media-src/higgsfield/people.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "clip-people start frame",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "resources",
+      "generationId": "b279b6d5-79ab-4f43-87d6-7e8c9561b621",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-10-21T04:35:24.530879Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 198040
+      },
+      "promptFile": "media-src/higgsfield/resources.prompt.txt",
+      "original": "media-src/higgsfield/resources.png",
+      "estimatedCredits": 2.5,
+      "status": "selected",
+      "usage": "Responsible growth story media; clip-pool start frame",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    }
+  ],
+  "failedJobs": [
+    {
+      "generationId": "22f619b4-807d-4872-96ae-cbc744d631dd",
+      "model": "Seedream 5.0 Pro",
+      "status": "failed",
+      "note": "Neighbourhood still; job failed on the service, no output"
+    },
+    {
+      "generationId": "3989b91e-3227-4566-9b67-759108016b2d",
+      "model": "Seedream 5.0 Pro",
+      "status": "failed",
+      "note": "Neighbourhood retry; job failed on the service, no output"
+    }
+  ],
+  "webOutputs": "impact/public/media (built by scripts/build_media.py)"
+}

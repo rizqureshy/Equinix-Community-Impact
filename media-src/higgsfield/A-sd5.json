@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T04:34:01.734607Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "af6a20d2-ec55-4d51-af0a-4ceb73c5ccea",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043401_af6a20d2-ec55-4d51-af0a-4ceb73c5ccea_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "batch_size": 1,
+      "height": 1536,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "Architectural visual study of a connected small community seen as a refined handcrafted scale model, elevated three-quarter view, soft morning daylight from the left, long gentle shadows. A modest hospital, a research building with a sawtooth roof, a learning centre with a small courtyard, rows of homes, a few local shops, a public aquatic and community centre, and a low, elegant modern data center with a planted roof sitting naturally among them. Warm stone, cream plaster and pale oak materials, muted sage greenery, tiny trees. A single very fine red thread runs along the ground connecting the buildings. Generous empty warm-white space in the upper third for typography. Calm, welcoming civic atmosphere, realistic proportions, museum-quality model craftsmanship, shallow depth of field. No text, no words, no logos, no people.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 527155,
+      "width": 2720
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043401_af6a20d2-ec55-4d51-af0a-4ceb73c5ccea.png",
+    "status": "completed"
+  }
+]

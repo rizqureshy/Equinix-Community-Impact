@@ -1,0 +1,22 @@
+[
+  {
+    "created_at": "2026-10-21T04:34:01.427984Z",
+    "display_name": "Nano Banana 2",
+    "id": "d5b65aeb-c578-4f80-9b35-1f7fc76e6f0f",
+    "job_type": "nano_banana_flash",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043401_d5b65aeb-c578-4f80-9b35-1f7fc76e6f0f_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "batch_size": 1,
+      "height": 1536,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "Architectural visual study of a connected small community seen as a refined handcrafted scale model, elevated three-quarter view, soft morning daylight from the left, long gentle shadows. A modest hospital, a research building with a sawtooth roof, a learning centre with a small courtyard, rows of homes, a few local shops, a public aquatic and community centre, and a low, elegant modern data center with a planted roof sitting naturally among them. Warm stone, cream plaster and pale oak materials, muted sage greenery, tiny trees. A single very fine red thread runs along the ground connecting the buildings. Generous empty warm-white space in the upper third for typography. Calm, welcoming civic atmosphere, realistic proportions, museum-quality model craftsmanship, shallow depth of field. No text, no words, no logos, no people.",
+      "reference_elements": [],
+      "resolution": "2k",
+      "width": 2752
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043401_d5b65aeb-c578-4f80-9b35-1f7fc76e6f0f.png",
+    "status": "completed"
+  }
+]

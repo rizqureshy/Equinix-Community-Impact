@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T04:38:39.87883Z",
+    "display_name": "Kling v3.0",
+    "id": "c1235f69-1eb5-41e9-82a8-7979104ae366",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "e2ef9b3e-299b-428a-a716-4dadd857efd6",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/e2ef9b3e-299b-428a-a716-4dadd857efd6_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "The engineer walks slowly along the daylit corridor beside the planted courtyard, leaves move slightly in a breeze, camera tracks gently alongside at walking pace. Calm, natural, documentary feel.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043839_c1235f69-1eb5-41e9-82a8-7979104ae366.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043839_c1235f69-1eb5-41e9-82a8-7979104ae366_thumbnail.webp"
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T04:35:25.06536Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "93a63b36-f2d6-47b8-b207-3cec043bbbf7",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043525_93a63b36-f2d6-47b8-b207-3cec043bbbf7_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "batch_size": 1,
+      "height": 1664,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "A data center operations engineer in a light grey work jacket walks along a daylit corridor beside a planted courtyard, holding a tablet, looking out through the glass with quiet pride, modern industrial architecture with warm materials. Documentary-style editorial photograph, natural window daylight, warm neutral colour grade, soft shadows, 35mm lens, shallow depth of field, calm and dignified, authentic diverse people with agency, real working environment, generous negative space on one side for typography. Screens show only abstract soft imagery with no readable text. No text, no words, no logos, no brand marks.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 450036,
+      "width": 2496
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043525_93a63b36-f2d6-47b8-b207-3cec043bbbf7.png",
+    "status": "completed"
+  }
+]

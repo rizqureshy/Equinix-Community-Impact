@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T04:35:23.928947Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "0409d5e3-9c9a-47e6-88c5-e294043de654",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043523_0409d5e3-9c9a-47e6-88c5-e294043de654_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "batch_size": 1,
+      "height": 1664,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "An older woman and a teenage volunteer sit side by side at a table in a sunlit community library, the teenager helping her use a tablet, both smiling gently, bookshelves and plants in the background. Documentary-style editorial photograph, natural window daylight, warm neutral colour grade, soft shadows, 35mm lens, shallow depth of field, calm and dignified, authentic diverse people with agency, real working environment, generous negative space on one side for typography. Screens show only abstract soft imagery with no readable text. No text, no words, no logos, no brand marks.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 791601,
+      "width": 2496
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043523_0409d5e3-9c9a-47e6-88c5-e294043de654.png",
+    "status": "completed"
+  }
+]

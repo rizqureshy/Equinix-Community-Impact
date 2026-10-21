@@ -1,0 +1,61 @@
+/* Design tokens. The palette is creative direction for the prototype, not an
+   official Equinix brand specification. Replace with approved brand tokens
+   when supplied; the red value below is pending brand review. */
+@import '@fontsource-variable/inter-tight';
+@import '@fontsource-variable/fraunces/opsz.css';
+
+:root {
+  --paper: #f6f1e9;
+  --paper-raised: #fbf8f3;
+  --stone: #ece4d7;
+  --stone-2: #dfd4c3;
+  --line: #d6cab8;
+  --ink: #23201c;
+  --ink-2: #4c463f;
+  --ink-3: #665e55;
+  --red: #e31c25;
+  --red-ink: #b8121b;
+  --amber: #d08a2b;
+  --amber-ink: #8c5208;
+  --sage: #7d8b67;
+  --focus: #1d4ed8;
+
+  --font-sans: 'Inter Tight Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --step--1: clamp(0.82rem, 0.8rem + 0.1vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.09rem);
+  --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem);
+  --step-2: clamp(1.45rem, 1.25rem + 0.9vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+  --step-4: clamp(2.5rem, 1.7rem + 3.6vw, 5.2rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+
+  --radius: 6px;
+  --radius-lg: 14px;
+  --shadow-panel: 0 1px 0 rgb(35 32 28 / 0.04), 0 24px 48px -28px rgb(35 32 28 / 0.28);
+  --header-h: 64px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-1: 180ms;
+  --dur-2: 420ms;
+  --dur-3: 900ms;
+
+  color-scheme: light;
+}
+
+:root[data-motion='off'] {
+  --dur-1: 0ms;
+  --dur-2: 0ms;
+  --dur-3: 0ms;
+}

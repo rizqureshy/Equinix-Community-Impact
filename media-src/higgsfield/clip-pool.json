@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T04:38:39.560075Z",
+    "display_name": "Kling v3.0",
+    "id": "ae518e2a-f0bc-4d95-95df-4ff35a407c30",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "ee751232-1cc1-4934-af35-fd93d2ef0ccc",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/ee751232-1cc1-4934-af35-fd93d2ef0ccc_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Gentle still water in the indoor pool with soft ripples, a lone swimmer glides slowly, steam rises softly in the morning light, camera holds steady with a barely perceptible drift. Calm, serene, natural.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043839_ae518e2a-f0bc-4d95-95df-4ff35a407c30.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043839_ae518e2a-f0bc-4d95-95df-4ff35a407c30_thumbnail.webp"
+  }
+]

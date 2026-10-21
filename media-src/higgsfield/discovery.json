@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T04:35:25.439262Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "d92ccbfc-c997-43b6-a878-847bb1238e70",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043525_d92ccbfc-c997-43b6-a878-847bb1238e70_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "batch_size": 1,
+      "height": 1664,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "Two researchers in a bright paediatric cancer research laboratory look together at a laptop showing an abstract colourful genomic visualisation, pipettes and sample racks softly out of focus, a sense of shared purpose. Documentary-style editorial photograph, natural window daylight, warm neutral colour grade, soft shadows, 35mm lens, shallow depth of field, calm and dignified, authentic diverse people with agency, real working environment, generous negative space on one side for typography. Screens show only abstract soft imagery with no readable text. No text, no words, no logos, no brand marks.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 383517,
+      "width": 2496
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043525_d92ccbfc-c997-43b6-a878-847bb1238e70.png",
+    "status": "completed"
+  }
+]

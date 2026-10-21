@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Infrastructure for human possibility | Equinix connected impact</title>
+    <meta name="description" content="Explore the connections between Equinix digital infrastructure and the care, discovery and opportunity that help communities thrive. Internal prototype for Equinix CRO colleagues." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f6f1e9" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f1e9'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preload" as="image" href="media/community-model-1200.webp" imagesrcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" imagesizes="100vw" fetchpriority="high" />
+    <script>
+      // Apply motion preference before first paint.
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
+        var q = new URLSearchParams(location.search).get('opening');
+        document.documentElement.dataset.opening = /^[abc]$/.test(q || '') ? q : 'a';
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start">
+        <span class="wordmark-name">Equinix</span>
+        <span class="wordmark-sep" aria-hidden="true"></span>
+        <span class="wordmark-sub">Our connected impact</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#/explore">Explore</a></li>
+          <li><a href="#/chapter/care">Stories</a></li>
+          <li><a href="#/principles">Principles</a></li>
+          <li><a href="#/people">People</a></li>
+          <li><a href="#/share">Share</a></li>
+          <li><a href="#/sources">Sources</a></li>
+        </ul>
+      </nav>
+      <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
+        <span class="motion-icon" aria-hidden="true"></span><span class="motion-label">Pause motion</span>
+      </button>
+    </header>
+
+    <nav class="thread-rail" aria-label="Chapters">
+      <span class="thread-rail-line" aria-hidden="true"><span class="thread-rail-fill"></span></span>
+      <ol>
+        <li><a href="#/" data-rail="top"><span class="rail-label">Overview</span></a></li>
+        <li><a href="#/explore" data-rail="explore"><span class="rail-label">Explore</span></a></li>
+        <li><a href="#/chapter/care" data-rail="care"><span class="rail-label">Care</span></a></li>
+        <li><a href="#/chapter/discovery" data-rail="discovery"><span class="rail-label">Discovery</span></a></li>
+        <li><a href="#/chapter/opportunity" data-rail="opportunity"><span class="rail-label">Opportunity</span></a></li>
+        <li><a href="#/chapter/community" data-rail="community"><span class="rail-label">Community</span></a></li>
+        <li><a href="#/chapter/resources" data-rail="resources"><span class="rail-label">Responsible growth</span></a></li>
+        <li><a href="#/principles" data-rail="principles"><span class="rail-label">Principles</span></a></li>
+        <li><a href="#/people" data-rail="people"><span class="rail-label">People</span></a></li>
+        <li><a href="#/share" data-rail="share"><span class="rail-label">Share</span></a></li>
+        <li><a href="#/sources" data-rail="sources"><span class="rail-label">Sources</span></a></li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <div class="journey">
+        <div class="stage" id="stage" data-scene-state="loading">
+          <figure class="stage-fallback" aria-hidden="true">
+            <img src="media/community-model-1200.webp" srcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1130" />
+          </figure>
+          <div class="scene-host" id="scene-host"></div>
+          <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
+            <button type="button" class="place-label" data-place="hospital" data-topic="care"><span class="place-dot" aria-hidden="true"></span><span>Hospital</span></button>
+            <button type="button" class="place-label" data-place="research" data-topic="discovery"><span class="place-dot" aria-hidden="true"></span><span>Research centre</span></button>
+            <button type="button" class="place-label" data-place="learning" data-topic="opportunity"><span class="place-dot" aria-hidden="true"></span><span>Learning space</span></button>
+            <button type="button" class="place-label" data-place="homes" data-topic="community"><span class="place-dot" aria-hidden="true"></span><span>Homes and library</span></button>
+            <button type="button" class="place-label" data-place="aquatic" data-topic="resources"><span class="place-dot place-dot--heat" aria-hidden="true"></span><span>Aquatic centre</span></button>
+            <button type="button" class="place-label place-label--dc" data-place="datacenter" data-topic="people"><span class="place-dot" aria-hidden="true"></span><span>Equinix data center</span></button>
+          </div>
+          <div class="stage-legend" aria-hidden="true">
+            <span><i class="legend-line"></i>Digital connection</span>
+            <span><i class="legend-line legend-line--heat"></i>Recovered heat</span>
+          </div>
+          <button type="button" class="overview-btn" data-overview>
+            <span aria-hidden="true">&#8634;</span> Community overview
+          </button>
+          <p class="scene-caption">An illustrative composite, not a real place or network.<span class="caption-more"> Each story refers to its named location.</span></p>
+        </div>
+
+        <div class="journey-content">
+          <section class="hero" id="top" data-section="top" data-focus="overview" aria-labelledby="hero-title">
+            <div class="hero-copy">
+              <p class="eyebrow">Equinix <span aria-hidden="true">|</span> Our connected impact</p>
+              <h1 class="hero-title" id="hero-title">Infrastructure for human&nbsp;possibility.</h1>
+              <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
+              <div class="hero-actions">
+                <a class="btn btn--primary btn--large" href="#/explore">Explore the connections</a>
+                <a class="btn btn--quiet btn--large" href="#/chapter/care">Discover the stories</a>
+              </div>
+            </div>
+            <ul class="human-windows" aria-label="People at the heart of the stories">
+              <li>
+                <a href="#/chapter/care" class="human-window">
+                  <img src="media/care-640.webp" alt="" width="640" height="853" loading="eager" decoding="async" />
+                  <span class="human-window-text"><span class="hw-topic">Care</span> A care team reading a scan</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/chapter/discovery" class="human-window">
+                  <img src="media/discovery-640.webp" alt="" width="640" height="427" loading="eager" decoding="async" />
+                  <span class="human-window-text"><span class="hw-topic">Discovery</span> Researchers comparing notes</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/chapter/opportunity" class="human-window">
+                  <img src="media/opportunity-640.webp" alt="" width="640" height="427" loading="eager" decoding="async" />
+                  <span class="human-window-text"><span class="hw-topic">Opportunity</span> Students on their first tour</span>
+                </a>
+              </li>
+            </ul>
+            <p class="hero-note">Images are illustrative and AI generated.</p>
+          </section>
+
+          <section class="explorer" id="explore" data-section="explore" data-focus="topic" aria-labelledby="explore-title">
+            <div class="section-inner">
+              <p class="eyebrow">The community explorer</p>
+              <h2 class="section-title" id="explore-title">See what connection makes possible.</h2>
+              <p class="section-lede">Choose a topic to follow the red thread from the people involved to the infrastructure behind them. You can also read every story in order below.</p>
+              <!--@explorer-->
+            </div>
+          </section>
+
+          <div class="chapters" id="stories" aria-label="Connected story chapters">
+            <!--@chapters-->
+          </div>
+        </div>
+      </div>
+
+      <section class="principles" id="principles" data-section="principles" aria-labelledby="principles-title">
+        <div class="section-inner section-inner--wide">
+          <p class="eyebrow">Part of the community</p>
+          <h2 class="section-title" id="principles-title">Five promises to the places we call home.</h2>
+          <p class="section-lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
+          <!--@principles-->
+        </div>
+      </section>
+
+      <section class="people" id="people" data-section="people" aria-labelledby="people-title">
+        <div class="section-inner section-inner--wide people-grid">
+          <div class="people-media">
+            <figure class="media media--video">
+              <video class="ambient-video" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
+                <source src="media/clip-people.webm" type="video/webm" />
+                <source src="media/clip-people.mp4" type="video/mp4" />
+              </video>
+              <figcaption class="media-note">Illustrative film, AI generated. Not a real Equinix employee or site.</figcaption>
+            </figure>
+          </div>
+          <div class="people-copy">
+            <p class="eyebrow">The people behind the connections</p>
+            <h2 class="section-title" id="people-title">Our people are part of the story.</h2>
+            <blockquote class="pull-quote">
+              <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
+              <footer>Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer, Equinix blog, March 2026</footer>
+            </blockquote>
+            <ul class="roles-list">
+              <li><h3>Operations teams</h3><p>Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
+              <li><h3>Customer and CRO teams</h3><p>The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
+              <li><h3>Heat export and sustainability engineers</h3><p>The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
+              <li><h3>Volunteers and ambassadors</h3><p>More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
+            </ul>
+            <p class="people-story"><strong>Kayla&rsquo;s path.</strong> A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago. <a href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="collection" id="share" data-section="share" aria-labelledby="share-title">
+        <div class="section-inner section-inner--wide">
+          <p class="eyebrow">Explore and carry it forward</p>
+          <h2 class="section-title" id="share-title">Find a story worth sharing.</h2>
+          <p class="section-lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
+          <!--@collection-->
+        </div>
+      </section>
+
+      <section class="sources" id="sources" data-section="sources" aria-labelledby="sources-title">
+        <div class="section-inner section-inner--wide">
+          <p class="eyebrow">Sources and progress</p>
+          <h2 class="section-title" id="sources-title">What we have done, are doing and have committed to.</h2>
+          <!--@sources-->
+          <p class="more-links">
+            <a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">Equinix Sustainability Report<span class="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="https://www.equinix.com/about/equinix-foundation" target="_blank" rel="noopener">Equinix Foundation<span class="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="https://equinixtogether.com/community-principles/" target="_blank" rel="noopener">U.S. Community Principles<span class="visually-hidden"> (opens in a new tab)</span></a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Internal prototype for Equinix CRO colleagues. The community scene and AI-generated images are illustrative. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
+    </footer>
+
+    <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title">
+      <div class="drawer-panel">
+        <div class="drawer-bar">
+          <span class="drawer-thread" aria-hidden="true"></span>
+          <button type="button" class="drawer-close" data-drawer-close aria-label="Close story">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="drawer-content" id="drawer-content"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./scripts/app.js"></script>
+  </body>
+</html>

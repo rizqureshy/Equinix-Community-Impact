@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T04:36:42.035111Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "e1d2fc0f-38ba-4fc1-94ae-eab7525282d7",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043642_e1d2fc0f-38ba-4fc1-94ae-eab7525282d7_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "batch_size": 1,
+      "height": 1664,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "Four older teenage students aged 16 to 17, diverse, wearing visitor lanyards, on an educational careers tour in a bright clean data center operations area with daylight from a high window, a friendly woman engineer in a light grey work jacket explaining a cooling system to them, students curious, asking questions, one taking notes. Documentary-style editorial photograph, natural window daylight, warm neutral colour grade, soft shadows, 35mm lens, shallow depth of field, calm and dignified, authentic diverse people with agency, real working environment. Screens show only abstract soft imagery with no readable text. No text, no words, no logos, no brand marks.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 835703,
+      "width": 2496
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_043642_e1d2fc0f-38ba-4fc1-94ae-eab7525282d7.png",
+    "status": "completed"
+  }
+]
