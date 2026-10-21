@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fly through the community | Equinix connected impact</title>
+    <meta name="description" content="A scroll-driven flight through a miniature community connected by Equinix: care, discovery, opportunity, neighbourhood, recovered heat and the data center at its heart. Internal prototype." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0f0d0b" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0d0b'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preload" as="image" href="media/flight/scene-1-1600.webp" fetchpriority="high" />
+    <script>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body class="flight-page">
+    <a class="skip-link" href="#scenes">Skip to the scenes</a>
+
+    <header class="site-header is-scrolled">
+      <span class="scroll-progress" aria-hidden="true"></span>
+      <a class="wordmark" href="./" aria-label="Equinix, our connected impact. Back to the stories">
+        <span class="wordmark-name">Equinix</span>
+        <span class="wordmark-sep" aria-hidden="true"></span>
+        <span class="wordmark-sub">Fly through the community</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="./">&larr; Back to the stories</a></li>
+          <li><a href="explore.html">Interactive 3D</a></li>
+        </ul>
+      </nav>
+      <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
+        <span class="motion-icon" aria-hidden="true"></span><span class="motion-label">Pause motion</span>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="flight" id="flight" aria-label="A flight through the community">
+        <div class="flight-stage" id="flight-stage">
+          <img class="flight-poster" src="media/flight/scene-1-1600.webp" alt="" fetchpriority="high" />
+          <div class="flight-shade" aria-hidden="true"></div>
+
+          <div class="flight-intro">
+            <p class="eyebrow eyebrow--light">Fly through the community</p>
+            <h1 class="explore-title">Follow the thread <em>from place to place.</em></h1>
+            <p class="explore-lede">Scroll to fly through a small community connected by Equinix, from the hospital to the data center at its heart.</p>
+            <p class="flight-cue"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to fly</p>
+          </div>
+
+          <div class="flight-scenes" id="scenes">
+            <!--@flight-->
+          </div>
+
+          <nav class="flight-nav" aria-label="Scenes">
+            <button type="button" class="flight-dot" data-go="0" aria-label="Hospital"><i></i></button>
+            <button type="button" class="flight-dot" data-go="1" aria-label="Research centre"><i></i></button>
+            <button type="button" class="flight-dot" data-go="2" aria-label="Learning space"><i></i></button>
+            <button type="button" class="flight-dot" data-go="3" aria-label="Homes and neighbourhood"><i></i></button>
+            <button type="button" class="flight-dot" data-go="4" aria-label="Aquatic centre"><i></i></button>
+            <button type="button" class="flight-dot" data-go="5" aria-label="Equinix data center"><i></i></button>
+          </nav>
+          <p class="flight-note">An illustrative AI-generated film, not a real place or network. Each story refers to its named location.</p>
+        </div>
+      </section>
+
+      <section class="flight-end wrap" aria-labelledby="flight-end-title">
+        <p class="eyebrow">Every thread begins somewhere</p>
+        <h2 class="section-title" id="flight-end-title">Now meet the people behind each place.</h2>
+        <div class="actions">
+          <a class="btn btn--primary btn--large" href="./#/chapter/care">Read the stories</a>
+          <a class="btn btn--ghost btn--large" href="explore.html">Explore the interactive 3D model</a>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title">
+      <div class="drawer-panel">
+        <div class="drawer-bar">
+          <span class="drawer-thread" aria-hidden="true"></span>
+          <button type="button" class="drawer-close" data-drawer-close aria-label="Close story">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="drawer-content" id="drawer-content"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./scripts/flight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+[
+  {
+    "created_at": "2026-10-21T06:55:08.729153Z",
+    "display_name": "Kling v3.0",
+    "id": "85bf0ab4-a353-406f-b76f-6872cc35b4a6",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "1c660e7b-148f-4698-b0a3-3bd745184b69",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/1c660e7b-148f-4698-b0a3-3bd745184b69.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "5698869f-2080-403d-9009-5c20c5ad8d9b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/5698869f-2080-403d-9009-5c20c5ad8d9b.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Single continuous cinematic camera move, no cuts, no morphing. The camera rises high and pulls back until the whole neighbourhood island is small below, it drifts out of frame to the left as the camera glides across the dark sky, and a second, separate floating island with an aquatic centre comes into view on the right and grows as the camera descends toward it, arriving at exactly the framing of the final image. The two islands are different places and never blend into each other. Refined architectural miniature islands, golden-hour dusk light, warm glowing windows, tilt-shift look, deep charcoal background. Smooth, graceful, slow motion. No text, no captions.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_065508_85bf0ab4-a353-406f-b76f-6872cc35b4a6.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_065508_85bf0ab4-a353-406f-b76f-6872cc35b4a6_thumbnail.webp"
+  }
+]

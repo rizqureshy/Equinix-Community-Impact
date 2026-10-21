@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T06:48:40.047019Z",
+    "display_name": "Kling v3.0",
+    "id": "48384b43-7e59-4f83-a6da-94ee2a2f2246",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "51a3d74e-0d8b-484c-84df-eac4608d0650",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/51a3d74e-0d8b-484c-84df-eac4608d0650_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Single continuous cinematic camera move, no cuts. Begin high and far, looking down at the whole miniature island from outside like a tiny model. The camera slowly glides forward and descends toward it, sweeping in toward the lit reading room window where two clinicians study a glowing scan, as if flying inside the miniature world. Refined architectural miniature, golden-hour dusk light, warm glowing windows, tilt-shift look, deep charcoal background. Smooth, graceful, slow motion, subtle parallax. No text, no captions.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064840_48384b43-7e59-4f83-a6da-94ee2a2f2246.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064840_48384b43-7e59-4f83-a6da-94ee2a2f2246_thumbnail.webp"
+  }
+]

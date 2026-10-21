@@ -313,3 +313,23 @@ export function sourcesHTML() {
       <p class="source-meta">Summaries on this page are original paraphrases. Figures keep the scope and period stated by each source.</p>
     </details>`;
 }
+
+// ---------------------------------------------------------------------------
+// Flight: one caption per scene, with a still for the static (no motion) view
+// ---------------------------------------------------------------------------
+export function flightScenesHTML() {
+  const steps = flySteps();
+  return steps
+    .map(
+      (s, i) => `<article class="flight-scene" data-scene="${i}" id="scene-${s.id}" aria-labelledby="flight-scene-${i}">
+      <img class="flight-still" src="media/flight/scene-${i + 1}-1600.webp" alt="" loading="lazy" decoding="async" width="1600" height="900">
+      <div class="flight-caption">
+        <p class="fly-kicker"><span>${String(i + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')}</span> ${esc(s.label)}</p>
+        <h2 class="flight-place" id="flight-scene-${i}">${esc(s.place)}</h2>
+        <p class="fly-moment">${esc(s.moment)}</p>
+        ${s.story ? `<a class="btn btn--primary btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">${esc(s.title)}</a>` : `<a class="btn btn--primary btn--small" href="./#/principles">Our five community promises</a>`}
+      </div>
+    </article>`,
+    )
+    .join('');
+}

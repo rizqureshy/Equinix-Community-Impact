@@ -54,7 +54,7 @@ try {
   await wait(2500);
   check(await p.evaluate(() => !!window.__impact.lenis), 'smooth scrolling active when motion is on');
   check(await p.evaluate(() => !document.querySelector('#stage') && !performance.getEntriesByType('resource').some((r) => /scene-/.test(r.name))), 'main page does not load the 3D scene');
-  check((await p.locator('a[href="explore.html"]').count()) >= 3, 'hero, nav and invitation link to the 3D community');
+  check((await p.locator('a[href="flight.html"]').count()) >= 3 && (await p.locator('a[href="explore.html"]').count()) >= 1, 'hero, nav and invitation link to the fly-through and 3D model');
 
   await p.goto(`${BASE}#/chapter/community`);
   await wait(2500);
@@ -143,6 +143,31 @@ try {
   check(p.external.length === 0, 'no requests leave the host (3D page)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (3D page)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (3D page)', p.errors.slice(0, 3).join(' | '));
+  await p.context().close();
+
+  // ---- Fly-through film page --------------------------------------------------
+  p = await open(browser, `${BASE}flight.html`);
+  await wait(2500);
+  check(await p.locator('.flight-intro h1').isVisible(), 'fly-through opens on its title');
+  check(await p.evaluate(() => !!window.__impact.lenis && document.querySelector('#flight').offsetHeight > innerHeight * 10), 'fly-through pins a long scrubbed film');
+  await p.locator('.flight-dot[data-go="2"]').click();
+  await wait(4500);
+  check((await p.evaluate(() => window.__impact.current)) === 2, 'scene controls fly to their place', JSON.stringify(await p.evaluate(() => window.__impact.state)));
+  check(await p.locator('.flight-scene.is-active .flight-place').textContent() === 'Learning space', 'caption appears for the arrived scene');
+  check(await p.evaluate(() => [...document.querySelectorAll('.flight-clip')].some((v) => v.readyState >= 2 && v.style.opacity === '1')), 'the film frame for the scene is decoded and showing');
+  await p.locator('.flight-scene.is-active [data-story-trigger]').click();
+  await wait(800);
+  check(await isOpen(p) && (await p.evaluate(() => location.hash)) === '#/story/pathways-to-tech', 'story opens over the film');
+  await p.keyboard.press('Escape');
+  await wait(800);
+  check(!(await isOpen(p)), 'closing returns to the film');
+  check(p.external.length === 0, 'no requests leave the host (fly-through)', p.external.slice(0, 3).join(', '));
+  check(p.failed.length === 0, 'no missing local assets (fly-through)', p.failed.slice(0, 3).join(', '));
+  check(p.errors.length === 0, 'no JavaScript errors (fly-through)', p.errors.slice(0, 3).join(' | '));
+  await p.context().close();
+  p = await open(browser, `${BASE}flight.html`, { reducedMotion: 'reduce' });
+  await wait(1500);
+  check(await p.evaluate(() => document.documentElement.classList.contains('flight-static') && !document.querySelector('.flight-clip') && document.querySelectorAll('.flight-scene.is-active').length === 6), 'with reduced motion the fly-through becomes a sequence of stills');
   await p.context().close();
 
   // ---- Direct story link and clipboard failure ---------------------------

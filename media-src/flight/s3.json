@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-21T06:47:35.64957Z",
+    "display_name": "GPT Image 2.5",
+    "id": "a38d3499-2059-4e17-abb9-1d0727b51ce0",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064735_a38d3499-2059-4e17-abb9-1d0727b51ce0_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [
+        {
+          "data": {
+            "id": "5068926b-6ef4-4ae2-b8fe-bde32577c82c",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/5068926b-6ef4-4ae2-b8fe-bde32577c82c_resize.jpg"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Isometric 3D diorama floating as a small rounded island on a plain solid deep charcoal #14110E background, with a soft warm contact shadow beneath it. Refined architectural scale-model craftsmanship: warm stone, cream plaster, pale oak, slate-grey roofs, muted sage greenery, tiny trees and tiny people going about their day. Golden-hour dusk light from the left, warm glowing windows, soft long shadows, tilt-shift miniature look, cinematic and calm. A single fine glowing red thread runs across the island to the building. Highly detailed, centered composition with headroom, absolutely no text, no letters, no numbers, no logos, no signage. Subject: a learning centre that looks clearly different from a hospital: a long single-storey timber-clad school with a tall gabled roof hall and big glazed doors opening onto a sports court and playground; in the courtyard a group of teenage students with lanyards is being shown around by a friendly engineer pointing to a small glass-walled technical training pavilion with neat server racks; bicycles in a rack. Match the visual style, materials, lighting and island framing of the reference image, but with different architecture.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064735_a38d3499-2059-4e17-abb9-1d0727b51ce0.png",
+    "status": "completed"
+  }
+]

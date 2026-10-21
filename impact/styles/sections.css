@@ -1435,3 +1435,212 @@
     flex: 1;
   }
 }
+
+/* ---- Fly through the community (flight.html) ------------------------------
+   A pinned stage whose film is scrubbed by scroll (see scripts/flight/scrub.js). */
+.flight {
+  position: relative;
+}
+.flight-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  background: #14110e;
+  color: #fff;
+}
+.flight-poster,
+.flight-clip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.flight-clip {
+  visibility: hidden;
+  opacity: 0;
+}
+.flight-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgb(10 8 6 / 0.82) 0%, rgb(10 8 6 / 0.15) 40%, rgb(10 8 6 / 0) 60%),
+    linear-gradient(90deg, rgb(10 8 6 / 0.55) 0%, rgb(10 8 6 / 0) 50%),
+    linear-gradient(180deg, rgb(10 8 6 / 0.5) 0%, rgb(10 8 6 / 0) 18%);
+}
+.flight-intro {
+  position: absolute;
+  z-index: 30;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(48px, 9vh, 110px);
+  max-width: 48rem;
+  transition: opacity var(--dur-2), transform var(--dur-2) var(--ease-out);
+}
+.flight-intro.is-hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+.flight-cue {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-6);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.75);
+}
+.flight-scenes {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+.flight-scene {
+  position: absolute;
+  left: var(--gutter);
+  bottom: clamp(48px, 9vh, 110px);
+  width: min(460px, calc(100% - 2 * var(--gutter)));
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur-2), transform var(--dur-2) var(--ease-out);
+}
+.flight-scene.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.flight-still {
+  display: none;
+}
+.flight-caption {
+  padding: var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgb(18 15 12 / 0.88);
+}
+.flight-place {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--step-2);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.flight-nav {
+  position: absolute;
+  z-index: 30;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 4px;
+}
+.flight-dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.flight-dot i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgb(255 255 255 / 0.6);
+  background: rgb(255 58 63 / var(--fill, 0));
+  transition: transform var(--dur-1), background-color var(--dur-1);
+}
+.flight-dot[aria-current='true'] i {
+  transform: scale(1.4);
+  border-color: var(--red-glow);
+  box-shadow: 0 0 12px rgb(255 58 63 / 0.8);
+}
+.flight-note {
+  position: absolute;
+  z-index: 30;
+  right: var(--gutter);
+  bottom: 16px;
+  font-size: 0.72rem;
+  color: rgb(255 255 255 / 0.65);
+}
+.flight-end {
+  padding: var(--space-9) 0;
+}
+
+/* Motion off: the same scenes as a plain sequence of stills and captions. */
+.flight-static .flight-stage {
+  position: relative;
+  height: auto;
+  min-height: 0;
+}
+.flight-static .flight-clip,
+.flight-static .flight-poster,
+.flight-static .flight-shade,
+.flight-static .flight-nav,
+.flight-static .flight-cue {
+  display: none;
+}
+.flight-static .flight-intro {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  padding: calc(var(--header-h) + var(--space-8)) var(--gutter) var(--space-7);
+}
+.flight-static .flight-scenes {
+  position: relative;
+  display: grid;
+  gap: var(--space-8);
+  padding: 0 var(--gutter) var(--space-8);
+}
+.flight-static .flight-scene {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  width: auto;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.flight-static .flight-still {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  margin-bottom: calc(-1 * var(--space-8));
+}
+.flight-static .flight-caption {
+  position: relative;
+  width: min(520px, calc(100% - 2 * var(--space-5)));
+  margin-left: var(--space-5);
+}
+.flight-static .flight-note {
+  position: static;
+  padding: 0 var(--gutter) var(--space-6);
+}
+@media (max-width: 760px) {
+  .flight-nav {
+    top: auto;
+    bottom: 40px;
+    right: 8px;
+    transform: none;
+  }
+  .flight-dot {
+    width: 32px;
+    height: 32px;
+  }
+  .flight-scene {
+    bottom: 44px;
+    width: calc(100% - 2 * var(--gutter) - 36px);
+  }
+  .flight-note {
+    display: none;
+  }
+}

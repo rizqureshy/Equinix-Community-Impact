@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T06:48:40.817583Z",
+    "display_name": "Kling v3.0",
+    "id": "8f5c30e3-a63d-4165-bfc6-ae6159b968b7",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "440f4e29-81df-47a8-924d-3873171db3e3",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/440f4e29-81df-47a8-924d-3873171db3e3_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Single continuous cinematic camera move, no cuts. Begin high and far, looking down at the whole miniature island from outside like a tiny model. The camera slowly glides forward and descends toward it, sweeping in toward the path past the library window where a teenager helps an older woman with a tablet, as if flying inside the miniature world. Refined architectural miniature, golden-hour dusk light, warm glowing windows, tilt-shift look, deep charcoal background. Smooth, graceful, slow motion, subtle parallax. No text, no captions.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064840_8f5c30e3-a63d-4165-bfc6-ae6159b968b7.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064840_8f5c30e3-a63d-4165-bfc6-ae6159b968b7_thumbnail.webp"
+  }
+]

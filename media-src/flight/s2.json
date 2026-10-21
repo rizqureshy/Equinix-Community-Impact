@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-21T06:46:33.98624Z",
+    "display_name": "GPT Image 2.5",
+    "id": "692956ad-6eb8-4702-859e-b72836d21bab",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064633_692956ad-6eb8-4702-859e-b72836d21bab_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [
+        {
+          "data": {
+            "id": "d1665301-863f-4816-87d8-9a235d73a2fd",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/d1665301-863f-4816-87d8-9a235d73a2fd_resize.jpg"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Isometric 3D diorama floating as a small rounded island on a plain solid deep charcoal #14110E background, with a soft warm contact shadow beneath it. Refined architectural scale-model craftsmanship: warm stone, cream plaster, pale oak, slate-grey roofs, muted sage greenery, tiny trees and tiny people going about their day. Golden-hour dusk light from the left, warm glowing windows, soft long shadows, tilt-shift miniature look, cinematic and calm. A single fine glowing red thread runs across the island to the building. Highly detailed, centered composition with headroom, absolutely no text, no letters, no numbers, no logos, no signage. Subject: a research institute with a sawtooth roof of glass and oak; inside a bright laboratory, researchers in white coats gather around a laptop showing a colourful data visualisation, microscopes and sample racks on the benches; a small courtyard with a bench. Match the visual style, materials, lighting and island framing of the reference image exactly.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064633_692956ad-6eb8-4702-859e-b72836d21bab.png",
+    "status": "completed"
+  }
+]

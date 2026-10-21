@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T06:48:39.708944Z",
+    "display_name": "Kling v3.0",
+    "id": "71ba2adc-5496-4633-bfcd-965f6ae1da56",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "d567267d-7e92-40a7-a990-a8f4f0fc9c45",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/d567267d-7e92-40a7-a990-a8f4f0fc9c45_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Single continuous cinematic camera move, no cuts. Begin high and far, looking down at the whole miniature island from outside like a tiny model. The camera slowly glides forward and descends toward it, sweeping in toward the glass laboratory where researchers gather around the laptop, as if flying inside the miniature world. Refined architectural miniature, golden-hour dusk light, warm glowing windows, tilt-shift look, deep charcoal background. Smooth, graceful, slow motion, subtle parallax. No text, no captions.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064839_71ba2adc-5496-4633-bfcd-965f6ae1da56.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064839_71ba2adc-5496-4633-bfcd-965f6ae1da56_thumbnail.webp"
+  }
+]

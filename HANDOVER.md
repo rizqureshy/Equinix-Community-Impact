@@ -8,6 +8,7 @@ A single-page experience in `impact/`, built with Vite, Three.js (WebGLRenderer)
 
 - **Hero:** a full-screen reel of human moments (care, discovery, opportunity, community, swimmers) crossfading behind giant type: "Infrastructure for human *possibility.*" The title rises into place on load and lifts away as you scroll.
 - **The 3D community, on its own page (`explore.html`):** kept out of the main scroll at your request. It opens on an introduction, then a click-through tour visits each place: hospital, research centre, learning space, homes, aquatic centre, and finally the data center. Visitors move with Next and Previous, the step bar, arrow keys, the in-scene labels or by clicking a building. Each stop draws its glowing red thread (amber for heat), shows a caption, and opens its story over the scene. Shared links point back to the main page. Three.js loads only on this page.
+- **Fly through the community (`flight.html`):** a second way to explore, built with the scroll-world technique (pre-rendered AI film scrubbed by scroll, like Apple's product pages). Six miniature diorama scenes at dusk (hospital, research lab, learning centre, neighbourhood, aquatic centre, data center), each with a "dive-in" clip, joined by five connector flights locked to the exact neighbouring frames so there are no cuts. Captions settle in as each scene arrives, scene dots jump to any place, and stories open over the film. With reduced motion it becomes a sequence of stills and captions. Media: about 26 MB per visitor, loaded a clip at a time; H.264 with a VP9 fallback.
 - **Invitation band:** on the main page, a full-screen film of the model with "Step inside the connected community." links to the 3D page, as do the hero and the header.
 - **Statement:** "Equinix is not a visitor in these places…" lights up word by word as you scroll.
 - **Five story posters:** each chapter is a full-screen film with a giant title and the human moment. The story panel then scrolls up over the film, carrying the connection, the two sets of contributions, the scoped figure and the story links.
@@ -48,6 +49,8 @@ Searches across two rounds covered heroes, chapter navigation, drawers, tabs, im
 | Drawer (ddoemonn/drawer) | Story dialog behaviour: scrim, focus, Escape, focus restore, scroll lock |
 | Editorial Image Hero, Kokonut Scroll Index, Segmented Tabs, Mask Reveal | Used in version one; retired in the redesign |
 
+**scroll-world** (cyw, MIT, https://github.com/oso95/scroll-world): its method and seam rule were followed for the fly-through, and `scripts/flight/scrub.js` adapts its engine approach (whole-clip blobs, coalesced seeks, seam crossfades). The skill itself was not installed; its default Monid video backend was not used.
+
 21st.dev hosted generation was not used, so no 21st.dev credits were spent. Only ideas and behaviour were adapted. Confirm reuse terms before copying any component code verbatim.
 
 ### Higgsfield (CLI, Plus plan, Private workspace)
@@ -61,7 +64,9 @@ The connector in this session could only read the account. Generation ran throug
 | 3 films, 5 s | Kling 3.0 Pro, image to video | Community model drift, pool, engineer walk | 26.25 |
 | 1 still | Nano Banana 2 | Neighbourhood path for Community (two Seedream attempts failed on the service, no charge) | 2 |
 | 4 films, 5 s | Kling 3.0 Pro, image to video | Living posters for Care, Discovery, Opportunity and Community; also the hero reel | 35 |
-| **Total** | | | **85.25 of the 400 budget** |
+| 7 stills | GPT Image 2.5 (high), Seedream 5.0 Pro for one comparison | Fly-through diorama scenes; scene 1 used as the style reference; scene 3 regenerated | 19.25 |
+| 12 films, 5 s | Kling 3.0 Pro, image to video with start and end frames | 6 dive-ins and 5 frame-locked connectors, one connector re-rolled | 105 |
+| **Total** | | | **212 of the 400 budget** (1,210 → 998 credits) |
 
 Every output is recorded in `media-src/asset-manifest.json` with its generation id, model, settings, prompt file, status and use. Web versions (WebP 640 and 1200, H.264 and VP9 films with posters) are in `impact/public/media/` and rebuilt by `scripts/build_media.py`.
 
@@ -109,10 +114,11 @@ Sources were checked on 21 October 2026. Your uploaded PDFs were used to confirm
 - **Unit tests (`npm test`):** 17 pass.
   - Content model: required fields, registered sources, metric scope, no em dashes, media files present, no "powering hospitals".
   - Routing, state and sharing.
-- **Browser checks (`npm run test:e2e`):** 52 pass in headless Chromium with software WebGL.
+- **Browser checks (`npm run test:e2e`):** 63 pass in headless Chromium with software WebGL.
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Loading:** the headline is usable before the scene loads.
   - **Main page:** the scene is not loaded, the 3D page is linked from the hero, nav and invitation, chapter routes land on their poster, and old explore links redirect to the 3D page.
+  - **Fly-through:** opens on its title, pins a long film, scene dots fly to the right place with its caption and a decoded film frame showing, stories open and close over the film, and reduced motion gives a sequence of stills.
   - **3D page:** opens on its introduction; Start, arrow keys, the step bar and labels move the tour; captions match; stories open over the scene and closing keeps the place in view; direct place links work.
   - **Stories:** a story opens from the tour with its URL, focus moves into it, Escape and Back close it with focus restored, and Forward reopens it. Direct links work.
   - **Copy and filters:** copy works with a fallback when the clipboard is denied. Gallery filters work, with an empty state and reset.
@@ -132,6 +138,8 @@ Sources were checked on 21 October 2026. Your uploaded PDFs were used to confirm
 - **Brand assets:** replace the placeholder wordmark, fonts and red with approved Equinix assets when supplied (`styles/tokens.css`).
 - **Documentary media:** approved photography of real people and facilities would strengthen every chapter. The page labels all current imagery as illustrative.
 - **Scene architecture:** buildings are procedural primitives. A modelled data center would add character.
+- **Fly-through originals:** raw Kling downloads and extracted seam frames (about 250 MB) are not committed. Each `media-src/flight/*.json` keeps the generation id and result link to re-download them; scene pictures, prompts and web encodes are committed.
+- **Fly-through transitions:** Kling's connectors tend to morph one island into the next rather than fly between them. It reads as a dreamlike transition; a Seedance chain (as the skill recommends) may give truer flights at higher cost. Joins measure within 2 to 5 levels out of 255.
 - **Asset sizes:** the 3D chunk is about 660 KB (180 KB gzipped) and loads after the page is usable. Seven films total about 5 MB and load only near the viewport.
 
 - **Higgsfield access:** the CLI sign-in lived in this session's container. Future sessions need to sign in again.

@@ -1,0 +1,47 @@
+[
+  {
+    "created_at": "2026-10-21T06:51:41.836754Z",
+    "display_name": "Kling v3.0",
+    "id": "9fdf5e04-b321-4c8e-af52-911f8f4bb6af",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "2aa03145-52b6-4199-b5f1-2def8578f4cf",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/2aa03145-52b6-4199-b5f1-2def8578f4cf.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "d4f69265-9c90-458c-8eef-27c9346e49a2",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/d4f69265-9c90-458c-8eef-27c9346e49a2.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "Single continuous cinematic camera move, no cuts. The camera smoothly pulls up and back out of the miniature scene, rising into the dark sky, then glides forward across to the next floating miniature island and gently descends toward it, arriving at exactly the framing of the final image. A fine glowing red thread leads the way between the islands. Refined architectural miniature islands, golden-hour dusk light, warm glowing windows, tilt-shift look, deep charcoal background. Smooth, graceful, slow motion, subtle parallax. No text, no captions.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_065141_9fdf5e04-b321-4c8e-af52-911f8f4bb6af.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_065141_9fdf5e04-b321-4c8e-af52-911f8f4bb6af_thumbnail.webp"
+  }
+]

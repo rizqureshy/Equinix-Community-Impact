@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import {
   chaptersHTML,
   flythroughHTML,
+  flightScenesHTML,
   numbersHTML,
   collectionHTML,
   sourcesHTML,
@@ -15,6 +16,7 @@ const prerender = () => ({
   transformIndexHtml(html) {
     return html
       .replace('<!--@flythrough-->', flythroughHTML())
+      .replace('<!--@flight-->', flightScenesHTML())
       .replace('<!--@numbers-->', numbersHTML())
       .replace('<!--@chapters-->', chaptersHTML())
       .replace('<!--@principles-->', principlesHTML())
@@ -38,6 +40,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),
         explore: resolve(import.meta.dirname, 'impact/explore.html'),
+        flight: resolve(import.meta.dirname, 'impact/flight.html'),
       },
     },
   },

@@ -21,7 +21,7 @@ The 3D community is at `/explore.html`; add `?scene=off` there to see it without
 
 ```bash
 npm test                          # unit tests: content model, routing, state, sharing
-npm run build && npm run test:e2e # 52 browser checks against the production build
+npm run build && npm run test:e2e # 63 browser checks against the production build
 node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs]   # screenshot helper
 ```
 
@@ -32,13 +32,15 @@ The browser checks block every request that leaves the local host, then exercise
 ```text
 impact/                   Vite root: the experience
   index.html              the scroll story; content is pre-rendered into it at build time
-  explore.html            the separate 3D community tour
+  explore.html            the separate 3D community tour (Three.js)
+  flight.html             the scroll-scrubbed fly-through film
   styles/                 tokens.css, base.css, sections.css
   scripts/
     app.js                wiring: state, routing, scroll choreography (GSAP ScrollTrigger + Lenis), story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
     router.js             hash routes: #/chapter/<topic>, #/story/<id>, #/people and others
     explore.js            the 3D community page: scene, tour, story dialog
+    flight.js, flight/    the fly-through page and its scroll-scrub engine
     story-dialog.js       shared toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
@@ -49,6 +51,7 @@ impact/                   Vite root: the experience
   public/media/           web-ready images, films and posters
 media-src/                Higgsfield originals, prompts and asset-manifest.json
 scripts/build_media.py    rebuilds public/media from the originals
+scripts/build_flight.sh   fly-through pipeline: frames, frame-locked connectors (Higgsfield), encodes
 tests/                    unit and end-to-end tests
 ```
 
@@ -67,5 +70,6 @@ Note: this repository is currently public. The site sets `noindex`, but anyone w
 
 ## Third-party code and assets
 
+- The fly-through follows the scroll-world method by cyw (MIT, github.com/oso95/scroll-world).
 - Three.js 0.186.1 (MIT), GSAP 3.15.0 with ScrollTrigger (GreenSock standard license, free for this use), Lenis 1.3.27 (MIT), Inter Tight and Fraunces via Fontsource (SIL Open Font License).
 - Interface patterns adapted from 21st.dev references, rewritten in plain JavaScript and CSS. See HANDOVER.md for the list. 

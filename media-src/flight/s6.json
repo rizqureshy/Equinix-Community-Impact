@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-21T06:46:33.151691Z",
+    "display_name": "GPT Image 2.5",
+    "id": "609dcc69-f4f3-4757-8103-72f6e7296db8",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064633_609dcc69-f4f3-4757-8103-72f6e7296db8_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [
+        {
+          "data": {
+            "id": "e20aed5e-3b68-4937-8416-2f3e88feecb4",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/e20aed5e-3b68-4937-8416-2f3e88feecb4_resize.jpg"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Isometric 3D diorama floating as a small rounded island on a plain solid deep charcoal #14110E background, with a soft warm contact shadow beneath it. Refined architectural scale-model craftsmanship: warm stone, cream plaster, pale oak, slate-grey roofs, muted sage greenery, tiny trees and tiny people going about their day. Golden-hour dusk light from the left, warm glowing windows, soft long shadows, tilt-shift miniature look, cinematic and calm. A single fine glowing red thread runs across the island to the building. Highly detailed, centered composition with headroom, absolutely no text, no letters, no numbers, no logos, no signage. Subject: a low, elegant modern data center with a planted green roof and vertical oak fins, warm light inside, a few engineers in light jackets at the entrance; several fine glowing red threads leave it and run outward to the edges of the island in different directions, and one warm amber line; calm and proud, the heart of the community. Match the visual style, materials, lighting and island framing of the reference image exactly.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064633_609dcc69-f4f3-4757-8103-72f6e7296db8.png",
+    "status": "completed"
+  }
+]

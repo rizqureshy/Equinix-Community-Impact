@@ -345,5 +345,198 @@
       "note": "Neighbourhood retry; job failed on the service, no output"
     }
   ],
-  "webOutputs": "impact/public/media (built by scripts/build_media.py)"
+  "webOutputs": "impact/public/media (built by scripts/build_media.py)",
+  "flight": [
+    {
+      "key": "conn-1",
+      "generationId": "d23c6b46-c9a9-49e1-9655-f8612df5632c",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "connector clip 1",
+      "promptFile": "media-src/flight/conn-1.prompt.txt"
+    },
+    {
+      "key": "conn-2",
+      "generationId": "9fdf5e04-b321-4c8e-af52-911f8f4bb6af",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "connector clip 2",
+      "promptFile": "media-src/flight/conn-2.prompt.txt"
+    },
+    {
+      "key": "conn-3",
+      "generationId": "3534f369-a158-483f-b502-ea7e68491789",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "connector clip 3",
+      "promptFile": "media-src/flight/conn-3.prompt.txt"
+    },
+    {
+      "key": "conn-4-take1",
+      "generationId": "01887094-f83e-4b63-a3d0-f078dc07c2f5",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "rejected: dark glitch mid-transition",
+      "usage": "connector clip 4-take1",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "conn-4",
+      "generationId": "85bf0ab4-a353-406f-b76f-6872cc35b4a6",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "connector clip 4",
+      "promptFile": "media-src/flight/conn-4.prompt.txt"
+    },
+    {
+      "key": "conn-5",
+      "generationId": "84508b87-dc64-4e62-a5d0-7ce169702a72",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "connector clip 5",
+      "promptFile": "media-src/flight/conn-5.prompt.txt"
+    },
+    {
+      "key": "dive-1",
+      "generationId": "48384b43-7e59-4f83-a6da-94ee2a2f2246",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 1",
+      "promptFile": "media-src/flight/dive-1.prompt.txt"
+    },
+    {
+      "key": "dive-2",
+      "generationId": "71ba2adc-5496-4633-bfcd-965f6ae1da56",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 2",
+      "promptFile": "media-src/flight/dive-2.prompt.txt"
+    },
+    {
+      "key": "dive-3",
+      "generationId": "fc6749c7-6f6d-47eb-9f9b-7916df93fe30",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 3",
+      "promptFile": "media-src/flight/dive-3.prompt.txt"
+    },
+    {
+      "key": "dive-4",
+      "generationId": "8f5c30e3-a63d-4165-bfc6-ae6159b968b7",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 4",
+      "promptFile": "media-src/flight/dive-4.prompt.txt"
+    },
+    {
+      "key": "dive-5",
+      "generationId": "1a98a2ff-5cf4-4fae-9d49-4b54bd33924a",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 5",
+      "promptFile": "media-src/flight/dive-5.prompt.txt"
+    },
+    {
+      "key": "dive-6",
+      "generationId": "8648249b-c637-422f-bd5b-b5afa08a0be4",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "dive-in clip 6",
+      "promptFile": "media-src/flight/dive-6.prompt.txt"
+    },
+    {
+      "key": "s1-gpt",
+      "generationId": "c0f58fbd-47f0-4a27-ac42-baaedac67ca9",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected",
+      "usage": "scene-1 hospital still",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s1-sd",
+      "generationId": "15e7a838-ac36-4289-8a7e-719b21f4990a",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "estimatedCredits": 2.5,
+      "status": "rejected: plainer than GPT Image 2.5",
+      "usage": "s1-sd",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s2",
+      "generationId": "692956ad-6eb8-4702-859e-b72836d21bab",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected",
+      "usage": "scene-2 research",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s3",
+      "generationId": "a38d3499-2059-4e17-abb9-1d0727b51ce0",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected (second take; first copied the hospital)",
+      "usage": "scene-3 learning",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s4",
+      "generationId": "d2cddca9-a61f-423d-a9e3-9c75580b5dba",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected",
+      "usage": "scene-4 neighbourhood",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s5",
+      "generationId": "7bd1bc67-6902-4a24-b98a-189aca7131d9",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected",
+      "usage": "scene-5 aquatic centre",
+      "promptFile": "media-src/flight/style.txt"
+    },
+    {
+      "key": "s6",
+      "generationId": "609dcc69-f4f3-4757-8103-72f6e7296db8",
+      "model": "GPT Image 2.5",
+      "jobType": "gpt_image_2_5",
+      "estimatedCredits": 2.75,
+      "status": "selected",
+      "usage": "scene-6 data center",
+      "promptFile": "media-src/flight/style.txt"
+    }
+  ],
+  "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1."
 }

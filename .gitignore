@@ -4,3 +4,8 @@ dist/
 .DS_Store
 # Uploaded reference documents (internal slides, PDF captures): kept locally, never committed
 media-src/sources/
+# Fly-through raw renders and extracted frames (large; re-downloadable via the
+# result_url in each media-src/flight/*.json, web encodes live in impact/public)
+media-src/flight/*.mp4
+media-src/flight/*-first.png
+media-src/flight/*-last.png

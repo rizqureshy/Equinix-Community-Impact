@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-21T06:45:11.097105Z",
+    "display_name": "GPT Image 2.5",
+    "id": "c0f58fbd-47f0-4a27-ac42-baaedac67ca9",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064511_c0f58fbd-47f0-4a27-ac42-baaedac67ca9_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "height": 1520,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Isometric 3D diorama floating as a small rounded island on a plain solid deep charcoal #14110E background, with a soft warm contact shadow beneath it. Refined architectural scale-model craftsmanship: warm stone, cream plaster, pale oak, slate-grey roofs, muted sage greenery, tiny trees and tiny people going about their day. Golden-hour dusk light from the left, warm glowing windows, soft long shadows, tilt-shift miniature look, cinematic and calm. A single fine glowing red thread runs across the island to the building. Highly detailed, centered composition with headroom, absolutely no text, no letters, no numbers, no logos, no signage. Subject: a modest modern hospital with a glass entrance canopy and a small garden courtyard; through a large window a calm reading room where two clinicians look at a softly glowing medical scan on a monitor; an ambulance bay and a few people walking in.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064511_c0f58fbd-47f0-4a27-ac42-baaedac67ca9.png",
+    "status": "completed"
+  }
+]

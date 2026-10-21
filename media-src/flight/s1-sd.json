@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-21T06:45:09.121653Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "15e7a838-ac36-4289-8a7e-719b21f4990a",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064509_15e7a838-ac36-4289-8a7e-719b21f4990a_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "batch_size": 1,
+      "height": 1536,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "Isometric 3D diorama floating as a small rounded island on a plain solid deep charcoal #14110E background, with a soft warm contact shadow beneath it. Refined architectural scale-model craftsmanship: warm stone, cream plaster, pale oak, slate-grey roofs, muted sage greenery, tiny trees and tiny people going about their day. Golden-hour dusk light from the left, warm glowing windows, soft long shadows, tilt-shift miniature look, cinematic and calm. A single fine glowing red thread runs across the island to the building. Highly detailed, centered composition with headroom, absolutely no text, no letters, no numbers, no logos, no signage. Subject: a modest modern hospital with a glass entrance canopy and a small garden courtyard; through a large window a calm reading room where two clinicians look at a softly glowing medical scan on a monitor; an ambulance bay and a few people walking in.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 203650,
+      "width": 2720
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_064509_15e7a838-ac36-4289-8a7e-719b21f4990a.png",
+    "status": "completed"
+  }
+]
