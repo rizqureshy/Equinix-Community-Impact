@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T05:51:03.026689Z",
+    "display_name": "Kling v3.0",
+    "id": "d9867bae-1295-4d7c-b091-cb55c6a3f488",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "27584b63-27e7-4adf-bd7f-2ccd9ab80d19",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/27584b63-27e7-4adf-bd7f-2ccd9ab80d19_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "The two researchers look at the laptop, one gestures toward the screen and they share a small smile of discovery, the colourful visualisation glows softly, camera drifts slowly sideways. Calm, natural, documentary. No text.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055103_d9867bae-1295-4d7c-b091-cb55c6a3f488.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055103_d9867bae-1295-4d7c-b091-cb55c6a3f488_thumbnail.webp"
+  }
+]

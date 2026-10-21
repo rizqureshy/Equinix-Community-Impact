@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T05:51:04.411893Z",
+    "display_name": "Kling v3.0",
+    "id": "99b29ac8-7733-4b43-9c28-d434c3d50ea3",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "f028041c-2188-41a7-87eb-2041b439d88b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/f028041c-2188-41a7-87eb-2041b439d88b_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "The parent and child ride slowly along the path toward the camera, the older couple walks and talks, meadow grasses sway in a light breeze in warm evening light, camera glides slowly backward. Calm, natural, documentary. No text.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055104_99b29ac8-7733-4b43-9c28-d434c3d50ea3.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055104_99b29ac8-7733-4b43-9c28-d434c3d50ea3_thumbnail.webp"
+  }
+]

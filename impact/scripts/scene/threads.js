@@ -42,7 +42,7 @@ export const threadsForFocus = {
 export function buildThreads(places) {
   const group = new THREE.Group();
   const threads = {};
-  const bead = new THREE.SphereGeometry(0.16, 16, 10);
+  const bead = new THREE.SphereGeometry(0.2, 16, 10);
 
   for (const def of threadDefinitions(places)) {
     const curve = new THREE.CatmullRomCurve3(def.points, false, 'centripetal');
@@ -51,17 +51,25 @@ export function buildThreads(places) {
     const material = new THREE.MeshStandardMaterial({
       color,
       emissive: color,
-      emissiveIntensity: 0.55,
+      emissiveIntensity: 1.1,
       roughness: 0.5,
       transparent: true,
       opacity: 0,
     });
     const mesh = new THREE.Mesh(geo, material);
     mesh.renderOrder = 2;
+    // A soft additive halo makes the thread glow against the evening scene.
+    const halo = new THREE.Mesh(
+      new THREE.TubeGeometry(curve, 160, def.kind === 'heat' ? 0.34 : 0.26, 8, false),
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }),
+    );
+    halo.geometry.setDrawRange(0, 0);
+    halo.renderOrder = 3;
+    mesh.add(halo);
     const total = geo.index.count;
     geo.setDrawRange(0, 0);
 
-    const pulse = new THREE.Mesh(bead, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0 }));
+    const pulse = new THREE.Mesh(bead, new THREE.MeshBasicMaterial({ color: def.kind === 'heat' ? 0xffd08a : 0xff8a85, transparent: true, opacity: 0 }));
     group.add(mesh, pulse);
     threads[def.id] = {
       id: def.id,
@@ -83,6 +91,9 @@ export function buildThreads(places) {
       const count = Math.floor((t.total * progress) / 3) * 3;
       t.mesh.geometry.setDrawRange(0, count);
       t.mesh.material.opacity = opacity;
+      const halo = t.mesh.children[0];
+      halo.geometry.setDrawRange(0, count);
+      halo.material.opacity = opacity * 0.22;
       t.mesh.visible = opacity > 0.001 && count > 0;
       t.pulse.material.opacity = pulse * opacity;
       t.pulse.visible = t.pulse.material.opacity > 0.01;

@@ -15,13 +15,13 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-Opening studies: `/studies.html` compares the three opening compositions. Any of them can be opened directly with `?opening=a`, `?opening=b` or `?opening=c`. Add `?scene=off` to see the experience without the 3D scene.
+Add `?scene=off` to see the experience without the 3D scene. Use the "Pause motion" control, or the system reduced-motion setting, to see the static version without pinning or smooth scrolling.
 
 ## Test
 
 ```bash
 npm test                          # unit tests: content model, routing, state, sharing
-npm run build && npm run test:e2e # 35 browser checks against the production build
+npm run build && npm run test:e2e # 41 browser checks against the production build
 node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs]   # screenshot helper
 ```
 
@@ -32,15 +32,14 @@ The browser checks block every request that leaves the local host, then exercise
 ```text
 impact/                   Vite root: the experience
   index.html              page shell; content is pre-rendered into it at build time
-  studies.html            the three opening studies side by side
-  styles/                 tokens.css, layout.css, components.css
+  styles/                 tokens.css, base.css, sections.css
   scripts/
-    app.js                wiring: state, routing, scene, story dialog, filters, copy
+    app.js                wiring: state, routing, scroll choreography (GSAP ScrollTrigger + Lenis), story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
     router.js             hash routes: #/explore, #/chapter/<topic>, #/story/<id>
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
-    content/render.js     HTML for chapters, explorer, story detail, collection, sources
+    content/render.js     HTML for posters, flythrough captions, story detail, gallery, promises, numbers, sources
     scene/community.js    procedural community geometry and materials
     scene/threads.js      red and amber connection threads
     scene/scene.js        renderer, lighting, camera choreography, labels, interaction
@@ -65,5 +64,5 @@ Note: this repository is currently public. The site sets `noindex`, but anyone w
 
 ## Third-party code and assets
 
-- Three.js 0.186.1 (MIT), GSAP 3.15.0 (GreenSock standard license, free for this use), Inter Tight and Fraunces via Fontsource (SIL Open Font License).
-- Interface patterns adapted from 21st.dev references, rewritten in plain JavaScript and CSS. See HANDOVER.md for the list. The Kokonut UI Scroll Index is MIT licensed (Copyright (c) 2025 kokonutUI).
+- Three.js 0.186.1 (MIT), GSAP 3.15.0 with ScrollTrigger (GreenSock standard license, free for this use), Lenis 1.3.27 (MIT), Inter Tight and Fraunces via Fontsource (SIL Open Font License).
+- Interface patterns adapted from 21st.dev references, rewritten in plain JavaScript and CSS. See HANDOVER.md for the list. 

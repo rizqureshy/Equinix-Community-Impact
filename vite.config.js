@@ -2,7 +2,8 @@ import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 import {
   chaptersHTML,
-  explorerHTML,
+  flythroughHTML,
+  numbersHTML,
   collectionHTML,
   sourcesHTML,
   principlesHTML,
@@ -13,7 +14,8 @@ const prerender = () => ({
   name: 'impact-prerender',
   transformIndexHtml(html) {
     return html
-      .replace('<!--@explorer-->', explorerHTML())
+      .replace('<!--@flythrough-->', flythroughHTML())
+      .replace('<!--@numbers-->', numbersHTML())
       .replace('<!--@chapters-->', chaptersHTML())
       .replace('<!--@principles-->', principlesHTML())
       .replace('<!--@collection-->', collectionHTML())
@@ -35,7 +37,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),
-        studies: resolve(import.meta.dirname, 'impact/studies.html'),
       },
     },
   },

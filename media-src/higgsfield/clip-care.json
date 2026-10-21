@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T05:51:03.306816Z",
+    "display_name": "Kling v3.0",
+    "id": "46e409e1-9daf-491a-8aee-c66ca88d14d1",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "d4ecb802-4f15-428f-bc03-51ba45480a5a",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/d4ecb802-4f15-428f-bc03-51ba45480a5a_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "The clinician slowly points along the scan on the monitor while the colleague leans in to look, quiet focus, soft daylight shifts gently through the window, camera makes a very slow push in. Calm, natural, documentary. No text.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055103_46e409e1-9daf-491a-8aee-c66ca88d14d1.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055103_46e409e1-9daf-491a-8aee-c66ca88d14d1_thumbnail.webp"
+  }
+]

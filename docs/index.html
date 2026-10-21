@@ -6,9 +6,9 @@
     <title>Infrastructure for human possibility | Equinix connected impact</title>
     <meta name="description" content="Explore the connections between Equinix digital infrastructure and the care, discovery and opportunity that help communities thrive. Internal prototype for Equinix CRO colleagues." />
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#f6f1e9" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f1e9'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
-    <link rel="preload" as="image" href="media/community-model-1200.webp" imagesrcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" imagesizes="100vw" fetchpriority="high" />
+    <meta name="theme-color" content="#0f0d0b" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0d0b'/%3E%3Cpath d='M5 22 C11 8 21 26 27 10' fill='none' stroke='%23e31c25' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preload" as="image" href="media/care-1200.webp" fetchpriority="high" />
     <script>
       // Apply motion preference before first paint.
       (function () {
@@ -16,17 +16,16 @@
         try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
-        var q = new URLSearchParams(location.search).get('opening');
-        document.documentElement.dataset.opening = /^[abc]$/.test(q || '') ? q : 'a';
       })();
     </script>
-    <script type="module" crossorigin src="./assets/main-b2h26Y4e.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-DfFxCRqD.css">
+    <script type="module" crossorigin src="./assets/main-DmxB0y1L.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-Davx7gQm.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header">
+      <span class="scroll-progress" aria-hidden="true"></span>
       <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start">
         <span class="wordmark-name">Equinix</span>
         <span class="wordmark-sep" aria-hidden="true"></span>
@@ -36,7 +35,7 @@
         <ul>
           <li><a href="#/explore">Explore</a></li>
           <li><a href="#/chapter/care">Stories</a></li>
-          <li><a href="#/principles">Principles</a></li>
+          <li><a href="#/principles">Promises</a></li>
           <li><a href="#/people">People</a></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/sources">Sources</a></li>
@@ -47,119 +46,117 @@
       </button>
     </header>
 
-    <nav class="thread-rail" aria-label="Chapters">
-      <span class="thread-rail-line" aria-hidden="true"><span class="thread-rail-fill"></span></span>
-      <ol>
-        <li><a href="#/" data-rail="top"><span class="rail-label">Overview</span></a></li>
-        <li><a href="#/explore" data-rail="explore"><span class="rail-label">Explore</span></a></li>
-        <li><a href="#/chapter/care" data-rail="care"><span class="rail-label">Care</span></a></li>
-        <li><a href="#/chapter/discovery" data-rail="discovery"><span class="rail-label">Discovery</span></a></li>
-        <li><a href="#/chapter/opportunity" data-rail="opportunity"><span class="rail-label">Opportunity</span></a></li>
-        <li><a href="#/chapter/community" data-rail="community"><span class="rail-label">Community</span></a></li>
-        <li><a href="#/chapter/resources" data-rail="resources"><span class="rail-label">Responsible growth</span></a></li>
-        <li><a href="#/principles" data-rail="principles"><span class="rail-label">Principles</span></a></li>
-        <li><a href="#/people" data-rail="people"><span class="rail-label">People</span></a></li>
-        <li><a href="#/share" data-rail="share"><span class="rail-label">Share</span></a></li>
-        <li><a href="#/sources" data-rail="sources"><span class="rail-label">Sources</span></a></li>
-      </ol>
-    </nav>
-
     <main id="main" tabindex="-1">
-      <div class="journey">
-        <div class="stage" id="stage" data-scene-state="loading">
-          <figure class="stage-fallback" aria-hidden="true">
-            <img src="media/community-model-1200.webp" srcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1130" />
-          </figure>
-          <div class="scene-host" id="scene-host"></div>
-          <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
-            <button type="button" class="place-label" data-place="hospital" data-topic="care"><span class="place-dot" aria-hidden="true"></span><span>Hospital</span></button>
-            <button type="button" class="place-label" data-place="research" data-topic="discovery"><span class="place-dot" aria-hidden="true"></span><span>Research centre</span></button>
-            <button type="button" class="place-label" data-place="learning" data-topic="opportunity"><span class="place-dot" aria-hidden="true"></span><span>Learning space</span></button>
-            <button type="button" class="place-label" data-place="homes" data-topic="community"><span class="place-dot" aria-hidden="true"></span><span>Homes and library</span></button>
-            <button type="button" class="place-label" data-place="aquatic" data-topic="resources"><span class="place-dot place-dot--heat" aria-hidden="true"></span><span>Aquatic centre</span></button>
-            <button type="button" class="place-label place-label--dc" data-place="datacenter" data-topic="people"><span class="place-dot" aria-hidden="true"></span><span>Equinix data center</span></button>
-          </div>
-          <div class="stage-legend" aria-hidden="true">
-            <span><i class="legend-line"></i>Digital connection</span>
-            <span><i class="legend-line legend-line--heat"></i>Recovered heat</span>
-          </div>
-          <button type="button" class="overview-btn" data-overview>
-            <span aria-hidden="true">&#8634;</span> Community overview
-          </button>
-          <p class="scene-caption">An illustrative composite, not a real place or network.<span class="caption-more"> Each story refers to its named location.</span></p>
+      <!-- Hero: a reel of human moments behind giant type -->
+      <section class="hero" id="top" data-section="top" aria-labelledby="hero-title">
+        <div class="hero-reel" aria-hidden="true">
+          <img class="hero-poster" src="media/care-1200.webp" srcset="media/care-640.webp 640w, media/care-1200.webp 1200w" sizes="100vw" alt="" fetchpriority="high" />
         </div>
-
-        <div class="journey-content">
-          <section class="hero" id="top" data-section="top" data-focus="overview" aria-labelledby="hero-title">
-            <div class="hero-copy">
-              <p class="eyebrow">Equinix <span aria-hidden="true">|</span> Our connected impact</p>
-              <h1 class="hero-title" id="hero-title">Infrastructure for human&nbsp;possibility.</h1>
-              <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
-              <div class="hero-actions">
-                <a class="btn btn--primary btn--large" href="#/explore">Explore the connections</a>
-                <a class="btn btn--quiet btn--large" href="#/chapter/care">Discover the stories</a>
-              </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <p class="eyebrow eyebrow--light">Equinix <span aria-hidden="true">|</span> Our connected impact</p>
+          <h1 class="hero-title" id="hero-title">
+            <span class="line"><span class="line-inner">Infrastructure for</span></span>
+            <span class="line"><span class="line-inner">human <em>possibility.</em></span></span>
+          </h1>
+          <div class="hero-foot">
+            <p class="hero-lede">Explore the connections between digital infrastructure and the care, discovery and opportunity that help communities thrive.</p>
+            <div class="actions">
+              <a class="btn btn--primary btn--large" href="#/explore">Explore the connections</a>
+              <a class="btn btn--ghost btn--large" href="#/chapter/care">Discover the stories</a>
             </div>
-            <ul class="human-windows" aria-label="People at the heart of the stories">
-              <li>
-                <a href="#/chapter/care" class="human-window">
-                  <img src="media/care-640.webp" alt="" width="640" height="853" loading="eager" decoding="async" />
-                  <span class="human-window-text"><span class="hw-topic">Care</span> A care team reading a scan</span>
-                </a>
-              </li>
-              <li>
-                <a href="#/chapter/discovery" class="human-window">
-                  <img src="media/discovery-640.webp" alt="" width="640" height="427" loading="eager" decoding="async" />
-                  <span class="human-window-text"><span class="hw-topic">Discovery</span> Researchers comparing notes</span>
-                </a>
-              </li>
-              <li>
-                <a href="#/chapter/opportunity" class="human-window">
-                  <img src="media/opportunity-640.webp" alt="" width="640" height="427" loading="eager" decoding="async" />
-                  <span class="human-window-text"><span class="hw-topic">Opportunity</span> Students on their first tour</span>
-                </a>
-              </li>
-            </ul>
-            <p class="hero-note">Images are illustrative and AI generated.</p>
-          </section>
+          </div>
+        </div>
+        <p class="hero-caption" aria-live="off"><span class="hero-caption-topic">Care</span> <span class="hero-caption-text">A care team reading a scan</span> <span class="hero-caption-note">Illustrative, AI generated</span></p>
+        <a class="scroll-cue" href="#/explore"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
+      </section>
 
-          <section class="explorer" id="explore" data-section="explore" data-focus="topic" aria-labelledby="explore-title">
-            <div class="section-inner">
-              <p class="eyebrow">The community explorer</p>
-              <h2 class="section-title" id="explore-title">See what connection makes possible.</h2>
-              <p class="section-lede">Choose a topic to follow the red thread from the people involved to the infrastructure behind them. You can also read every story in order below.</p>
-              <div class="topic-tabs" role="tablist" aria-label="Choose a topic">
-    <span class="topic-indicator" aria-hidden="true"></span><button type="button" role="tab" class="topic-tab" id="topic-tab-care" data-topic="care"
-        aria-selected="true" aria-controls="topic-panel" tabindex="0">Care</button><button type="button" role="tab" class="topic-tab" id="topic-tab-discovery" data-topic="discovery"
-        aria-selected="false" aria-controls="topic-panel" tabindex="-1">Discovery</button><button type="button" role="tab" class="topic-tab" id="topic-tab-opportunity" data-topic="opportunity"
-        aria-selected="false" aria-controls="topic-panel" tabindex="-1">Opportunity</button><button type="button" role="tab" class="topic-tab" id="topic-tab-community" data-topic="community"
-        aria-selected="false" aria-controls="topic-panel" tabindex="-1">Community</button><button type="button" role="tab" class="topic-tab" id="topic-tab-resources" data-topic="resources"
-        aria-selected="false" aria-controls="topic-panel" tabindex="-1">Responsible growth</button>
-  </div>
-  <div class="topic-panel" id="topic-panel" role="tabpanel" aria-labelledby="topic-tab-care" aria-live="polite">
-    <p class="preview-place">3verest <span aria-hidden="true">·</span> 21 regions worldwide, with the U.K. NHS among its users</p>
-    <h3 class="preview-title">Medical images, ready when the care team needs them</h3>
-    <p class="preview-summary">3verest runs sovereign healthcare clouds from Equinix facilities so radiologists can retrieve medical images in under a second while patient data stays within its jurisdiction.</p>
-    <div class="preview-actions">
-      <a class="btn btn--primary" href="#/chapter/care">Follow the thread</a>
-      <a class="btn btn--quiet" href="#/story/3verest" data-story-trigger="3verest">Open the story</a>
+      <!-- Flythrough: the community expands to full screen, then the camera visits each place -->
+      <section class="fly" id="explore" data-section="explore" aria-labelledby="explore-title">
+        <div class="fly-pin">
+          <h2 class="fly-title" id="explore-title">
+            <span class="fly-title-a">See what</span>
+            <span class="fly-title-b">connection makes possible.</span>
+          </h2>
+          <div class="stage" id="stage" data-scene-state="loading">
+            <figure class="stage-fallback" aria-hidden="true">
+              <img src="media/community-model-1200.webp" srcset="media/community-model-640.webp 640w, media/community-model-1200.webp 1200w, media/community-model-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1130" loading="lazy" />
+            </figure>
+            <div class="scene-host" id="scene-host"></div>
+            <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
+              <button type="button" class="place-label" data-place="hospital"><span class="place-dot" aria-hidden="true"></span><span>Hospital</span></button>
+              <button type="button" class="place-label" data-place="research"><span class="place-dot" aria-hidden="true"></span><span>Research centre</span></button>
+              <button type="button" class="place-label" data-place="learning"><span class="place-dot" aria-hidden="true"></span><span>Learning space</span></button>
+              <button type="button" class="place-label" data-place="homes"><span class="place-dot" aria-hidden="true"></span><span>Homes</span></button>
+              <button type="button" class="place-label" data-place="aquatic"><span class="place-dot place-dot--heat" aria-hidden="true"></span><span>Aquatic centre</span></button>
+              <button type="button" class="place-label place-label--dc" data-place="datacenter"><span class="place-dot" aria-hidden="true"></span><span>Equinix data center</span></button>
+            </div>
+            <div class="stage-legend" aria-hidden="true">
+              <span><i class="legend-line"></i>Digital connection</span>
+              <span><i class="legend-line legend-line--heat"></i>Recovered heat</span>
+            </div>
+            <div class="fly-ui">
+              <div class="fly-captions"><div class="fly-caption" data-step="0" >
+      <p class="fly-kicker"><span>01 / 06</span> Care</p>
+      <h3 class="fly-place">Hospital</h3>
+      <p class="fly-moment">A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.</p>
+      <a class="btn btn--primary btn--small" href="#/story/3verest" data-story-trigger="3verest">Medical images, ready when the care team needs them</a>
+    </div><div class="fly-caption" data-step="1" hidden>
+      <p class="fly-kicker"><span>02 / 06</span> Discovery</p>
+      <h3 class="fly-place">Research centre</h3>
+      <p class="fly-moment">In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.</p>
+      <a class="btn btn--primary btn--small" href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Comparing notes across the world for every child with cancer</a>
+    </div><div class="fly-caption" data-step="2" hidden>
+      <p class="fly-kicker"><span>03 / 06</span> Opportunity</p>
+      <h3 class="fly-place">Learning space</h3>
+      <p class="fly-moment">A student walks into a data center for the first time and asks how it all works.</p>
+      <a class="btn btn--primary btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">From a school tour to a technician’s badge</a>
+    </div><div class="fly-caption" data-step="3" hidden>
+      <p class="fly-kicker"><span>04 / 06</span> Community</p>
+      <h3 class="fly-place">Homes and neighbourhood</h3>
+      <p class="fly-moment">In Minooka, Illinois, a public bike path runs along the data center site, and land is being donated for a future fire station.</p>
+      <a class="btn btn--primary btn--small" href="#/story/community-principles" data-story-trigger="community-principles">A neighbour that plans to stay for decades</a>
+    </div><div class="fly-caption" data-step="4" hidden>
+      <p class="fly-kicker"><span>05 / 06</span> Responsible growth</p>
+      <h3 class="fly-place">Aquatic centre</h3>
+      <p class="fly-moment">Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.</p>
+      <a class="btn btn--primary btn--small" href="#/story/pa10-heat" data-story-trigger="pa10-heat">Warm water for a neighbourhood pool in Saint-Denis</a>
+    </div><div class="fly-caption" data-step="5" hidden>
+      <p class="fly-kicker"><span>06 / 06</span> Every thread</p>
+      <h3 class="fly-place">Equinix data center</h3>
+      <p class="fly-moment">Private interconnection for care and research. Heat recovered for neighbours. People who keep it running, and who volunteer down the road.</p>
+      <a class="btn btn--primary btn--small" href="#/principles">Our five community promises</a>
+    </div></div>
+  <div class="fly-steps" role="group" aria-label="Places in the community"><button type="button" class="fly-step" data-step="0" aria-pressed="true"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Care</span></button><button type="button" class="fly-step" data-step="1" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Discovery</span></button><button type="button" class="fly-step" data-step="2" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Opportunity</span></button><button type="button" class="fly-step" data-step="3" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Community</span></button><button type="button" class="fly-step" data-step="4" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Responsible growth</span></button><button type="button" class="fly-step" data-step="5" aria-pressed="false"><span class="fly-step-bar" aria-hidden="true"><i></i></span><span class="fly-step-label">Every thread</span></button></div>
+            </div>
+            <p class="scene-caption">An illustrative composite, not a real place or network.<span class="caption-more"> Each story refers to its named location.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statement revealed word by word -->
+      <section class="statement" id="statement" aria-label="Our role">
+        <p class="statement-text" data-words>Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
+      </section>
+
+      <!-- Story posters -->
+      <div class="posters" id="stories" aria-label="Connected story chapters">
+        <section class="poster" id="chapter-care" data-chapter="care" aria-labelledby="chapter-care-title">
+  <div class="poster-stage">
+    <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-care-poster.jpg" aria-label="Two clinicians review a medical scan together on a monitor in a daylit reading room.">
+      <source src="media/clip-care.webm" type="video/webm"><source src="media/clip-care.mp4" type="video/mp4"></video></div>
+    <div class="poster-shade" aria-hidden="true"></div>
+    <div class="poster-head">
+      <p class="poster-kicker"><span class="poster-num">01</span><span class="poster-line" aria-hidden="true"></span>Care</p>
+      <h2 class="poster-title" id="chapter-care-title"><span>Care that</span> <em>connects.</em></h2>
+      <p class="poster-moment">A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.</p>
     </div>
+    <p class="poster-note">Illustrative, AI generated. Not the organisation or people named.</p>
   </div>
-            </div>
-          </section>
-
-          <div class="chapters" id="stories" aria-label="Connected story chapters">
-            <article class="chapter" id="chapter-care" data-chapter="care" data-focus="hospital" aria-labelledby="chapter-care-title">
-  <div class="chapter-inner">
-    <p class="eyebrow"><span class="eyebrow-num">01</span> Care</p>
-    <figure class="media ">
-    <img src="media/care-1200.webp" srcset="media/care-640.webp 640w, media/care-1200.webp 1200w" sizes="(min-width: 1000px) 40vw, 92vw"
-      alt="Two clinicians review a medical scan together on a monitor in a daylit reading room." width="1200" height="800" loading="lazy" decoding="async">
-    <figcaption class="media-note">Illustrative image, AI generated. Not a photograph of the organisation or people named.</figcaption>
-  </figure>
-    <p class="chapter-moment">A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.</p>
-    <h2 class="chapter-title" id="chapter-care-title">Care that connects.</h2>
-    <p class="chapter-lede">Medical images are large, heavily regulated and kept for decades, yet clinicians need them in seconds. Healthcare operators also need proof that data, backups and AI inference stay within their jurisdiction.</p>
+  <article class="poster-body">
+    <p class="poster-org">3verest <span aria-hidden="true">·</span> 21 regions worldwide, with the U.K. NHS among its users</p>
+    <h3 class="poster-story">Medical images, ready when the care team needs them</h3>
+    <p class="poster-lede">Medical images are large, heavily regulated and kept for decades, yet clinicians need them in seconds. Healthcare operators also need proof that data, backups and AI inference stay within their jurisdiction.</p>
     <div class="connection">
       <p class="connection-label"><span class="thread-swatch" aria-hidden="true"></span>The Equinix connection</p>
       <p>Equinix does not deliver the care. It provides the secure, local and directly connected foundation that lets 3verest keep critical medical data close, fast and governed.</p>
@@ -168,24 +165,29 @@
       <div><dt>What Equinix contributes</dt><dd>In-country data center space as the physical anchor, carrier-neutral interconnection for private connections between care providers, medical device platforms and clouds, and Equinix Fabric Geo Zones that keep traffic inside defined geographic boundaries, even during failover.</dd></div>
       <div><dt>What partners deliver</dt><dd>3verest designs and operates the sovereign healthcare clouds, including imaging archives and governed AI inference, offered through medical device partners such as Agfa, GE HealthCare and Philips.</dd></div>
     </dl>
-    <p class="metric"><span class="metric-value">Under 1 second</span> <span class="metric-label">to retrieve a medical image</span><span class="metric-scope">Reported by 3verest for its own platform, compared with general public clouds. Specific to this customer example.</span></p>
-    <div class="chapter-actions">
+    <p class="metric"><span class="metric-value">Under 1 second</span><span class="metric-label">to retrieve a medical image</span><span class="metric-scope">Reported by 3verest for its own platform, compared with general public clouds. Specific to this customer example.</span></p>
+    <div class="actions">
       <a class="btn btn--primary" href="#/story/3verest" data-story-trigger="3verest">Open the full story</a>
-      <a class="btn btn--quiet" href="#/story/harrison-ai" data-story-trigger="harrison-ai">Faster AI development for earlier detection</a>
+      <a class="btn btn--ghost" href="#/story/harrison-ai" data-story-trigger="harrison-ai">Faster AI development for earlier detection</a>
     </div>
+  </article>
+</section>
+<section class="poster" id="chapter-discovery" data-chapter="discovery" aria-labelledby="chapter-discovery-title">
+  <div class="poster-stage">
+    <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-discovery-poster.jpg" aria-label="Two researchers in a bright laboratory look together at a colourful data visualisation on a laptop.">
+      <source src="media/clip-discovery.webm" type="video/webm"><source src="media/clip-discovery.mp4" type="video/mp4"></video></div>
+    <div class="poster-shade" aria-hidden="true"></div>
+    <div class="poster-head">
+      <p class="poster-kicker"><span class="poster-num">02</span><span class="poster-line" aria-hidden="true"></span>Discovery</p>
+      <h2 class="poster-title" id="chapter-discovery-title"><span>Discovery that</span> <em>advances.</em></h2>
+      <p class="poster-moment">In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.</p>
+    </div>
+    <p class="poster-note">Illustrative, AI generated. Not the organisation or people named.</p>
   </div>
-</article>
-<article class="chapter" id="chapter-discovery" data-chapter="discovery" data-focus="research" aria-labelledby="chapter-discovery-title">
-  <div class="chapter-inner">
-    <p class="eyebrow"><span class="eyebrow-num">02</span> Discovery</p>
-    <figure class="media ">
-    <img src="media/discovery-1200.webp" srcset="media/discovery-640.webp 640w, media/discovery-1200.webp 1200w" sizes="(min-width: 1000px) 40vw, 92vw"
-      alt="Two researchers in a bright laboratory look together at a colourful data visualisation on a laptop." width="1200" height="800" loading="lazy" decoding="async">
-    <figcaption class="media-note">Illustrative image, AI generated. Not a photograph of the organisation or people named.</figcaption>
-  </figure>
-    <p class="chapter-moment">In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.</p>
-    <h2 class="chapter-title" id="chapter-discovery-title">Discovery that advances.</h2>
-    <p class="chapter-lede">That precision medicine approach creates terabytes of data, and the most useful patterns appear only when it is compared with data from research centres in other countries. In-house computing could not scale to that, and the data needed protecting.</p>
+  <article class="poster-body">
+    <p class="poster-org">Children&#39;s Cancer Institute <span aria-hidden="true">·</span> Sydney, Australia, with collaborators in Philadelphia, Memphis and Heidelberg</p>
+    <h3 class="poster-story">Comparing notes across the world for every child with cancer</h3>
+    <p class="poster-lede">That precision medicine approach creates terabytes of data, and the most useful patterns appear only when it is compared with data from research centres in other countries. In-house computing could not scale to that, and the data needed protecting.</p>
     <div class="connection">
       <p class="connection-label"><span class="thread-swatch" aria-hidden="true"></span>The Equinix connection</p>
       <p>The discoveries belong to the researchers. Equinix helps by shortening the distance between their data and the people they need to compare it with.</p>
@@ -195,23 +197,28 @@
       <div><dt>What partners deliver</dt><dd>The Institute’s researchers lead the science, from generating the data to integrating it with partner centres and pursuing new treatments.</dd></div>
     </dl>
     
-    <div class="chapter-actions">
+    <div class="actions">
       <a class="btn btn--primary" href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Open the full story</a>
       
     </div>
+  </article>
+</section>
+<section class="poster" id="chapter-opportunity" data-chapter="opportunity" aria-labelledby="chapter-opportunity-title">
+  <div class="poster-stage">
+    <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-opportunity-poster.jpg" aria-label="Teenage students with visitor lanyards listen to an engineer explain a cooling system inside a bright data center.">
+      <source src="media/clip-opportunity.webm" type="video/webm"><source src="media/clip-opportunity.mp4" type="video/mp4"></video></div>
+    <div class="poster-shade" aria-hidden="true"></div>
+    <div class="poster-head">
+      <p class="poster-kicker"><span class="poster-num">03</span><span class="poster-line" aria-hidden="true"></span>Opportunity</p>
+      <h2 class="poster-title" id="chapter-opportunity-title"><span>Opportunity that</span> <em>grows.</em></h2>
+      <p class="poster-moment">A student walks into a data center for the first time and asks how it all works.</p>
+    </div>
+    <p class="poster-note">Illustrative, AI generated. Not the organisation or people named.</p>
   </div>
-</article>
-<article class="chapter" id="chapter-opportunity" data-chapter="opportunity" data-focus="learning" aria-labelledby="chapter-opportunity-title">
-  <div class="chapter-inner">
-    <p class="eyebrow"><span class="eyebrow-num">03</span> Opportunity</p>
-    <figure class="media ">
-    <img src="media/opportunity-1200.webp" srcset="media/opportunity-640.webp 640w, media/opportunity-1200.webp 1200w" sizes="(min-width: 1000px) 40vw, 92vw"
-      alt="Teenage students with visitor lanyards listen to an engineer explain a cooling system inside a bright data center." width="1200" height="800" loading="lazy" decoding="async">
-    <figcaption class="media-note">Illustrative image, AI generated. Not a photograph of the organisation or people named.</figcaption>
-  </figure>
-    <p class="chapter-moment">A student walks into a data center for the first time and asks how it all works.</p>
-    <h2 class="chapter-title" id="chapter-opportunity-title">Opportunity that grows.</h2>
-    <p class="chapter-lede">The work that keeps data centers running is largely hidden, so most young people never consider it as a career, or know how to start.</p>
+  <article class="poster-body">
+    <p class="poster-org">Equinix employees and the Equinix Foundation <span aria-hidden="true">·</span> Now scaling to every Equinix location</p>
+    <h3 class="poster-story">From a school tour to a technician’s badge</h3>
+    <p class="poster-lede">The work that keeps data centers running is largely hidden, so most young people never consider it as a career, or know how to start.</p>
     <div class="connection">
       <p class="connection-label"><span class="thread-swatch" aria-hidden="true"></span>The Equinix connection</p>
       <p>This is Equinix acting directly: our own people opening our own facilities, so students can picture themselves working there.</p>
@@ -220,24 +227,29 @@
       <div><dt>What Equinix contributes</dt><dd>Employee volunteers lead classroom talks, IBX tours and hands-on education days, and the programme offers a structured path into Equinix internships, apprenticeships and early-career roles. School partnerships began in Ashburn, Virginia, and Dallas, Texas.</dd></div>
       <div><dt>What partners deliver</dt><dd>Schools and youth organisations, including Foundation partners such as i.c. stars, bring students and support them into training and work.</dd></div>
     </dl>
-    <p class="metric"><span class="metric-value">Nearly 2,000</span> <span class="metric-label">students reached in the two-year pilot</span><span class="metric-scope">Two-year pilot in select communities across the Americas and Asia-Pacific, as reported in the 2025 Sustainability Report and Equinix blog.</span></p>
-    <div class="chapter-actions">
+    <p class="metric"><span class="metric-value">Nearly 2,000</span><span class="metric-label">students reached in the two-year pilot</span><span class="metric-scope">Two-year pilot in select communities across the Americas and Asia-Pacific, as reported in the 2025 Sustainability Report and Equinix blog.</span></p>
+    <div class="actions">
       <a class="btn btn--primary" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Open the full story</a>
-      <a class="btn btn--quiet" href="#/story/technician-coalition" data-story-trigger="technician-coalition">An industry-wide answer to the technician shortage</a>
+      <a class="btn btn--ghost" href="#/story/technician-coalition" data-story-trigger="technician-coalition">An industry-wide answer to the technician shortage</a>
     </div>
+  </article>
+</section>
+<section class="poster" id="chapter-community" data-chapter="community" aria-labelledby="chapter-community-title">
+  <div class="poster-stage">
+    <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-neighbourhood-poster.jpg" aria-label="A parent and child cycle and an older couple walk along a new path through meadow planting, with a low timber and stone building beyond.">
+      <source src="media/clip-neighbourhood.webm" type="video/webm"><source src="media/clip-neighbourhood.mp4" type="video/mp4"></video></div>
+    <div class="poster-shade" aria-hidden="true"></div>
+    <div class="poster-head">
+      <p class="poster-kicker"><span class="poster-num">04</span><span class="poster-line" aria-hidden="true"></span>Community</p>
+      <h2 class="poster-title" id="chapter-community-title"><span>Community in</span> <em>connection.</em></h2>
+      <p class="poster-moment">In Minooka, Illinois, a public bike path runs along the data center site, and land is being donated for a future fire station.</p>
+    </div>
+    <p class="poster-note">Illustrative, AI generated. Not the organisation or people named.</p>
   </div>
-</article>
-<article class="chapter" id="chapter-community" data-chapter="community" data-focus="homes" aria-labelledby="chapter-community-title">
-  <div class="chapter-inner">
-    <p class="eyebrow"><span class="eyebrow-num">04</span> Community</p>
-    <figure class="media ">
-    <img src="media/neighbourhood-1200.webp" srcset="media/neighbourhood-640.webp 640w, media/neighbourhood-1200.webp 1200w" sizes="(min-width: 1000px) 40vw, 92vw"
-      alt="A parent and child cycle and an older couple walk along a new path through meadow planting, with a low timber and stone building beyond." width="1200" height="800" loading="lazy" decoding="async">
-    <figcaption class="media-note">Illustrative image, AI generated. Not a photograph of the organisation or people named.</figcaption>
-  </figure>
-    <p class="chapter-moment">In Minooka, Illinois, a public bike path runs along the data center site, and land is being donated for a future fire station.</p>
-    <h2 class="chapter-title" id="chapter-community-title">Community in connection.</h2>
-    <p class="chapter-lede">Data centers use power, water and land, and AI is accelerating demand. Communities rightly ask who pays for grid upgrades and what a new neighbour will give back.</p>
+  <article class="poster-body">
+    <p class="poster-org">Equinix with local governments, utilities and community leaders <span aria-hidden="true">·</span> Minooka, Illinois; San Jose, California; and U.S. communities where Equinix operates</p>
+    <h3 class="poster-story">A neighbour that plans to stay for decades</h3>
+    <p class="poster-lede">Data centers use power, water and land, and AI is accelerating demand. Communities rightly ask who pays for grid upgrades and what a new neighbour will give back.</p>
     <div class="connection">
       <p class="connection-label"><span class="thread-swatch" aria-hidden="true"></span>The Equinix connection</p>
       <p>Here the thread is not a cable. It is the long-term relationship between a data center and the town around it: roads, paths, power, taxes and local work.</p>
@@ -246,23 +258,29 @@
       <div><dt>What Equinix contributes</dt><dd>At the Minooka campus, Equinix is contributing $17M in public infrastructure, including roads, traffic signals and multi-use paths. Across the U.S., Equinix funds the power and water infrastructure its sites need, with long-term utility agreements such as a 10-year transmission agreement with ComEd and a collaboration with PG&amp;E and the City of San Jose.</dd></div>
       <div><dt>What partners deliver</dt><dd>Local leaders, utilities and residents set the priorities. Utilities plan and build the grid upgrades; local businesses supply the work.</dd></div>
     </dl>
-    <p class="metric"><span class="metric-value">$95M+</span> <span class="metric-label">with small and inclusive U.S. businesses</span><span class="metric-scope">U.S. inclusive procurement with certified and qualified businesses in calendar year 2025, as reported in Equinix’s U.S. Community Principles.</span></p>
-    <div class="chapter-actions">
+    <p class="metric"><span class="metric-value">$95M+</span><span class="metric-label">with small and inclusive U.S. businesses</span><span class="metric-scope">U.S. inclusive procurement with certified and qualified businesses in calendar year 2025, as reported in Equinix’s U.S. Community Principles.</span></p>
+    <div class="actions">
       <a class="btn btn--primary" href="#/story/community-principles" data-story-trigger="community-principles">Open the full story</a>
-      <a class="btn btn--quiet" href="#/story/digital-inclusion" data-story-trigger="digital-inclusion">Bringing more people online, and helping them thrive there</a><a class="btn btn--quiet" href="#/story/employee-volunteering" data-story-trigger="employee-volunteering">Colleagues giving time where they live</a>
+      <a class="btn btn--ghost" href="#/story/digital-inclusion" data-story-trigger="digital-inclusion">Bringing more people online, and helping them thrive there</a><a class="btn btn--ghost" href="#/story/employee-volunteering" data-story-trigger="employee-volunteering">Colleagues giving time where they live</a>
     </div>
+  </article>
+</section>
+<section class="poster" id="chapter-resources" data-chapter="resources" aria-labelledby="chapter-resources-title">
+  <div class="poster-stage">
+    <div class="poster-media"><video class="film " muted playsinline loop preload="none" poster="media/clip-pool-poster.jpg" aria-label="Morning light on the still water of an indoor public pool under a timber roof, with a few swimmers.">
+      <source src="media/clip-pool.webm" type="video/webm"><source src="media/clip-pool.mp4" type="video/mp4"></video></div>
+    <div class="poster-shade" aria-hidden="true"></div>
+    <div class="poster-head">
+      <p class="poster-kicker"><span class="poster-num">05</span><span class="poster-line poster-line--heat" aria-hidden="true"></span>Responsible growth</p>
+      <h2 class="poster-title" id="chapter-resources-title"><span>Resources used</span> <em>thoughtfully.</em></h2>
+      <p class="poster-moment">Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.</p>
+    </div>
+    <p class="poster-note">Illustrative, AI generated. Not the organisation or people named.</p>
   </div>
-</article>
-<article class="chapter" id="chapter-resources" data-chapter="resources" data-focus="aquatic" aria-labelledby="chapter-resources-title">
-  <div class="chapter-inner">
-    <p class="eyebrow"><span class="eyebrow-num">05</span> Responsible growth</p>
-    <figure class="media media--video"><video class="ambient-video" muted playsinline loop preload="none"
-        poster="media/clip-pool-poster.jpg" aria-label="Morning light on the still water of an indoor public pool under a timber roof, with a few swimmers.">
-        <source src="media/clip-pool.webm" type="video/webm"><source src="media/clip-pool.mp4" type="video/mp4"></video>
-        <figcaption class="media-note">Illustrative image, AI generated. Not a photograph of the organisation or people named.</figcaption></figure>
-    <p class="chapter-moment">Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.</p>
-    <h2 class="chapter-title" id="chapter-resources-title">Resources used thoughtfully.</h2>
-    <p class="chapter-lede">Servers produce heat that is usually released into the air. The neighbourhood around them needs heat for water and homes.</p>
+  <article class="poster-body">
+    <p class="poster-org">Equinix PA10 with the local heat network operator <span aria-hidden="true">·</span> Saint-Denis, Paris, France</p>
+    <h3 class="poster-story">Warm water for a neighbourhood pool in Saint-Denis</h3>
+    <p class="poster-lede">Servers produce heat that is usually released into the air. The neighbourhood around them needs heat for water and homes.</p>
     <div class="connection">
       <p class="connection-label"><span class="thread-swatch thread-swatch--heat" aria-hidden="true"></span>The heat connection</p>
       <p>Here the thread is warm, not digital: heat leaving a data center and arriving as warm water in a public pool.</p>
@@ -271,85 +289,134 @@
       <div><dt>What Equinix contributes</dt><dd>PA10 opened in 2023 and was designed to recover and export heat from customer equipment. Heat is recovered at about 28°C, raised to 65°C by heat pumps and passed through a heat exchanger to the heat network operator.</dd></div>
       <div><dt>What partners deliver</dt><dd>The heat network operator distributes the heat to the Olympic Aquatics Centre and the surrounding Plaine Saulnier neighbourhood.</dd></div>
     </dl>
-    <p class="metric"><span class="metric-value">1,000+</span> <span class="metric-label">homes expected to be warmed</span><span class="metric-scope">Expected reach of PA10 heat export, as stated by Equinix in April 2025. Specific to this site.</span></p>
-    <div class="chapter-actions">
+    <p class="metric"><span class="metric-value">1,000+</span><span class="metric-label">homes expected to be warmed</span><span class="metric-scope">Expected reach of PA10 heat export, as stated by Equinix in April 2025. Specific to this site.</span></p>
+    <div class="actions">
       <a class="btn btn--primary" href="#/story/pa10-heat" data-story-trigger="pa10-heat">Open the full story</a>
-      <a class="btn btn--quiet" href="#/story/markham-heat" data-story-trigger="markham-heat">Heat for homes, offices and two community pools in Markham</a><a class="btn btn--quiet" href="#/story/efficient-operations" data-story-trigger="efficient-operations">Running facilities more efficiently, year after year</a>
+      <a class="btn btn--ghost" href="#/story/markham-heat" data-story-trigger="markham-heat">Heat for homes, offices and two community pools in Markham</a><a class="btn btn--ghost" href="#/story/efficient-operations" data-story-trigger="efficient-operations">Running facilities more efficiently, year after year</a>
     </div>
-  </div>
-</article>
-          </div>
-        </div>
+  </article>
+</section>
       </div>
 
-      <section class="principles" id="principles" data-section="principles" aria-labelledby="principles-title">
-        <div class="section-inner section-inner--wide">
-          <p class="eyebrow">Part of the community</p>
-          <h2 class="section-title" id="principles-title">Five promises to the places we call home.</h2>
-          <p class="section-lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
-          <ol class="principles-list"><li class="principle">
-        <span class="principle-num" aria-hidden="true">01</span>
-        <h3 class="principle-name">Public infrastructure investment</h3>
-        <p class="principle-promise">Invest in roads, paths and public services around our sites, and fund the power and water infrastructure our sites need.</p>
-        <p class="principle-proof"><span class="visually-hidden">Example: </span>A public bike path and land for a future fire station in Minooka, Illinois.</p>
-      </li><li class="principle">
-        <span class="principle-num" aria-hidden="true">02</span>
-        <h3 class="principle-name">Power responsibility</h3>
-        <p class="principle-promise">Pay our full share of grid costs so our demand does not raise residents’ bills.</p>
-        <p class="principle-proof"><span class="visually-hidden">Example: </span>A 10-year transmission agreement with ComEd that the utility described as a model.</p>
-      </li><li class="principle">
-        <span class="principle-num" aria-hidden="true">03</span>
-        <h3 class="principle-name">Jobs and skills development</h3>
-        <p class="principle-promise">Create quality jobs and educational pathways for tomorrow’s workforce.</p>
-        <p class="principle-proof"><span class="visually-hidden">Example: </span>School partnerships through Pathways to Tech, starting in Ashburn and Dallas.</p>
-      </li><li class="principle">
-        <span class="principle-num" aria-hidden="true">04</span>
-        <h3 class="principle-name">Natural resource protection</h3>
-        <p class="principle-promise">Use water and land carefully and report transparently.</p>
-        <p class="principle-proof"><span class="visually-hidden">Example: </span>Avoiding water-based cooling at new sites in water-stressed areas.</p>
-      </li><li class="principle">
-        <span class="principle-num" aria-hidden="true">05</span>
-        <h3 class="principle-name">Bridge the digital divide</h3>
-        <p class="principle-promise">Expand access to connectivity, skills and careers.</p>
-        <p class="principle-proof"><span class="visually-hidden">Example: </span>28 WeAreEquinix teams supported 31 local digital inclusion nonprofits in 2025.</p>
-      </li></ol>
-  <p class="source-meta">Equinix U.S. Community Principles. Not every action applies at every location. <a href="https://equinixtogether.com/community-principles/" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+      <!-- Numbers -->
+      <section class="impact" id="impact" aria-labelledby="impact-title">
+        <div class="wrap">
+          <p class="eyebrow">In numbers</p>
+          <h2 class="section-title" id="impact-title">What connection adds&nbsp;up&nbsp;to.</h2>
+          <ul class="numbers"><li class="number">
+      <span class="number-value" data-count="3.5" data-decimals="1" data-prefix="" data-suffix="M+">3.5M+</span>
+      <span class="number-label">people connected to the internet by Equinix Foundation partners</span>
+      <span class="number-scope">Nonprofit portfolio, 2025. <a href="https://investor.equinix.com/news-events/press-releases/detail/1120/equinix-commits-additional-50-million-to-the-equinix" target="_blank" rel="noopener">Source<span class="visually-hidden">: Equinix commits additional $50 million to the Equinix Foundation (opens in a new tab)</span></a></span>
+    </li><li class="number">
+      <span class="number-value" data-count="54400" data-decimals="0" data-prefix="" data-suffix="+">54,400+</span>
+      <span class="number-label">hours volunteered by Equinix employees</span>
+      <span class="number-scope">All employees, 2025. <a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">Source<span class="visually-hidden">: 2025 Sustainability Report (opens in a new tab)</span></a></span>
+    </li><li class="number">
+      <span class="number-value" data-count="95" data-decimals="0" data-prefix="$" data-suffix="M+">$95M+</span>
+      <span class="number-label">spent with small and inclusive U.S. businesses</span>
+      <span class="number-scope">U.S. inclusive procurement, 2025. <a href="https://equinixtogether.com/community-principles/" target="_blank" rel="noopener">Source<span class="visually-hidden">: Our U.S. community principles (opens in a new tab)</span></a></span>
+    </li><li class="number">
+      <span class="number-value" data-count="5" data-decimals="0" data-prefix="" data-suffix="">5</span>
+      <span class="number-label">data centers exporting heat to their communities</span>
+      <span class="number-scope">As of 2025. <a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">Source<span class="visually-hidden">: 2025 Sustainability Report (opens in a new tab)</span></a></span>
+    </li></ul>
         </div>
       </section>
 
-      <section class="people" id="people" data-section="people" aria-labelledby="people-title">
-        <div class="section-inner section-inner--wide people-grid">
-          <div class="people-media">
-            <figure class="media media--video">
-              <video class="ambient-video" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
-                <source src="media/clip-people.webm" type="video/webm" />
-                <source src="media/clip-people.mp4" type="video/mp4" />
-              </video>
-              <figcaption class="media-note">Illustrative film, AI generated. Not a real Equinix employee or site.</figcaption>
-            </figure>
+      <!-- Principles as stacking cards -->
+      <section class="principles" id="principles" data-section="principles" aria-labelledby="principles-title">
+        <div class="wrap">
+          <p class="eyebrow">Part of the community</p>
+          <h2 class="section-title" id="principles-title">Five promises to the places we call&nbsp;home.</h2>
+          <p class="section-lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
+          <ol class="stack"><li class="stack-card" style="--i:0">
+        <div class="stack-inner">
+          <span class="stack-num" aria-hidden="true">01</span>
+          <div class="stack-copy">
+            <h3 class="stack-name">Public infrastructure investment</h3>
+            <p class="stack-promise">Invest in roads, paths and public services around our sites, and fund the power and water infrastructure our sites need.</p>
+            <p class="stack-proof"><span class="visually-hidden">Example: </span>A public bike path and land for a future fire station in Minooka, Illinois.</p>
           </div>
-          <div class="people-copy">
-            <p class="eyebrow">The people behind the connections</p>
-            <h2 class="section-title" id="people-title">Our people are part of the story.</h2>
+        </div>
+      </li><li class="stack-card" style="--i:1">
+        <div class="stack-inner">
+          <span class="stack-num" aria-hidden="true">02</span>
+          <div class="stack-copy">
+            <h3 class="stack-name">Power responsibility</h3>
+            <p class="stack-promise">Pay our full share of grid costs so our demand does not raise residents’ bills.</p>
+            <p class="stack-proof"><span class="visually-hidden">Example: </span>A 10-year transmission agreement with ComEd that the utility described as a model.</p>
+          </div>
+        </div>
+      </li><li class="stack-card" style="--i:2">
+        <div class="stack-inner">
+          <span class="stack-num" aria-hidden="true">03</span>
+          <div class="stack-copy">
+            <h3 class="stack-name">Jobs and skills development</h3>
+            <p class="stack-promise">Create quality jobs and educational pathways for tomorrow’s workforce.</p>
+            <p class="stack-proof"><span class="visually-hidden">Example: </span>School partnerships through Pathways to Tech, starting in Ashburn and Dallas.</p>
+          </div>
+        </div>
+      </li><li class="stack-card" style="--i:3">
+        <div class="stack-inner">
+          <span class="stack-num" aria-hidden="true">04</span>
+          <div class="stack-copy">
+            <h3 class="stack-name">Natural resource protection</h3>
+            <p class="stack-promise">Use water and land carefully and report transparently.</p>
+            <p class="stack-proof"><span class="visually-hidden">Example: </span>Avoiding water-based cooling at new sites in water-stressed areas.</p>
+          </div>
+        </div>
+      </li><li class="stack-card" style="--i:4">
+        <div class="stack-inner">
+          <span class="stack-num" aria-hidden="true">05</span>
+          <div class="stack-copy">
+            <h3 class="stack-name">Bridge the digital divide</h3>
+            <p class="stack-promise">Expand access to connectivity, skills and careers.</p>
+            <p class="stack-proof"><span class="visually-hidden">Example: </span>28 WeAreEquinix teams supported 31 local digital inclusion nonprofits in 2025.</p>
+          </div>
+        </div>
+      </li></ol>
+  <p class="source-meta stack-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="https://equinixtogether.com/community-principles/" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+        </div>
+      </section>
+
+      <!-- People -->
+      <section class="people" id="people" data-section="people" aria-labelledby="people-title">
+        <div class="people-film">
+          <video class="film" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
+            <source src="media/clip-people.webm" type="video/webm" />
+            <source src="media/clip-people.mp4" type="video/mp4" />
+          </video>
+          <div class="people-shade" aria-hidden="true"></div>
+          <div class="people-head wrap">
+            <p class="eyebrow eyebrow--light">The people behind the connections</p>
+            <h2 class="section-title section-title--xl" id="people-title">Our people are part of the&nbsp;story.</h2>
             <blockquote class="pull-quote">
               <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
-              <footer>Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer, Equinix blog, March 2026</footer>
+              <footer>Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
             </blockquote>
-            <ul class="roles-list">
-              <li><h3>Operations teams</h3><p>Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
-              <li><h3>Customer and CRO teams</h3><p>The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
-              <li><h3>Heat export and sustainability engineers</h3><p>The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
-              <li><h3>Volunteers and ambassadors</h3><p>More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
-            </ul>
-            <p class="people-story"><strong>Kayla&rsquo;s path.</strong> A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago. <a href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a></p>
           </div>
+          <p class="poster-note">Illustrative film, AI generated. Not a real Equinix employee or site.</p>
+        </div>
+        <div class="wrap people-grid">
+          <ul class="roles-list">
+            <li><h3>Operations teams</h3><p>Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
+            <li><h3>Customer and CRO teams</h3><p>The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
+            <li><h3>Heat export engineers</h3><p>The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
+            <li><h3>Volunteers and ambassadors</h3><p>More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
+          </ul>
+          <aside class="people-story">
+            <p class="eyebrow">Kayla&rsquo;s path</p>
+            <p class="people-story-text">A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago.</p>
+            <a class="btn btn--ghost btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a>
+          </aside>
         </div>
       </section>
 
+      <!-- Story gallery -->
       <section class="collection" id="share" data-section="share" aria-labelledby="share-title">
-        <div class="section-inner section-inner--wide">
+        <div class="wrap">
           <p class="eyebrow">Explore and carry it forward</p>
-          <h2 class="section-title" id="share-title">Find a story worth sharing.</h2>
+          <h2 class="section-title" id="share-title">Find a story worth&nbsp;sharing.</h2>
           <p class="section-lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
           <div class="filters">
     <div class="filter-group" role="group" aria-label="Filter by topic">
@@ -359,125 +426,163 @@
       <button type="button" class="chip" data-filter-group="relationship" data-filter="all" aria-pressed="true">All relationships</button><button type="button" class="chip" data-filter-group="relationship" data-filter="enables" aria-pressed="false">Infrastructure that enables customer work</button><button type="button" class="chip" data-filter-group="relationship" data-filter="action" aria-pressed="false">Direct Equinix action</button><button type="button" class="chip" data-filter-group="relationship" data-filter="partnership" aria-pressed="false">Community partnership</button>
     </div>
   </div>
-  <p class="collection-count" id="collection-count" aria-live="polite">11 stories</p>
-  <ul class="collection-list" id="collection-list"><li class="collection-item" data-topic="care" data-relationship="enables">
-    <p class="collection-tags"><span class="tag">Care</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
-    <h3 class="collection-title">Medical images, ready when the care team needs them</h3>
-    <p class="collection-org">3verest</p>
-    <p class="collection-summary">3verest runs sovereign healthcare clouds from Equinix facilities so radiologists can retrieve medical images in under a second while patient data stays within its jurisdiction.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/3verest" data-story-trigger="3verest">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="3verest">Copy summary</button>
+  <div class="rail-head">
+    <p class="collection-count" id="collection-count" aria-live="polite">11 stories</p>
+    <div class="rail-nav"><button type="button" class="rail-btn" data-rail-dir="-1" aria-label="Previous stories">←</button><button type="button" class="rail-btn" data-rail-dir="1" aria-label="Next stories">→</button></div>
+  </div>
+  <ul class="cards" id="collection-list" tabindex="0" aria-label="Stories"><li class="card" data-topic="care" data-relationship="enables">
+    <div class="card-art"><img class="card-img" src="media/care-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Care</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
+      <h3 class="card-title">Medical images, ready when the care team needs them</h3>
+      <p class="card-org">3verest</p>
+      <p class="card-summary">3verest runs sovereign healthcare clouds from Equinix facilities so radiologists can retrieve medical images in under a second while patient data stays within its jurisdiction.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/3verest" data-story-trigger="3verest">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="3verest">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="care" data-relationship="enables">
-    <p class="collection-tags"><span class="tag">Care</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
-    <h3 class="collection-title">Faster AI development for earlier detection</h3>
-    <p class="collection-org">Harrison.ai</p>
-    <p class="collection-summary">Harrison.ai develops AI that helps clinicians read chest X-rays, building its models on NVIDIA infrastructure hosted in an Equinix data center.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/harrison-ai" data-story-trigger="harrison-ai">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="harrison-ai">Copy summary</button>
+  </li><li class="card" data-topic="care" data-relationship="enables">
+    <div class="card-art card-art--type"><span class="card-type" aria-hidden="true">Months to days</span><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Care</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
+      <h3 class="card-title">Faster AI development for earlier detection</h3>
+      <p class="card-org">Harrison.ai</p>
+      <p class="card-summary">Harrison.ai develops AI that helps clinicians read chest X-rays, building its models on NVIDIA infrastructure hosted in an Equinix data center.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/harrison-ai" data-story-trigger="harrison-ai">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="harrison-ai">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="discovery" data-relationship="enables">
-    <p class="collection-tags"><span class="tag">Discovery</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
-    <h3 class="collection-title">Comparing notes across the world for every child with cancer</h3>
-    <p class="collection-org">Children&#39;s Cancer Institute</p>
-    <p class="collection-summary">Children&#39;s Cancer Institute in Sydney uses Equinix Fabric to connect its precision medicine data directly with cloud providers and research collaborators overseas.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="childrens-cancer-institute">Copy summary</button>
+  </li><li class="card" data-topic="discovery" data-relationship="enables">
+    <div class="card-art"><img class="card-img" src="media/discovery-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Discovery</span><span class="tag tag--quiet">Infrastructure that enables customer work</span></p>
+      <h3 class="card-title">Comparing notes across the world for every child with cancer</h3>
+      <p class="card-org">Children&#39;s Cancer Institute</p>
+      <p class="card-summary">Children&#39;s Cancer Institute in Sydney uses Equinix Fabric to connect its precision medicine data directly with cloud providers and research collaborators overseas.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="childrens-cancer-institute">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="opportunity" data-relationship="action">
-    <p class="collection-tags"><span class="tag">Opportunity</span><span class="tag tag--quiet">Direct Equinix action</span></p>
-    <h3 class="collection-title">From a school tour to a technician’s badge</h3>
-    <p class="collection-org">Equinix employees and the Equinix Foundation</p>
-    <p class="collection-summary">Pathways to Tech opens Equinix data centers to students aged 14 to 18 through classroom talks, facility tours and education days led by employee volunteers.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="pathways-to-tech">Copy summary</button>
+  </li><li class="card" data-topic="opportunity" data-relationship="action">
+    <div class="card-art"><img class="card-img" src="media/opportunity-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Opportunity</span><span class="tag tag--quiet">Direct Equinix action</span></p>
+      <h3 class="card-title">From a school tour to a technician’s badge</h3>
+      <p class="card-org">Equinix employees and the Equinix Foundation</p>
+      <p class="card-summary">Pathways to Tech opens Equinix data centers to students aged 14 to 18 through classroom talks, facility tours and education days led by employee volunteers.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="pathways-to-tech">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="opportunity" data-relationship="partnership">
-    <p class="collection-tags"><span class="tag">Opportunity</span><span class="tag tag--quiet">Community partnership</span></p>
-    <h3 class="collection-title">An industry-wide answer to the technician shortage</h3>
-    <p class="collection-org">Equinix Foundation with Generation and coalition partners</p>
-    <p class="collection-summary">The Equinix Foundation and Generation launched the Global Data Center Technician Training Coalition, starting in Brazil with co-funding from ODATA, Cisco and Vertiv.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/technician-coalition" data-story-trigger="technician-coalition">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="technician-coalition">Copy summary</button>
+  </li><li class="card" data-topic="opportunity" data-relationship="partnership">
+    <div class="card-art card-art--type"><span class="card-type" aria-hidden="true">Opportunity</span><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Opportunity</span><span class="tag tag--quiet">Community partnership</span></p>
+      <h3 class="card-title">An industry-wide answer to the technician shortage</h3>
+      <p class="card-org">Equinix Foundation with Generation and coalition partners</p>
+      <p class="card-summary">The Equinix Foundation and Generation launched the Global Data Center Technician Training Coalition, starting in Brazil with co-funding from ODATA, Cisco and Vertiv.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/technician-coalition" data-story-trigger="technician-coalition">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="technician-coalition">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="community" data-relationship="action">
-    <p class="collection-tags"><span class="tag">Community</span><span class="tag tag--quiet">Direct Equinix action</span></p>
-    <h3 class="collection-title">A neighbour that plans to stay for decades</h3>
-    <p class="collection-org">Equinix with local governments, utilities and community leaders</p>
-    <p class="collection-summary">Equinix’s U.S. Community Principles set out what neighbours can expect: paying our full share of grid costs, investing in public infrastructure, local jobs and skills, careful use of resources and digital inclusion.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/community-principles" data-story-trigger="community-principles">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="community-principles">Copy summary</button>
+  </li><li class="card" data-topic="community" data-relationship="action">
+    <div class="card-art"><img class="card-img" src="media/neighbourhood-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Community</span><span class="tag tag--quiet">Direct Equinix action</span></p>
+      <h3 class="card-title">A neighbour that plans to stay for decades</h3>
+      <p class="card-org">Equinix with local governments, utilities and community leaders</p>
+      <p class="card-summary">Equinix’s U.S. Community Principles set out what neighbours can expect: paying our full share of grid costs, investing in public infrastructure, local jobs and skills, careful use of resources and digital inclusion.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/community-principles" data-story-trigger="community-principles">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="community-principles">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="community" data-relationship="partnership">
-    <p class="collection-tags"><span class="tag">Community</span><span class="tag tag--quiet">Community partnership</span></p>
-    <h3 class="collection-title">Bringing more people online, and helping them thrive there</h3>
-    <p class="collection-org">Equinix Foundation and its nonprofit partners</p>
-    <p class="collection-summary">The Equinix Foundation funds nonprofits that expand connectivity, digital skills and workforce readiness, chosen with input from local Equinix employees.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/digital-inclusion" data-story-trigger="digital-inclusion">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="digital-inclusion">Copy summary</button>
+  </li><li class="card" data-topic="community" data-relationship="partnership">
+    <div class="card-art"><img class="card-img" src="media/community-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Community</span><span class="tag tag--quiet">Community partnership</span></p>
+      <h3 class="card-title">Bringing more people online, and helping them thrive there</h3>
+      <p class="card-org">Equinix Foundation and its nonprofit partners</p>
+      <p class="card-summary">The Equinix Foundation funds nonprofits that expand connectivity, digital skills and workforce readiness, chosen with input from local Equinix employees.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/digital-inclusion" data-story-trigger="digital-inclusion">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="digital-inclusion">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="community" data-relationship="action">
-    <p class="collection-tags"><span class="tag">Community</span><span class="tag tag--quiet">Direct Equinix action</span></p>
-    <h3 class="collection-title">Colleagues giving time where they live</h3>
-    <p class="collection-org">Equinix employees</p>
-    <p class="collection-summary">Through WeGive, WeSkill and Matching Gifts, Equinix employees support local organisations with their time, expertise and giving, choosing the causes themselves.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/employee-volunteering" data-story-trigger="employee-volunteering">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="employee-volunteering">Copy summary</button>
+  </li><li class="card" data-topic="community" data-relationship="action">
+    <div class="card-art card-art--type"><span class="card-type" aria-hidden="true">54,400+</span><span class="card-thread" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Community</span><span class="tag tag--quiet">Direct Equinix action</span></p>
+      <h3 class="card-title">Colleagues giving time where they live</h3>
+      <p class="card-org">Equinix employees</p>
+      <p class="card-summary">Through WeGive, WeSkill and Matching Gifts, Equinix employees support local organisations with their time, expertise and giving, choosing the causes themselves.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/employee-volunteering" data-story-trigger="employee-volunteering">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="employee-volunteering">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="resources" data-relationship="action">
-    <p class="collection-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Direct Equinix action</span></p>
-    <h3 class="collection-title">Warm water for a neighbourhood pool in Saint-Denis</h3>
-    <p class="collection-org">Equinix PA10 with the local heat network operator</p>
-    <p class="collection-summary">Equinix PA10 in Saint-Denis, Paris, recovers heat from customer servers for the local heat network that supplies the Olympic Aquatics Centre and homes nearby.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/pa10-heat" data-story-trigger="pa10-heat">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="pa10-heat">Copy summary</button>
+  </li><li class="card" data-topic="resources" data-relationship="action">
+    <div class="card-art"><img class="card-img" src="media/resources-640.webp" alt="" loading="lazy" decoding="async" width="640" height="427"><span class="card-thread card-thread--heat" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Direct Equinix action</span></p>
+      <h3 class="card-title">Warm water for a neighbourhood pool in Saint-Denis</h3>
+      <p class="card-org">Equinix PA10 with the local heat network operator</p>
+      <p class="card-summary">Equinix PA10 in Saint-Denis, Paris, recovers heat from customer servers for the local heat network that supplies the Olympic Aquatics Centre and homes nearby.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/pa10-heat" data-story-trigger="pa10-heat">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="pa10-heat">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="resources" data-relationship="partnership">
-    <p class="collection-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Community partnership</span></p>
-    <h3 class="collection-title">Heat for homes, offices and two community pools in Markham</h3>
-    <p class="collection-org">Equinix TR5 with Markham District Energy</p>
-    <p class="collection-summary">Equinix TR5 exports residual heat to Markham District Energy, the city-owned utility that warms buildings, condo hot water and two community centre pools.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/markham-heat" data-story-trigger="markham-heat">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="markham-heat">Copy summary</button>
+  </li><li class="card" data-topic="resources" data-relationship="partnership">
+    <div class="card-art card-art--type"><span class="card-type" aria-hidden="true">14M sq ft</span><span class="card-thread card-thread--heat" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Community partnership</span></p>
+      <h3 class="card-title">Heat for homes, offices and two community pools in Markham</h3>
+      <p class="card-org">Equinix TR5 with Markham District Energy</p>
+      <p class="card-summary">Equinix TR5 exports residual heat to Markham District Energy, the city-owned utility that warms buildings, condo hot water and two community centre pools.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/markham-heat" data-story-trigger="markham-heat">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="markham-heat">Copy summary</button>
+      </div>
     </div>
-  </li><li class="collection-item" data-topic="resources" data-relationship="action">
-    <p class="collection-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Direct Equinix action</span></p>
-    <h3 class="collection-title">Running facilities more efficiently, year after year</h3>
-    <p class="collection-org">Equinix</p>
-    <p class="collection-summary">Equinix reports its 2025 performance, an average annual PUE of 1.37 and 96% renewable energy coverage across retail IBX data centers, and has dated commitments for what comes next.</p>
-    <div class="collection-actions">
-      <a class="btn btn--small btn--primary" href="#/story/efficient-operations" data-story-trigger="efficient-operations">Open story</a>
-      <button type="button" class="btn btn--small btn--quiet" data-copy="summary" data-story="efficient-operations">Copy summary</button>
+  </li><li class="card" data-topic="resources" data-relationship="action">
+    <div class="card-art card-art--type"><span class="card-type" aria-hidden="true">1.37</span><span class="card-thread card-thread--heat" aria-hidden="true"></span></div>
+    <div class="card-body">
+      <p class="card-tags"><span class="tag">Responsible growth</span><span class="tag tag--quiet">Direct Equinix action</span></p>
+      <h3 class="card-title">Running facilities more efficiently, year after year</h3>
+      <p class="card-org">Equinix</p>
+      <p class="card-summary">Equinix reports its 2025 performance, an average annual PUE of 1.37 and 96% renewable energy coverage across retail IBX data centers, and has dated commitments for what comes next.</p>
+      <div class="card-actions">
+        <a class="btn btn--primary btn--small" href="#/story/efficient-operations" data-story-trigger="efficient-operations">Open story</a>
+        <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="efficient-operations">Copy summary</button>
+      </div>
     </div>
   </li></ul>
   <div class="collection-empty" id="collection-empty" hidden>
     <p>No stories match both filters yet. Try another relationship, or see everything.</p>
-    <button type="button" class="btn btn--quiet" data-filter-reset>Show all stories</button>
+    <button type="button" class="btn btn--ghost" data-filter-reset>Show all stories</button>
   </div>
         </div>
       </section>
 
+      <!-- Sources -->
       <section class="sources" id="sources" data-section="sources" aria-labelledby="sources-title">
-        <div class="section-inner section-inner--wide">
+        <div class="wrap">
           <p class="eyebrow">Sources and progress</p>
-          <h2 class="section-title" id="sources-title">What we have done, are doing and have committed to.</h2>
+          <h2 class="section-title" id="sources-title">What we have done, are doing and have committed&nbsp;to.</h2>
           <div class="progress-grid">
       <div><h3>Achieved</h3><p class="source-meta">Results reported for a past period.</p><ul><li><a href="#/story/harrison-ai" data-story-trigger="harrison-ai">Faster AI development for earlier detection</a> <span class="source-meta">Harrison.ai</span></li><li><a href="#/story/employee-volunteering" data-story-trigger="employee-volunteering">Colleagues giving time where they live</a> <span class="source-meta">Equinix employees</span></li></ul></div>
       <div><h3>Happening now</h3><p class="source-meta">Current programmes and customer stories.</p><ul><li><a href="#/story/3verest" data-story-trigger="3verest">Medical images, ready when the care team needs them</a> <span class="source-meta">3verest</span></li><li><a href="#/story/childrens-cancer-institute" data-story-trigger="childrens-cancer-institute">Comparing notes across the world for every child with cancer</a> <span class="source-meta">Children&#39;s Cancer Institute</span></li><li><a href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">From a school tour to a technician’s badge</a> <span class="source-meta">Equinix employees and the Equinix Foundation</span></li><li><a href="#/story/technician-coalition" data-story-trigger="technician-coalition">An industry-wide answer to the technician shortage</a> <span class="source-meta">Equinix Foundation with Generation and coalition partners</span></li><li><a href="#/story/community-principles" data-story-trigger="community-principles">A neighbour that plans to stay for decades</a> <span class="source-meta">Equinix with local governments, utilities and community leaders</span></li><li><a href="#/story/digital-inclusion" data-story-trigger="digital-inclusion">Bringing more people online, and helping them thrive there</a> <span class="source-meta">Equinix Foundation and its nonprofit partners</span></li><li><a href="#/story/pa10-heat" data-story-trigger="pa10-heat">Warm water for a neighbourhood pool in Saint-Denis</a> <span class="source-meta">Equinix PA10 with the local heat network operator</span></li><li><a href="#/story/markham-heat" data-story-trigger="markham-heat">Heat for homes, offices and two community pools in Markham</a> <span class="source-meta">Equinix TR5 with Markham District Energy</span></li><li><a href="#/story/efficient-operations" data-story-trigger="efficient-operations">Running facilities more efficiently, year after year</a> <span class="source-meta">Equinix</span></li></ul></div>
       <div><h3>Committed</h3><p class="source-meta">Stated future commitments, not yet outcomes.</p><ul><li>SBTi-approved targets to reach net zero by 2040. <a class="source-ref" href="https://www.equinix.com/about/sustainability/environmental" target="_blank" rel="noopener">Source<span class="visually-hidden">: Environmental sustainability (opens in a new tab)</span></a></li><li>A power usage effectiveness (PUE) of 1.33 or better by 2030. <a class="source-ref" href="https://equinixtogether.com/community-principles/" target="_blank" rel="noopener">Source<span class="visually-hidden">: Our U.S. community principles (opens in a new tab)</span></a></li><li>All future IBX colocation data centers designed with heat recovery and export capabilities, as stated by Equinix in July 2024. <a class="source-ref" href="https://www.datacenterknowledge.com/sustainability/paris-2024-excess-data-center-heat-used-to-warm-olympic-swimming-pools" target="_blank" rel="noopener">Source<span class="visually-hidden">: Paris 2024: Excess data center heat used to warm Olympic swimming pools (opens in a new tab)</span></a></li><li>A new $50 million commitment to the Equinix Foundation, announced 27 August 2026. <a class="source-ref" href="https://investor.equinix.com/news-events/press-releases/detail/1120/equinix-commits-additional-50-million-to-the-equinix" target="_blank" rel="noopener">Source<span class="visually-hidden">: Equinix commits additional $50 million to the Equinix Foundation (opens in a new tab)</span></a></li></ul></div>
     </div>
-    <h3 class="sources-heading">Source directory</h3>
-    <ul class="source-directory"><li><a href="https://www.equinix.com/insights/case-studies/3verest" target="_blank" rel="noopener">3verest speeds medical image access 28x with Equinix<span class="visually-hidden"> (opens in a new tab)</span></a>
+    <details class="directory">
+      <summary>Source directory <span class="source-meta">14 sources, checked 21 October 2026</span></summary>
+      <ul class="source-directory"><li><a href="https://www.equinix.com/insights/case-studies/3verest" target="_blank" rel="noopener">3verest speeds medical image access 28x with Equinix<span class="visually-hidden"> (opens in a new tab)</span></a>
     <span class="source-meta">Equinix customer story, date not stated</span></li><li><a href="https://www.equinix.com/insights/case-studies/childrens-cancer-institute" target="_blank" rel="noopener">Children&#39;s Cancer Institute relies on Equinix to connect its data directly with global partners<span class="visually-hidden"> (opens in a new tab)</span></a>
     <span class="source-meta">Equinix customer story, date not stated</span></li><li><a href="https://blog.equinix.com/blog/2025/03/05/how-life-science-and-healthcare-organizations-can-get-ai-ready/" target="_blank" rel="noopener">How life science and healthcare organizations can get AI-ready<span class="visually-hidden"> (opens in a new tab)</span></a>
     <span class="source-meta">Equinix blog, 5 March 2025</span></li><li><a href="https://blog.equinix.com/blog/2025/04/24/the-hidden-benefit-of-data-centers-warming-communities-not-just-servers/" target="_blank" rel="noopener">The hidden benefit of data centers: warming communities, not just servers<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -492,7 +597,8 @@
     <span class="source-meta">Equinix Together, date not stated</span></li><li><a href="https://equinixtogether.com/2026/06/02/we-are-building-communities/" target="_blank" rel="noopener">We&#39;re not just building data centers. We&#39;re building communities.<span class="visually-hidden"> (opens in a new tab)</span></a>
     <span class="source-meta">Equinix Together, Arquelle Shaw, President of the Americas, 2 June 2026</span></li><li><a href="https://blog.equinix.com/blog/2026/03/24/the-heartbeat-of-the-digital-world-runs-on-people/" target="_blank" rel="noopener">The heartbeat of the digital world runs on people<span class="visually-hidden"> (opens in a new tab)</span></a>
     <span class="source-meta">Equinix blog, 24 March 2026</span></li></ul>
-    <p class="source-meta">All sources checked 21 October 2026. Summaries on this page are original paraphrases. Figures keep the scope and period stated by each source.</p>
+      <p class="source-meta">Summaries on this page are original paraphrases. Figures keep the scope and period stated by each source.</p>
+    </details>
           <p class="more-links">
             <a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">Equinix Sustainability Report<span class="visually-hidden"> (opens in a new tab)</span></a>
             <a href="https://www.equinix.com/about/equinix-foundation" target="_blank" rel="noopener">Equinix Foundation<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -503,7 +609,8 @@
     </main>
 
     <footer class="site-footer">
-      <p>Internal prototype for Equinix CRO colleagues. The community scene and AI-generated images are illustrative. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
+      <p class="footer-mark" aria-hidden="true">Infrastructure for human <em>possibility.</em></p>
+      <p class="footer-note">Internal prototype for Equinix CRO colleagues. The community scene, images and films are illustrative and AI generated. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
     </footer>
 
     <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title">

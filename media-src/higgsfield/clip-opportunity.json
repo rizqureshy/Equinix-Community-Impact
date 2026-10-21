@@ -1,0 +1,39 @@
+[
+  {
+    "created_at": "2026-10-21T05:51:04.726117Z",
+    "display_name": "Kling v3.0",
+    "id": "a73f1d3e-a3d9-4d68-9d92-f6a4c78e9e8d",
+    "job_type": "kling3_0",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "cfg_scale": 0.5,
+      "duration": 5,
+      "enhance_prompt": false,
+      "height": 1080,
+      "kling_element_ids": [],
+      "kling_elements": [],
+      "medias": [
+        {
+          "data": {
+            "id": "6a0b5d79-f983-4771-90ea-ee71f9980c0a",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/6a0b5d79-f983-4771-90ea-ee71f9980c0a_resize.jpg"
+          },
+          "role": "start_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "The engineer explains with open hand gestures and the students listen, one nods and writes a note, another looks up at the equipment with curiosity, camera holds with a gentle slow push in. Calm, natural, documentary. No text.",
+      "reference_elements": [],
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055104_a73f1d3e-a3d9-4d68-9d92-f6a4c78e9e8d.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_055104_a73f1d3e-a3d9-4d68-9d92-f6a4c78e9e8d_thumbnail.webp"
+  }
+]

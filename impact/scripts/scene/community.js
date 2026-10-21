@@ -24,20 +24,25 @@ export const palette = {
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.86, metalness: 0, ...extra });
 
 /** A facade texture of soft window openings, tinted by the material colour. */
-function facadeTexture({ cols = 4, rows = 2, tall = false } = {}) {
+function facadeTexture({ cols = 4, rows = 2, tall = false } = {}, glow = false) {
   const c = document.createElement('canvas');
   c.width = 256;
   c.height = 256;
   const g = c.getContext('2d');
-  g.fillStyle = '#ffffff';
+  // The colour map darkens window openings; the glow map lights them warmly
+  // for the evening scene. Not every window is lit, as in a real street.
+  g.fillStyle = glow ? '#000000' : '#ffffff';
   g.fillRect(0, 0, 256, 256);
   const cw = 256 / cols;
   const rh = 256 / rows;
-  g.fillStyle = 'rgba(92, 82, 70, 0.55)';
+  let n = 0;
   for (let x = 0; x < cols; x++) {
     for (let y = 0; y < rows; y++) {
       const w = cw * (tall ? 0.3 : 0.36);
       const h = rh * (tall ? 0.6 : 0.42);
+      n++;
+      if (glow) g.fillStyle = (n * 7) % 5 === 0 ? '#2a1a0a' : '#ffc98a';
+      else g.fillStyle = 'rgba(70, 58, 46, 0.6)';
       g.fillRect(x * cw + (cw - w) / 2, y * rh + (rh - h) / 2, w, h);
     }
   }
@@ -51,11 +56,14 @@ function facadeTexture({ cols = 4, rows = 2, tall = false } = {}) {
 const textures = {};
 function facade(color, opts, repeat = [1, 1]) {
   const key = JSON.stringify(opts);
-  textures[key] ||= facadeTexture(opts);
-  const map = textures[key].clone();
-  map.needsUpdate = true;
-  map.repeat.set(repeat[0], repeat[1]);
-  return mat(color, { map });
+  textures[key] ||= [facadeTexture(opts), facadeTexture(opts, true)];
+  const [map, emissiveMap] = textures[key].map((t) => {
+    const c = t.clone();
+    c.needsUpdate = true;
+    c.repeat.set(repeat[0], repeat[1]);
+    return c;
+  });
+  return mat(color, { map, emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.55 });
 }
 
 function shadowed(mesh) {

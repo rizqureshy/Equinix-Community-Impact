@@ -50,7 +50,7 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
   const renderer = new THREE.WebGLRenderer({ antialias: !constrained, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, constrained ? 1 : 1.5));
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   // The model is static, so its shadows render once; moving details cast none.
@@ -67,15 +67,16 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = envTex;
-  scene.environmentIntensity = 0.42;
+  scene.environmentIntensity = 0.3;
 
   const camera = new THREE.PerspectiveCamera(26, 1, 0.5, 200);
 
   // Light: warm low sun through a window, soft sky fill, gentle bounce.
-  const hemi = new THREE.HemisphereLight(0xfff6ea, 0xb9a688, 0.8);
+  // Golden hour: a low warm sun, a cool dusk sky and lit windows.
+  const hemi = new THREE.HemisphereLight(0xbfc8d6, 0x3b2c20, 0.5);
   scene.add(hemi);
-  const sun = new THREE.SpotLight(0xffe7c7, 3400, 140, Math.PI / 7, 0.85, 2);
-  sun.position.set(-26, 30, 14);
+  const sun = new THREE.SpotLight(0xffbf7a, 5600, 150, Math.PI / 6.5, 0.8, 2);
+  sun.position.set(-34, 22, 16);
   sun.target.position.set(1, 0, 0);
   sun.castShadow = true;
   sun.shadow.mapSize.setScalar(constrained ? 1024 : 2048);
@@ -84,12 +85,12 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
   sun.shadow.radius = 4;
   sun.map = windowCookie();
   scene.add(sun, sun.target);
-  const fill = new THREE.DirectionalLight(0xe9eef2, 0.35);
+  const fill = new THREE.DirectionalLight(0x9fb4d8, 0.35);
   fill.position.set(18, 12, -10);
   scene.add(fill);
 
   // Soft contact shadow under the model on the warm-white page.
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.16 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -1.1;
   ground.receiveShadow = true;
@@ -228,18 +229,14 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   let hovered = null;
-  const tint = new THREE.Color(0xe31c25);
 
-  function highlight(id, strength = 0.06) {
+  /** The focused place lights up: its windows glow brighter than the rest. */
+  function highlight(id, strength = 1.6) {
     for (const [pid, p] of Object.entries(places)) {
-      const on = pid === id;
+      const level = !id ? 0.55 : pid === id ? strength : 0.3;
       p.group.traverse((o) => {
         if (!o.isMesh) return;
-        for (const m of [].concat(o.material)) {
-          if (!m.emissive) continue;
-          m.emissive.copy(on ? tint : new THREE.Color(0x000000));
-          m.emissiveIntensity = on ? strength : 0;
-        }
+        for (const m of [].concat(o.material)) if (m.emissiveMap) m.emissiveIntensity = level;
       });
     }
     for (const [lid, el] of labels) el.classList.toggle('is-focus', lid === id);
@@ -286,7 +283,8 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
     last = now;
     if (!visible || document.hidden || failed) return;
     if (motion) {
-      idle += dt * 0.25;
+      // Drift only in the overview, so labels hold still when a place is in focus.
+      if (focus === 'overview') idle += dt * 0.25;
       for (const w of walkers) {
         w.t = (w.t + dt * w.speed) % 1;
         w.mesh.position.lerpVectors(w.route.from, w.route.to, w.t);
@@ -355,7 +353,7 @@ export function createScene(container, { labels = new Map(), onSelect, onHover, 
       if (on) this.setMotion(false);
     },
     hoverLabel(id) {
-      highlight(id || (focus === 'overview' ? null : focus), id ? 0.04 : 0.06);
+      highlight(id || (focus === 'overview' ? null : focus), id ? 1.2 : 1.6);
       dirty = true;
     },
     render() {

@@ -41,23 +41,32 @@ def still(name, src, crop):
     print(name, im.size)
 
 
-CLIPS = ('community', 'pool', 'people')
+CLIPS = ('community', 'pool', 'people', 'care', 'discovery', 'opportunity', 'neighbourhood')
+
+
+# Seconds to trim from the start of a clip (care begins on an empty frame).
+TRIM = {'care': 2.2}
 
 
 def clip(name):
     src = SRC / f'clip-{name}.mp4'
-    base = ['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-an', '-vf', 'scale=1280:-2']
+    start = ['-ss', str(TRIM.get(name, 0))]
+    base = ['ffmpeg', '-v', 'error', '-y', *start, '-i', str(src), '-an', '-vf', 'scale=1280:-2']
     subprocess.run(base + ['-c:v', 'libx264', '-crf', '27', '-preset', 'slow', '-pix_fmt', 'yuv420p',
                            '-movflags', '+faststart', str(OUT / f'clip-{name}.mp4')], check=True)
     subprocess.run(base + ['-c:v', 'libvpx-vp9', '-crf', '38', '-b:v', '0', '-row-mt', '1',
                            str(OUT / f'clip-{name}.webm')], check=True)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-vf', 'scale=1280:-2', '-frames:v', '1',
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', *start, '-i', str(src), '-vf', 'scale=1280:-2', '-frames:v', '1',
                     '-q:v', '4', str(OUT / f'clip-{name}-poster.jpg')], check=True)
     print('clip', name)
 
 
 if __name__ == '__main__':
+    import sys
+    only = set(sys.argv[1:])
     for key, (src, crop) in STILLS.items():
-        still(key, src, crop)
+        if not only or key in only:
+            still(key, src, crop)
     for c in CLIPS:
-        clip(c)
+        if not only or c in only:
+            clip(c)

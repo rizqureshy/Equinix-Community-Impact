@@ -76,7 +76,7 @@
       "original": "media-src/higgsfield/clip-community.mp4",
       "estimatedCredits": 8.75,
       "status": "reserve",
-      "usage": "Not placed in the page; available as an opening film layer",
+      "usage": "Not placed; available as an opening film layer",
       "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
     },
     {
@@ -116,7 +116,7 @@
       "original": "media-src/higgsfield/clip-pool.mp4",
       "estimatedCredits": 8.75,
       "status": "selected",
-      "usage": "Responsible growth chapter ambient film",
+      "usage": "Responsible growth poster film and hero reel",
       "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
     },
     {
@@ -257,6 +257,78 @@
       "status": "selected",
       "usage": "Responsible growth story media; clip-pool start frame",
       "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-care",
+      "generationId": "46e409e1-9daf-491a-8aee-c66ca88d14d1",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T05:51:03.306816Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-care.prompt.txt",
+      "original": "media-src/higgsfield/clip-care.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "Care poster film and hero reel (first 2.2 s trimmed: source began on an empty half frame)",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026, image to video from the matching still. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-discovery",
+      "generationId": "d9867bae-1295-4d7c-b091-cb55c6a3f488",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T05:51:03.026689Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-discovery.prompt.txt",
+      "original": "media-src/higgsfield/clip-discovery.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "Discovery poster film and hero reel",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026, image to video from the matching still. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-opportunity",
+      "generationId": "a73f1d3e-a3d9-4d68-9d92-f6a4c78e9e8d",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T05:51:04.726117Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-opportunity.prompt.txt",
+      "original": "media-src/higgsfield/clip-opportunity.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "Opportunity poster film and hero reel",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026, image to video from the matching still. Illustrative only; not documentary."
+    },
+    {
+      "key": "clip-neighbourhood",
+      "generationId": "99b29ac8-7733-4b43-9c28-d434c3d50ea3",
+      "model": "Kling v3.0",
+      "jobType": "kling3_0",
+      "createdAt": "2026-10-21T05:51:04.411893Z",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "duration": 5,
+        "mode": "pro"
+      },
+      "promptFile": "media-src/higgsfield/clip-neighbourhood.prompt.txt",
+      "original": "media-src/higgsfield/clip-neighbourhood.mp4",
+      "estimatedCredits": 8.75,
+      "status": "selected",
+      "usage": "Community poster film and hero reel",
+      "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026, image to video from the matching still. Illustrative only; not documentary."
     }
   ],
   "failedJobs": [

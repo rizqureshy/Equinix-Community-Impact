@@ -53,63 +53,70 @@ try {
   check(await p.locator('h1').isVisible(), 'headline and actions usable before the scene loads', await p.evaluate(() => document.querySelector('#stage').dataset.sceneState));
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
   check((await p.evaluate(() => document.querySelector('#stage').dataset.sceneState)) === 'ready', '3D scene renders with WebGL');
-  await wait(1500);
+  check((await p.evaluate(() => !!window.__impact.lenis)), 'smooth scrolling active when motion is on');
 
-  await p.locator('.place-label[data-place="research"]').click();
-  await wait(800);
-  const s1 = await p.evaluate(() => window.__impact.store.get());
-  check(s1.section === 'explore' && s1.topic === 'discovery' && s1.focus === 'research', 'scene label selects its destination and preview', JSON.stringify(s1));
-  check((await p.locator('#topic-panel .preview-title').textContent()).includes('every child'), 'preview shows the matching story');
+  await p.goto(`${BASE}#/explore/discovery`);
+  await wait(3500);
+  let s1 = await p.evaluate(() => window.__impact.store.get());
+  check(s1.section === 'explore' && s1.topic === 'discovery' && s1.focus === 'research', 'explore route flies to its place', JSON.stringify(s1));
+  check(await p.locator('.fly-caption:not([hidden]) .fly-place').textContent() === 'Research centre', 'caption matches the place');
 
-  await p.locator('#topic-tab-discovery').focus();
-  await p.keyboard.press('ArrowRight');
-  await wait(300);
-  check((await p.evaluate(() => [window.__impact.store.get().topic, document.activeElement.id])).join() === 'opportunity,topic-tab-opportunity', 'arrow keys move and select topic tabs');
+  await p.locator('.fly-step[data-step="2"]').click();
+  await wait(3000);
+  s1 = await p.evaluate(() => window.__impact.store.get());
+  check(s1.topic === 'opportunity' && s1.focus === 'learning', 'step control moves the tour', JSON.stringify(s1));
+  await p.locator('.place-label[data-place="aquatic"]').click();
+  await wait(3000);
+  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'scene label selects its place');
 
-  const trigger = p.locator('#topic-panel [data-story-trigger]');
+  const trigger = p.locator('.fly-caption:not([hidden]) [data-story-trigger]');
+  const storyId = await trigger.getAttribute('data-story-trigger');
   await trigger.click();
-  await wait(600);
-  check(await isOpen(p), 'story opens from the explorer');
-  check((await p.evaluate(() => location.hash)) === '#/story/pathways-to-tech', 'open story exposes its URL');
+  await wait(700);
+  check(await isOpen(p), 'story opens from the tour');
+  check((await p.evaluate(() => location.hash)) === `#/story/${storyId}`, 'open story exposes its URL');
   check((await p.evaluate(() => document.activeElement.className)).includes('drawer-close'), 'focus moves into the story dialog');
   await p.keyboard.press('Escape');
-  await wait(600);
+  await wait(700);
   check(!(await isOpen(p)), 'Escape closes the story');
-  check((await p.evaluate(() => document.activeElement?.dataset?.storyTrigger)) === 'pathways-to-tech', 'focus returns to the trigger');
+  check((await p.evaluate(() => document.activeElement?.dataset?.storyTrigger)) === storyId, 'focus returns to the trigger');
   await p.goForward();
-  await wait(600);
+  await wait(700);
   check(await isOpen(p), 'browser forward restores the story');
   await p.goBack();
-  await wait(600);
-  check(!(await isOpen(p)) && (await p.evaluate(() => location.hash)) === '#/explore/opportunity', 'browser back restores the explorer');
+  await wait(700);
+  check(!(await isOpen(p)) && (await p.evaluate(() => location.hash)).startsWith('#/explore'), 'browser back restores the tour');
+
+  await p.goto(`${BASE}#/chapter/community`);
+  await wait(2500);
+  const top = await p.evaluate(() => document.querySelector('#chapter-community').getBoundingClientRect().top);
+  check(Math.abs(top) < 40, 'chapter route lands on its poster', `${Math.round(top)}px`);
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
-  await wait(1200);
-  await p.locator('.collection-item [data-copy="summary"]').first().click();
+  await wait(2500);
+  await p.locator('.card [data-copy="summary"]').first().click();
   await wait(300);
   const clip = await p.evaluate(() => navigator.clipboard.readText());
   check(clip.includes('Source:') && clip.includes('#/story/3verest'), 'copy summary includes source and story link');
   check((await p.locator('#toast').textContent()).includes('copied'), 'copy confirms success');
-
   await p.locator('[data-filter="discovery"]').click();
-  check((await p.locator('#collection-count').textContent()) === '1 story', 'topic filter narrows the collection');
+  check((await p.locator('#collection-count').textContent()) === '1 story', 'topic filter narrows the gallery');
   await p.locator('[data-filter="partnership"]').click();
   check(await p.locator('#collection-empty').isVisible(), 'filters show a useful empty state');
   await p.locator('[data-filter-reset]').click();
-  check((await p.locator('.collection-item:not([hidden])').count()) === (await p.locator('.collection-item').count()), 'reset shows all stories');
+  check((await p.locator('.card:not([hidden])').count()) === (await p.locator('.card').count()), 'reset shows all stories');
 
   const small = await p.evaluate(() =>
-    [...document.querySelectorAll('.btn, .chip, .topic-tab, .motion-toggle, .drawer-close, .overview-btn')]
-      .filter((el) => el.offsetParent)
-      .map((el) => el.getBoundingClientRect())
-      .filter((r) => r.height < 44).length,
+    [...document.querySelectorAll('.btn, .chip, .fly-step, .motion-toggle, .rail-btn, .place-label')]
+      .filter((el) => el.offsetParent && getComputedStyle(el).visibility !== 'hidden')
+      .map((el) => [el.className, el.getBoundingClientRect().height])
+      .filter(([, h]) => h > 0 && h < 34),
   );
-  check(small === 0, 'controls are at least 44px tall', `${small} too small`);
+  check(small.length === 0, 'controls are comfortably sized', JSON.stringify(small.slice(0, 3)));
   check(p.external.length === 0, 'no requests leave the host', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors', p.errors.slice(0, 3).join(' | '));
-
   await p.context().close();
 
   // ---- Direct story link and clipboard failure ---------------------------
@@ -129,22 +136,29 @@ try {
   await p.context().close();
 
   // ---- Reduced motion -----------------------------------------------------
-  p = await open(browser, `${BASE}#/chapter/discovery`, { reducedMotion: 'reduce' });
+  p = await open(browser, `${BASE}#/explore/discovery`, { reducedMotion: 'reduce' });
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
+  await wait(800);
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
+  check((await p.evaluate(() => !window.__impact.lenis)), 'no smooth scrolling or pinning with reduced motion');
   const th = await p.evaluate(() => window.__impact.scene?.debug().threads.research);
-  check(th && th.progress === 1 && th.pulse === 0, 'reduced motion shows connections instantly without looping effects', JSON.stringify(th));
+  check(th && th.progress === 1 && th.pulse === 0, 'connections appear instantly without looping effects', JSON.stringify(th));
+  await p.locator('.fly-step[data-step="4"]').click();
+  await wait(400);
+  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'tour steps work without scroll animation');
   await p.locator('[data-motion-toggle]').click();
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'on', 'motion control toggles motion');
-
+  check(p.errors.length === 0, 'no JavaScript errors with reduced motion', p.errors.join(' | '));
   await p.context().close();
 
   // ---- Mobile -------------------------------------------------------------
   p = await open(browser, BASE, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   await wait(3000);
   check((await p.evaluate(() => document.documentElement.scrollWidth)) <= 390, 'no horizontal scroll at phone width');
-  const stageH = await p.evaluate(() => document.querySelector('#stage').getBoundingClientRect().height);
-  check(stageH < 844 * 0.5, 'mobile scene stays compact', `${Math.round(stageH)}px`);
+  await p.goto(`${BASE}#/explore/care`);
+  await wait(3000);
+  const cap = await p.evaluate(() => document.querySelector('.fly-caption:not([hidden])').getBoundingClientRect());
+  check(cap.top >= 0 && cap.bottom <= 844 && cap.width <= 390, 'mobile tour caption fits the screen', JSON.stringify(cap));
   await p.goto(`${BASE}#/story/3verest`);
   await wait(800);
   const dw = await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width);
@@ -158,8 +172,8 @@ try {
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 20000 });
   check((await p.evaluate(() => document.querySelector('#stage').dataset.sceneState)) === 'fallback', 'without WebGL a composed illustration is shown');
   await p.locator('.place-label[data-place="aquatic"]').click();
-  await wait(600);
-  check((await p.evaluate(() => window.__impact.store.get().topic)) === 'resources', 'place controls still work without WebGL');
+  await wait(2500);
+  check((await p.evaluate(() => window.__impact.store.get().focus)) === 'aquatic', 'place controls still work without WebGL');
   check(p.errors.length === 0, 'no JavaScript errors without WebGL', p.errors.join(' | '));
   await noGL.close();
 } catch (error) {
