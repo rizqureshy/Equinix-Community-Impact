@@ -541,8 +541,30 @@
   "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1.",
   "city": {
     "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model). Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
-    "estimatedCredits": 19.25,
+    "estimatedCredits": 82.25,
     "items": [
+      {
+        "key": "b1-hospital-3d",
+        "generationId": "e0292c87-1388-4bee-b2cb-804b9303facd",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:54:08.662448Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b1-hospital.png",
+        "original": "media-src/city/b1-hospital.glb",
+        "web": "impact/public/media/city/b1-hospital.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185408_e0292c87-1388-4bee-b2cb-804b9303facd.glb",
+        "usage": "Building in the live community model (Three.js)"
+      },
       {
         "key": "b1-hospital",
         "generationId": "d8fb726a-cebc-4e89-98a9-f0755fc14b6d",
@@ -563,6 +585,28 @@
         "styleFile": "media-src/city/style.txt",
         "original": "media-src/city/b1-hospital.png",
         "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b2-research-3d",
+        "generationId": "6dbacae7-d1ae-45c3-9cae-38caf162f9a2",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:53:40.459695Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b2-research.png",
+        "original": "media-src/city/b2-research.glb",
+        "web": "impact/public/media/city/b2-research.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185340_6dbacae7-d1ae-45c3-9cae-38caf162f9a2.glb",
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b2-research",
@@ -586,6 +630,28 @@
         "usage": "Concept image for the community model building; the input to image-to-3D"
       },
       {
+        "key": "b3-learning-3d",
+        "generationId": "8d8706c4-8752-42f8-898e-142e5923571d",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:53:50.11813Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b3-learning.png",
+        "original": "media-src/city/b3-learning.glb",
+        "web": "impact/public/media/city/b3-learning.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185350_8d8706c4-8752-42f8-898e-142e5923571d.glb",
+        "usage": "Building in the live community model (Three.js)"
+      },
+      {
         "key": "b3-learning",
         "generationId": "06e76b46-5bfc-4cf2-bcb7-c69c632a3e3a",
         "model": "GPT Image 2.5",
@@ -605,6 +671,28 @@
         "styleFile": "media-src/city/style.txt",
         "original": "media-src/city/b3-learning.png",
         "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b4-homes-3d",
+        "generationId": "bc3535f3-007d-4ef5-b823-f054bf465914",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:53:54.890674Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b4-homes.png",
+        "original": "media-src/city/b4-homes.glb",
+        "web": "impact/public/media/city/b4-homes.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185354_bc3535f3-007d-4ef5-b823-f054bf465914.glb",
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b4-homes",
@@ -628,6 +716,28 @@
         "usage": "Concept image for the community model building; the input to image-to-3D"
       },
       {
+        "key": "b5-shops-3d",
+        "generationId": "70e97470-96df-4009-b261-ccd5bf499d92",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:53:59.368798Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b5-shops.png",
+        "original": "media-src/city/b5-shops.glb",
+        "web": "impact/public/media/city/b5-shops.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185359_70e97470-96df-4009-b261-ccd5bf499d92.glb",
+        "usage": "Building in the live community model (Three.js)"
+      },
+      {
         "key": "b5-shops",
         "generationId": "470b5130-1b49-4d5a-8ebe-d780926e3317",
         "model": "GPT Image 2.5",
@@ -649,6 +759,28 @@
         "usage": "Concept image for the community model building; the input to image-to-3D"
       },
       {
+        "key": "b6-aquatic-3d",
+        "generationId": "5da6fae8-f7bb-44ed-9bc7-19ec3bc0e6d0",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:54:04.653292Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b6-aquatic.png",
+        "original": "media-src/city/b6-aquatic.glb",
+        "web": "impact/public/media/city/b6-aquatic.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185404_5da6fae8-f7bb-44ed-9bc7-19ec3bc0e6d0.glb",
+        "usage": "Building in the live community model (Three.js)"
+      },
+      {
         "key": "b6-aquatic",
         "generationId": "2a7ef777-f3a6-42a2-9fd1-1c635d5b7ab3",
         "model": "GPT Image 2.5",
@@ -668,6 +800,28 @@
         "styleFile": "media-src/city/style.txt",
         "original": "media-src/city/b6-aquatic.png",
         "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b7-datacenter-3d",
+        "generationId": "50beb452-06e0-4a67-aec7-0b3886c19b2d",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-21T18:37:18.899399Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b7-datacenter.png",
+        "original": "media-src/city/b7-datacenter.glb",
+        "web": "impact/public/media/city/b7-datacenter.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_183718_50beb452-06e0-4a67-aec7-0b3886c19b2d.glb",
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b7-datacenter",

@@ -21,13 +21,13 @@ export const palette = {
  * the model so its front faces the camera's resting side.
  */
 export const PLACES = {
-  datacenter: { file: 'b7-datacenter', pos: [0.5, 0, -1.0], width: 7.2, rot: 0.15 },
-  hospital: { file: 'b1-hospital', pos: [-8.2, 0, -4.6], width: 6.6, rot: 0.55 },
-  research: { file: 'b2-research', pos: [8.4, 0, -5.6], width: 6.2, rot: -0.35 },
-  learning: { file: 'b3-learning', pos: [-8.6, 0, 4.4], width: 5.8, rot: 0.35 },
-  homes: { file: 'b4-homes', pos: [7.6, 0, 4.2], width: 6.4, rot: -0.55 },
-  shops: { file: 'b5-shops', pos: [2.6, 0, 8.2], width: 5.4, rot: 0.1 },
-  aquatic: { file: 'b6-aquatic', pos: [-3.4, 0, 8.6], width: 5.6, rot: 0.2 },
+  datacenter: { file: 'b7-datacenter', pos: [0.5, 0, -1.0], width: 8.4, rot: 0.15 },
+  hospital: { file: 'b1-hospital', pos: [-8.4, 0, -4.8], width: 7.6, rot: 0.55 },
+  research: { file: 'b2-research', pos: [8.6, 0, -5.8], width: 7.2, rot: -0.35 },
+  learning: { file: 'b3-learning', pos: [-8.8, 0, 4.4], width: 7.0, rot: 0.35 },
+  homes: { file: 'b4-homes', pos: [7.8, 0, 4.4], width: 7.4, rot: -0.55 },
+  shops: { file: 'b5-shops', pos: [2.8, 0, 8.6], width: 6.2, rot: 0.1 },
+  aquatic: { file: 'b6-aquatic', pos: [-3.6, 0, 8.8], width: 6.6, rot: 0.2 },
 };
 
 /** Camera stops: orbit around a target. Azimuth and elevation in radians. */
@@ -144,7 +144,7 @@ function buildGround(scene) {
   const trunkMat = new THREE.MeshStandardMaterial({ color: '#c9b79b', roughness: 1 });
   const leafMat = new THREE.MeshStandardMaterial({ color: '#a7bba0', roughness: 0.95 });
   const trunkGeo = new THREE.CylinderGeometry(0.06, 0.09, 0.6, 6);
-  const leafGeo = new THREE.SphereGeometry(0.42, 12, 10);
+  const leafGeo = new THREE.SphereGeometry(0.34, 12, 10);
   const spots = [
     [-1.6, 4.2], [0.2, 6.4], [2.2, 4.0], [1.4, 5.6], [-0.8, 5.9],
     [-12.4, -0.4], [-12.6, 1.2], [12.6, -0.6], [12.8, 1.4], [-12, 9.2], [12.2, 9.4], [-5.5, -10.2], [6.2, -10.4],
@@ -153,7 +153,7 @@ function buildGround(scene) {
     const trunk = new THREE.Mesh(trunkGeo, trunkMat);
     trunk.position.set(x, 0.3, z);
     const leaf = new THREE.Mesh(leafGeo, leafMat);
-    leaf.position.set(x, 0.85, z);
+    leaf.position.set(x, 0.8, z);
     leaf.castShadow = true;
     ground.add(trunk, leaf);
   }
@@ -373,9 +373,12 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     const h = container.clientHeight;
     for (const [id, el] of labels) {
       const a = anchors[id];
-      if (!a) continue;
+      if (!a) {
+        el.classList.add('is-offscreen');
+        continue;
+      }
       projected.copy(a).project(camera);
-      const off = projected.z > 1 || Math.abs(projected.x) > 1.1 || Math.abs(projected.y) > 1.1;
+      const off = projected.z > 1 || Math.abs(projected.x) > 0.98 || Math.abs(projected.y) > 0.98;
       el.classList.toggle('is-offscreen', off);
       if (!off) el.style.transform = `translate(${((projected.x + 1) / 2) * w}px, ${((1 - projected.y) / 2) * h}px)`;
     }
@@ -495,17 +498,24 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     }
   }
 
-  Promise.all(loads)
-    .then((results) => {
-      for (const [id, gltf] of results) placeModel(id, gltf);
-      ready = true;
-      instantNext = true;
-      setFocus('overview', { instant: true });
-      onReady?.();
-    })
-    .catch((err) => {
-      onFail?.(err);
+  // A missing building should not take the whole community down: place
+  // what loaded and report only if nothing did.
+  Promise.allSettled(loads).then((results) => {
+    const missing = [];
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') placeModel(...r.value);
+      else missing.push(ids[i]);
     });
+    if (missing.length === ids.length) {
+      onFail?.(results[0].reason);
+      return;
+    }
+    if (missing.length) console.warn('Community model: missing buildings', missing);
+    ready = true;
+    instantNext = true;
+    setFocus('overview', { instant: true });
+    onReady?.(missing);
+  });
 
   return {
     setStops,

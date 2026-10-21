@@ -190,19 +190,31 @@ function buildScroll() {
     scrub: 0.4,
     anticipatePin: 1,
     invalidateOnRefresh: true,
-    snap: {
-      snapTo: stopProgress,
-      duration: { min: 0.25, max: 0.7 },
-      ease: 'power2.inOut',
-      delay: 0.08,
-      inertia: false,
-      onStart: () => lenis?.stop(),
-      onComplete: () => lenis?.start(),
-    },
     onUpdate: (self) => onJourneyProgress(self.progress),
   });
   scrollTriggers.push(journeyTrigger);
   onJourneyProgress(0);
+
+  // When the scroll rests inside the journey, settle on the nearest stop
+  // (snapping is done through Lenis so the page never locks).
+  let restTimer = 0;
+  lenis.on('scroll', () => {
+    clearTimeout(restTimer);
+    restTimer = setTimeout(settleOnStop, 140);
+  });
+  function settleOnStop() {
+    if (!journeyTrigger || performance.now() < programmaticUntil || store.get().story) return;
+    const t = journeyTrigger;
+    const span = t.end - t.start;
+    const p = (scrollY - t.start) / span;
+    if (p < -0.02 || p > 1.02) return;
+    let best = stopProgress[0];
+    for (const sp of stopProgress) if (Math.abs(sp - p) < Math.abs(best - p)) best = sp;
+    const target = t.start + best * span;
+    if (Math.abs(target - scrollY) < 2) return;
+    programmaticUntil = performance.now() + 900;
+    lenis.scrollTo(target, { duration: 0.7, force: true, lock: true });
+  }
 
   // Statement: each word lights up in turn
   const words = $$('.statement-text .w');

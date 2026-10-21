@@ -212,8 +212,8 @@ main:focus {
   font-size: var(--t-md);
 }
 .btn--small {
-  min-height: 40px;
-  padding: 8px 16px;
+  min-height: 44px;
+  padding: 8px 18px;
   font-size: var(--t-xs);
 }
 
@@ -227,7 +227,7 @@ main:focus {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 6px 6px 16px;
+  padding: 5px 5px 5px 16px;
   border-radius: var(--radius-pill);
   background: var(--glass);
   border: 1px solid var(--glass-line);
@@ -281,7 +281,7 @@ main:focus {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   border: 0;
   border-radius: var(--radius-pill);

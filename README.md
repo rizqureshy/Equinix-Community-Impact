@@ -1,8 +1,8 @@
 # Equinix: Infrastructure for human possibility
 
-An internal, visual-first experience for Equinix CRO colleagues. One living 3D community, connected by an Equinix red thread, where each connection opens a sourced story about care, discovery, opportunity, community and responsible growth.
+An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model that travels with the scroll: six stops, each with its red thread (amber for recovered heat) and a sourced story about care, discovery, opportunity, community and responsible growth.
 
-This is a prototype. The community is an illustrative composite and every image or film is AI generated and labelled as such. Facts come from the linked Equinix sources. See [HANDOVER.md](HANDOVER.md) for creative decisions, tool use, provenance, validation and open editorial items.
+This is a prototype. The community is an illustrative composite; its buildings, images and films are AI generated and labelled as such. Facts come from the linked Equinix sources. See [HANDOVER.md](HANDOVER.md) for creative decisions, tool use, provenance, validation and open editorial items.
 
 ## Run locally
 
@@ -15,51 +15,56 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-The 3D community is at `/explore.html`; add `?scene=off` there to see it without WebGL. Use the "Pause motion" control, or the system reduced-motion setting, to see the static version without pinning or smooth scrolling.
+Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no pinning or smooth scrolling, the community shown as a still with the stops changed by the dots.
 
 ## Test
 
 ```bash
 npm test                          # unit tests: content model, routing, state, sharing
-npm run build && npm run test:e2e # 63 browser checks against the production build
-node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs]   # screenshot helper
+npm run build && npm run test:e2e # browser checks against the production build
+node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs] ["scroll=<y> full"]   # screenshot helper
+node tests/tools/glb-view.mjs <model.glb> <out.png>                                    # render a building model from four angles
 ```
 
-The browser checks block every request that leaves the local host, then exercise the scene, explorer, stories, history, copy actions, filters, reduced motion, mobile and a no-WebGL browser.
+The browser checks block every request that leaves the local host, then exercise the community journey, stories, history, copy actions, filters, reduced motion, mobile and a no-WebGL browser.
 
 ## Structure
 
 ```text
 impact/                   Vite root: the experience
-  index.html              the scroll story; content is pre-rendered into it at build time
-  explore.html            the separate 3D community tour (Three.js)
-  flight.html             the scroll-scrubbed fly-through film
+  index.html              the page; content is pre-rendered into it at build time
   styles/                 tokens.css, base.css, sections.css
   scripts/
-    app.js                wiring: state, routing, scroll choreography (GSAP ScrollTrigger + Lenis), story dialog, gallery, copy
+    app.js                wiring: pinned community journey, scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
-    router.js             hash routes: #/chapter/<topic>, #/story/<id>, #/people and others
-    explore.js            the 3D community page: scene, tour, story dialog
-    flight.js, flight/    the fly-through page and its scroll-scrub engine
-    story-dialog.js       shared toast, copy actions, story dialog and motion toggle
+    router.js             hash routes: #/community, #/chapter/<topic>, #/story/<id>, #/promises and others
+    story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
-    content/render.js     HTML for posters, flythrough captions, story detail, gallery, promises, numbers, sources
-    scene/community.js    procedural community geometry and materials
-    scene/threads.js      red and amber connection threads
-    scene/scene.js        renderer, lighting, camera choreography, labels, interaction
-  public/media/           web-ready images, films and posters
+    content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises, numbers, sources
+    scene/city.js         the community model: loads the building GLBs, plinth, threads, camera stops, labels, interaction
+  public/media/           web-ready images, films, posters and the building models (media/city/*.glb)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
-scripts/build_media.py    rebuilds public/media from the originals
-scripts/build_flight.sh   fly-through pipeline: frames, frame-locked connectors (Higgsfield), encodes
-tests/                    unit and end-to-end tests
+  city/                   building concept prompts and generation records (renders and raw GLBs are re-downloadable, not committed)
+scripts/build_media.py    rebuilds public/media images and films from the originals
+scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geometry, WebP textures)
+scripts/city_manifest.py  records the building pipeline in the asset manifest
+tests/                    unit and end-to-end tests, plus tools/glb-view.mjs
 ```
 
 To edit a story, change `impact/scripts/content/stories.js`. Rendering code does not need to change. `npm test` checks that every story cites registered sources, that every metric carries its scope and period, and that every media file exists.
 
+To change the community layout, edit `PLACES` (position, footprint, rotation) and `VIEWS` (camera stops) in `impact/scripts/scene/city.js`. The journey order comes from the topics in `stories.js`.
+
+### Regenerating a building
+
+1. Write the subject line in `media-src/city/<name>.txt`; the shared style lives in `style.txt`.
+2. Generate the concept image (GPT Image 2.5, 1:1, high) and convert it with Tripo H3.1 image-to-3D through the Higgsfield CLI. Save the job JSON beside the prompt as `<name>.json` and `<name>.3d.json` and download the GLB as `<name>.glb`.
+3. `scripts/build_city.sh <name>` writes the web version, and `python3 scripts/city_manifest.py` updates the manifest.
+
 ## Deploy
 
-The build is fully static and self-contained: Three.js, GSAP, fonts, images and films are bundled and served from the same host. No CDN, analytics or third-party runtime calls. Asset paths and story links are relative, so the same `dist/` works at a repository subpath or a host root.
+The build is fully static and self-contained: Three.js, GSAP, fonts, images, films and models are bundled and served from the same host. No CDN, analytics or third-party runtime calls. Asset paths and story links are relative, so the same `dist/` works at a repository subpath or a host root.
 
 - **GitHub Pages, simplest:** a ready-built copy lives in `docs/`. In the repository settings, open Pages, choose "Deploy from a branch", pick the branch and the `/docs` folder. Rebuild it after any change with `npm run build:docs` and commit the result.
 - **GitHub Pages, automated:** `.github/workflows/pages.yml` builds and deploys on pushes to `main` when Pages source is set to "GitHub Actions". Either way the site lives at `https://<owner>.github.io/Equinix-Community-Impact/`.
@@ -70,6 +75,6 @@ Note: this repository is currently public. The site sets `noindex`, but anyone w
 
 ## Third-party code and assets
 
-- The fly-through follows the scroll-world method by cyw (MIT, github.com/oso95/scroll-world).
-- Three.js 0.186.1 (MIT), GSAP 3.15.0 with ScrollTrigger (GreenSock standard license, free for this use), Lenis 1.3.27 (MIT), Inter Tight and Fraunces via Fontsource (SIL Open Font License).
-- Interface patterns adapted from 21st.dev references, rewritten in plain JavaScript and CSS. See HANDOVER.md for the list. 
+- Three.js 0.186.1 (MIT), GSAP 3.15.0 with ScrollTrigger (GreenSock standard license, free for this use), Lenis 1.3.27 (MIT), glTF Transform (MIT, build time only), Inter Tight via Fontsource (SIL Open Font License).
+- Interface patterns adapted from 21st.dev references, rewritten in plain JavaScript and CSS. See HANDOVER.md for the list.
+- The scroll technique (a live 3D model that moves with scroll and cursor, framed per section) follows the approach shown in the "Stay a little longer" reference video; no code from it was used.
