@@ -56,7 +56,8 @@ To edit a story, change `impact/scripts/content/stories.js`. Rendering code does
 
 The build is fully static and self-contained: Three.js, GSAP, fonts, images and films are bundled and served from the same host. No CDN, analytics or third-party runtime calls. Asset paths and story links are relative, so the same `dist/` works at a repository subpath or a host root.
 
-- **GitHub Pages:** `.github/workflows/pages.yml` builds and deploys `dist/` on pushes to `main`. In the repository settings, set Pages source to "GitHub Actions". The site will live at `https://<owner>.github.io/Equinix-Community-Impact/`.
+- **GitHub Pages, simplest:** a ready-built copy lives in `docs/`. In the repository settings, open Pages, choose "Deploy from a branch", pick the branch and the `/docs` folder. Rebuild it after any change with `npm run build:docs` and commit the result.
+- **GitHub Pages, automated:** `.github/workflows/pages.yml` builds and deploys on pushes to `main` when Pages source is set to "GitHub Actions". Either way the site lives at `https://<owner>.github.io/Equinix-Community-Impact/`.
 - **Cloudflare Pages:** build command `npm run build`, output directory `dist`, Node 22 (`NODE_VERSION=22`). No redirects needed because routes use the URL hash.
 - **Internal hosting:** copy `dist/` to any static web server.
 
