@@ -331,9 +331,10 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     want.shift = side;
   }
 
+  let threadsHidden = false;
   function revealThreads(ids, instant) {
     for (const [id, th] of Object.entries(threads)) {
-      th.target = ids.includes(id) ? 1 : 0;
+      th.target = !threadsHidden && ids.includes(id) ? 1 : 0;
       if (instant) th.shown = th.target;
     }
   }
@@ -531,6 +532,16 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     setStops,
     setProgress,
     setFocus,
+    /** Show or hide every thread (used by the crop renderer). */
+    setThreadsVisible(on) {
+      for (const th of Object.values(threads)) {
+        th.target = on ? th.target : 0;
+        th.shown = on ? th.shown : 0;
+      }
+      threadsHidden = !on;
+      dirty = true;
+      tick();
+    },
     setDrift(on) {
       drift = on;
       if (!on) {

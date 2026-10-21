@@ -16,6 +16,7 @@ await page.goto(`${url}#/community`, { waitUntil: 'load' });
 await page.addStyleTag({ content: '.scene-labels, .stage-note, .hero-stats, .journey-ui, .site-header { display: none !important } .explorer { height: 960px !important; margin: 0 !important; border-radius: 0 !important }' });
 await page.waitForFunction(() => document.querySelector('#stage').dataset.sceneState === 'ready', null, { timeout: 60000 });
 const files = [];
+await page.evaluate(() => window.__impact.scene.setThreadsVisible(false));
 for (const [n, place] of CROPS) {
   await page.evaluate((p) => window.__impact.scene.setFocus(p, { instant: true, side: 0 }), place);
   await page.waitForTimeout(1500);
