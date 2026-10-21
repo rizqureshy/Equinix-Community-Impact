@@ -1013,6 +1013,20 @@
   }
   .journey-bar {
     bottom: 12px;
+    gap: 0;
+    padding: 3px;
+  }
+  .journey-dot {
+    width: 28px;
+  }
+  .journey-dot span {
+    display: none;
+  }
+  .bar-btn {
+    width: 40px;
+  }
+  .bar-sep {
+    margin: 0 3px;
   }
   .journey-card--intro {
     bottom: 88px;
