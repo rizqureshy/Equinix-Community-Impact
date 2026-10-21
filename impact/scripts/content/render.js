@@ -235,24 +235,49 @@ export function collectionHTML() {
 // ---------------------------------------------------------------------------
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
-/** Soft photographs behind each promise (AI generated, illustrative). */
-const PROMISE_ART = ['promise-1', 'promise-2', 'promise-3', 'promise-4', 'promise-5'];
-
+/**
+ * The promises as a ledger: a numbered list the thread draws through, and a
+ * sticky panel that shows the proof for the active promise over a crop of
+ * the community model. Without motion, or on small screens, each proof sits
+ * under its promise.
+ */
 export function principlesHTML() {
-  return `<ol class="promises">${principles
+  const rows = principles
     .map(
-      (p, i) => `<li class="promise" data-reveal style="--i:${i}">
-        <img class="promise-art" src="media/${PROMISE_ART[i]}-640.webp" srcset="media/${PROMISE_ART[i]}-640.webp 640w, media/${PROMISE_ART[i]}-1200.webp 1200w" sizes="(min-width: 1100px) 20vw, (min-width: 700px) 45vw, 90vw" alt="" loading="lazy" decoding="async" width="1200" height="800">
-        <div class="promise-body">
-          <span class="promise-num">${String(i + 1).padStart(2, '0')}</span>
-          <h3 class="promise-name">${esc(p.name)}</h3>
-          <p class="promise-text muted">${esc(p.promise)}</p>
-          <p class="promise-proof"><span class="visually-hidden">Example: </span>${esc(p.proof)}</p>
+      (p, i) => `<li class="ledger-row" data-promise="${i}" ${i === 0 ? 'aria-current="true"' : ''}>
+        <button type="button" class="ledger-head" data-promise-go="${i}" aria-expanded="${i === 0}" aria-controls="promise-${i}">
+          <span class="ledger-num" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
+          <span class="ledger-name">${esc(p.name)}</span>
+        </button>
+        <div class="ledger-body" id="promise-${i}">
+          <p class="ledger-promise">${esc(p.promise)}</p>
+          <p class="ledger-inline-proof"><span class="ledger-kind">${esc(p.kind)}</span>${esc(p.proof)}</p>
         </div>
       </li>`,
     )
-    .join('')}</ol>
-  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. Photographs are illustrative and AI generated. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
+    .join('');
+  const proofs = principles
+    .map(
+      (p, i) => `<figure class="proof" data-proof="${i}" ${i ? 'hidden' : ''}>
+        <img class="proof-art" src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 1000px) 45vw, 100vw" alt="" loading="lazy" decoding="async" width="1280" height="960">
+        <figcaption class="proof-card">
+          <p class="eyebrow">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></p>
+          <p class="proof-text">${esc(p.proof)}</p>
+          <p class="note">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+        </figcaption>
+      </figure>`,
+    )
+    .join('');
+  return `<div class="ledger" data-active="0">
+    <div class="ledger-list-wrap">
+      <svg class="ledger-thread" viewBox="0 0 24 1000" preserveAspectRatio="none" aria-hidden="true"><path class="ledger-thread-track" d="M12 0 V1000"/><path class="ledger-thread-draw" d="M12 0 V1000" pathLength="1"/></svg>
+      <ol class="ledger-list">${rows}</ol>
+    </div>
+    <div class="ledger-panel" aria-live="polite">${proofs}
+      <p class="note proof-note">The model is an illustrative community, not the places named.</p>
+    </div>
+  </div>
+  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
 
 export const NUMBERS = [

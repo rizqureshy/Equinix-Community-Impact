@@ -847,7 +847,7 @@
     ]
   },
   "promises": {
-    "notes": "Five soft morning photographs in one shared style for the promise cards, built by scripts/build_media.py promises.",
+    "notes": "Five soft morning photographs generated for promise cards, then retired: the promises are now a ledger with crops rendered from the community model (tests/tools/city-crops.mjs, no credits). Originals kept; scripts/build_media.py promises rebuilds web versions if wanted.",
     "estimatedCredits": 13.75,
     "items": [
       {
@@ -866,10 +866,10 @@
         "promptFile": "media-src/promises/p1-infrastructure.txt",
         "styleFile": "media-src/promises/style.txt",
         "original": "media-src/promises/p1-infrastructure.png",
-        "web": "impact/public/media/promise-1-{640,1200}.webp",
+        "web": null,
         "estimatedCredits": 2.75,
-        "status": "selected",
-        "usage": "Photograph behind promise 1 (infrastructure)",
+        "status": "reserve",
+        "usage": "Photograph behind promise 1 (infrastructure); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       },
       {
@@ -888,10 +888,10 @@
         "promptFile": "media-src/promises/p2-power.txt",
         "styleFile": "media-src/promises/style.txt",
         "original": "media-src/promises/p2-power.png",
-        "web": "impact/public/media/promise-2-{640,1200}.webp",
+        "web": null,
         "estimatedCredits": 2.75,
-        "status": "selected",
-        "usage": "Photograph behind promise 2 (power)",
+        "status": "reserve",
+        "usage": "Photograph behind promise 2 (power); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       },
       {
@@ -910,10 +910,10 @@
         "promptFile": "media-src/promises/p3-jobs.txt",
         "styleFile": "media-src/promises/style.txt",
         "original": "media-src/promises/p3-jobs.png",
-        "web": "impact/public/media/promise-3-{640,1200}.webp",
+        "web": null,
         "estimatedCredits": 2.75,
-        "status": "selected",
-        "usage": "Photograph behind promise 3 (jobs)",
+        "status": "reserve",
+        "usage": "Photograph behind promise 3 (jobs); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       },
       {
@@ -932,10 +932,10 @@
         "promptFile": "media-src/promises/p4-nature.txt",
         "styleFile": "media-src/promises/style.txt",
         "original": "media-src/promises/p4-nature.png",
-        "web": "impact/public/media/promise-4-{640,1200}.webp",
+        "web": null,
         "estimatedCredits": 2.75,
-        "status": "selected",
-        "usage": "Photograph behind promise 4 (nature)",
+        "status": "reserve",
+        "usage": "Photograph behind promise 4 (nature); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       },
       {
@@ -954,10 +954,10 @@
         "promptFile": "media-src/promises/p5-digital.txt",
         "styleFile": "media-src/promises/style.txt",
         "original": "media-src/promises/p5-digital.png",
-        "web": "impact/public/media/promise-5-{640,1200}.webp",
+        "web": null,
         "estimatedCredits": 2.75,
-        "status": "selected",
-        "usage": "Photograph behind promise 5 (digital)",
+        "status": "reserve",
+        "usage": "Photograph behind promise 5 (digital); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       }
     ]

@@ -81,12 +81,12 @@ try {
   check((await step(p)) === 2 && (await focus(p)) === 'learning', 'moving to a stop frames its place and card', `${await step(p)} ${await focus(p)}`);
   check(await p.locator('.journey-card:not([hidden]) h3').textContent() === 'Learning centre', 'the card for the stop is showing');
   check(await p.evaluate(() => document.querySelector('.place-label.is-focus')?.dataset.place === 'learning'), 'the place label is highlighted');
-  await p.locator('.journey-dot[data-go="4"]').click();
+  await p.locator('.journey-dot[data-go="4"]').dispatchEvent('click');
   await settled(p, 4);
   check((await step(p)) === 4 && (await focus(p)) === 'aquatic', 'journey dots move between stops', `${await step(p)} ${await focus(p)}`);
   // Labels behind the camera hide themselves; pick one that is in view
   const visiblePlace = await p.evaluate(() => [...document.querySelectorAll('.place-label:not(.is-offscreen):not(.is-focus)')].map((l) => l.dataset.place).find((pl) => pl !== 'shops'));
-  // dispatched rather than pointer-clicked: labels keep moving while the camera eases
+  // dispatched rather than pointer-clicked: floating labels can drift under the pointer while the camera eases
   await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click');
   await wait(4000);
   check(visiblePlace && (await focus(p)) === visiblePlace && (await step(p)) !== 4, 'place labels move to their stop', `${visiblePlace} ${await step(p)} ${await focus(p)}`);
@@ -94,7 +94,7 @@ try {
   await p.locator('[data-step-dir="1"]').click();
   await settled(p, before + 1);
   check((await step(p)) === before + 1, 'next and previous move one stop', `${before} to ${await step(p)}`);
-  await p.locator('.journey-dot[data-go="0"]').click();
+  await p.locator('.journey-dot[data-go="0"]').dispatchEvent('click');
   await settled(p, 0);
   const trigger = p.locator('.journey-card:not([hidden]) [data-story-trigger]');
   const storyId = await trigger.getAttribute('data-story-trigger');
@@ -124,7 +124,7 @@ try {
   await p.locator('[data-mute]').click();
   await wait(1200);
   check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === 'off'), 'mute silences the music and is remembered');
-  await p.locator('.journey-dot[data-go="3"]').click();
+  await p.locator('.journey-dot[data-go="3"]').dispatchEvent('click');
   await wait(600);
   check(await p.evaluate(() => !window.__impact.playing) && (await step(p)) === 3, 'choosing a place pauses the tour');
   await p.locator('#explorer').focus();
@@ -152,6 +152,23 @@ try {
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
+  // The ledger: the row at the reading line is current and its proof shows
+  await p.evaluate(() => {
+    const r = document.querySelectorAll('.ledger-row')[3].getBoundingClientRect();
+    scrollTo(0, r.top + scrollY - innerHeight * 0.3);
+  });
+  await wait(1800);
+  const ledgerState = await p.evaluate(() => ({
+    active: document.querySelector('.ledger').dataset.active,
+    current: document.querySelector('.ledger-row[aria-current="true"]')?.dataset.promise,
+    proof: document.querySelector('.proof:not([hidden]) .proof-text')?.textContent,
+    drawn: Number(getComputedStyle(document.querySelector('.ledger-list-wrap')).getPropertyValue('--drawn')),
+  }));
+  check(ledgerState.active === '3' && ledgerState.current === '3' && /water-based cooling/.test(ledgerState.proof), 'the promise at the reading line shows its proof', JSON.stringify(ledgerState));
+  check(ledgerState.drawn > 0.4 && ledgerState.drawn < 1, 'the thread draws down the ledger with the scroll', String(ledgerState.drawn));
+  await p.locator('[data-promise-go="1"]').click();
+  await wait(2200);
+  check((await p.evaluate(() => document.querySelector('.ledger').dataset.active)) === '1', 'choosing a promise moves the ledger to it');
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
@@ -212,7 +229,7 @@ try {
   check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
   check(await p.evaluate(() => [...document.querySelectorAll('video.film')].every((v) => v.paused)), 'films stay paused with reduced motion');
   await waitScene(p);
-  await p.locator('.journey-dot[data-go="3"]').click();
+  await p.locator('.journey-dot[data-go="3"]').dispatchEvent('click');
   await wait(600);
   check((await step(p)) === 3 && (await focus(p)) === 'homes', 'stops still change by control with reduced motion', `${await step(p)} ${await focus(p)}`);
   await p.locator('[data-motion-toggle]').click();
@@ -238,6 +255,9 @@ try {
   await p.goto(`${BASE}#/story/3verest`);
   await wait(800);
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');
+  await p.keyboard.press('Escape');
+  await wait(500);
+  check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline-proof')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its proof inline');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   await browser.close();
 

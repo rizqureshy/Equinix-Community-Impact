@@ -566,12 +566,14 @@ export const stories = [
 ];
 
 /** Equinix's five U.S. Community Principles, summarised with one sourced proof point each. */
+// `where` and `kind` label the proof point; `art` names the crop of the
+// community model shown beside it (tests/tools/city-crops.mjs).
 export const principles = [
-  { name: 'Public infrastructure investment', promise: 'Invest in roads, paths and public services around our sites, and fund the power and water infrastructure our sites need.', proof: 'A public bike path and land for a future fire station in Minooka, Illinois.' },
-  { name: 'Power responsibility', promise: 'Pay our full share of grid costs so our demand does not raise residents’ bills.', proof: 'A 10-year transmission agreement with ComEd that the utility described as a model.' },
-  { name: 'Jobs and skills development', promise: 'Create quality jobs and educational pathways for tomorrow’s workforce.', proof: 'School partnerships through Pathways to Tech, starting in Ashburn and Dallas.' },
-  { name: 'Natural resource protection', promise: 'Use water and land carefully and report transparently.', proof: 'Avoiding water-based cooling at new sites in water-stressed areas.' },
-  { name: 'Bridge the digital divide', promise: 'Expand access to connectivity, skills and careers.', proof: '28 WeAreEquinix teams supported 31 local digital inclusion nonprofits in 2025.' },
+  { name: 'Public infrastructure investment', promise: 'Invest in roads, paths and public services around our sites, and fund the power and water infrastructure our sites need.', proof: 'A public bike path and land for a future fire station in Minooka, Illinois.', where: 'Minooka, Illinois', kind: 'Site example', art: 'promise-art-1' },
+  { name: 'Power responsibility', promise: 'Pay our full share of grid costs so our demand does not raise residents’ bills.', proof: 'A 10-year transmission agreement with ComEd that the utility described as a model.', where: 'With ComEd', kind: 'Agreement', art: 'promise-art-2' },
+  { name: 'Jobs and skills development', promise: 'Create quality jobs and educational pathways for tomorrow’s workforce.', proof: 'School partnerships through Pathways to Tech, starting in Ashburn and Dallas.', where: 'Ashburn and Dallas', kind: 'Programme', art: 'promise-art-3' },
+  { name: 'Natural resource protection', promise: 'Use water and land carefully and report transparently.', proof: 'Avoiding water-based cooling at new sites in water-stressed areas.', where: 'New sites in water-stressed areas', kind: 'Design choice', art: 'promise-art-4' },
+  { name: 'Bridge the digital divide', promise: 'Expand access to connectivity, skills and careers.', proof: '28 WeAreEquinix teams supported 31 local digital inclusion nonprofits in 2025.', where: 'Employee teams, 2025', kind: 'Result', art: 'promise-art-5' },
 ];
 
 /** The story that leads each chapter. */

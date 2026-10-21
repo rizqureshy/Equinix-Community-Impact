@@ -26,7 +26,8 @@ STILLS = {
 }
 WIDTHS = (1200, 640)
 
-# Soft photographs behind the five promises (media-src/promises)
+# Soft photographs made for the five promises (media-src/promises). Not used
+# on the page since the ledger; run `build_media.py promises` to rebuild them.
 PROMISES = {f'promise-{i}': f'p{i}-{n}.png' for i, n in enumerate(['infrastructure', 'power', 'jobs', 'nature', 'digital'], 1)}
 
 

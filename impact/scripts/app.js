@@ -465,6 +465,52 @@ const counter = new IntersectionObserver(
 $$('.number-digits').forEach((n) => counter.observe(n));
 
 // ---------------------------------------------------------------------------
+// The promises ledger: the row nearest the reading line is current, its
+// proof shows in the sticky panel, and the thread draws down the list
+// ---------------------------------------------------------------------------
+const ledger = $('.ledger');
+const ledgerRows = $$('.ledger-row');
+const proofs = $$('.proof');
+let activePromise = 0;
+function setPromise(i) {
+  if (i === activePromise) return;
+  activePromise = i;
+  ledger.dataset.active = String(i);
+  ledgerRows.forEach((r, j) => {
+    const on = j === i;
+    if (on) r.setAttribute('aria-current', 'true');
+    else r.removeAttribute('aria-current');
+    $('.ledger-head', r).setAttribute('aria-expanded', String(on));
+  });
+  proofs.forEach((f, j) => {
+    f.hidden = j !== i;
+  });
+}
+function updateLedger() {
+  if (!ledger || !isInView(ledger)) return;
+  const line = innerHeight * 0.42;
+  let best = 0;
+  ledgerRows.forEach((r, i) => {
+    if (r.getBoundingClientRect().top <= line) best = i;
+  });
+  setPromise(best);
+  const wrap = $('.ledger-list-wrap');
+  const r = wrap.getBoundingClientRect();
+  const drawn = clamp((line - r.top) / r.height);
+  wrap.style.setProperty('--drawn', String(store.get().motion ? drawn : 1));
+}
+addEventListener('scroll', updateLedger, { passive: true });
+addEventListener('resize', updateLedger);
+document.addEventListener('click', (e) => {
+  const head = e.target.closest('[data-promise-go]');
+  if (!head) return;
+  const i = Number(head.dataset.promiseGo);
+  setPromise(i);
+  const top = ledgerRows[i].getBoundingClientRect().top + scrollY - innerHeight * 0.4;
+  if (innerWidth > 1000) scrollToY(top);
+});
+
+// ---------------------------------------------------------------------------
 // Story gallery: filters and rail buttons
 // ---------------------------------------------------------------------------
 const filters = { topic: 'all', relationship: 'all' };
@@ -505,6 +551,7 @@ document.addEventListener('click', (e) => {
 // ---------------------------------------------------------------------------
 buildScroll();
 applyRoute(parseHash(location.hash), { initial: true });
+updateLedger();
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
 // Exposed for automated checks only.
