@@ -1,42 +1,40 @@
-# Handover: Where the light goes
+# Handover: Infrastructure for human possibility
 
-Prepared 22 October 2026 for Rizwan Qureshy. Fourth version, on the branch `claude/where-the-light-goes`: a complete redesign that leaves the white Apple-like page, the 3D community model, the ribbon and the red fabric behind. The content model, sources and editorial rules are unchanged. The earlier handover notes follow this section for reference; where they describe the explorer, the fabric or the sunlight, they describe code that is no longer on this branch.
+Prepared 22 October 2026 for Rizwan Qureshy. Fifth version, on the branch `claude/where-the-light-goes`, replacing the dark theatre built earlier the same day after your feedback: explorative, corporate, community-building and inspiring, showing growth, research, support, care and progress. The content model, sources and editorial rules are unchanged. The earlier handover notes follow for reference; where they describe the 3D explorer, the fabric, the sunlight or the dark theatre, they describe code that is no longer on this branch.
 
-## Version four: where the light goes
+## Version five: explore the impact
 
-**Brief:** a highly interactive, visually striking, story-driven community landing site for the positive impact of Equinix data centers, entirely different from the ribbon design and the 3D community block, with full creative authority. The Motionsites gallery was explored for flow; the "Future-State" direction (a pinned cinematic stage, one central light-form that changes with each numbered sequence, a side rail and a counter) fits a story told in chapters best, and it is warmed with the editorial serif and arched photo portals of the "Golden Portal" direction. No code or assets from either were used; the Motionsites prompt library itself needs an account sign-in, so only its public previews informed the work.
+**Visual thesis:** light, warm and credible. White and a warm off-white for alternating bands, near-black Inter Tight for headlines, the Equinix logo red as the single accent, amber for recovered heat, and the photographs doing the emotional work. Fraunces appears only in quotations and the large figures.
 
-**Visual thesis:** a dark theatre in which the only light is what leaves a data center. Warm off-white type set in Fraunces, Inter Tight for the interface, the Equinix logo red as the signal and amber for recovered heat. The AI photographs, which were documentary-flat on white, now glow out of the dark through arched portals.
+**Structure, top to bottom**
 
-**The page, top to bottom**
+- **Hero:** the headline beside a photo mosaic (the Minooka path, the reading room, the school tour) with two floating figures, and the five pillars as the way in: Care, Research, Growth, Support, Progress. Each pillar card links to its section.
+- **Explore (`#/community`):** a world map drawn as a dot matrix (Natural Earth land, generated at build time, one SVG path) with sixteen pins: eleven Equinix sites and programmes (filled), five partner locations (open), heat exporters in amber. Arcs join Sydney to Philadelphia, Memphis and Heidelberg for the research story. A list beside the map names each place; choosing a place or a pin opens its stories in the panel, with the figure and the buttons to open or copy. Pillar chips filter pins and list together. Pins pulse gently and are keyboard operable.
+- **Pillars (`#/chapter/<topic>`):** five sections with a sticky tab bar that follows the one in view. Each has a title, an intro, the lead story (photograph, human moment, figure, what Equinix contributes and what partners deliver, open and copy), a small film card with the chapter's moment, and the remaining stories as compact cards. Layout alternates sides between pillars.
+- **Progress (`#/progress`):** a draggable timeline from 1998 to 2040 with eight milestones (past, now, and two dated commitments drawn hollow), then the four headline figures counting up and two meters (renewable coverage with the 90% line, PUE 1.37 against the 1.33 target).
+- **Promises, People, Library, Training, Sources, Engage:** as before, in the light system. The library filters by pillar and Equinix role.
 
-- **Hero:** "Infrastructure for human possibility." rises over the field, which draws fibre strands sweeping in from the lower right, light leaving a building. A ticker of sourced figures passes beneath. The pointer pushes the light aside; a click sends a ring through it.
-- **The theatre (`#/community`):** one sticky stage, six chapters, one viewport of scrolling each. For every chapter the field travels into a new form: a pulse through a reading ring (care), four research centres joined by arcs from Sydney (discovery), a rising path to a lit doorway (opportunity), a town's blocks with a path winding through (community), rings of warmth widening in water (resources, in amber) and finally the Equinix fortress mark filled with red light (the source). Each chapter has its number, title, human moment, the lead story's figure, an arched photograph and a button to the full story; a rail on the left and a counter at the bottom right show where you are; the arrow keys move the stage. The hash follows the chapter, so `#/chapter/care` and the rest still work.
-- **Statement:** lights up word by word, with "part", "communities" and "serve" in red.
-- **One day, connected (`#/day`):** a horizontal track that moves sideways as the page scrolls, from 05:40 at the Saint-Denis pool to 23:00 on the night shift with heat still flowing in Markham. Seven moments, each a film, a time, a place, one sentence and a link to its sourced story. On phones and with motion off it is a swipe rail.
-- **In numbers:** four figures that count up, with scope and source.
-- **Five promises:** a list that opens one promise at a time (hover or click), with the matching photograph and its proof headline in a sticky frame beside it.
-- **People, library, training, sources, Engage:** as before, restyled. The library keeps its theme and role filters and copy actions; the story dialog slides in from the right.
-- **Sound:** the calm theme from version three is now an optional "Sound" control in the header, fading in and out, never starting on its own.
+**Why this and not the previous versions:** the brief asked for exploration and a corporate, inspiring tone. A map of real places is the most honest explorer the content supports (every story has a location), the pillars give the five words you asked for a home each, and the timeline makes progress visible without inventing data. Nothing is a ribbon, a 3D block or a dark stage.
 
 **How it is built**
 
-- The field is `impact/scripts/field.js`: a Canvas 2D particle system (about 4,200 points on desktop, fewer on phones) with per-particle spring targets, a slow breath, pointer repulsion and ring bursts, drawn additively with short trails. The forms live in `impact/scripts/shapes.js` as generators that return normalised coordinates, so every form scales to any viewport and the whole thing is a few kilobytes. The fortress mark is filled by sampling the polygon from the supplied brand SVG. There is no WebGL and no Three.js on this branch, and no GSAP: the theatre and the day use CSS `position: sticky` with one scroll handler, which keeps them steady under Lenis.
-- With motion off the field draws each form once, still; chapters still change as you scroll; the day becomes a rail; films pause; the ticker wraps as plain text.
-- Bundle: about 78 kB of JavaScript and 37 kB of CSS before compression, plus fonts and media.
+- `impact/scripts/map.js` draws the map from `content/map-dots.js` (about 6,300 land dots on a 1.5 degree grid, 68 kB of source, generated by `scripts/build-map.mjs` from world-atlas). No geographic library ships to the browser.
+- `impact/scripts/content/places.js` holds the pillar framing, pins, arcs and milestones; `render.js` renders everything at build time. `app.js` wires the map, the tabs, the timeline drag, reveals, counters, meters, promises, filters, header, routing and the story dialog.
+- Dependencies: Lenis and the two fonts. Bundle about 139 kB of JavaScript (half of it the map dots) and 38 kB of CSS before compression.
+- With motion off: no smooth scrolling, no pulsing pins, figures and meters at their final values, films paused.
 
 **Validation (this version)**
 
-- Unit tests: 17 pass (unchanged).
-- Browser checks (`npm run test:e2e`): 49 pass in headless Chromium. They cover arrival and the field, moving the theatre by request, rail and keyboard, the hash and the counter, the field's form per chapter, opening a story from a chapter with its link and focus handling, copy feedback, Escape, direct story links, section links (direct and in page), the field handing over after the theatre, promises, library filters, the horizontal day and its films, no external requests, no failed requests, no page errors; motion off; a phone (no sideways overflow, the menu, the chapter photograph fitting the screen, the day as a rail); the Engage page.
-- Screenshots inspected at 1440 px and 390 px: hero, all six chapters, the statement, the day at two positions, numbers, promises, people, library, training, sources and an open story.
-- Not yet checked: real-GPU and real-phone frame rates, Safari and Firefox, screen readers, the sound level on speakers.
+- Unit tests: 17 pass.
+- Browser checks (`npm run test:e2e`): 57 pass in headless Chromium: arrival, the map (pins, land, list selection, pin selection, two stories at Sydney, lit arcs, pillar filter with cleared selection, keyboard), stories from the map with link, focus, sources and copy feedback, pillar links and tabs, state, the lead story, the progress link, milestones, the timeline's margin and drag, counters and meters, promises, library filters, direct story and section links, no external or failed requests, no page errors; motion off; a phone (overflow, menu, places, map size); the Engage page.
+- Screenshots inspected at 1440 px and 390 px: hero, map before and after choosing a place, all five pillars, progress and measures, promises, people, library, training, sources, an open story.
+- Not yet checked: Safari and Firefox, screen readers, real phones.
 
 **Open items**
 
-- `docs/` still holds the built copy of the previous design; run `npm run build:docs` when this direction is approved, or deploy through the Pages workflow.
-- The theatre's forms are deliberately abstract. If a more literal reading is wanted, each generator in `shapes.js` can be swapped without touching the rest.
-- Mobile type sizes in the theatre are a first pass; check on a real phone.
+- Pins cluster in the north-eastern United States (Chicago, Minooka, Ashburn, Philadelphia); the list beside the map is the dependable way in there. A zoom or a cluster treatment would be the next step if the map grows.
+- The pillar labels in `stories.js` are now Care, Research, Growth, Support, Progress; the route ids (`care`, `discovery`, `opportunity`, `community`, `resources`) are unchanged so older links work.
+- `docs/` is rebuilt on this branch and Pages serves it from the root through a forwarding `index.html`; rebuild it after every change.
 
 ---
 

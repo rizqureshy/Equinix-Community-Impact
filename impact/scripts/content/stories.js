@@ -136,12 +136,13 @@ export const sources = {
   },
 };
 
+// The five pillars. Ids are stable (routes and tests use them); labels are the words on the page.
 export const topics = [
   { id: 'care', label: 'Care', chapter: 'care', sceneTarget: 'hospital' },
-  { id: 'discovery', label: 'Discovery', chapter: 'discovery', sceneTarget: 'research' },
-  { id: 'opportunity', label: 'Opportunity', chapter: 'opportunity', sceneTarget: 'learning' },
-  { id: 'community', label: 'Community', chapter: 'community', sceneTarget: 'homes' },
-  { id: 'resources', label: 'Responsible growth', chapter: 'resources', sceneTarget: 'aquatic' },
+  { id: 'discovery', label: 'Research', chapter: 'discovery', sceneTarget: 'research' },
+  { id: 'opportunity', label: 'Growth', chapter: 'opportunity', sceneTarget: 'learning' },
+  { id: 'community', label: 'Support', chapter: 'community', sceneTarget: 'homes' },
+  { id: 'resources', label: 'Progress', chapter: 'resources', sceneTarget: 'aquatic' },
 ];
 
 /** Relationship types keep direct Equinix action apart from enabled customer work and partner outcomes. */

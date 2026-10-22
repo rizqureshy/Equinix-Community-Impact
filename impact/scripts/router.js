@@ -1,15 +1,15 @@
 // Hash routes, so the prototype works at any base path without server
 // configuration (GitHub Pages subpaths, Cloudflare Pages roots, local files).
 //   #/                     overview
-//   #/community            the theatre, six chapters on one stage (section id `journey`,
+//   #/community            the impact map (section id `journey`,
 //                          since `community` is also a chapter topic)
 //   #/chapter/<topic>      a story chapter
 //   #/story/<id>           a story opened in the detail view
-//   #/day | #/stories | #/promises | #/people | #/training | #/share | #/sources
+//   #/stories | #/progress | #/promises | #/people | #/training | #/share | #/sources
 //   #/explore and #/principles are older links, kept as aliases
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['journey', 'day', 'stories', 'promises', 'people', 'training', 'share', 'sources']);
+const SECTIONS = new Set(['journey', 'progress', 'stories', 'promises', 'people', 'training', 'share', 'sources']);
 const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises' };
 const TOPICS = new Set(topics.map((t) => t.id));
 

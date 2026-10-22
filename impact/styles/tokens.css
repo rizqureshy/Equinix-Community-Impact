@@ -1,38 +1,37 @@
-/* Design tokens for "Where the light goes": a dark theatre where the only
-   light is what leaves a data center. Warm off-white type, Equinix logo red
-   as the signal, amber for recovered heat. Fraunces carries the story voice;
-   Inter Tight carries the interface. */
-@import '@fontsource-variable/fraunces';
+/* Design tokens: light, warm and corporate. White and a warm off-white for
+   bands, near-black ink, the Equinix logo red as the one accent, amber for
+   recovered heat. Inter Tight for the interface and headlines; Fraunces only
+   for quotations and the large figures, where a little warmth helps. */
 @import '@fontsource-variable/inter-tight';
+@import '@fontsource-variable/fraunces';
 
 :root {
-  --bg: #08080b;
-  --bg-2: #0e0e13;
-  --bg-3: #16161d;
-  --surface: rgb(255 255 255 / 0.04);
-  --surface-2: rgb(255 255 255 / 0.07);
-  --line: rgb(255 244 223 / 0.1);
-  --line-strong: rgb(255 244 223 / 0.22);
-  --ink: #f4efe6;
-  --ink-2: #c9c3b8;
-  --ink-3: #8f8a81;
+  --bg: #ffffff;
+  --bg-soft: #f6f4ef;
+  --bg-tint: #fdf1f0;
+  --surface: #ffffff;
+  --line: rgb(21 22 26 / 0.1);
+  --line-strong: rgb(21 22 26 / 0.22);
+  --ink: #15161a;
+  --ink-2: #4b4d55;
+  --ink-3: #7a7d86;
   --red: #e91c24;
-  --red-glow: #ff4a4f;
-  --ember: #ff7a45;
-  --amber: #e8a040;
-  --light: #fff2d8;
-  --focus: #ffd27a;
+  --red-deep: #b8151b;
+  --red-soft: #fbd7d8;
+  --amber: #c97a12;
+  --amber-soft: #fbe9cf;
+  --focus: #0a5fd6;
 
-  --serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --sans: 'Inter Tight Variable', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', ui-sans-serif, system-ui, sans-serif;
+  --serif: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
 
   --t-xs: 0.75rem;
   --t-sm: 0.875rem;
-  --t-md: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  --t-lg: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --t-xl: clamp(1.75rem, 1.3rem + 2vw, 3rem);
-  --t-2xl: clamp(2.5rem, 1.5rem + 4.5vw, 5.5rem);
-  --t-3xl: clamp(3rem, 1.2rem + 8vw, 9rem);
+  --t-md: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --t-lg: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  --t-xl: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
+  --t-2xl: clamp(2.2rem, 1.4rem + 3.2vw, 4.25rem);
+  --t-3xl: clamp(2.6rem, 1.4rem + 5vw, 5.75rem);
 
   --s-1: 0.25rem;
   --s-2: 0.5rem;
@@ -42,26 +41,25 @@
   --s-6: 2rem;
   --s-7: 3rem;
   --s-8: 5rem;
-  --s-9: 8rem;
-  --s-10: 12rem;
+  --s-9: 7rem;
 
-  --gutter: clamp(20px, 5vw, 96px);
+  --gutter: clamp(20px, 5vw, 88px);
   --measure: 66rem;
-  --radius: 12px;
+  --radius: 14px;
   --radius-lg: 24px;
   --radius-pill: 999px;
-  --header-h: 60px;
+  --header-h: 64px;
 
-  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 60px -30px rgb(0 0 0 / 0.8);
-  --shadow-float: 0 40px 120px -40px rgb(0 0 0 / 0.9);
+  --shadow-card: 0 1px 2px rgb(21 22 26 / 0.05), 0 16px 48px -24px rgb(21 22 26 / 0.25);
+  --shadow-float: 0 24px 64px -24px rgb(21 22 26 / 0.3);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
-  --d1: 220ms;
-  --d2: 560ms;
-  --d3: 1100ms;
+  --d1: 200ms;
+  --d2: 500ms;
+  --d3: 900ms;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 :root[data-motion='off'] {

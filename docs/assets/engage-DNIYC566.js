@@ -1,1 +1,0 @@
-import"./main-CvPckcbE.js";var e=document.getElementById(`menu-toggle`),t=document.getElementById(`site-nav`);e.addEventListener(`click`,()=>{let n=t.classList.toggle(`is-open`);e.setAttribute(`aria-expanded`,String(n))});

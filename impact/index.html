@@ -2,11 +2,11 @@
 <html lang="en-GB">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Where the light goes | Equinix community impact</title>
-    <meta name="description" content="Follow what leaves an Equinix data center: the care, discovery, opportunity, community and warmth that digital infrastructure helps make possible. Internal prototype for Equinix CRO colleagues." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Infrastructure for human possibility | Equinix community impact</title>
+    <meta name="description" content="Explore the care, research, growth, support and progress that Equinix data centers help make possible in the communities around them. Internal prototype for Equinix CRO colleagues." />
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#08080b" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href="brand/equinix-fortress.svg" />
     <script>
       (function () {
@@ -20,15 +20,14 @@
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <canvas class="field" id="field" aria-hidden="true"></canvas>
-    <div class="cursor-light" id="cursor-light" aria-hidden="true"></div>
 
     <header class="site-header" id="site-header">
-      <a class="wordmark" href="#/" aria-label="Equinix, where the light goes. Back to the start"><img class="wordmark-logo wordmark-logo--mark" src="brand/equinix-fortress.svg" alt="" width="29" height="16" decoding="async" /><img class="wordmark-logo" src="brand/equinix-logo-horizontal.svg" alt="" width="124" height="13" decoding="async" /></a>
+      <a class="wordmark" href="#/" aria-label="Equinix community impact. Back to the start"><img class="wordmark-logo" src="brand/equinix-logo-horizontal.svg" alt="" width="124" height="13" decoding="async" /></a>
       <nav class="site-nav" id="site-nav" aria-label="Primary">
         <ul>
-          <li><a href="#/community" data-nav="journey">The story</a></li>
-          <li><a href="#/day" data-nav="day">One day</a></li>
+          <li><a href="#/community" data-nav="journey">Explore</a></li>
+          <li><a href="#/chapter/care" data-nav="stories">Pillars</a></li>
+          <li><a href="#/progress" data-nav="progress">Progress</a></li>
           <li><a href="#/promises" data-nav="promises">Promises</a></li>
           <li><a href="#/people" data-nav="people">People</a></li>
           <li><a href="#/share" data-nav="share">Library</a></li>
@@ -38,9 +37,6 @@
         </ul>
       </nav>
       <div class="header-tools">
-        <button type="button" class="tool" id="sound-toggle" aria-pressed="false" aria-label="Sound, off">
-          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="tool-label">Sound</span>
-        </button>
         <button type="button" class="tool motion-toggle" aria-pressed="false" data-motion-toggle>
           <span class="tool-dot" aria-hidden="true"></span><span class="motion-label tool-label">Pause motion</span>
         </button>
@@ -48,65 +44,89 @@
       </div>
     </header>
 
-    <p class="sequence mono" id="sequence" aria-hidden="true"><b>01</b> / 06</p>
-
     <main id="main" tabindex="-1">
-      <!-- Hero: the headline over a field of light leaving the building -->
+      <!-- Hero: the headline, the five pillars as the way in, and the people behind the figures -->
       <section class="hero" id="top" data-section="top" aria-labelledby="hero-title">
-        <div class="wrap hero-copy">
-          <p class="eyebrow" data-reveal>Equinix <span aria-hidden="true">·</span> Where the light goes</p>
-          <h1 class="display" id="hero-title"><span class="line"><span class="line-inner">Infrastructure for</span></span><span class="line"><span class="line-inner"><em class="ital">human</em> possibility.</span></span></h1>
-          <p class="lede" data-reveal>Follow what leaves a data center: light, heat, work and care. Six places, one connected community, and every story sourced.</p>
-          <div class="actions" data-reveal>
-            <a class="btn btn--signal btn--large" href="#/community">Begin the story<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            <a class="btn btn--ghost btn--large" href="#/share">Browse the library</a>
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-reveal>Equinix <span aria-hidden="true">·</span> Community impact</p>
+            <h1 class="display" id="hero-title">Infrastructure for <em class="ital">human</em> possibility.</h1>
+            <p class="lede" data-reveal>Explore how the communities around Equinix data centers grow with them: care that arrives in time, research that crosses borders, careers that start with a school tour, neighbours supported, and progress you can measure.</p>
+            <div class="actions" data-reveal>
+              <a class="btn btn--primary btn--large" href="#/community">Explore the map<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a class="btn btn--ghost btn--large" href="#/share">Browse the stories</a>
+            </div>
+            <div data-reveal style="--reveal-delay: 120ms"><!--@pillar-row--></div>
+          </div>
+          <div class="hero-mosaic" data-reveal style="--reveal-delay: 160ms">
+            <figure class="mosaic-main"><img src="media/neighbourhood-1200.webp" srcset="media/neighbourhood-640.webp 640w, media/neighbourhood-1200.webp 1200w" sizes="(min-width: 900px) 30vw, 60vw" alt="A parent and child cycle and an older couple walk along a new path through meadow planting, with a low timber and stone building beyond." width="1200" height="800" decoding="async" fetchpriority="high" /></figure>
+            <figure class="mosaic-a"><img src="media/care-1200.webp" srcset="media/care-640.webp 640w, media/care-1200.webp 1200w" sizes="(min-width: 900px) 20vw, 40vw" alt="Two clinicians review a medical scan together on a monitor in a daylit reading room." width="1200" height="800" decoding="async" /></figure>
+            <figure class="mosaic-b"><img src="media/opportunity-1200.webp" srcset="media/opportunity-640.webp 640w, media/opportunity-1200.webp 1200w" sizes="(min-width: 900px) 20vw, 40vw" alt="Teenage students with visitor lanyards listen to an engineer inside a bright data center." width="1200" height="800" decoding="async" /></figure>
+            <p class="float-stat float-stat--1"><b>3.5M+</b><span>people connected to the internet by Equinix Foundation partners in 2025</span></p>
+            <p class="float-stat float-stat--2"><b>1,000+</b><span>homes expected to be warmed by heat from one Paris data center</span></p>
           </div>
         </div>
-        <div class="hero-foot">
-          <p class="scroll-hint"><span>Scroll</span><i aria-hidden="true"></i></p>
-          <!--@ticker-->
-        </div>
       </section>
 
-      <!-- The theatre: six chapters on one stage; the field changes form for each -->
-      <section class="theatre" id="community" data-section="journey" aria-label="The story in six chapters">
-        <div class="theatre-stage" id="stage" tabindex="0" aria-roledescription="carousel" aria-label="The story. Use the left and right arrow keys to move between chapters.">
-          <!--@rail-->
-          <!--@chapters-->
-          <p class="theatre-note note">An illustrative community, not a real place. Each story refers to its named location. Move with the arrow keys, or click the field to send a ripple through it.</p>
-        </div>
-      </section>
-
-      <!-- Statement -->
-      <section class="statement" id="statement" aria-label="Our role">
-        <p class="statement-text" data-words data-signal="part,communities,serve">Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
-      </section>
-
-      <!-- One day, connected: a horizontal day from the first swimmer to the night shift -->
-      <section class="day" id="day" data-section="day" aria-labelledby="day-title">
-        <div class="day-pin" id="day-pin">
-          <!--@day-->
-          <div class="day-progress" aria-hidden="true"><i></i></div>
-        </div>
-      </section>
-
-      <!-- Numbers -->
-      <section class="impact section" id="impact" aria-labelledby="impact-title">
+      <!-- Explore: the map of where the stories happen -->
+      <section class="explore section" id="community" data-section="journey" aria-labelledby="explore-title">
         <div class="wrap">
           <div class="section-head" data-reveal>
-            <p class="eyebrow">In numbers</p>
-            <h2 class="title" id="impact-title">What connection <em class="ital">adds up to.</em></h2>
+            <p class="eyebrow">Explore</p>
+            <h2 class="title" id="explore-title">Where the stories happen.</h2>
+            <p class="lede">Choose a place on the map or in the list. Filled pins are Equinix sites and programmes, open pins are partner locations, amber pins export heat.</p>
           </div>
-          <!--@numbers-->
+          <div class="explorer" data-reveal>
+            <div class="map-pane">
+              <div class="map-filters" role="group" aria-label="Filter the map by pillar">
+                <button type="button" class="chip" data-map-filter="all" aria-pressed="true">All pillars</button>
+                <button type="button" class="chip" data-map-filter="care" aria-pressed="false">Care</button>
+                <button type="button" class="chip" data-map-filter="discovery" aria-pressed="false">Research</button>
+                <button type="button" class="chip" data-map-filter="opportunity" aria-pressed="false">Growth</button>
+                <button type="button" class="chip" data-map-filter="community" aria-pressed="false">Support</button>
+                <button type="button" class="chip" data-map-filter="resources" aria-pressed="false">Progress</button>
+              </div>
+              <div class="map-wrap" id="map"></div>
+              <p class="note">Approximate locations, for orientation. Each story refers to its named location and keeps the scope of its source.</p>
+            </div>
+            <aside class="map-panel" id="map-panel">
+              <div id="map-panel-list">
+                <!--@places-->
+              </div>
+              <div id="map-panel-detail" hidden aria-live="polite"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pillars -->
+      <div id="stories" aria-label="The five pillars">
+        <!--@pillar-tabs-->
+        <!--@pillars-->
+      </div>
+
+      <!-- Progress -->
+      <section class="progress section" id="progress" data-section="progress" aria-labelledby="progress-title">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <p class="eyebrow">Progress</p>
+            <h2 class="title" id="progress-title">From 1998 to net zero.</h2>
+            <p class="lede">What has happened, what is happening now, and what Equinix has committed to by a date. Drag the timeline, or scroll it sideways.</p>
+          </div>
+          <!--@timeline-->
+          <div class="measures">
+            <!--@numbers-->
+            <!--@meters-->
+          </div>
         </div>
       </section>
 
       <!-- Promises -->
-      <section class="promises section" id="promises" data-section="promises" aria-labelledby="promises-title">
+      <section class="promises section section--soft" id="promises" data-section="promises" aria-labelledby="promises-title">
         <div class="wrap">
           <div class="section-head" data-reveal>
             <p class="eyebrow">Part of the community</p>
-            <h2 class="title" id="promises-title">Five promises to the places we <em class="ital">call home.</em></h2>
+            <h2 class="title" id="promises-title">Five promises to the places we call home.</h2>
             <p class="lede">Equinix has operated since 1998 and intends to stay in its communities for decades. Our U.S. Community Principles say what neighbours can expect, and we report against them.</p>
           </div>
           <!--@promises-->
@@ -118,7 +138,7 @@
         <div class="wrap">
           <div class="section-head" data-reveal>
             <p class="eyebrow">The people behind the connections</p>
-            <h2 class="title" id="people-title">Our people are <em class="ital">part of the story.</em></h2>
+            <h2 class="title" id="people-title">Our people are part of the story.</h2>
           </div>
           <div class="people-grid">
             <figure class="people-frame" data-reveal>
@@ -153,11 +173,11 @@
       </section>
 
       <!-- Library -->
-      <section class="library-section section" id="share" data-section="share" aria-labelledby="share-title">
+      <section class="library-section section section--soft" id="share" data-section="share" aria-labelledby="share-title">
         <div class="wrap">
           <div class="section-head" data-reveal>
             <p class="eyebrow">The library</p>
-            <h2 class="title" id="share-title">Find a story <em class="ital">worth carrying.</em></h2>
+            <h2 class="title" id="share-title">Find a story worth carrying.</h2>
             <p class="lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
           </div>
           <!--@library-->
@@ -169,7 +189,7 @@
         <div class="wrap">
           <div class="section-head" data-reveal>
             <p class="eyebrow">Training and resources</p>
-            <h2 class="title" id="training-title">Carry the story <em class="ital">with confidence.</em></h2>
+            <h2 class="title" id="training-title">Carry the story with confidence.</h2>
             <p class="lede">What to download, how to practise, and where to talk about it. The library is being assembled; every item below is a placeholder until its asset is approved.</p>
           </div>
           <div class="resources-grid">
@@ -204,11 +224,11 @@
       </section>
 
       <!-- Sources -->
-      <section class="sources section" id="sources" data-section="sources" aria-labelledby="sources-title">
+      <section class="sources section section--soft" id="sources" data-section="sources" aria-labelledby="sources-title">
         <div class="wrap">
           <div class="section-head" data-reveal>
             <p class="eyebrow">Sources and progress</p>
-            <h2 class="title" id="sources-title">What we have done, are doing and have <em class="ital">committed to.</em></h2>
+            <h2 class="title" id="sources-title">What we have done, are doing and have committed to.</h2>
           </div>
           <!--@sources-->
           <p class="more-links">
@@ -222,7 +242,7 @@
 
     <footer class="site-footer">
       <img class="footer-logo" src="brand/equinix-logo-vertical.svg" alt="Equinix" width="124" height="60" loading="lazy" decoding="async" />
-      <p>Internal prototype for Equinix CRO colleagues. The images and films are illustrative and AI generated; the field of light is drawn in code. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
+      <p>Internal prototype for Equinix CRO colleagues. The images and films are illustrative and AI generated. Map land data from Natural Earth. Facts are drawn from the linked sources and were checked on 21 October 2026.</p>
     </footer>
 
     <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title" data-lenis-prevent>
@@ -238,10 +258,6 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <audio id="theme" loop preload="none">
-      <source src="media/audio/community-theme.ogg" type="audio/ogg" />
-      <source src="media/audio/community-theme.mp3" type="audio/mpeg" />
-    </audio>
 
     <script type="module" src="./scripts/app.js"></script>
   </body>

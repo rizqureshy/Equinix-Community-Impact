@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 import {
-  railHTML,
-  chaptersHTML,
-  dayHTML,
+  pillarRowHTML,
+  placesListHTML,
+  pillarTabsHTML,
+  pillarsHTML,
+  timelineHTML,
   numbersHTML,
+  metersHTML,
   promisesHTML,
   libraryHTML,
   sourcesHTML,
-  tickerHTML,
 } from './impact/scripts/content/render.js';
 
 /** Pre-render content into the HTML so text is readable before scripts load. */
@@ -16,11 +18,13 @@ const prerender = () => ({
   name: 'impact-prerender',
   transformIndexHtml(html) {
     return html
-      .replace('<!--@ticker-->', tickerHTML())
-      .replace('<!--@rail-->', railHTML())
-      .replace('<!--@chapters-->', chaptersHTML())
-      .replace('<!--@day-->', dayHTML())
+      .replace('<!--@pillar-row-->', pillarRowHTML())
+      .replace('<!--@places-->', placesListHTML())
+      .replace('<!--@pillar-tabs-->', pillarTabsHTML())
+      .replace('<!--@pillars-->', pillarsHTML())
+      .replace('<!--@timeline-->', timelineHTML())
       .replace('<!--@numbers-->', numbersHTML())
+      .replace('<!--@meters-->', metersHTML())
       .replace('<!--@promises-->', promisesHTML())
       .replace('<!--@library-->', libraryHTML())
       .replace('<!--@sources-->', sourcesHTML());

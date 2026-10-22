@@ -1,16 +1,19 @@
 // HTML rendering for content. Pure string functions with no DOM access, used
-// at build time (pre-rendered into index.html) and at runtime (story detail).
+// at build time (pre-rendered into index.html) and at runtime (story detail,
+// the map panel).
 import {
   stories,
   sources,
   topics,
   chapterLead,
   getStory,
+  storiesForTopic,
   principles,
   relationshipLabels,
   timeframeLabels,
   LAST_CHECKED,
 } from './stories.js';
+import { PILLARS, PLACES, MILESTONES } from './places.js';
 
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -22,134 +25,237 @@ const formatDate = (iso) => {
 };
 
 const ILLUSTRATIVE = 'Illustrative, AI generated. Not the organisation or people named.';
+const ARROW = '<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-const picture = (media, { cls = '', sizes = '(min-width: 900px) 50vw, 100vw', loading = 'lazy' } = {}) => {
+const picture = (media, { cls = '', sizes = '(min-width: 900px) 50vw, 100vw', loading = 'lazy', caption = true } = {}) => {
   if (!media) return '';
   const small = media.path.replace('-1200', '-640');
   return `<figure class="${cls}">
     <img src="${esc(media.path)}" srcset="${esc(small)} 640w, ${esc(media.path)} 1200w" sizes="${sizes}" alt="${esc(media.alt)}" loading="${loading}" decoding="async" width="1200" height="800" />
-    <figcaption class="note">${ILLUSTRATIVE}</figcaption>
+    ${caption ? `<figcaption class="note">${ILLUSTRATIVE}</figcaption>` : ''}
   </figure>`;
 };
 
-/**
- * The six sequences of the theatre. Each pairs a chapter with the place it
- * happens in and the light-form the field draws for it.
- */
-export const CHAPTERS = {
-  care: { number: '01', title: 'Care that <em class="ital">connects.</em>', moment: 'A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.', shape: 'pulse', place: 'hospital', placeName: 'Hospital', film: 'clip-care' },
-  discovery: { number: '02', title: 'Discovery that <em class="ital">advances.</em>', moment: 'In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.', shape: 'constellation', place: 'research', placeName: 'Research centre', film: 'clip-discovery' },
-  opportunity: { number: '03', title: 'Opportunity that <em class="ital">grows.</em>', moment: 'A student walks into a data center for the first time and asks how it all works.', shape: 'ascent', place: 'learning', placeName: 'Learning centre', film: 'clip-opportunity' },
-  community: { number: '04', title: 'Community in <em class="ital">connection.</em>', moment: 'In Minooka, Illinois, a public bike path runs along the data center site, and land is set aside for a future fire station.', shape: 'town', place: 'homes', placeName: 'Homes and high street', film: 'clip-neighbourhood' },
-  resources: { number: '05', title: 'Resources used <em class="ital">thoughtfully.</em>', moment: 'Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.', shape: 'ripples', place: 'aquatic', placeName: 'Aquatic centre', film: 'clip-pool' },
-};
+const topicLabel = (id) => topics.find((t) => t.id === id)?.label || '';
+const metricHTML = (story, cls = 'stat') =>
+  story.metric
+    ? `<p class="${cls}"><span class="${cls}-value serif">${esc(story.metric)}</span><span class="${cls}-label">${esc(story.metricLabel)}</span></p>`
+    : '';
 
-export function sequenceSteps() {
-  const steps = topics.map((t) => {
-    const story = getStory(chapterLead[t.id]);
-    const c = CHAPTERS[t.id];
-    return { id: t.id, topic: t.id, number: c.number, label: t.label, title: c.title, moment: c.moment, shape: c.shape, place: c.place, placeName: c.placeName, story, heat: t.id === 'resources' };
-  });
-  steps.push({
-    id: 'datacenter',
-    topic: null,
-    number: '06',
-    label: 'The source',
-    title: 'Where every <em class="ital">thread</em> begins.',
-    moment: 'Private connections for care and research. Heat recovered for neighbours. People who keep it running, and who volunteer down the road. A data center is part of its community, not apart from it.',
-    shape: 'mark',
-    place: 'datacenter',
-    placeName: 'Equinix data center',
-    story: null,
-    heat: false,
-  });
-  return steps;
-}
-
-export function railHTML() {
-  return `<ol class="rail" aria-label="Chapters">${sequenceSteps()
-    .map(
-      (s, i) => `<li><button type="button" class="rail-item" data-go="${i}" aria-current="${i === 0 ? 'step' : 'false'}">
-        <span class="rail-num mono">${s.number}</span><span class="rail-label">${esc(s.label)}</span><span class="rail-bar" aria-hidden="true"></span>
-      </button></li>`,
-    )
+// ---------------------------------------------------------------------------
+// Hero: the five pillars as the way in
+// ---------------------------------------------------------------------------
+export function pillarRowHTML() {
+  return `<ol class="pillar-row" aria-label="Explore by pillar">${topics
+    .map((t) => {
+      const p = PILLARS[t.id];
+      return `<li><a class="pillar-link" href="#/chapter/${t.id}" data-topic="${t.id}"><span class="pillar-num">${p.number}</span><span class="pillar-word">${esc(p.word)}</span><span class="pillar-line">${esc(p.title)}</span>${ARROW}</a></li>`;
+    })
     .join('')}</ol>`;
 }
 
-export function chaptersHTML() {
-  const steps = sequenceSteps();
-  const panel = (s, i) => {
-    const story = s.story;
-    const media = story?.media?.[0] || { path: 'media/people-1200.webp', alt: 'An operations engineer walks along a daylit corridor beside a planted courtyard.' };
-    const metric = story?.metric
-      ? `<p class="chapter-metric"><span class="chapter-metric-value">${esc(story.metric)}</span><span class="chapter-metric-label">${esc(story.metricLabel)}</span></p>`
-      : '';
-    const actions = story
-      ? `<a class="btn btn--primary" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the story<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-         <span class="note chapter-who">${esc(story.organisation)}</span>`
-      : `<a class="btn btn--primary" href="#/day">See one day, connected<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-         <a class="btn btn--ghost" href="#/share">Browse the library</a>`;
-    return `<article class="chapter${i === 0 ? ' is-active' : ''}${s.heat ? ' chapter--heat' : ''}" id="chapter-${s.id}" data-index="${i}" data-place="${s.place}" data-shape="${s.shape}" aria-labelledby="chapter-title-${s.id}" ${i === 0 ? '' : 'aria-hidden="true"'}>
-      <div class="chapter-copy">
-        <p class="eyebrow"><b>${s.number}</b> ${esc(s.label)} <span class="dot" aria-hidden="true"></span> ${esc(s.placeName)}</p>
-        <h2 class="title chapter-title" id="chapter-title-${s.id}">${s.title}</h2>
-        <p class="chapter-moment">${esc(s.moment)}</p>
-        ${metric}
-        <div class="actions chapter-actions">${actions}</div>
-      </div>
-      <figure class="portal">
-        <img src="${esc(media.path)}" srcset="${esc(media.path.replace('-1200', '-640'))} 640w, ${esc(media.path)} 1200w" sizes="(min-width: 900px) 34vw, 70vw" alt="${esc(media.alt)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" width="1200" height="800" />
-        <figcaption class="note">${ILLUSTRATIVE}</figcaption>
-      </figure>
-    </article>`;
-  };
-  return `<div class="chapters" id="chapters">${steps.map(panel).join('')}</div>`;
+// ---------------------------------------------------------------------------
+// The map panel: places to choose, and the detail for one place (runtime)
+// ---------------------------------------------------------------------------
+const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen'];
+const cap = (w) => w.charAt(0).toUpperCase() + w.slice(1);
+
+export function placesListHTML() {
+  const byStory = (id) => getStory(id);
+  const own = PLACES.filter((p) => !p.partner);
+  const storyCount = new Set(PLACES.flatMap((p) => [p.story, ...(p.also || [])])).size;
+  return `<p class="eyebrow">Places</p>
+    <h3 class="title--sm">${cap(WORDS[own.length] || String(own.length))} places, ${WORDS[storyCount] || storyCount} stories.</h3>
+    <ol class="place-list" aria-label="Places on the map">${own
+    .map((p) => {
+      const s = byStory(p.story);
+      return `<li><button type="button" class="place-item${p.heat ? ' place-item--heat' : ''}" data-place="${p.id}" data-topic="${s.topic}">
+        <span class="place-dot" aria-hidden="true"></span>
+        <span class="place-name">${esc(p.name)}</span>
+        <span class="place-story">${esc(s.title)}</span>
+      </button></li>`;
+    })
+    .join('')}</ol>`;
 }
 
-/* A day, connected: seven moments from dawn to the night shift, each tied to a sourced story. */
-export const DAY = [
-  { time: '05:40', place: 'Saint-Denis, Paris', line: 'The pool is warm before the first swimmer arrives.', film: 'clip-pool', story: 'pa10-heat', heat: true, alt: 'Morning light on the still water of an indoor pool.' },
-  { time: '07:15', place: 'A reading room', line: 'A radiologist opens a scan. It arrives in under a second.', film: 'clip-care', story: '3verest', alt: 'Two clinicians study a medical scan together.' },
-  { time: '09:30', place: 'Sydney', line: 'Researchers compare one child’s case with data from Philadelphia, Memphis and Heidelberg.', film: 'clip-discovery', story: 'childrens-cancer-institute', alt: 'Two researchers look at a data visualisation in a bright laboratory.' },
-  { time: '11:00', place: 'An Equinix IBX', line: 'A school group walks the corridors and asks how it all works.', film: 'clip-opportunity', story: 'pathways-to-tech', alt: 'Students with visitor lanyards listen to an engineer inside a data center.' },
-  { time: '16:00', place: 'Minooka, Illinois', line: 'A cyclist takes the new public path along the edge of the campus.', film: 'clip-neighbourhood', story: 'community-principles', alt: 'People cycle and walk along a new path through meadow planting.' },
-  { time: '18:30', place: 'A public library', line: 'A volunteer helps a neighbour get online for the first time.', film: 'clip-community', story: 'digital-inclusion', alt: 'A teenage volunteer helps an older woman use a tablet.' },
-  { time: '23:00', place: 'Markham, Ontario', line: 'The night shift keeps the pulse steady. Outside, recovered heat is still flowing to homes.', film: 'clip-people', story: 'markham-heat', heat: true, alt: 'An operations engineer walks a daylit corridor beside a courtyard.' },
+export function placeDetailHTML(place) {
+  const ids = [place.story, ...(place.also || [])];
+  const cards = ids
+    .map((id) => {
+      const s = getStory(id);
+      return `<article class="place-card">
+        <p class="eyebrow">${esc(topicLabel(s.topic))} <span class="muted">· ${esc(s.organisation)}</span></p>
+        <h4 class="title--sm">${esc(s.title)}</h4>
+        <p class="muted">${esc(s.summary)}</p>
+        ${metricHTML(s)}
+        <div class="actions"><a class="btn btn--primary btn--small" href="#/story/${s.id}" data-story-trigger="${s.id}">Open the story ${ARROW}</a><button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="${s.id}">Copy summary</button></div>
+      </article>`;
+    })
+    .join('');
+  return `<button type="button" class="btn btn--link btn--small place-back" data-place-back>All places</button>
+    <p class="eyebrow place-kind">${place.partner ? 'Partner location' : place.heat ? 'Heat export' : 'Equinix site or programme'}</p>
+    <h3 class="title--md">${esc(place.name)}</h3>
+    <p class="muted">${esc(place.note)}</p>
+    ${cards}`;
+}
+
+// ---------------------------------------------------------------------------
+// Pillars: five sections, each with a lead story and the rest of its stories
+// ---------------------------------------------------------------------------
+export function pillarTabsHTML() {
+  return `<nav class="pillar-tabs" id="pillar-tabs" aria-label="Pillars"><div class="wrap"><ol>${topics
+    .map((t) => `<li><a href="#/chapter/${t.id}" data-tab="${t.id}"><span class="tab-num">${PILLARS[t.id].number}</span>${esc(PILLARS[t.id].word)}</a></li>`)
+    .join('')}</ol></div></nav>`;
+}
+
+function storyCardHTML(s) {
+  return `<li class="story-mini">
+    <p class="eyebrow">${esc(relationshipLabels[s.relationship])}</p>
+    <h4 class="title--sm">${esc(s.title)}</h4>
+    <p class="story-mini-org">${esc(s.organisation)} <span aria-hidden="true">·</span> ${esc(s.location)}</p>
+    <p class="muted">${esc(s.summary)}</p>
+    ${metricHTML(s, 'stat stat--small')}
+    <div class="actions"><a class="btn btn--dark btn--small" href="#/story/${s.id}" data-story-trigger="${s.id}">Open the story</a><button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="${s.id}">Copy summary</button></div>
+  </li>`;
+}
+
+export function pillarsHTML() {
+  return topics
+    .map((t, i) => {
+      const p = PILLARS[t.id];
+      const lead = getStory(chapterLead[t.id]);
+      const rest = storiesForTopic(t.id).filter((s) => s.id !== lead.id);
+      const heat = t.id === 'resources';
+      return `<section class="pillar${i % 2 ? ' pillar--flip' : ''}${heat ? ' pillar--heat' : ''}" id="chapter-${t.id}" data-section="${t.id}" data-topic="${t.id}" aria-labelledby="pillar-title-${t.id}">
+      <div class="wrap">
+        <header class="pillar-head" data-reveal>
+          <p class="eyebrow"><b>${p.number}</b> ${esc(p.word)}</p>
+          <h2 class="title" id="pillar-title-${t.id}">${esc(p.title)}</h2>
+          <p class="lede">${esc(p.intro)}</p>
+        </header>
+        <div class="pillar-grid">
+          <div class="lead-media" data-reveal>
+            ${picture(lead.media[0], { cls: 'lead-figure', sizes: '(min-width: 900px) 48vw, 100vw' })}
+            <figure class="lead-film">
+              <video class="film" muted playsinline loop preload="none" poster="media/${p.film}-poster.jpg" aria-label="${esc(p.moment)}">
+                <source src="media/${p.film}.webm" type="video/webm" />
+                <source src="media/${p.film}.mp4" type="video/mp4" />
+              </video>
+              <figcaption class="film-caption"><span class="serif">${esc(p.moment)}</span><span class="note">Illustrative film, AI generated.</span></figcaption>
+            </figure>
+          </div>
+          <article class="lead-story" data-reveal style="--reveal-delay: 120ms" aria-labelledby="lead-${lead.id}">
+            <p class="eyebrow">Lead story <span class="muted">· ${esc(relationshipLabels[lead.relationship])}</span></p>
+            <h3 class="title--md" id="lead-${lead.id}">${esc(lead.title)}</h3>
+            <p class="lead-org">${esc(lead.organisation)} <span aria-hidden="true">·</span> ${esc(lead.location)}</p>
+            <p class="lead-summary">${esc(lead.humanContext)}</p>
+            ${metricHTML(lead, 'stat stat--lead')}
+            <dl class="contrib">
+              <div><dt>What Equinix contributes</dt><dd>${esc(lead.equinixContribution)}</dd></div>
+              <div><dt>What partners deliver</dt><dd>${esc(lead.partnerContribution)}</dd></div>
+            </dl>
+            <div class="actions">
+              <a class="btn btn--primary" href="#/story/${lead.id}" data-story-trigger="${lead.id}">Open the story ${ARROW}</a>
+              <button type="button" class="btn btn--ghost" data-copy="summary" data-story="${lead.id}">Copy summary</button>
+            </div>
+          </article>
+        </div>
+        ${rest.length ? `<ul class="story-minis" data-reveal>${rest.map(storyCardHTML).join('')}</ul>` : ''}
+      </div>
+    </section>`;
+    })
+    .join('');
+}
+
+// ---------------------------------------------------------------------------
+// Progress: the timeline and the measures
+// ---------------------------------------------------------------------------
+export function timelineHTML() {
+  const item = (m, i) => {
+    const story = m.story ? getStory(m.story) : null;
+    return `<li class="milestone milestone--${m.kind}" data-index="${i}">
+      <span class="milestone-year serif">${esc(m.year)}</span>
+      <span class="milestone-mark" aria-hidden="true"></span>
+      <h3 class="title--sm">${esc(m.title)}</h3>
+      <p class="muted">${esc(m.text)}</p>
+      <p class="milestone-links">
+        ${story ? `<a href="#/story/${story.id}" data-story-trigger="${story.id}">Story</a>` : ''}
+        <a href="${esc(sources[m.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[m.source].title)} (opens in a new tab)</span></a>
+      </p>
+    </li>`;
+  };
+  return `<div class="timeline" id="timeline" tabindex="0" aria-label="Timeline from 1998 to 2040. Scroll sideways, or drag.">
+    <ol class="timeline-track">${MILESTONES.map(item).join('')}</ol>
+  </div>
+  <p class="timeline-legend note"><span class="legend-swatch" aria-hidden="true"></span>Happened or happening <span class="legend-swatch legend-swatch--commitment" aria-hidden="true"></span>Committed, not yet an outcome</p>`;
+}
+
+export const NUMBERS = [
+  { value: 3.5, suffix: 'M+', decimals: 1, label: 'people connected to the internet by Equinix Foundation partners', scope: 'Nonprofit portfolio, 2025', source: 'S4b' },
+  { value: 54400, suffix: '+', decimals: 0, label: 'hours volunteered by Equinix employees, up 45% on 2024', scope: 'All employees, 2025', source: 'S6' },
+  { value: 95, prefix: '$', suffix: 'M+', decimals: 0, label: 'spent with small and inclusive U.S. businesses', scope: 'U.S. inclusive procurement, 2025', source: 'S7' },
+  { value: 5, suffix: '', decimals: 0, label: 'data centers exporting recovered heat to their communities', scope: 'As of 2025', source: 'S6' },
 ];
 
-export function dayHTML() {
-  const card = (m, i) => {
-    const story = getStory(m.story);
-    return `<article class="moment${m.heat ? ' moment--heat' : ''}" data-index="${i}" aria-labelledby="moment-${i}">
-      <p class="moment-time mono" aria-label="${esc(m.time)}"><span>${esc(m.time)}</span></p>
-      <figure class="moment-media">
-        <video class="film" muted playsinline loop preload="none" poster="media/${m.film}-poster.jpg" aria-label="${esc(m.alt)}">
-          <source src="media/${m.film}.webm" type="video/webm" />
-          <source src="media/${m.film}.mp4" type="video/mp4" />
-        </video>
-      </figure>
-      <div class="moment-copy">
-        <p class="eyebrow">${esc(m.place)}</p>
-        <p class="moment-line" id="moment-${i}">${esc(m.line)}</p>
-        <a class="btn btn--link btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">${esc(story.title)}</a>
-      </div>
-    </article>`;
-  };
-  return `<div class="day-track" id="day-track">
-    <div class="moment moment--start">
-      <p class="eyebrow">One day, connected</p>
-      <h2 class="title day-title" id="day-title">From the first swimmer to the <em class="ital">night shift.</em></h2>
-      <p class="moment-intro">Seven moments, in seven places, from a single day that Equinix infrastructure quietly helps make possible. Scroll to move through it.</p>
-      <p class="note">Each moment links to its sourced story. The films are illustrative and AI generated.</p>
+const digits = (n) => (n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB'));
+const fmt = (n) => `${n.prefix || ''}${digits(n)}${n.suffix}`;
+
+export function numbersHTML() {
+  return `<ol class="numbers">${NUMBERS.map(
+    (n, i) => `<li class="number${i === 3 ? ' number--heat' : ''}" data-reveal style="--reveal-delay:${i * 80}ms">
+      <span class="number-value serif" aria-label="${esc(fmt(n))}">${n.prefix ? `<span class="number-affix">${esc(n.prefix)}</span>` : ''}<span class="number-digits" data-count="${n.value}" data-decimals="${n.decimals}">${digits(n)}</span>${n.suffix ? `<span class="number-affix">${esc(n.suffix)}</span>` : ''}</span>
+      <span class="number-label">${esc(n.label)}</span>
+      <span class="note">${esc(n.scope)}. <a href="${esc(sources[n.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[n.source].title)} (opens in a new tab)</span></a></span>
+    </li>`,
+  ).join('')}</ol>`;
+}
+
+/** Two measures with a target, drawn as simple single-hue meters with the value in text. */
+export function metersHTML() {
+  return `<div class="meters">
+    <div class="meter" data-reveal>
+      <p class="eyebrow">Renewable energy coverage</p>
+      <p class="meter-value"><span class="serif" data-count="96" data-decimals="0">96</span>%</p>
+      <div class="meter-bar" role="img" aria-label="96 percent renewable energy coverage in 2025, the eighth year in a row above 90 percent"><i style="--v: 0.96"></i><b class="meter-tick" style="--v: 0.9" aria-hidden="true"><span>90% since 2018</span></b></div>
+      <p class="note">Across retail IBX data centers in 2025, the eighth year in a row above 90% globally. Equinix’s published definition; not continuous direct supply at every site. <a href="${esc(sources.S5.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
     </div>
-    ${DAY.map(card).join('')}
-    <div class="moment moment--end">
-      <p class="moment-intro">None of this is the data center’s work alone. It is what becomes possible when a community is connected to it.</p>
-      <a class="btn btn--primary" href="#/promises">The promises behind it</a>
+    <div class="meter" data-reveal style="--reveal-delay: 100ms">
+      <p class="eyebrow">Power usage effectiveness</p>
+      <p class="meter-value"><span class="serif">1.37</span> <span class="meter-target">target 1.33 by 2030</span></p>
+      <div class="meter-bar meter-bar--pue" role="img" aria-label="Average annual PUE of 1.37 in 2025, with a target of 1.33 or better by 2030; lower is better"><i style="--v: 0.62"></i><b class="meter-tick" style="--v: 0.5" aria-hidden="true"><span>1.33</span></b></div>
+      <p class="note">Average annual PUE in 2025, where 1.0 would be perfect. Lower is better. Scale shown from 1.0 to 1.6. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
     </div>
   </div>`;
 }
 
+// ---------------------------------------------------------------------------
+// Promises
+// ---------------------------------------------------------------------------
+export function promisesHTML() {
+  const item = (p, i) => `<li class="promise${i === 0 ? ' is-open' : ''}" data-index="${i}">
+      <h3><button type="button" class="promise-btn" aria-expanded="${i === 0 ? 'true' : 'false'}" aria-controls="promise-body-${i}" data-promise="${i}">
+        <span class="promise-num">0${i + 1}</span><span class="promise-name">${esc(p.name)}</span>
+        <svg class="promise-plus" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button></h3>
+      <div class="promise-body" id="promise-body-${i}" ${i === 0 ? '' : 'hidden'}>
+        <p class="promise-text">${esc(p.promise)}</p>
+        <p class="promise-proof"><span class="promise-kind">${esc(p.kind)} <span aria-hidden="true">·</span> ${esc(p.where)}</span>${esc(p.proof)}</p>
+      </div>
+    </li>`;
+  const frame = (p, i) => `<figure class="promise-frame${i === 0 ? ' is-active' : ''}" data-index="${i}" ${i === 0 ? '' : 'aria-hidden="true"'}>
+      <img src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="800" />
+      <figcaption><span class="promise-headline">${esc(p.headline)}</span><span class="note">Illustrative, AI generated.</span></figcaption>
+    </figure>`;
+  return `<div class="promises-grid">
+    <ol class="promise-list">${principles.map(item).join('')}</ol>
+    <div class="promise-visual" aria-live="polite">${principles.map(frame).join('')}</div>
+  </div>
+  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
+}
+
+// ---------------------------------------------------------------------------
+// Story detail
+// ---------------------------------------------------------------------------
 const sourceLink = (id) => {
   const s = sources[id];
   return `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -159,7 +265,7 @@ const sourceLink = (id) => {
 export function storyDetailHTML(story) {
   const heat = story.id === 'pa10-heat' || story.id === 'markham-heat';
   return `<header class="story-head">
-    <p class="eyebrow">${esc(topics.find((t) => t.id === story.topic).label)} <span class="muted">· ${esc(relationshipLabels[story.relationship])}</span></p>
+    <p class="eyebrow">${esc(topicLabel(story.topic))} <span class="muted">· ${esc(relationshipLabels[story.relationship])}</span></p>
     <h2 class="story-title" id="story-title">${esc(story.title)}</h2>
     <p class="story-org">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
   </header>
@@ -188,23 +294,22 @@ export function storyDetailHTML(story) {
 }
 
 // ---------------------------------------------------------------------------
-// Library: every story, filterable
+// Library
 // ---------------------------------------------------------------------------
 export function libraryItemHTML(story) {
-  const topic = topics.find((t) => t.id === story.topic);
   const media = story.media[0];
   const art = media
     ? `<img class="card-img" src="${esc(media.path.replace('-1200', '-640'))}" alt="" loading="lazy" decoding="async" width="640" height="427">`
-    : `<span class="card-type" aria-hidden="true">${esc(story.metric || topic.label)}</span>`;
+    : `<span class="card-type serif" aria-hidden="true">${esc(story.metric || topicLabel(story.topic))}</span>`;
   return `<li class="card" data-topic="${story.topic}" data-relationship="${story.relationship}">
     <div class="card-art${media ? '' : ' card-art--type'}">${art}</div>
     <div class="card-body">
-      <p class="card-tags"><span class="tag">${esc(topic.label)}</span><span class="tag tag--quiet">${esc(relationshipLabels[story.relationship])}</span></p>
+      <p class="card-tags"><span class="tag">${esc(topicLabel(story.topic))}</span><span class="tag tag--quiet">${esc(relationshipLabels[story.relationship])}</span></p>
       <h3 class="card-title">${esc(story.title)}</h3>
       <p class="card-org">${esc(story.organisation)}</p>
       <p class="card-summary">${esc(story.summary)}</p>
       <div class="card-actions">
-        <a class="btn btn--primary btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">Open story</a>
+        <a class="btn btn--dark btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">Open story</a>
         <button type="button" class="btn btn--ghost btn--small" data-copy="summary" data-story="${story.id}">Copy summary</button>
       </div>
     </div>
@@ -216,7 +321,7 @@ export function libraryHTML() {
     `<button type="button" class="chip" data-filter-group="${group}" data-filter="${value}" aria-pressed="${pressed}">${esc(label)}</button>`;
   return `<div class="filters" role="group" aria-label="Filter stories">
       <div class="filter-row">
-        <span class="filter-name">Theme</span>
+        <span class="filter-name">Pillar</span>
         ${chip('topic', 'all', 'All', 'true')}${topics.map((t) => chip('topic', t.id, t.label, 'false')).join('')}
       </div>
       <div class="filter-row">
@@ -231,63 +336,8 @@ export function libraryHTML() {
 }
 
 // ---------------------------------------------------------------------------
-// Promises: the five U.S. Community Principles, each with its proof
+// Sources
 // ---------------------------------------------------------------------------
-export function promisesHTML() {
-  const item = (p, i) => `<li class="promise${i === 0 ? ' is-open' : ''}" data-index="${i}">
-      <h3><button type="button" class="promise-btn" aria-expanded="${i === 0 ? 'true' : 'false'}" aria-controls="promise-body-${i}" data-promise="${i}">
-        <span class="promise-num mono">0${i + 1}</span><span class="promise-name">${esc(p.name)}</span>
-        <svg class="promise-plus" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button></h3>
-      <div class="promise-body" id="promise-body-${i}" ${i === 0 ? '' : 'hidden'}>
-        <p class="promise-text">${esc(p.promise)}</p>
-        <p class="promise-proof"><span class="promise-kind">${esc(p.kind)} <span aria-hidden="true">·</span> ${esc(p.where)}</span>${esc(p.proof)}</p>
-      </div>
-    </li>`;
-  const frame = (p, i) => `<figure class="promise-frame${i === 0 ? ' is-active' : ''}" data-index="${i}" ${i === 0 ? '' : 'aria-hidden="true"'}>
-      <img src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="800" />
-      <figcaption><span class="promise-headline">${esc(p.headline)}</span><span class="note">Illustrative, AI generated.</span></figcaption>
-    </figure>`;
-  return `<div class="promises-grid">
-    <ol class="promise-list">${principles.map(item).join('')}</ol>
-    <div class="promise-visual" aria-live="polite">${principles.map(frame).join('')}</div>
-  </div>
-  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
-}
-
-export const NUMBERS = [
-  { value: 3.5, suffix: 'M+', decimals: 1, label: 'people connected to the internet by Equinix Foundation partners', scope: 'Nonprofit portfolio, 2025', source: 'S4b' },
-  { value: 54400, suffix: '+', decimals: 0, label: 'hours volunteered by Equinix employees', scope: 'All employees, 2025', source: 'S6' },
-  { value: 95, prefix: '$', suffix: 'M+', decimals: 0, label: 'spent with small and inclusive U.S. businesses', scope: 'U.S. inclusive procurement, 2025', source: 'S7' },
-  { value: 5, suffix: '', decimals: 0, label: 'data centers exporting heat to their communities', scope: 'As of 2025', source: 'S6' },
-];
-
-const digits = (n) => (n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB'));
-const fmt = (n) => `${n.prefix || ''}${digits(n)}${n.suffix}`;
-
-export function numbersHTML() {
-  return `<ol class="numbers">${NUMBERS.map(
-    (n, i) => `<li class="number${i === 3 ? ' number--heat' : ''}" data-reveal style="--reveal-delay:${i * 90}ms">
-      <span class="number-value" aria-label="${esc(fmt(n))}">${n.prefix ? `<span class="number-prefix">${esc(n.prefix)}</span>` : ''}<span class="number-digits" data-count="${n.value}" data-decimals="${n.decimals}">${digits(n)}</span>${n.suffix ? `<span class="number-suffix">${esc(n.suffix)}</span>` : ''}</span>
-      <span class="number-label">${esc(n.label)}</span>
-      <span class="note">${esc(n.scope)}. <a href="${esc(sources[n.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[n.source].title)} (opens in a new tab)</span></a></span>
-    </li>`,
-  ).join('')}</ol>`;
-}
-
-/** The ticker under the hero: short, sourced facts that pass by. */
-export function tickerHTML() {
-  const items = [
-    ...NUMBERS.map((n) => `<b>${esc(fmt(n))}</b> ${esc(n.label)}`),
-    `<b>1,000+</b> homes expected to be warmed by heat from PA10, Saint-Denis`,
-    `<b>Under 1 second</b> to retrieve a medical image on 3verest clouds`,
-    `<b>Nearly 2,000</b> students reached in the Pathways to Tech pilot`,
-    `<b>100</b> nonprofit partners across 48 metros`,
-  ];
-  const run = items.map((t) => `<li>${t}<span class="tick" aria-hidden="true"></span></li>`).join('');
-  return `<div class="ticker" aria-label="Headline figures"><ul class="ticker-run">${run}</ul><ul class="ticker-run" aria-hidden="true">${run}</ul></div>`;
-}
-
 export function sourcesHTML() {
   const groups = { historical: [], current: [], commitment: [] };
   for (const s of stories) groups[s.timeframe].push(s);
