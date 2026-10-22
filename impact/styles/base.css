@@ -221,9 +221,11 @@ main:focus {
 .site-header {
   position: fixed;
   top: 14px;
-  left: 50%;
+  left: 0;
+  right: 0;
   z-index: 40;
-  transform: translateX(-50%);
+  width: fit-content;
+  margin-inline: auto;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -589,5 +591,16 @@ main:focus {
   *::after {
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;
+  }
+}
+
+/* Narrower desktops: the full set of links still fits the pill */
+@media (max-width: 1180px) {
+  .site-nav a {
+    padding: 0 9px;
+    font-size: var(--t-xs);
+  }
+  .motion-label {
+    display: none;
   }
 }
