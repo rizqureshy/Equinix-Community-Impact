@@ -26,14 +26,20 @@ main,
 .statement {
   position: relative;
 }
-:root[data-fabric='on'] .hero-copy::before,
-:root[data-fabric='on'] .statement::before {
-  content: '';
-  position: absolute;
-  inset: -8% -12%;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0));
+@media (min-width: 761px) {
+  :root[data-fabric='on'] .hero-copy::before,
+  :root[data-fabric='on'] .statement::before {
+    content: '';
+    position: absolute;
+    inset: -8% -12%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0));
+  }
+}
+.hero,
+.statement {
+  overflow-x: clip;
 }
 
 .fabric-toggle {
