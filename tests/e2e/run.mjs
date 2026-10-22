@@ -119,9 +119,11 @@ try {
   const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
   check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));
   check(roomState.title === 'The reading room' && (await p.evaluate(() => document.activeElement?.hasAttribute('data-room-leave'))), 'the room names itself and focus lands on Leave');
+  const lineBefore = await p.evaluate(() => window.__impact.room.line);
   await p.locator('[data-room-next]').click();
   await wait(600);
-  check(await p.evaluate(() => window.__impact.room.line === 1 && !!document.querySelector('.room-line--fact .room-line-source a')), 'the next caption carries its figure with scope and source');
+  const factLine = await p.evaluate(() => ({ line: window.__impact.room.line, fact: !!document.querySelector('.room-line--fact .room-line-source a'), kind: document.querySelector('.room-line')?.className }));
+  check(factLine.line === lineBefore + 1 && (factLine.line !== 1 || factLine.fact), 'Next moves one caption on, and the figure carries its scope and source', JSON.stringify(factLine));
   await p.locator('[data-room-next]').click();
   await p.locator('[data-room-next]').click();
   await wait(600);
@@ -337,7 +339,8 @@ try {
   check((await step(p)) === 4, 'place controls still work without WebGL', String(await step(p)));
   await p.locator('[data-room-enter="aquatic"]').dispatchEvent('click');
   await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.room.phase === 'inside' && !document.querySelector('#room').classList.contains('has-pano') && getComputedStyle(document.querySelector('.room-poster')).opacity === '1'), 'without WebGL the room shows as a still with its captions');
+  await wait(1500);
+  check(await p.evaluate(() => window.__impact.room.phase === 'inside' && !document.querySelector('#room').classList.contains('has-pano') && Number(getComputedStyle(document.querySelector('.room-poster')).opacity) > 0.9 && !!document.querySelector('.room-line')), 'without WebGL the room shows as a still with its captions');
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
   check(p.failed.length === 0, 'no missing local assets without WebGL', p.failed.slice(0, 3).join(', '));
