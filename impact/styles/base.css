@@ -238,13 +238,14 @@ main:focus {
 }
 .wordmark {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   padding: 8px 12px 8px 4px;
   border-radius: var(--radius-pill);
 }
 .wordmark-logo {
   display: block;
-  width: auto;
+  width: 159px;
   height: 16px;
 }
 .wordmark:focus-visible {
