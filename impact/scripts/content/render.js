@@ -23,130 +23,131 @@ const formatDate = (iso) => {
 
 const ILLUSTRATIVE = 'Illustrative, AI generated. Not the organisation or people named.';
 
-/** Chapter framing around each lead story, and the place it lives in the city. */
-export const CHAPTERS = {
-  care: { number: '01', title: 'Care that connects.', moment: 'A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.', film: 'clip-care', place: 'hospital', placeName: 'Hospital' },
-  discovery: { number: '02', title: 'Discovery that advances.', moment: 'In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.', film: 'clip-discovery', place: 'research', placeName: 'Research centre' },
-  opportunity: { number: '03', title: 'Opportunity that grows.', moment: 'A student walks into a data center for the first time and asks how it all works.', film: 'clip-opportunity', place: 'learning', placeName: 'Learning centre' },
-  community: { number: '04', title: 'Community in connection.', moment: 'In Minooka, Illinois, a public bike path runs along the data center site, and land is being donated for a future fire station.', film: 'clip-neighbourhood', place: 'homes', placeName: 'Homes and high street' },
-  resources: { number: '05', title: 'Resources used thoughtfully.', moment: 'Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.', film: 'clip-pool', place: 'aquatic', placeName: 'Aquatic centre' },
+const picture = (media, { cls = '', sizes = '(min-width: 900px) 50vw, 100vw', loading = 'lazy' } = {}) => {
+  if (!media) return '';
+  const small = media.path.replace('-1200', '-640');
+  return `<figure class="${cls}">
+    <img src="${esc(media.path)}" srcset="${esc(small)} 640w, ${esc(media.path)} 1200w" sizes="${sizes}" alt="${esc(media.alt)}" loading="${loading}" decoding="async" width="1200" height="800" />
+    <figcaption class="note">${ILLUSTRATIVE}</figcaption>
+  </figure>`;
 };
 
-/** The stops of the city journey, in order. */
-export function journeySteps() {
+/**
+ * The six sequences of the theatre. Each pairs a chapter with the place it
+ * happens in and the light-form the field draws for it.
+ */
+export const CHAPTERS = {
+  care: { number: '01', title: 'Care that <em class="ital">connects.</em>', moment: 'A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.', shape: 'pulse', place: 'hospital', placeName: 'Hospital', film: 'clip-care' },
+  discovery: { number: '02', title: 'Discovery that <em class="ital">advances.</em>', moment: 'In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.', shape: 'constellation', place: 'research', placeName: 'Research centre', film: 'clip-discovery' },
+  opportunity: { number: '03', title: 'Opportunity that <em class="ital">grows.</em>', moment: 'A student walks into a data center for the first time and asks how it all works.', shape: 'ascent', place: 'learning', placeName: 'Learning centre', film: 'clip-opportunity' },
+  community: { number: '04', title: 'Community in <em class="ital">connection.</em>', moment: 'In Minooka, Illinois, a public bike path runs along the data center site, and land is set aside for a future fire station.', shape: 'town', place: 'homes', placeName: 'Homes and high street', film: 'clip-neighbourhood' },
+  resources: { number: '05', title: 'Resources used <em class="ital">thoughtfully.</em>', moment: 'Early swimmers in Saint-Denis are in water warmed, in part, by heat that once left a data center unused.', shape: 'ripples', place: 'aquatic', placeName: 'Aquatic centre', film: 'clip-pool' },
+};
+
+export function sequenceSteps() {
   const steps = topics.map((t) => {
     const story = getStory(chapterLead[t.id]);
     const c = CHAPTERS[t.id];
-    return { id: t.id, place: c.place, placeName: c.placeName, label: t.label, number: c.number, moment: c.moment, summary: story.summary, story: story.id, heat: t.id === 'resources' };
+    return { id: t.id, topic: t.id, number: c.number, label: t.label, title: c.title, moment: c.moment, shape: c.shape, place: c.place, placeName: c.placeName, story, heat: t.id === 'resources' };
   });
   steps.push({
     id: 'datacenter',
+    topic: null,
+    number: '06',
+    label: 'The source',
+    title: 'Where every <em class="ital">thread</em> begins.',
+    moment: 'Private connections for care and research. Heat recovered for neighbours. People who keep it running, and who volunteer down the road. A data center is part of its community, not apart from it.',
+    shape: 'mark',
     place: 'datacenter',
     placeName: 'Equinix data center',
-    label: 'Every thread',
-    number: '06',
-    moment: 'Private connections for care and research. Heat recovered for neighbours. People who keep it running, and who volunteer down the road.',
-    summary: 'A data center is part of its community, not apart from it.',
     story: null,
     heat: false,
   });
   return steps;
 }
 
-export function journeyHTML() {
-  const steps = journeySteps();
-  const card = (s, i) => `<article class="journey-card${i % 2 ? ' journey-card--right' : ''}" data-step="${i}" hidden aria-labelledby="journey-${s.id}">
-      <p class="eyebrow">${s.number} <span class="muted">${esc(s.label)}</span></p>
-      <h3 class="title--md" id="journey-${s.id}">${esc(s.placeName)}</h3>
-      <p class="journey-moment">${esc(s.moment)}</p>
-      <p class="journey-summary muted">${esc(s.summary)}</p>
-      <p class="journey-thread"><span class="thread-swatch${s.heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${s.heat ? 'Recovered heat' : s.id === 'datacenter' ? 'Where every thread begins' : 'Connected to the data center'}</p>
-      ${s.story ? `<a class="btn btn--primary btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">Open the story</a>` : `<a class="btn btn--primary btn--small" href="#/promises">Our five promises</a>`}
-    </article>`;
-  return `<div class="journey-cards">
-    <article class="journey-card journey-card--intro" data-step="-1" aria-labelledby="journey-intro">
-      <p class="eyebrow">The community</p>
-      <h3 class="title--md" id="journey-intro">Six places. One thread.</h3>
-      <p class="journey-moment">A data center is part of the community around it. Follow the thread from the hospital to the aquatic centre, or let the tour play.</p>
-      <div class="actions">
-        <button type="button" class="btn btn--primary btn--small" data-play>Play the tour</button>
-        <button type="button" class="btn btn--link btn--small" data-go="0">Start at the hospital</button>
-      </div>
-    </article>
-    ${steps.map(card).join('')}
-  </div>
-  <div class="journey-bar" role="group" aria-label="Tour controls">
-    <button type="button" class="bar-btn" data-step-dir="-1" aria-label="Previous place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <nav class="journey-nav" aria-label="Places">${steps
-      .map((s, i) => `<button type="button" class="journey-dot" data-go="${i}" aria-label="${esc(s.placeName)}" aria-current="false"><i></i><span>${esc(s.placeName)}</span></button>`)
-      .join('')}</nav>
-    <button type="button" class="bar-btn" data-step-dir="1" aria-label="Next place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="m5 2 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="bar-sep" aria-hidden="true"></span>
-    <button type="button" class="bar-btn bar-btn--play" data-play aria-pressed="false" aria-label="Play the tour"><svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2.2v9.6L11.4 7Z" fill="currentColor"/></svg><svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2.5h2.4v9H3.5zM8.1 2.5h2.4v9H8.1z" fill="currentColor"/></svg></button>
-    <button type="button" class="bar-btn" data-mute aria-pressed="false" aria-label="Mute the music"><svg class="icon-sound" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="M10 4.5a3.5 3.5 0 0 1 0 5M11.6 2.6a6 6 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><svg class="icon-muted" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="m10 5 3 4m0-4-3 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
-  </div>
-  <audio id="theme" loop preload="none" aria-hidden="true"><source src="media/audio/community-theme.mp3" type="audio/mpeg"><source src="media/audio/community-theme.ogg" type="audio/ogg; codecs=opus"></audio>`;
-}
-
-// ---------------------------------------------------------------------------
-// Chapters: large rounded film with headline above, quiet copy below
-// ---------------------------------------------------------------------------
-function film(name, alt, { cls = '' } = {}) {
-  return `<video class="film ${cls}" muted playsinline loop preload="none" poster="media/${name}-poster.jpg" aria-label="${esc(alt)}">
-      <source src="media/${name}.webm" type="video/webm"><source src="media/${name}.mp4" type="video/mp4"></video>`;
-}
-
-export function chapterHTML(topic, i) {
-  const story = getStory(chapterLead[topic.id]);
-  const c = CHAPTERS[topic.id];
-  const others = stories.filter((s) => s.topic === topic.id && s.id !== story.id);
-  const heat = topic.id === 'resources';
-  return `<section class="chapter${i % 2 ? ' chapter--soft' : ''}" id="chapter-${topic.id}" data-chapter="${topic.id}" aria-labelledby="chapter-${topic.id}-title">
-  <div class="wrap center chapter-head" data-reveal>
-    <p class="eyebrow">${c.number} <span class="muted">${esc(topic.label)}</span></p>
-    <h2 class="title" id="chapter-${topic.id}-title">${esc(c.title)}</h2>
-    <p class="lede">${esc(c.moment)}</p>
-  </div>
-  <div class="wrap chapter-media" data-reveal>
-    <figure class="frame">${film(c.film, story.media[0]?.alt || '')}<figcaption class="note">${ILLUSTRATIVE}</figcaption></figure>
-  </div>
-  <div class="wrap chapter-grid" data-reveal>
-    <div class="chapter-copy">
-      <p class="chapter-org muted">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
-      <h3 class="title--md">${esc(story.title)}</h3>
-      <p class="chapter-text">${esc(story.challenge)}</p>
-      <p class="chapter-connection"><span class="thread-swatch${heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${esc(story.connection)}</p>
-      <div class="actions">
-        <a class="btn btn--primary" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the full story</a>
-        ${others.map((o) => `<a class="btn btn--link" href="#/story/${o.id}" data-story-trigger="${o.id}">${esc(o.title)}</a>`).join('')}
-      </div>
-    </div>
-    <aside class="chapter-aside">
-      <dl class="roles">
-        <div><dt>Equinix contributes</dt><dd>${esc(story.equinixContribution)}</dd></div>
-        <div><dt>Partners deliver</dt><dd>${esc(story.partnerContribution)}</dd></div>
-      </dl>
-      ${story.metric ? `<p class="metric"><span class="metric-value">${esc(story.metric)}</span><span class="metric-label">${esc(story.metricLabel)}</span><span class="metric-scope">${esc(story.metricScope)}</span></p>` : ''}
-    </aside>
-  </div>
-</section>`;
+export function railHTML() {
+  return `<ol class="rail" aria-label="Chapters">${sequenceSteps()
+    .map(
+      (s, i) => `<li><button type="button" class="rail-item" data-go="${i}" aria-current="${i === 0 ? 'step' : 'false'}">
+        <span class="rail-num mono">${s.number}</span><span class="rail-label">${esc(s.label)}</span><span class="rail-bar" aria-hidden="true"></span>
+      </button></li>`,
+    )
+    .join('')}</ol>`;
 }
 
 export function chaptersHTML() {
-  return topics.map(chapterHTML).join('\n');
+  const steps = sequenceSteps();
+  const panel = (s, i) => {
+    const story = s.story;
+    const media = story?.media?.[0] || { path: 'media/people-1200.webp', alt: 'An operations engineer walks along a daylit corridor beside a planted courtyard.' };
+    const metric = story?.metric
+      ? `<p class="chapter-metric"><span class="chapter-metric-value">${esc(story.metric)}</span><span class="chapter-metric-label">${esc(story.metricLabel)}</span></p>`
+      : '';
+    const actions = story
+      ? `<a class="btn btn--primary" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the story<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+         <span class="note chapter-who">${esc(story.organisation)}</span>`
+      : `<a class="btn btn--primary" href="#/day">See one day, connected<svg class="arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+         <a class="btn btn--ghost" href="#/share">Browse the library</a>`;
+    return `<article class="chapter${i === 0 ? ' is-active' : ''}${s.heat ? ' chapter--heat' : ''}" id="chapter-${s.id}" data-index="${i}" data-place="${s.place}" data-shape="${s.shape}" aria-labelledby="chapter-title-${s.id}" ${i === 0 ? '' : 'aria-hidden="true"'}>
+      <div class="chapter-copy">
+        <p class="eyebrow"><b>${s.number}</b> ${esc(s.label)} <span class="dot" aria-hidden="true"></span> ${esc(s.placeName)}</p>
+        <h2 class="title chapter-title" id="chapter-title-${s.id}">${s.title}</h2>
+        <p class="chapter-moment">${esc(s.moment)}</p>
+        ${metric}
+        <div class="actions chapter-actions">${actions}</div>
+      </div>
+      <figure class="portal">
+        <img src="${esc(media.path)}" srcset="${esc(media.path.replace('-1200', '-640'))} 640w, ${esc(media.path)} 1200w" sizes="(min-width: 900px) 34vw, 70vw" alt="${esc(media.alt)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" width="1200" height="800" />
+        <figcaption class="note">${ILLUSTRATIVE}</figcaption>
+      </figure>
+    </article>`;
+  };
+  return `<div class="chapters" id="chapters">${steps.map(panel).join('')}</div>`;
 }
 
-// ---------------------------------------------------------------------------
-// Story detail dialog
-// ---------------------------------------------------------------------------
-function picture(media, { sizes = '(min-width: 900px) 640px, 92vw', cls = '' } = {}) {
-  if (!media) return '';
-  const base = media.path.replace(/-1200\.webp$/, '');
-  return `<figure class="media ${cls}">
-    <img src="${esc(media.path)}" srcset="${esc(base)}-640.webp 640w, ${esc(media.path)} 1200w" sizes="${sizes}"
-      alt="${esc(media.alt)}" width="1200" height="800" loading="lazy" decoding="async">
-    ${media.usage === 'illustrative' ? `<figcaption class="media-note">${ILLUSTRATIVE}</figcaption>` : ''}
-  </figure>`;
+/* A day, connected: seven moments from dawn to the night shift, each tied to a sourced story. */
+export const DAY = [
+  { time: '05:40', place: 'Saint-Denis, Paris', line: 'The pool is warm before the first swimmer arrives.', film: 'clip-pool', story: 'pa10-heat', heat: true, alt: 'Morning light on the still water of an indoor pool.' },
+  { time: '07:15', place: 'A reading room', line: 'A radiologist opens a scan. It arrives in under a second.', film: 'clip-care', story: '3verest', alt: 'Two clinicians study a medical scan together.' },
+  { time: '09:30', place: 'Sydney', line: 'Researchers compare one child’s case with data from Philadelphia, Memphis and Heidelberg.', film: 'clip-discovery', story: 'childrens-cancer-institute', alt: 'Two researchers look at a data visualisation in a bright laboratory.' },
+  { time: '11:00', place: 'An Equinix IBX', line: 'A school group walks the corridors and asks how it all works.', film: 'clip-opportunity', story: 'pathways-to-tech', alt: 'Students with visitor lanyards listen to an engineer inside a data center.' },
+  { time: '16:00', place: 'Minooka, Illinois', line: 'A cyclist takes the new public path along the edge of the campus.', film: 'clip-neighbourhood', story: 'community-principles', alt: 'People cycle and walk along a new path through meadow planting.' },
+  { time: '18:30', place: 'A public library', line: 'A volunteer helps a neighbour get online for the first time.', film: 'clip-community', story: 'digital-inclusion', alt: 'A teenage volunteer helps an older woman use a tablet.' },
+  { time: '23:00', place: 'Markham, Ontario', line: 'The night shift keeps the pulse steady. Outside, recovered heat is still flowing to homes.', film: 'clip-people', story: 'markham-heat', heat: true, alt: 'An operations engineer walks a daylit corridor beside a courtyard.' },
+];
+
+export function dayHTML() {
+  const card = (m, i) => {
+    const story = getStory(m.story);
+    return `<article class="moment${m.heat ? ' moment--heat' : ''}" data-index="${i}" aria-labelledby="moment-${i}">
+      <p class="moment-time mono" aria-label="${esc(m.time)}"><span>${esc(m.time)}</span></p>
+      <figure class="moment-media">
+        <video class="film" muted playsinline loop preload="none" poster="media/${m.film}-poster.jpg" aria-label="${esc(m.alt)}">
+          <source src="media/${m.film}.webm" type="video/webm" />
+          <source src="media/${m.film}.mp4" type="video/mp4" />
+        </video>
+      </figure>
+      <div class="moment-copy">
+        <p class="eyebrow">${esc(m.place)}</p>
+        <p class="moment-line" id="moment-${i}">${esc(m.line)}</p>
+        <a class="btn btn--link btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">${esc(story.title)}</a>
+      </div>
+    </article>`;
+  };
+  return `<div class="day-track" id="day-track">
+    <div class="moment moment--start">
+      <p class="eyebrow">One day, connected</p>
+      <h2 class="title day-title" id="day-title">From the first swimmer to the <em class="ital">night shift.</em></h2>
+      <p class="moment-intro">Seven moments, in seven places, from a single day that Equinix infrastructure quietly helps make possible. Scroll to move through it.</p>
+      <p class="note">Each moment links to its sourced story. The films are illustrative and AI generated.</p>
+    </div>
+    ${DAY.map(card).join('')}
+    <div class="moment moment--end">
+      <p class="moment-intro">None of this is the data center’s work alone. It is what becomes possible when a community is connected to it.</p>
+      <a class="btn btn--primary" href="#/promises">The promises behind it</a>
+    </div>
+  </div>`;
 }
 
 const sourceLink = (id) => {
@@ -162,7 +163,7 @@ export function storyDetailHTML(story) {
     <h2 class="story-title" id="story-title">${esc(story.title)}</h2>
     <p class="story-org">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
   </header>
-  ${picture(story.media[0], { cls: 'story-media' })}
+  ${picture(story.media[0], { cls: 'story-media', sizes: '(min-width: 700px) 640px, 100vw' })}
   <div class="story-body">
     <section><h3>The people</h3><p>${esc(story.humanContext)}</p></section>
     <section><h3>The ambition</h3><p>${esc(story.challenge)}</p></section>
@@ -187,9 +188,9 @@ export function storyDetailHTML(story) {
 }
 
 // ---------------------------------------------------------------------------
-// Story gallery: cards in a snap rail with filters
+// Library: every story, filterable
 // ---------------------------------------------------------------------------
-export function collectionItemHTML(story) {
+export function libraryItemHTML(story) {
   const topic = topics.find((t) => t.id === story.topic);
   const media = story.media[0];
   const art = media
@@ -210,73 +211,46 @@ export function collectionItemHTML(story) {
   </li>`;
 }
 
-export function collectionHTML() {
+export function libraryHTML() {
   const chip = (group, value, label, pressed) =>
     `<button type="button" class="chip" data-filter-group="${group}" data-filter="${value}" aria-pressed="${pressed}">${esc(label)}</button>`;
-  return `<div class="filters">
-    <div class="filter-group" role="group" aria-label="Filter by topic">
-      ${chip('topic', 'all', 'All topics', true)}${topics.map((t) => chip('topic', t.id, t.label, false)).join('')}
+  return `<div class="filters" role="group" aria-label="Filter stories">
+      <div class="filter-row">
+        <span class="filter-name">Theme</span>
+        ${chip('topic', 'all', 'All', 'true')}${topics.map((t) => chip('topic', t.id, t.label, 'false')).join('')}
+      </div>
+      <div class="filter-row">
+        <span class="filter-name">Equinix role</span>
+        ${chip('relationship', 'all', 'All', 'true')}${Object.entries(relationshipLabels)
+          .map(([k, v]) => chip('relationship', k, v, 'false'))
+          .join('')}
+      </div>
     </div>
-    <div class="filter-group" role="group" aria-label="Filter by relationship">
-      ${chip('relationship', 'all', 'All relationships', true)}${Object.entries(relationshipLabels).map(([k, v]) => chip('relationship', k, v, false)).join('')}
-    </div>
-  </div>
-  <div class="rail-head">
-    <p class="collection-count muted" id="collection-count" aria-live="polite">${stories.length} stories</p>
-    <div class="rail-nav"><button type="button" class="rail-btn" data-rail-dir="-1" aria-label="Previous stories">←</button><button type="button" class="rail-btn" data-rail-dir="1" aria-label="Next stories">→</button></div>
-  </div>
-  <ul class="cards" id="collection-list" tabindex="0" aria-label="Stories">${stories.map(collectionItemHTML).join('')}</ul>
-  <div class="collection-empty" id="collection-empty" hidden>
-    <p>No stories match both filters yet. Try another relationship, or see everything.</p>
-    <button type="button" class="btn btn--ghost" data-filter-reset>Show all stories</button>
-  </div>`;
+    <ul class="library" id="library" aria-live="polite">${stories.map(libraryItemHTML).join('')}</ul>
+    <p class="note library-empty" id="library-empty" hidden>No stories match these filters yet.</p>`;
 }
 
 // ---------------------------------------------------------------------------
-// Promises, numbers, sources
+// Promises: the five U.S. Community Principles, each with its proof
 // ---------------------------------------------------------------------------
-/**
- * The promises: a numbered list beside a sticky panel that shows, for the
- * promise at the reading line, a photograph with the proof set large over
- * it. On narrow screens, or without motion, each promise carries its proof
- * and photograph inline.
- */
-export function principlesHTML() {
-  const rows = principles
-    .map(
-      (p, i) => `<li class="ledger-row" data-promise="${i}" ${i === 0 ? 'aria-current="true"' : ''}>
-        <button type="button" class="ledger-head" data-promise-go="${i}" aria-controls="promise-${i}">
-          <span class="ledger-num" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
-          <span class="ledger-name">${esc(p.name)}</span>
-        </button>
-        <div class="ledger-body" id="promise-${i}">
-          <p class="ledger-promise">${esc(p.promise)}</p>
-          <figure class="ledger-inline">
-            <img src="media/${p.art}-640.webp" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="640" height="960">
-            <figcaption><span class="ledger-kind">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></span><strong>${esc(p.headline)}</strong>${esc(p.proof)}</figcaption>
-          </figure>
-        </div>
-      </li>`,
-    )
-    .join('');
-  const proofs = principles
-    .map(
-      (p, i) => `<figure class="proof" data-proof="${i}" ${i ? 'hidden' : ''}>
-        <img class="proof-art" src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 1000px) 44vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="1800">
-        <figcaption class="proof-copy">
-          <p class="eyebrow">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></p>
-          <p class="proof-headline">${esc(p.headline)}</p>
-          <p class="proof-text">${esc(p.proof)}</p>
-          <p class="note">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-        </figcaption>
-      </figure>`,
-    )
-    .join('');
-  return `<div class="ledger" data-active="0">
-    <ol class="ledger-list">${rows}</ol>
-    <div class="ledger-panel" aria-live="polite">${proofs}
-      <p class="note proof-note">Photographs are illustrative and AI generated, not the places or people named.</p>
-    </div>
+export function promisesHTML() {
+  const item = (p, i) => `<li class="promise${i === 0 ? ' is-open' : ''}" data-index="${i}">
+      <h3><button type="button" class="promise-btn" aria-expanded="${i === 0 ? 'true' : 'false'}" aria-controls="promise-body-${i}" data-promise="${i}">
+        <span class="promise-num mono">0${i + 1}</span><span class="promise-name">${esc(p.name)}</span>
+        <svg class="promise-plus" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button></h3>
+      <div class="promise-body" id="promise-body-${i}" ${i === 0 ? '' : 'hidden'}>
+        <p class="promise-text">${esc(p.promise)}</p>
+        <p class="promise-proof"><span class="promise-kind">${esc(p.kind)} <span aria-hidden="true">·</span> ${esc(p.where)}</span>${esc(p.proof)}</p>
+      </div>
+    </li>`;
+  const frame = (p, i) => `<figure class="promise-frame${i === 0 ? ' is-active' : ''}" data-index="${i}" ${i === 0 ? '' : 'aria-hidden="true"'}>
+      <img src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="800" />
+      <figcaption><span class="promise-headline">${esc(p.headline)}</span><span class="note">Illustrative, AI generated.</span></figcaption>
+    </figure>`;
+  return `<div class="promises-grid">
+    <ol class="promise-list">${principles.map(item).join('')}</ol>
+    <div class="promise-visual" aria-live="polite">${principles.map(frame).join('')}</div>
   </div>
   <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
@@ -288,28 +262,30 @@ export const NUMBERS = [
   { value: 5, suffix: '', decimals: 0, label: 'data centers exporting heat to their communities', scope: 'As of 2025', source: 'S6' },
 ];
 
+const digits = (n) => (n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB'));
+const fmt = (n) => `${n.prefix || ''}${digits(n)}${n.suffix}`;
+
 export function numbersHTML() {
-  const digits = (n) => (n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB'));
-  // Each figure carries a short thread that draws in as it arrives
-  const thread = (i) => `<svg class="number-thread" viewBox="0 0 200 40" aria-hidden="true"><path d="M2 ${30 - (i % 2) * 8} C 60 ${(i % 2) * 20 + 4}, 120 ${38 - (i % 3) * 10}, 198 ${10 + (i % 2) * 12}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" pathLength="1"/><circle class="number-bead" r="4" fill="currentColor"><animateMotion dur="6s" repeatCount="indefinite" path="M2 ${30 - (i % 2) * 8} C 60 ${(i % 2) * 20 + 4}, 120 ${38 - (i % 3) * 10}, 198 ${10 + (i % 2) * 12}"/></circle></svg>`;
-  return `<ul class="numbers">${NUMBERS.map(
-    (n, i) => `<li class="number${i === 3 ? ' number--heat' : ''}" data-reveal>
-      ${thread(i)}
-      <span class="number-value" aria-label="${esc(`${n.prefix || ''}${digits(n)}${n.suffix}`)}">${n.prefix ? `<span class="number-prefix">${esc(n.prefix)}</span>` : ''}<span class="number-digits" data-count="${n.value}" data-decimals="${n.decimals}">${digits(n)}</span>${n.suffix ? `<span class="number-suffix">${esc(n.suffix)}</span>` : ''}</span>
+  return `<ol class="numbers">${NUMBERS.map(
+    (n, i) => `<li class="number${i === 3 ? ' number--heat' : ''}" data-reveal style="--reveal-delay:${i * 90}ms">
+      <span class="number-value" aria-label="${esc(fmt(n))}">${n.prefix ? `<span class="number-prefix">${esc(n.prefix)}</span>` : ''}<span class="number-digits" data-count="${n.value}" data-decimals="${n.decimals}">${digits(n)}</span>${n.suffix ? `<span class="number-suffix">${esc(n.suffix)}</span>` : ''}</span>
       <span class="number-label">${esc(n.label)}</span>
       <span class="note">${esc(n.scope)}. <a href="${esc(sources[n.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[n.source].title)} (opens in a new tab)</span></a></span>
     </li>`,
-  ).join('')}</ul>`;
+  ).join('')}</ol>`;
 }
 
-/** Hero stat pills: three of the numbers, short form. */
-export function heroStatsHTML() {
-  const picks = [NUMBERS[0], NUMBERS[1], NUMBERS[3]];
-  const short = ['people connected by Foundation partners in 2025', 'employee volunteer hours in 2025', 'data centers exporting heat'];
-  const fmt = (n) => `${n.prefix || ''}${n.decimals ? n.value.toFixed(n.decimals) : n.value.toLocaleString('en-GB')}${n.suffix}`;
-  return `<ul class="hero-stats" aria-label="Headline figures">${picks
-    .map((n, i) => `<li class="stat"><span class="stat-value">${fmt(n)}</span><span class="stat-label">${esc(short[i])}</span></li>`)
-    .join('')}</ul>`;
+/** The ticker under the hero: short, sourced facts that pass by. */
+export function tickerHTML() {
+  const items = [
+    ...NUMBERS.map((n) => `<b>${esc(fmt(n))}</b> ${esc(n.label)}`),
+    `<b>1,000+</b> homes expected to be warmed by heat from PA10, Saint-Denis`,
+    `<b>Under 1 second</b> to retrieve a medical image on 3verest clouds`,
+    `<b>Nearly 2,000</b> students reached in the Pathways to Tech pilot`,
+    `<b>100</b> nonprofit partners across 48 metros`,
+  ];
+  const run = items.map((t) => `<li>${t}<span class="tick" aria-hidden="true"></span></li>`).join('');
+  return `<div class="ticker" aria-label="Headline figures"><ul class="ticker-run">${run}</ul><ul class="ticker-run" aria-hidden="true">${run}</ul></div>`;
 }
 
 export function sourcesHTML() {
@@ -324,8 +300,8 @@ export function sourcesHTML() {
   const list = (arr) => arr.map((s) => `<li><a href="#/story/${s.id}" data-story-trigger="${s.id}">${esc(s.title)}</a> <span class="source-meta">${esc(s.organisation)}</span></li>`).join('');
   return `<div class="progress-grid">
       <div data-reveal><h3>Achieved</h3><p class="note">Results reported for a past period.</p><ul>${list(groups.historical)}</ul></div>
-      <div data-reveal><h3>Happening now</h3><p class="note">Current programmes and customer stories.</p><ul>${list(groups.current)}</ul></div>
-      <div data-reveal><h3>Committed</h3><p class="note">Stated future commitments, not yet outcomes.</p><ul>${commitments.map((c) => `<li>${esc(c.text)} <a class="source-ref" href="${esc(sources[c.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[c.source].title)} (opens in a new tab)</span></a></li>`).join('')}</ul></div>
+      <div data-reveal style="--reveal-delay:90ms"><h3>Happening now</h3><p class="note">Current programmes and customer stories.</p><ul>${list(groups.current)}</ul></div>
+      <div data-reveal style="--reveal-delay:180ms"><h3>Committed</h3><p class="note">Stated future commitments, not yet outcomes.</p><ul>${commitments.map((c) => `<li>${esc(c.text)} <a class="source-ref" href="${esc(sources[c.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[c.source].title)} (opens in a new tab)</span></a></li>`).join('')}</ul></div>
     </div>
     <details class="directory">
       <summary>Source directory <span class="source-meta">${Object.keys(sources).length} sources, checked ${formatDate(LAST_CHECKED)}</span></summary>

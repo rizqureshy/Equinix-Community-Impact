@@ -1,375 +1,375 @@
-// Main page wiring: the community explorer and its tour, scroll choreography,
-// story dialog, gallery and copy actions. Three.js loads lazily, only when
-// the community comes near the viewport and WebGL is available.
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+// Wiring for the experience: the field of light, the theatre of six chapters,
+// one horizontal day, promises, the library, routing and the story dialog.
 import Lenis from 'lenis';
-import { createStore, topicTarget } from './state.js';
+import { createStore } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
-import { journeySteps } from './content/render.js';
+import { createField } from './field.js';
+import { sequenceSteps } from './content/render.js';
+import { topics } from './content/stories.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
-import { createSunlight } from './weather.js';
 
-gsap.registerPlugin(ScrollTrigger);
-gsap.ticker.lagSmoothing(0);
-
-const root = document.documentElement;
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const store = createStore({ motion: root.dataset.motion !== 'off' });
-let lenis = null;
-
+const store = createStore();
+const steps = sequenceSteps();
+const motionOn = () => document.documentElement.dataset.motion !== 'off';
+const vh = () => window.innerHeight;
 const notify = createToast($('#toast'));
-setupCopy(notify, (id) => storyURL(id));
 
 // ---------------------------------------------------------------------------
-// The community: an explorer with six stops and a tour that plays
+// Smooth scrolling (motion on only)
 // ---------------------------------------------------------------------------
-const steps = journeySteps();
-const stage = $('#stage');
-const explorer = $('#explorer');
-const journey = $('.journey');
-const cards = $$('.journey-card');
-const dots = $$('.journey-dot');
-const playButtons = $$('[data-play]');
-const muteButton = $('[data-mute]');
-const theme = $('#theme');
-const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-const TOUR_DWELL = 9000; // ms at each stop while the tour plays
-let scene = null;
-let sceneLoading = false;
-let activeStep = -1; // -1 is the overview
-let playing = false;
-let tourTimer = 0;
-let muted = false; // not remembered: a tour should never open silent by surprise
-
-function showStep(i) {
-  activeStep = i;
-  explorer.dataset.step = String(i);
-  cards.forEach((c) => {
-    c.hidden = Number(c.dataset.step) !== i;
-  });
-  dots.forEach((d) => d.setAttribute('aria-current', String(Number(d.dataset.go) === i)));
-  const place = i < 0 ? 'overview' : steps[i].place;
-  scene?.setFocus(place, { instant: !store.get().motion, side: i < 0 ? 0 : i % 2 === 0 ? -1 : 1 });
-}
-
-/** Move to a stop. User moves stop the tour; the tour's own moves do not. */
-function goToStep(i, { byTour = false } = {}) {
-  const next = Math.max(-1, Math.min(steps.length - 1, i));
-  if (!byTour) stopTour();
-  if (next === activeStep) return;
-  showStep(next);
-}
-function stepBy(dir) {
-  goToStep(activeStep + dir);
-}
-function goToPlace(place) {
-  const i = steps.findIndex((s) => s.place === place);
-  if (i >= 0) goToStep(i);
-}
-
-// The tour: one stop after another, around and around, with music
-function setPlayingUI() {
-  for (const b of playButtons) {
-    b.setAttribute('aria-pressed', String(playing));
-    if (b.classList.contains('bar-btn')) b.setAttribute('aria-label', playing ? 'Pause the tour' : 'Play the tour');
-    else b.textContent = playing ? 'Pause the tour' : 'Play the tour';
-  }
-  explorer.classList.toggle('is-playing', playing);
-}
-function startTour() {
-  if (playing) return;
-  playing = true;
-  setPlayingUI();
-  scene?.setDrift(store.get().motion);
-  fadeMusic(true);
-  if (muted) notify('The tour is playing without music. Use the sound control to turn it on.');
-  const advance = () => {
-    const next = activeStep >= steps.length - 1 ? -1 : activeStep + 1;
-    goToStep(next, { byTour: true });
-    tourTimer = setTimeout(advance, next < 0 ? TOUR_DWELL * 0.7 : TOUR_DWELL);
+let lenis = null;
+let lenisRaf = 0;
+function startLenis() {
+  if (lenis || !motionOn()) return;
+  lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+  const loop = (t) => {
+    lenis?.raf(t);
+    lenisRaf = requestAnimationFrame(loop);
   };
-  tourTimer = setTimeout(advance, activeStep < 0 ? 1200 : TOUR_DWELL);
+  lenisRaf = requestAnimationFrame(loop);
 }
-function stopTour() {
-  if (!playing) return;
-  playing = false;
-  clearTimeout(tourTimer);
-  setPlayingUI();
-  scene?.setDrift(false);
-  fadeMusic(false);
+function stopLenis() {
+  if (!lenis) return;
+  cancelAnimationFrame(lenisRaf);
+  lenis.destroy();
+  lenis = null;
 }
-function toggleTour() {
-  playing ? stopTour() : startTour();
+function scrollTo(y, { instant = false } = {}) {
+  if (lenis && !instant) lenis.scrollTo(y, { duration: 1.3, force: true });
+  else window.scrollTo({ top: y, behavior: 'auto' });
 }
 
-let fadeTimer = 0;
-/** Fade the theme in or out over a fixed time, whatever the frame rate. */
-function fadeMusic(on) {
-  if (!theme) return;
-  clearInterval(fadeTimer);
-  const target = on && !muted ? 0.55 : 0;
-  if (target > 0) {
-    if (theme.preload === 'none') theme.preload = 'auto';
-    theme.play().catch(() => notify('The browser blocked the music. Press play again to allow it.', { error: true }));
-  }
-  const from = theme.volume;
-  const started = performance.now();
-  const length = 700;
-  fadeTimer = setInterval(() => {
-    const t = Math.min(1, (performance.now() - started) / length);
-    theme.volume = from + (target - from) * t;
-    if (t === 1) {
-      clearInterval(fadeTimer);
-      if (target === 0) theme.pause();
-    }
-  }, 40);
-}
-function setMuted(on) {
-  muted = on;
-  muteButton.setAttribute('aria-pressed', String(on));
-  muteButton.setAttribute('aria-label', on ? 'Unmute the music' : 'Mute the music');
-  if (playing) fadeMusic(!on);
-}
-setMuted(muted);
-setPlayingUI();
-showStep(-1);
+// ---------------------------------------------------------------------------
+// The field
+// ---------------------------------------------------------------------------
+const canvas = $('#field');
+const field = createField(canvas, { count: 4200, motion: motionOn });
+/** Chapter forms sit to the right of the copy on wide screens. */
+const formShift = () => (window.innerWidth >= 900 ? 0.24 : 0);
 
-// Controls
-document.addEventListener('click', (e) => {
-  const go = e.target.closest('[data-go]');
-  if (go) return goToStep(Number(go.dataset.go));
-  const dir = e.target.closest('[data-step-dir]');
-  if (dir) return stepBy(Number(dir.dataset.stepDir));
-  if (e.target.closest('[data-play]')) return toggleTour();
-  if (e.target.closest('[data-mute]')) return setMuted(!muted);
-});
-for (const [place, el] of labels) el.addEventListener('click', () => goToPlace(place));
-explorer.addEventListener('keydown', (e) => {
-  if (e.target !== explorer && e.target.closest('.journey-card')) return;
-  if (e.key === 'ArrowRight') stepBy(1);
-  else if (e.key === 'ArrowLeft') stepBy(-1);
-  else if (e.key === ' ' && e.target === explorer) toggleTour();
-  else return;
-  e.preventDefault();
-});
+// ---------------------------------------------------------------------------
+// The theatre
+// ---------------------------------------------------------------------------
+const theatre = $('#community');
+const stage = $('#stage');
+const chapters = $$('.chapter', theatre);
+const railItems = $$('.rail-item', theatre);
+const sequence = $('#sequence');
+const N = steps.length;
+let chapterIndex = -1;
+let theatreTop = 0;
+let theatreHeight = 0;
+let inTheatre = false;
 
-function supportsWebGL2() {
-  try {
-    return !!document.createElement('canvas').getContext('webgl2');
-  } catch {
-    return false;
+function layoutTheatre() {
+  theatre.style.height = `${(N + 1) * vh()}px`;
+  const r = theatre.getBoundingClientRect();
+  theatreTop = r.top + window.scrollY;
+  theatreHeight = theatre.offsetHeight;
+}
+
+/** Scroll position at which chapter `i` is on stage. */
+const positionFor = (i) => Math.round(theatreTop + (i + 0.5) * vh());
+
+function setChapter(i, { silent = false } = {}) {
+  i = Math.max(0, Math.min(N - 1, i));
+  if (i === chapterIndex) return;
+  chapterIndex = i;
+  const step = steps[i];
+  chapters.forEach((c, k) => {
+    const on = k === i;
+    c.classList.toggle('is-active', on);
+    c.setAttribute('aria-hidden', String(!on));
+    if (on) $$('img', c).forEach((img) => (img.loading = 'eager'));
+  });
+  railItems.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'step' : 'false'));
+  $('b', sequence).textContent = step.number;
+  store.set({ section: step.topic || 'journey', topic: step.topic || store.get().topic, focus: step.place });
+  if (!silent && !parseHash(location.hash).story) {
+    history.replaceState(null, '', step.topic ? hashFor({ section: step.topic }) : '#/community');
   }
 }
 
-async function loadScene() {
-  if (scene || sceneLoading) return;
-  sceneLoading = true;
-  if (!supportsWebGL2()) {
-    stage.dataset.sceneState = 'fallback';
+function goToChapter(i) {
+  scrollTo(positionFor(i));
+}
+
+/** Progress through the theatre drives the chapter, the rail bars and the counter. */
+function updateTheatre(y) {
+  const span = theatreHeight - vh();
+  const p = (y - theatreTop) / span;
+  const inside = p >= -0.5 && p <= 1.15;
+  if (inside !== inTheatre) {
+    inTheatre = inside;
+    sequence.classList.toggle('is-visible', inside && p >= 0 && p <= 1);
+    stage.classList.toggle('is-live', inside);
+  }
+  sequence.classList.toggle('is-visible', p >= -0.02 && p <= 1.02);
+  const clamped = Math.max(0, Math.min(0.999, p));
+  const i = Math.floor(clamped * N);
+  // Before the stage, the field is the light leaving the building; on stage it takes each chapter's form.
+  if (p < -0.12) field.setShape('strands', 0);
+  else field.setShape(steps[i].shape, formShift());
+  railItems.forEach((b, k) => b.style.setProperty('--p', k < i ? 1 : k === i ? Math.max(0.08, clamped * N - i) : 0));
+  setChapter(i);
+  // The field shows for the hero and theatre, then hands the page over.
+  canvas.classList.toggle('is-hidden', p > 1.02);
+  field.setVisible(p <= 1.12);
+}
+
+railItems.forEach((b) => b.addEventListener('click', () => goToChapter(+b.dataset.go)));
+stage.addEventListener('keydown', (e) => {
+  if (e.target !== stage && e.target.closest('a, button')) return;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    goToChapter(chapterIndex + 1);
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToChapter(chapterIndex - 1);
+  }
+});
+
+// Pointer over the stage: the light follows, the field moves aside, a click sends a ripple.
+const cursorLight = $('#cursor-light');
+const hero = $('#top');
+for (const el of [stage, hero]) {
+  el.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || !motionOn()) return;
+    field.setPointer(e.clientX, e.clientY);
+    cursorLight.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    cursorLight.classList.add('is-on');
+  });
+  el.addEventListener('pointerleave', () => {
+    field.setPointer(null);
+    cursorLight.classList.remove('is-on');
+  });
+  el.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('a, button, input')) return;
+    field.burst(e.clientX, e.clientY);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// One day, connected: a track that moves sideways as the page moves down
+// ---------------------------------------------------------------------------
+const day = $('#day');
+const dayPin = $('#day-pin');
+const dayTrack = $('#day-track');
+const dayProgress = $('.day-progress i', day);
+const moments = $$('.moment', day);
+let dayTop = 0;
+let dayDistance = 0;
+let dayRail = false;
+
+function layoutDay() {
+  dayRail = window.innerWidth < 900 || !motionOn();
+  day.classList.toggle('is-rail', dayRail);
+  if (dayRail) {
+    day.style.height = '';
+    dayTrack.style.transform = '';
     return;
   }
-  try {
-    const { createCityScene } = await import('./scene/city.js');
-    scene = createCityScene($('#scene-host'), {
-      labels,
-      motion: () => store.get().motion,
-      onReady: () => {
-        stage.dataset.sceneState = 'ready';
-        showStep(activeStep);
-        scene.setDrift(playing && store.get().motion);
-      },
-      onFail: (err) => {
-        console.warn('Community scene unavailable', err);
-        stage.dataset.sceneState = 'fallback';
-      },
-      onSelect: (place) => goToPlace(place),
+  dayDistance = Math.max(0, dayTrack.scrollWidth - window.innerWidth);
+  day.style.height = `${vh() + dayDistance}px`;
+  dayTop = day.getBoundingClientRect().top + window.scrollY;
+}
+
+function updateDay(y) {
+  if (dayRail) return;
+  const p = Math.max(0, Math.min(1, (y - dayTop) / dayDistance));
+  dayTrack.style.transform = `translate3d(${-p * dayDistance}px, 0, 0)`;
+  dayProgress.style.setProperty('--p', p);
+}
+
+// Films play while near the viewport, whichever way the track moves.
+const films = $$('video.film');
+const filmObserver = new IntersectionObserver(
+  (entries) => {
+    for (const en of entries) {
+      const v = en.target;
+      v.closest('.moment')?.classList.toggle('is-near', en.isIntersecting);
+      if (en.isIntersecting && motionOn()) v.play().catch(() => {});
+      else v.pause();
+    }
+  },
+  { rootMargin: '10% 20%', threshold: 0.2 },
+);
+films.forEach((v) => filmObserver.observe(v));
+
+// ---------------------------------------------------------------------------
+// Reveals, words and numbers
+// ---------------------------------------------------------------------------
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    for (const en of entries) {
+      if (!en.isIntersecting) continue;
+      en.target.classList.add('is-in');
+      revealObserver.unobserve(en.target);
+      $$('[data-count]', en.target).forEach(countUp);
+    }
+  },
+  { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+);
+$$('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+function countUp(el) {
+  const end = parseFloat(el.dataset.count);
+  const decimals = +el.dataset.decimals || 0;
+  const fmt = (v) => (decimals ? v.toFixed(decimals) : Math.round(v).toLocaleString('en-GB'));
+  if (!motionOn()) {
+    el.textContent = fmt(end);
+    return;
+  }
+  const t0 = performance.now();
+  const dur = 1600;
+  const tick = (t) => {
+    const p = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(end * e);
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// The statement lights up word by word as it passes the middle of the screen.
+const statement = $('[data-words]');
+const signalWords = new Set((statement.dataset.signal || '').split(','));
+statement.innerHTML = statement.textContent
+  .split(/\s+/)
+  .map((w) => `<span class="w${signalWords.has(w.replace(/[^a-z]/gi, '').toLowerCase()) ? ' is-signal' : ''}">${w}</span>`)
+  .join(' ');
+const words = $$('.w', statement);
+function updateWords() {
+  const r = statement.getBoundingClientRect();
+  const start = vh() * 0.85;
+  const end = vh() * 0.25;
+  const p = Math.max(0, Math.min(1, (start - r.top) / (start - end + r.height * 0.6)));
+  const lit = motionOn() ? Math.round(p * words.length) : words.length;
+  words.forEach((w, i) => w.classList.toggle('is-lit', i < lit));
+}
+
+// ---------------------------------------------------------------------------
+// Promises: open one, the frame beside it changes
+// ---------------------------------------------------------------------------
+const promiseList = $('.promise-list');
+if (promiseList) {
+  const items = $$('.promise', promiseList);
+  const frames = $$('.promise-frame');
+  const openPromise = (i) => {
+    items.forEach((li, k) => {
+      const on = k === i;
+      li.classList.toggle('is-open', on);
+      $('.promise-btn', li).setAttribute('aria-expanded', String(on));
+      $('.promise-body', li).hidden = !on;
     });
-    if (!scene) stage.dataset.sceneState = 'fallback';
-  } catch (err) {
-    console.warn('Community scene unavailable', err);
-    stage.dataset.sceneState = 'fallback';
-  }
+    frames.forEach((f, k) => {
+      f.classList.toggle('is-active', k === i);
+      f.setAttribute('aria-hidden', String(k !== i));
+    });
+  };
+  promiseList.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-promise]');
+    if (b) openPromise(+b.dataset.promise);
+  });
+  promiseList.addEventListener('pointerover', (e) => {
+    const b = e.target.closest('[data-promise]');
+    if (b && e.pointerType === 'mouse') openPromise(+b.dataset.promise);
+  });
 }
 
-// Sunlight: a wash of low autumn light over the page
-const sunlight = createSunlight({ light: $('#weather-light'), motion: () => store.get().motion });
-
-// The red fabric behind the page: loaded after first paint, with a toggle
-const fabricLayer = $('#fabric-layer');
-const fabricToggle = $('[data-fabric-toggle]');
-let fabric = null;
-let fabricLoading = false;
-function fabricWanted() {
-  return root.dataset.fabric === 'on' && innerWidth > 760 && supportsWebGL2();
-}
-async function loadFabric() {
-  if (fabric || fabricLoading || !fabricWanted()) return;
-  fabricLoading = true;
-  try {
-    const { createFabric } = await import('./fabric.js');
-    fabric = createFabric(fabricLayer, { motion: () => store.get().motion });
-    if (fabric) fabricLayer.classList.add('is-ready');
-  } catch (err) {
-    console.warn('Fabric unavailable', err);
+// ---------------------------------------------------------------------------
+// Library filters
+// ---------------------------------------------------------------------------
+const filters = { topic: 'all', relationship: 'all' };
+const cards = $$('#library .card');
+function applyFilters() {
+  let shown = 0;
+  for (const c of cards) {
+    const ok = (filters.topic === 'all' || c.dataset.topic === filters.topic) && (filters.relationship === 'all' || c.dataset.relationship === filters.relationship);
+    c.hidden = !ok;
+    if (ok) shown++;
   }
-  fabricLoading = false;
+  $('#library-empty').hidden = shown > 0;
 }
-function setFabric(on) {
-  root.dataset.fabric = on ? 'on' : 'off';
-  fabricToggle.setAttribute('aria-pressed', String(on));
-  fabricToggle.setAttribute('aria-label', `Red fabric background, ${on ? 'on' : 'off'}`);
-  try {
-    localStorage.setItem('impact-fabric', on ? 'on' : 'off');
-  } catch {}
-  if (on) {
-    loadFabric();
-    fabric?.start();
-  } else {
-    // Let it fade out, then stop rendering
-    setTimeout(() => {
-      if (root.dataset.fabric === 'off') fabric?.stop();
-    }, 1100);
-  }
-}
-fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
-setFabric(root.dataset.fabric === 'on');
-if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
-
-// Load the scene once the community is within reach; pause everything when it leaves
-const near = new IntersectionObserver(
-  (entries) => {
-    if (entries.some((e) => e.isIntersecting)) {
-      near.disconnect();
-      loadScene();
-    }
-  },
-  { rootMargin: '120% 0px' },
-);
-near.observe(journey);
-const inView = new IntersectionObserver(
-  (entries) => {
-    const visible = entries.some((e) => e.isIntersecting);
-    scene?.setVisible(visible);
-    if (!visible) stopTour();
-  },
-  { rootMargin: '10% 0px' },
-);
-inView.observe(explorer);
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopTour();
+document.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip[data-filter-group]');
+  if (!chip) return;
+  const group = chip.dataset.filterGroup;
+  filters[group] = chip.dataset.filter;
+  $$(`.chip[data-filter-group="${group}"]`).forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+  applyFilters();
 });
 
 // ---------------------------------------------------------------------------
-// Scroll choreography (built only when motion is on)
+// Header: solid once scrolled, the current section marked, a menu on phones
 // ---------------------------------------------------------------------------
-let scrollTriggers = [];
-
-function buildScroll() {
-  teardownScroll();
-  if (!store.get().motion) {
-    $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
-    scene?.setFocus(activeStep < 0 ? 'overview' : steps[activeStep].place, { instant: true });
-    return;
+const header = $('#site-header');
+const nav = $('#site-nav');
+const navLinks = $$('[data-nav]', nav);
+const menuToggle = $('#menu-toggle');
+menuToggle.addEventListener('click', () => {
+  const open = nav.classList.toggle('is-open');
+  menuToggle.setAttribute('aria-expanded', String(open));
+});
+nav.addEventListener('click', (e) => {
+  if (e.target.closest('a')) {
+    nav.classList.remove('is-open');
+    menuToggle.setAttribute('aria-expanded', 'false');
   }
-
-  lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(lenisRaf);
-
-  // Hero copy drifts up and fades as the community arrives
-  const heroCopy = $('.hero-copy');
-  scrollTriggers.push(
-    ScrollTrigger.create({
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-      onUpdate: (self) => {
-        heroCopy.style.transform = `translateY(${-self.progress * 12}vh)`;
-        heroCopy.style.opacity = String(1 - self.progress * 1.6);
-      },
-    }),
-  );
-
-  // Statement: each word lights up in turn
-  const words = $$('.statement-text .w');
-  scrollTriggers.push(
-    ScrollTrigger.create({
-      trigger: '.statement',
-      start: 'top 75%',
-      end: 'bottom 55%',
-      scrub: true,
-      onUpdate: (self) => {
-        const lit = self.progress * words.length * 1.15;
-        words.forEach((w, i) => w.style.setProperty('--o', String(clamp(lit - i))));
-      },
-    }),
-  );
-
-  ScrollTrigger.refresh();
-}
-
-function lenisRaf(time) {
-  lenis?.raf(time * 1000);
-}
-
-function teardownScroll() {
-  scrollTriggers.forEach((t) => t.kill());
-  scrollTriggers = [];
-  if (lenis) {
-    gsap.ticker.remove(lenisRaf);
-    lenis.destroy();
-    lenis = null;
-  }
-  const heroCopy = $('.hero-copy');
-  heroCopy.style.transform = '';
-  heroCopy.style.opacity = '';
-}
-
-let programmaticUntil = 0;
-function scrollToY(y, { instant = false } = {}) {
-  programmaticUntil = performance.now() + (instant ? 300 : 1600);
-  if (lenis) lenis.scrollTo(y, { immediate: instant, duration: 1.4, force: true });
-  else scrollTo({ top: y, behavior: instant || !store.get().motion ? 'auto' : 'smooth' });
-}
-const isInView = (el) => {
-  const r = el.getBoundingClientRect();
-  return r.top < innerHeight && r.bottom > 0;
-};
-
-// Split the statement into words once.
-{
-  const el = $('[data-words]');
-  el.innerHTML = el.textContent
-    .trim()
-    .split(/\s+/)
-    .map((w) => `<span class="w">${w}</span>`)
-    .join(' ');
-}
-
-// Sections and cards fade up as they arrive
-const reveal = new IntersectionObserver(
+});
+const sectionEls = $$('[data-section]');
+const sectionObserver = new IntersectionObserver(
   (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      e.target.classList.add('is-in');
-      reveal.unobserve(e.target);
+    for (const en of entries) {
+      if (!en.isIntersecting) continue;
+      const id = en.target.dataset.section;
+      const key = id === 'top' ? null : id;
+      navLinks.forEach((a) => {
+        if (a.dataset.nav === key) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
     }
   },
-  { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+  { rootMargin: '-45% 0px -50% 0px' },
 );
-$$('[data-reveal]').forEach((el) => reveal.observe(el));
+sectionEls.forEach((s) => sectionObserver.observe(s));
 
-setupMotionToggle($('[data-motion-toggle]'), {
-  initial: store.get().motion,
-  onChange: (on) => {
-    store.set({ motion: on });
-    buildScroll();
-    syncVideos();
-    sunlight.motionChanged();
-    fabric?.motionChanged();
-  },
+// ---------------------------------------------------------------------------
+// Sound: the theme, only after a tap, fading in and out
+// ---------------------------------------------------------------------------
+const theme = $('#theme');
+const soundToggle = $('#sound-toggle');
+let fadeTimer = 0;
+function fadeTo(target, done) {
+  clearInterval(fadeTimer);
+  fadeTimer = setInterval(() => {
+    const next = theme.volume + (target > theme.volume ? 0.04 : -0.04);
+    theme.volume = Math.max(0, Math.min(target, 1) === target ? Math.max(0, Math.min(1, next)) : next);
+    if (Math.abs(theme.volume - target) < 0.045) {
+      theme.volume = target;
+      clearInterval(fadeTimer);
+      done?.();
+    }
+  }, 80);
+}
+soundToggle.addEventListener('click', async () => {
+  const on = soundToggle.getAttribute('aria-pressed') !== 'true';
+  soundToggle.setAttribute('aria-pressed', String(on));
+  soundToggle.setAttribute('aria-label', `Sound, ${on ? 'on' : 'off'}`);
+  if (on) {
+    theme.volume = 0;
+    try {
+      await theme.play();
+      fadeTo(0.4);
+    } catch {
+      soundToggle.setAttribute('aria-pressed', 'false');
+      notify('Sound could not start in this browser.', { error: true });
+    }
+  } else fadeTo(0, () => theme.pause());
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !theme.paused) theme.pause();
+  else if (!document.hidden && soundToggle.getAttribute('aria-pressed') === 'true') theme.play().catch(() => {});
 });
 
 // ---------------------------------------------------------------------------
@@ -378,237 +378,128 @@ setupMotionToggle($('[data-motion-toggle]'), {
 const dialog = createStoryDialog({
   drawer: $('#story-drawer'),
   content: $('#drawer-content'),
-  motion: () => store.get().motion,
-  fallbackHash: () => hashFor({ section: store.get().section, topic: store.get().topic }),
+  motion: motionOn,
+  fallbackHash: () => hashFor({ section: store.get().section === 'top' ? 'share' : store.get().section }),
   onOpen: (story) => {
-    lenis?.stop();
     store.set({ story: story.id });
+    lenis?.stop();
+    document.body.classList.add('is-locked');
   },
   onClose: () => {
-    lenis?.start();
     store.set({ story: null });
+    lenis?.start();
+    document.body.classList.remove('is-locked');
   },
 });
+setupCopy(notify, (id) => storyURL(id));
 
 function scrollToSection(section, { instant = false } = {}) {
-  if (section === 'top') return scrollToY(0, { instant });
-  const el = document.getElementById(anchorFor(section));
-  if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
+  const anchor = anchorFor(section);
+  const topicIndex = steps.findIndex((s) => s.topic === section);
+  if (topicIndex >= 0) return scrollTo(positionFor(topicIndex), { instant });
+  if (anchor === 'community') return scrollTo(positionFor(0), { instant });
+  const el = document.getElementById(anchor);
+  if (!el) return scrollTo(0, { instant });
+  const y = el.getBoundingClientRect().top + window.scrollY - (section === 'day' ? 0 : 8);
+  scrollTo(y, { instant });
 }
 
-function applyRoute(route, { initial = false } = {}) {
-  const prev = store.get();
-  if (route.story) {
-    if (initial) {
-      store.set({ section: route.section, topic: route.topic });
-      scrollToSection(route.section, { instant: true });
+let firstRoute = true;
+function route() {
+  const r = parseHash(location.hash);
+  if (r.story) {
+    dialog.open(r.story);
+    if (firstRoute) scrollToSection(r.section, { instant: true });
+  } else {
+    const go = () => {
+      if (r.section === 'top' && !firstRoute) scrollTo(0);
+      else if (r.section !== 'top') scrollToSection(r.section, { instant: firstRoute });
+      firstRoute = false;
+    };
+    if (dialog.isOpen) {
+      // Let the story finish closing (and scrolling resume) before travelling.
+      dialog.close();
+      setTimeout(go, 240);
+      return;
     }
-    dialog.open(route.story);
-    return;
+    go();
   }
-  const returning = !!prev.story;
-  if (dialog.isOpen) dialog.close();
-  const patch = { section: route.section };
-  if (route.topic) patch.topic = route.topic;
-  store.set(patch);
-  if (!returning) scrollToSection(route.section, { instant: initial });
+  firstRoute = false;
 }
+window.addEventListener('hashchange', route);
 
-addEventListener('hashchange', () => applyRoute(parseHash(location.hash)));
-// Clicking a link to the current hash should still move there.
+// In-page links to chapters and sections: scroll smoothly, and keep the hash honest.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#/"]');
-  if (a && a.getAttribute('href') === location.hash && !a.dataset.storyTrigger) {
-    e.preventDefault();
-    scrollToSection(parseHash(location.hash).section);
-  }
+  if (!a || a.dataset.storyTrigger) return;
+  const r = parseHash(a.getAttribute('href'));
+  if (r.story) return;
+  e.preventDefault();
+  if (location.hash !== a.getAttribute('href')) history.pushState(null, '', a.getAttribute('href'));
+  if (r.section === 'top') scrollTo(0);
+  else scrollToSection(r.section);
 });
 
-// The section in the middle of the viewport sets the state.
-const spy = new IntersectionObserver(
-  (entries) => {
-    if (performance.now() < programmaticUntil || store.get().story) return;
-    const hit = entries.filter((e) => e.isIntersecting).pop();
-    if (!hit) return;
-    const section = hit.target.dataset.chapter || hit.target.dataset.section;
-    if (section === store.get().section) return;
-    const patch = { section };
-    if (topicTarget[section]) patch.topic = section;
-    store.set(patch);
-    history.replaceState(null, '', hashFor({ section, topic: store.get().topic }));
-  },
-  { rootMargin: '-45% 0px -50% 0px' },
-);
-$$('[data-section], .chapter').forEach((s) => spy.observe(s));
-
-const navLinks = $$('.site-nav a');
-store.subscribe((s, prev) => {
-  if (s.section === prev.section) return;
-  const group = topicTarget[s.section] || s.section === 'stories' ? 'chapter' : s.section;
-  for (const a of navLinks) {
-    const h = a.getAttribute('href');
-    const on = (group === 'chapter' && h.startsWith('#/chapter')) || h === `#/${s.section}`;
-    if (on) a.setAttribute('aria-current', 'true');
-    else a.removeAttribute('aria-current');
-  }
-});
-
-const header = $('.site-header');
+// ---------------------------------------------------------------------------
+// Scroll loop and layout
+// ---------------------------------------------------------------------------
+let ticking = false;
 function onScroll() {
-  header.classList.toggle('is-scrolled', scrollY > 40);
-}
-addEventListener('scroll', onScroll, { passive: true });
-onScroll();
-
-// ---------------------------------------------------------------------------
-// Films: play only while visible and motion is on
-// ---------------------------------------------------------------------------
-const visibleFilms = new Set();
-function syncVideos() {
-  for (const v of $$('video.film')) {
-    if (store.get().motion && visibleFilms.has(v) && !document.hidden) {
-      if (v.preload === 'none') v.preload = 'auto';
-      v.play().catch(() => {});
-    } else v.pause();
-  }
-}
-const filmObserver = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) e.isIntersecting ? visibleFilms.add(e.target) : visibleFilms.delete(e.target);
-    syncVideos();
-  },
-  { rootMargin: '10% 0px' },
-);
-document.addEventListener('visibilitychange', syncVideos);
-$$('video.film').forEach((v) => filmObserver.observe(v));
-
-// Numbers count up once when they arrive.
-const counter = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      counter.unobserve(e.target);
-      if (!store.get().motion) continue;
-      const el = e.target;
-      const { count, decimals } = el.dataset;
-      const obj = { v: 0 };
-      gsap.to(obj, {
-        v: Number(count),
-        duration: 1.8,
-        ease: 'power3.out',
-        onUpdate: () => {
-          el.textContent = Number(decimals) ? obj.v.toFixed(Number(decimals)) : Math.round(obj.v).toLocaleString('en-GB');
-        },
-      });
-    }
-  },
-  { threshold: 0.6 },
-);
-$$('.number-digits').forEach((n) => counter.observe(n));
-
-// ---------------------------------------------------------------------------
-// The promises: the row nearest the reading line is current and its
-// photograph and proof show in the sticky panel
-// ---------------------------------------------------------------------------
-const ledger = $('.ledger');
-const ledgerRows = $$('.ledger-row');
-const proofs = $$('.proof');
-let activePromise = 0;
-function setPromise(i) {
-  if (i === activePromise) return;
-  activePromise = i;
-  ledger.dataset.active = String(i);
-  ledgerRows.forEach((r, j) => {
-    if (j === i) r.setAttribute('aria-current', 'true');
-    else r.removeAttribute('aria-current');
-  });
-  proofs.forEach((f, j) => {
-    f.hidden = j !== i;
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    const y = window.scrollY;
+    header.classList.toggle('is-solid', y > 24);
+    updateTheatre(y);
+    updateDay(y);
+    updateWords();
   });
 }
-function updateLedger() {
-  if (!ledger || !isInView(ledger)) return;
-  const line = innerHeight * 0.42;
-  let best = 0;
-  ledgerRows.forEach((r, i) => {
-    if (r.getBoundingClientRect().top <= line) best = i;
-  });
-  setPromise(best);
+function layout() {
+  layoutTheatre();
+  layoutDay();
+  onScroll();
 }
-addEventListener('scroll', updateLedger, { passive: true });
-addEventListener('resize', updateLedger);
-document.addEventListener('click', (e) => {
-  const head = e.target.closest('[data-promise-go]');
-  if (!head) return;
-  const i = Number(head.dataset.promiseGo);
-  setPromise(i);
-  const top = ledgerRows[i].getBoundingClientRect().top + scrollY - innerHeight * 0.4;
-  if (innerWidth > 1000) scrollToY(top);
+window.addEventListener('scroll', onScroll, { passive: true });
+let resizeTimer = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(layout, 120);
 });
 
 // ---------------------------------------------------------------------------
-// Story gallery: filters and rail buttons
+// Motion preference
 // ---------------------------------------------------------------------------
-const filters = { topic: 'all', relationship: 'all' };
-const items = $$('.card');
-const list = $('#collection-list');
-function applyFilters() {
-  let shown = 0;
-  for (const item of items) {
-    const ok =
-      (filters.topic === 'all' || item.dataset.topic === filters.topic) &&
-      (filters.relationship === 'all' || item.dataset.relationship === filters.relationship);
-    item.hidden = !ok;
-    if (ok) shown++;
-  }
-  for (const chip of $$('.chip')) chip.setAttribute('aria-pressed', String(filters[chip.dataset.filterGroup] === chip.dataset.filter));
-  $('#collection-count').textContent = shown === 1 ? '1 story' : `${shown} stories`;
-  $('#collection-empty').hidden = shown > 0;
-  list.hidden = shown === 0;
-  list.scrollLeft = 0;
-}
-document.addEventListener('click', (e) => {
-  const chip = e.target.closest('.chip');
-  if (chip) {
-    filters[chip.dataset.filterGroup] = chip.dataset.filter;
-    applyFilters();
-  }
-  if (e.target.closest('[data-filter-reset]')) {
-    filters.topic = filters.relationship = 'all';
-    applyFilters();
-    $('.chip').focus();
-  }
-  const railBtn = e.target.closest('[data-rail-dir]');
-  if (railBtn) list.scrollBy({ left: Number(railBtn.dataset.railDir) * list.clientWidth * 0.8, behavior: store.get().motion ? 'smooth' : 'auto' });
+const motion = setupMotionToggle($('[data-motion-toggle]'), {
+  initial: motionOn(),
+  onChange: (on) => {
+    if (on) startLenis();
+    else stopLenis();
+    field.motionChanged();
+    films.forEach((v) => (on ? null : v.pause()));
+    layout();
+  },
 });
+if (motion.on) startLenis();
 
-// ---------------------------------------------------------------------------
-// Start
-// ---------------------------------------------------------------------------
-buildScroll();
-applyRoute(parseHash(location.hash), { initial: true });
-updateLedger();
-document.fonts?.ready.then(() => ScrollTrigger.refresh());
+layout();
+setChapter(0, { silent: true });
+route();
+document.fonts?.ready.then(layout);
+window.addEventListener('load', layout);
 
-// Exposed for automated checks only.
+// For tests and the console.
 window.__impact = {
   store,
+  field,
+  steps,
+  goToChapter,
+  get chapter() {
+    return chapterIndex;
+  },
   get lenis() {
     return lenis;
   },
-  get scene() {
-    return scene;
-  },
-  get step() {
-    return activeStep;
-  },
-  get playing() {
-    return playing;
-  },
-  goToStep,
-  startTour,
-  stopTour,
-  get fabric() {
-    return fabric;
-  },
+  layout,
 };

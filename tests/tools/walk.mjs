@@ -1,0 +1,31 @@
+// Walk the built site and screenshot every section: node tests/tools/walk.mjs <url> [width] [height] [tag]
+// Screenshots land in $SHOT_DIR (default ./shots). Prints page errors and failed requests.
+import { chromium } from 'playwright';
+const out = process.env.SHOT_DIR || 'shots';
+const base = process.argv[2] || 'http://localhost:4181/';
+const w = +(process.argv[3] || 1440), h = +(process.argv[4] || 900);
+const tag = process.argv[5] || 'd';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
+const errors = [];
+page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+page.on('console', (m) => ['error', 'warning'].includes(m.type()) && errors.push(m.type() + ': ' + m.text()));
+page.on('response', (r) => r.status() >= 400 && errors.push(r.status() + ' ' + r.url()));
+await page.goto(base, { waitUntil: 'load' });
+await page.waitForTimeout(2500);
+await page.screenshot({ path: `${out}/${tag}-hero.png` });
+const shot = async (name, fn, wait = 1800) => { await fn(); await page.waitForTimeout(wait); await page.screenshot({ path: `${out}/${tag}-${name}.png` }); };
+for (let i = 0; i < 6; i++) await shot(`ch${i}`, () => page.evaluate((i) => window.__impact.goToChapter(i), i), 2600);
+await shot('statement', () => page.evaluate(() => { const el = document.querySelector('#statement'); scrollTo(0, el.getBoundingClientRect().top + scrollY - innerHeight * 0.2); }));
+await shot('day0', () => page.evaluate(() => location.hash = '#/day'), 2500);
+await shot('day1', () => page.evaluate(() => scrollBy(0, innerHeight * 1.6)), 1800);
+await shot('numbers', () => page.evaluate(() => { const el = document.querySelector('#impact'); scrollTo(0, el.getBoundingClientRect().top + scrollY - 40); }), 2600);
+await shot('promises', () => page.evaluate(() => location.hash = '#/promises'), 2200);
+await shot('people', () => page.evaluate(() => location.hash = '#/people'), 2200);
+await shot('library', () => page.evaluate(() => location.hash = '#/share'), 2200);
+await shot('training', () => page.evaluate(() => location.hash = '#/training'), 2200);
+await shot('sources', () => page.evaluate(() => location.hash = '#/sources'), 2200);
+await shot('story', () => page.evaluate(() => location.hash = '#/story/pa10-heat'), 1500);
+console.log(JSON.stringify({ chapter: await page.evaluate(() => window.__impact.chapter), st: await page.evaluate(() => window.__impact.store.get()) }));
+console.log(errors.join('\n') || 'no errors');
+await browser.close();

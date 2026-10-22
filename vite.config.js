@@ -1,26 +1,28 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 import {
+  railHTML,
   chaptersHTML,
-  journeyHTML,
-  heroStatsHTML,
+  dayHTML,
   numbersHTML,
-  collectionHTML,
+  promisesHTML,
+  libraryHTML,
   sourcesHTML,
-  principlesHTML,
+  tickerHTML,
 } from './impact/scripts/content/render.js';
 
-/** Pre-render content into the HTML so text is readable before scripts or the scene load. */
+/** Pre-render content into the HTML so text is readable before scripts load. */
 const prerender = () => ({
   name: 'impact-prerender',
   transformIndexHtml(html) {
     return html
-      .replace('<!--@journey-->', journeyHTML())
-      .replace('<!--@hero-stats-->', heroStatsHTML())
-      .replace('<!--@numbers-->', numbersHTML())
+      .replace('<!--@ticker-->', tickerHTML())
+      .replace('<!--@rail-->', railHTML())
       .replace('<!--@chapters-->', chaptersHTML())
-      .replace('<!--@principles-->', principlesHTML())
-      .replace('<!--@collection-->', collectionHTML())
+      .replace('<!--@day-->', dayHTML())
+      .replace('<!--@numbers-->', numbersHTML())
+      .replace('<!--@promises-->', promisesHTML())
+      .replace('<!--@library-->', libraryHTML())
       .replace('<!--@sources-->', sourcesHTML());
   },
 });
@@ -35,7 +37,6 @@ export default defineConfig({
     outDir: resolve(import.meta.dirname, 'dist'),
     emptyOutDir: true,
     assetsInlineLimit: 0,
-    chunkSizeWarningLimit: 800,
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),

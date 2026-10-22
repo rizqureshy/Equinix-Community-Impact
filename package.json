@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Infrastructure for human possibility: an internal Equinix CRO community impact experience.",
+  "description": "Where the light goes: an internal Equinix CRO community impact experience.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,12 +16,9 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "5.3.0",
     "@fontsource-variable/inter-tight": "5.3.0",
-    "gsap": "3.15.0",
-    "lenis": "^1.3.27",
-    "three": "0.186.1"
+    "lenis": "^1.3.27"
   },
   "devDependencies": {
-    "@gltf-transform/cli": "^4.5.1",
     "jsdom": "30.1.3",
     "playwright": "^1.56.1",
     "vite": "8.3.4",
