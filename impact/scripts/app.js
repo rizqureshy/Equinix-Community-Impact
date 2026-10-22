@@ -9,6 +9,7 @@ import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
 import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
 import { createSunlight } from './weather.js';
+import { createRoom } from './room.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -183,7 +184,11 @@ async function loadScene() {
         console.warn('Community scene unavailable', err);
         stage.dataset.sceneState = 'fallback';
       },
-      onSelect: (place) => goToPlace(place),
+      onSelect: (place) => {
+        const i = steps.findIndex((s) => s.place === place);
+        if (i === activeStep) room.enter(place);
+        else goToPlace(place);
+      },
     });
     if (!scene) stage.dataset.sceneState = 'fallback';
   } catch (err) {
@@ -235,6 +240,30 @@ function setFabric(on) {
 fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
 setFabric(root.dataset.fabric === 'on');
 if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
+
+// Stepping inside a building: the room overlay
+const room = createRoom($('#room'), {
+  motion: () => store.get().motion,
+  webgl: supportsWebGL2(),
+  approach: (place) => {
+    stopTour();
+    cards.forEach((c) => {
+      c.hidden = true;
+    });
+    if (scene && store.get().motion) return scene.approach(place);
+    scene?.approach(place, { instant: true });
+    return Promise.resolve();
+  },
+  onLeft: (place) => {
+    const i = steps.findIndex((s) => s.place === place);
+    showStep(i >= 0 ? i : activeStep);
+  },
+  openStory: (id) => dialog.open(id),
+});
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-room-enter]');
+  if (b) room.enter(b.dataset.roomEnter, { trigger: b });
+});
 
 // Load the scene once the community is within reach; pause everything when it leaves
 const near = new IntersectionObserver(
@@ -611,4 +640,5 @@ window.__impact = {
   get fabric() {
     return fabric;
   },
+  room,
 };

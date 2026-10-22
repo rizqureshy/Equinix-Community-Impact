@@ -22,6 +22,19 @@ A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Le
 - **Sources:** Achieved, Happening now, Committed, plus the source directory.
 - **Story dialog:** a modal panel (full screen on mobile) with focus handling, copy actions and sources. The mouse wheel scrolls the open story while the page behind stays put.
 
+## Stepping inside (branch `claude/enter-the-story`)
+
+Research, routes and costs are in `design/enter-the-story.md`. What was built:
+
+- **Enter.** "Step inside" on each stop's card, or a click on a building you are already at, glides the live camera to the building's door (a clock-timed 2.6 s approach, so it is the same on slow machines), darkens the page, and cuts to the dive film. The film's first frame is a render of our own model from that exact door view, so the join is soft; over 8 seconds the model dissolves into the real room.
+- **Inside.** The room is a 360 panorama (FLUX 3 Image, 2:1, one per stop) on a sphere you can look around in by dragging or with the arrow keys, with a slow drift while you rest. The story arrives as captions placed in the room: the moment, a figure with its scope and source, the Equinix connection, then a card with the full story and Leave. Captions advance on their own every 7 seconds or on Next.
+- **Out.** Leave, Escape or the end card plays the same film backwards to the door view and the live camera returns to the stop. The story dialog can open from the end card.
+- **Rooms:** the hospital reading room, the children's cancer research lab, the data center training floor with the tour group, the Minooka path by the site, the Saint-Denis pool hall, the data hall with recovered-heat pipework. Same light and palette as the promise photographs; all captioned as illustrative.
+- **Fallbacks:** without WebGL the room is a still with the captions; with motion off the approach is instant and the films are skipped; on phones the captions sit at the bottom and the room is draggable. Films and panoramas load only when a room is entered.
+- **Honest limits:** you cannot walk; you stand in one spot and look. The dive films are a dissolve from the model into the room rather than a true pass through the door (Kling joins the two frames its own way). Walkable rooms need Gaussian-splat worlds from tools outside Higgsfield; noted in the proposal for a later round.
+
+Credits this round: six panoramas at 3, six dive films at 10, 78 of the 250 allowed. Files: `impact/scripts/room.js`, `impact/styles/room.css`, `impact/scripts/content/rooms.js` (captions), `DOORS` and `approach` in `scene/city.js`, `scripts/pano_tools.py`, `scripts/build_rooms.sh`, `tests/tools/door-views.mjs`.
+
 ## The red fabric (branch `claude/red-fabric`)
 
 An experiment you asked for, on its own branch so it can be compared and merged or dropped.
@@ -115,6 +128,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Community:** the headline is usable on arrival; the explorer sits in the page flow with its own controls; the model renders; the still is in place before it; moving to a stop frames its place, card and label; dots, arrows, labels and the keyboard move between stops; previous from the first stop returns to the overview; the tour starts, moves on and plays music, mute is remembered, and choosing a place pauses it; a story opens from a card with its URL and focus handling; Back and Forward work.
   - **Sunlight and fabric:** the light layer is in place, blended, and takes no clicks; the fabric flies behind the page, can be switched off and remembered, and stays off on phones.
+  - **Stepping inside:** entering the hospital flies to the door, through the film and into the room with the first caption; the room names itself and focus lands on Leave; captions carry figure, scope and source; the end card offers the full story; leaving returns to the stop with focus on the button; the room fits a phone; without WebGL the room is a still.
   - **Sections:** chapter and alias routes land where expected; navigation marks the current section; in the promises the row at the reading line shows its proof over a large photograph and choosing a promise moves to it; on phones every promise shows its photograph and proof inline; the training route lands, its placeholders and live link are labelled, and the Engage page opens with the Viva Engage feed embedded and reaches nothing else; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
   - **Reduced motion:** no smooth scrolling, films paused, stops still change by control, the toggle works.
   - **Mobile:** no sideways scroll, the journey card fits the screen, stories open full width.

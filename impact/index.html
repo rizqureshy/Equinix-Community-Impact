@@ -232,6 +232,22 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+    <section class="room" id="room" hidden data-phase="closed" aria-label="Inside the building" role="dialog" aria-modal="true">
+      <div class="room-stage" tabindex="0" aria-label="The room. Drag or use the arrow keys to look around.">
+        <video class="room-film" muted playsinline preload="auto" aria-hidden="true"></video>
+        <div class="room-pano"></div>
+        <img class="room-poster" src="" alt="" decoding="async" />
+        <div class="room-veil" aria-hidden="true"></div>
+      </div>
+      <div class="room-top">
+        <h2 class="room-title">Inside</h2>
+        <button type="button" class="room-btn" data-room-next>Next</button>
+        <button type="button" class="room-btn room-btn--leave" data-room-leave>Leave</button>
+      </div>
+      <div class="room-captions" aria-live="polite"></div>
+      <p class="room-hint note" hidden>Drag to look around</p>
+    </section>
+
     <script type="module" src="./scripts/app.js"></script>
   </body>
 </html>

@@ -61,13 +61,16 @@ export function journeyHTML() {
       <p class="journey-moment">${esc(s.moment)}</p>
       <p class="journey-summary muted">${esc(s.summary)}</p>
       <p class="journey-thread"><span class="thread-swatch${s.heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${s.heat ? 'Recovered heat' : s.id === 'datacenter' ? 'Where every thread begins' : 'Connected to the data center'}</p>
-      ${s.story ? `<a class="btn btn--primary btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">Open the story</a>` : `<a class="btn btn--primary btn--small" href="#/promises">Our five promises</a>`}
+      <div class="actions">
+        <button type="button" class="btn btn--primary btn--small" data-room-enter="${s.place}">Step inside</button>
+        ${s.story ? `<a class="btn btn--link btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">Open the story</a>` : `<a class="btn btn--link btn--small" href="#/promises">Our five promises</a>`}
+      </div>
     </article>`;
   return `<div class="journey-cards">
     <article class="journey-card journey-card--intro" data-step="-1" aria-labelledby="journey-intro">
       <p class="eyebrow">The community</p>
       <h3 class="title--md" id="journey-intro">Six places. One thread.</h3>
-      <p class="journey-moment">A data center is part of the community around it. Follow the thread from the hospital to the aquatic centre, or let the tour play.</p>
+      <p class="journey-moment">A data center is part of the community around it. Choose a place and step inside, or let the tour play.</p>
       <div class="actions">
         <button type="button" class="btn btn--primary btn--small" data-play>Play the tour</button>
         <button type="button" class="btn btn--link btn--small" data-go="0">Start at the hospital</button>

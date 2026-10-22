@@ -1094,5 +1094,162 @@
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
       }
     ]
+  },
+  "rooms": {
+    "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film (Kling 3.0 Omni Frames, first frame a render of the live model at the door, last frame the panorama centre). Raw files are re-downloadable from each generation; web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
+    "estimatedCredits": 28,
+    "items": [
+      {
+        "key": "room-hospital-pano",
+        "generationId": "9357c554-028a-42d7-bd55-27e7b09d6ea3",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:12:54.929812Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/hospital.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/hospital.pano.png",
+        "web": "impact/public/media/rooms/hospital-pano-{2048,4096}.webp and hospital-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the hospital room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-hospital-dive",
+        "generationId": "40aff7d8-53d2-4a46-84ab-bc18f561d1fd",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:22:28.982016Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/hospital.door.png (render of the live model)",
+          "media-src/rooms/hospital.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/hospital.dive.mp4",
+        "web": "impact/public/media/rooms/hospital-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_022228_40aff7d8-53d2-4a46-84ab-bc18f561d1fd.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the hospital room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-research-pano",
+        "generationId": "22afcbb3-66f8-4030-9603-ad8b02df7272",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:17:27.522305Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/research.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/research.pano.png",
+        "web": "impact/public/media/rooms/research-pano-{2048,4096}.webp and research-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the research room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-learning-pano",
+        "generationId": "93a0c83a-4d05-4273-9c6e-397d3edc7b80",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:18:11.901486Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/learning.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/learning.pano.png",
+        "web": "impact/public/media/rooms/learning-pano-{2048,4096}.webp and learning-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the learning room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-homes-pano",
+        "generationId": "c8d1c3dc-959e-44aa-8747-f61798e752b5",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:19:08.613383Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/homes.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/homes.pano.png",
+        "web": "impact/public/media/rooms/homes-pano-{2048,4096}.webp and homes-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the homes room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-aquatic-pano",
+        "generationId": "350f8834-0da3-4562-ac6a-b10be3172927",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:19:53.091121Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/aquatic.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/aquatic.pano.png",
+        "web": "impact/public/media/rooms/aquatic-pano-{2048,4096}.webp and aquatic-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the aquatic room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-datacenter-pano",
+        "generationId": "85db90bf-95a1-47b1-8d83-ae122ba60e97",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-22T02:20:38.517066Z",
+        "settings": {
+          "aspect_ratio": "2:1",
+          "resolution": "2k",
+          "width": 2896,
+          "height": 1440
+        },
+        "promptFile": "media-src/rooms/datacenter.txt",
+        "styleFile": "media-src/rooms/style.txt",
+        "original": "media-src/rooms/datacenter.pano.png",
+        "web": "impact/public/media/rooms/datacenter-pano-{2048,4096}.webp and datacenter-room-1280.webp",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "360 panorama of the datacenter room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      }
+    ]
   }
 }

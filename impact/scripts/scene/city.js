@@ -42,6 +42,20 @@ export const VIEWS = {
   shops: { target: [2.6, 1.0, 8.2], dist: 20, az: 0.3, el: 0.5 },
 };
 
+/**
+ * Door views: the camera at street level close to each building's entrance,
+ * looking at the door. The approach glides here before the dive film takes
+ * over, and the film's first frame is rendered from this exact view.
+ */
+export const DOORS = {
+  hospital: { target: [-8.2, 1.6, -4.6], dist: 12, az: 0.97, el: 0.16 },
+  research: { target: [8.4, 1.6, -5.6], dist: 12, az: -0.9, el: 0.16 },
+  learning: { target: [-8.6, 1.4, 4.4], dist: 11.5, az: 1.95, el: 0.16 },
+  homes: { target: [7.6, 1.4, 4.2], dist: 12, az: 1.5, el: 0.16 },
+  aquatic: { target: [-3.4, 1.3, 8.6], dist: 10, az: -1.2, el: 0.18 },
+  datacenter: { target: [0.5, 1.8, -1.0], dist: 13, az: 0.2, el: 0.16 },
+};
+
 /** Threads: conceptual connections, not network routes or physical pipes. */
 function threadDefinitions() {
   const at = (id, dy = 0.6) => new THREE.Vector3(...PLACES[id].pos).add(new THREE.Vector3(0, dy, 0));
@@ -196,7 +210,7 @@ function buildThreads(scene) {
 export function createCityScene(container, { assetBase = 'media/city/', labels = new Map(), onReady, onFail, onSelect, onHover, motion = () => true } = {}) {
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
   } catch (err) {
     onFail?.(err);
     return null;
@@ -362,8 +376,46 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     dirty = true;
   }
 
+  /** Glide to a building's door; resolves when the camera has settled. */
+  // The approach is timed by the clock, not the frame rate, so it takes the
+  // same 2.6 seconds on a slow machine as on a fast one and always arrives.
+  let settledResolvers = [];
+  let glide = null; // { from, fromTarget, start, length }
+  const APPROACH_MS = 2600;
+  function approach(name, { instant = false } = {}) {
+    const v = DOORS[name];
+    if (!v) return Promise.resolve();
+    focus = name;
+    view = v;
+    driftAngle = 0;
+    drift = false;
+    want.pos.copy(orbitPosition(v));
+    want.target.set(...v.target);
+    want.shift = 0;
+    revealThreads([], instant);
+    for (const el of labels.values()) el.classList.add('is-offscreen');
+    if (instant) {
+      instantNext = true;
+      glide = null;
+      dirty = true;
+      tick();
+      return Promise.resolve();
+    }
+    glide = { from: cur.pos.clone(), fromTarget: cur.target.clone(), start: performance.now(), length: APPROACH_MS };
+    dirty = true;
+    tick();
+    return new Promise((resolve) => settledResolvers.push(resolve));
+  }
+
+  /** The current frame as a PNG data URL (used to render the door views). */
+  function snapshot() {
+    renderer.render(scene, camera);
+    return renderer.domElement.toDataURL('image/png');
+  }
+
   function setFocus(name, { instant = false, side = 0 } = {}) {
     const v = VIEWS[name] || VIEWS.overview;
+    glide = null;
     focus = name;
     view = v;
     driftAngle = 0;
@@ -435,8 +487,10 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
 
   const tmp = new THREE.Vector3();
   const right = new THREE.Vector3();
+  let frames = 0;
   function frame(now) {
     raf = 0;
+    frames++;
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000) || 0.016);
     last = now;
     if (!visible) return;
@@ -454,8 +508,16 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     pointer.x += (pointer.tx - pointer.x) * kp;
     pointer.y += (pointer.ty - pointer.y) * kp;
     cur.shift += (want.shift - cur.shift) * k;
-    cur.target.lerp(want.target, k);
-    cur.pos.lerp(want.pos, k);
+    if (glide) {
+      const t = Math.min(1, (now - glide.start) / glide.length);
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; // ease in and out
+      cur.pos.copy(glide.from).lerp(want.pos, e);
+      cur.target.copy(glide.fromTarget).lerp(want.target, e);
+      if (t >= 1) glide = null;
+    } else {
+      cur.target.lerp(want.target, k);
+      cur.pos.lerp(want.pos, k);
+    }
 
     camera.position.copy(cur.pos);
     const lookAt = cur.target.clone();
@@ -464,7 +526,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     right.setFromMatrixColumn(camera.matrix, 0);
     const span = cur.pos.distanceTo(cur.target) * 0.34;
     lookAt.addScaledVector(right, cur.shift * span * (container.clientWidth > 760 ? 1 : 0));
-    if (moving) {
+    if (moving && !DOORS[focus]) {
       camera.position.addScaledVector(right, pointer.x * 0.9);
       camera.position.y += -pointer.y * 0.5;
     }
@@ -491,6 +553,11 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     placeLabels();
 
     const settled = cur.pos.distanceToSquared(want.pos) < 1e-4 && Math.abs(pointer.x - pointer.tx) < 1e-3 && Math.abs(pointer.y - pointer.ty) < 1e-3;
+    if (settled && !glide && settledResolvers.length) {
+      const done = settledResolvers;
+      settledResolvers = [];
+      done.forEach((r) => r());
+    }
     dirty = animating || !settled || (drift && moving);
     if (dirty) raf = requestAnimationFrame(frame);
   }
@@ -534,6 +601,8 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     setStops,
     setProgress,
     setFocus,
+    approach,
+    snapshot,
     /** Show or hide every thread (used by the crop renderer). */
     setThreadsVisible(on) {
       for (const th of Object.values(threads)) {
@@ -562,6 +631,10 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       return ready;
     },
     canvas: renderer.domElement,
+    /** For automated checks: how far the camera is from where it wants to be. */
+    get travel() {
+      return { dist: Math.sqrt(cur.pos.distanceToSquared(want.pos)), pending: settledResolvers.length, visible, raf: !!raf, dirty, frames, focus };
+    },
     dispose() {
       clearInterval(ticker);
       cancelAnimationFrame(raf);

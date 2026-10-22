@@ -1,0 +1,20 @@
+[
+  {
+    "created_at": "2026-10-22T02:17:27.522305Z",
+    "display_name": "FLUX 3 Image",
+    "id": "22afcbb3-66f8-4030-9603-ad8b02df7272",
+    "job_type": "flux_3_image",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021727_22afcbb3-66f8-4030-9603-ad8b02df7272_min.webp",
+    "params": {
+      "aspect_ratio": "2:1",
+      "batch_size": 1,
+      "height": 1440,
+      "medias": [],
+      "prompt": "A seamless 360-degree equirectangular panorama in 2:1 format covering the full sphere, horizon exactly at the vertical centre, ceiling or sky at the top edge and floor at the bottom edge, the left and right edges continuing into each other with no seam. Photoreal documentary interior photography for a premium corporate report: low late-October sun through tall windows, long soft shadows, warm white and pale oak with slate grey, one small red detail somewhere natural, real people with faces turned away or softly out of focus, calm and unhurried. No text, no logos, no signage, no readable screens content, no watermark. Subject: a children's cancer research laboratory: long white benches with glass equipment, two researchers in lab coats seen from behind at a microscope and a screen, tall windows with eucalyptus trees in sunlight, a red notebook on the bench.",
+      "resolution": "2k",
+      "width": 2896
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021727_22afcbb3-66f8-4030-9603-ad8b02df7272.png",
+    "status": "completed"
+  }
+]

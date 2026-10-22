@@ -1,0 +1,20 @@
+[
+  {
+    "created_at": "2026-10-22T02:19:53.091121Z",
+    "display_name": "FLUX 3 Image",
+    "id": "350f8834-0da3-4562-ac6a-b10be3172927",
+    "job_type": "flux_3_image",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021953_350f8834-0da3-4562-ac6a-b10be3172927_min.webp",
+    "params": {
+      "aspect_ratio": "2:1",
+      "batch_size": 1,
+      "height": 1440,
+      "medias": [],
+      "prompt": "A seamless 360-degree equirectangular panorama in 2:1 format covering the full sphere, horizon exactly at the vertical centre, ceiling or sky at the top edge and floor at the bottom edge, the left and right edges continuing into each other with no seam. Photoreal documentary interior photography for a premium corporate report: low late-October sun through tall windows, long soft shadows, warm white and pale oak with slate grey, one small red detail somewhere natural, real people with faces turned away or softly out of focus, calm and unhurried. No text, no logos, no signage, no readable screens content, no watermark. Subject: standing on the deck of a public swimming pool hall in the early morning: timber roof, tall windows, steam rising from the warm water, a few swimmers, a lifeguard in a red shirt in the distance.",
+      "resolution": "2k",
+      "width": 2896
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021953_350f8834-0da3-4562-ac6a-b10be3172927.png",
+    "status": "completed"
+  }
+]

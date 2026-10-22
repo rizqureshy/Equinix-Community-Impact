@@ -1,0 +1,20 @@
+[
+  {
+    "created_at": "2026-10-22T02:19:08.613383Z",
+    "display_name": "FLUX 3 Image",
+    "id": "c8d1c3dc-959e-44aa-8747-f61798e752b5",
+    "job_type": "flux_3_image",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021908_c8d1c3dc-959e-44aa-8747-f61798e752b5_min.webp",
+    "params": {
+      "aspect_ratio": "2:1",
+      "batch_size": 1,
+      "height": 1440,
+      "medias": [],
+      "prompt": "A seamless 360-degree equirectangular panorama in 2:1 format covering the full sphere, horizon exactly at the vertical centre, ceiling or sky at the top edge and floor at the bottom edge, the left and right edges continuing into each other with no seam. Photoreal documentary interior photography for a premium corporate report: low late-October sun through tall windows, long soft shadows, warm white and pale oak with slate grey, one small red detail somewhere natural, real people with faces turned away or softly out of focus, calm and unhurried. No text, no logos, no signage, no readable screens content, no watermark. Subject: standing on a new public cycle path at the landscaped edge of a modern low campus in the Illinois prairie, a cyclist in a red jacket passing, native grasses, a cleared plot with survey stakes, family homes in the distance, golden hour.",
+      "resolution": "2k",
+      "width": 2896
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_021908_c8d1c3dc-959e-44aa-8747-f61798e752b5.png",
+    "status": "completed"
+  }
+]

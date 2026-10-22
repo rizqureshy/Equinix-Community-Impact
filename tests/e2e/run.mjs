@@ -113,6 +113,24 @@ try {
   await p.goBack();
   await wait(700);
   check(!(await isOpen(p)), 'browser back closes the story again');
+  // Stepping inside: approach, dive film, the room with captions, leave
+  await p.locator('[data-room-enter="hospital"]').click();
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
+  check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));
+  check(roomState.title === 'The reading room' && (await p.evaluate(() => document.activeElement?.hasAttribute('data-room-leave'))), 'the room names itself and focus lands on Leave');
+  await p.locator('[data-room-next]').click();
+  await wait(600);
+  check(await p.evaluate(() => window.__impact.room.line === 1 && !!document.querySelector('.room-line--fact .room-line-source a')), 'the next caption carries its figure with scope and source');
+  await p.locator('[data-room-next]').click();
+  await p.locator('[data-room-next]').click();
+  await wait(600);
+  check(await p.evaluate(() => !!document.querySelector('[data-room-story="3verest"]')), 'the last card offers the full story');
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.room.phase === 'closed' && document.querySelector('#room').hidden && window.__impact.step === 0 && !document.body.classList.contains('room-open')), 'leaving plays you out and returns to the hospital stop');
+  check(await p.evaluate(() => document.activeElement?.dataset?.roomEnter === 'hospital'), 'focus returns to the Step inside button');
+
   // The tour: plays through the stops with music, pauses on any choice
   await p.locator('[data-step-dir="-1"]').click();
   await settled(p, -1);
@@ -295,6 +313,15 @@ try {
   await wait(800);
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');
   await p.keyboard.press('Escape');
+  await wait(600);
+  await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
+  await p.locator('[data-room-enter="hospital"]').dispatchEvent('click');
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  const phoneRoom = await p.evaluate(() => { const c = document.querySelector('.room-line').getBoundingClientRect(); return { phase: window.__impact.room.phase, fits: c.left >= 0 && c.right <= 390 && c.bottom <= 844 }; });
+  check(phoneRoom.phase === 'inside' && phoneRoom.fits, 'the room and its captions fit a phone screen', JSON.stringify(phoneRoom));
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await p.keyboard.press('Escape');
   await wait(500);
   check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its photograph and proof inline');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
@@ -308,6 +335,11 @@ try {
   await p.locator('.place-label[data-place="aquatic"]').click();
   await settled(p, 4);
   check((await step(p)) === 4, 'place controls still work without WebGL', String(await step(p)));
+  await p.locator('[data-room-enter="aquatic"]').dispatchEvent('click');
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.room.phase === 'inside' && !document.querySelector('#room').classList.contains('has-pano') && getComputedStyle(document.querySelector('.room-poster')).opacity === '1'), 'without WebGL the room shows as a still with its captions');
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
   check(p.failed.length === 0, 'no missing local assets without WebGL', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors without WebGL', p.errors.join(' | '));
   await noGL.close();

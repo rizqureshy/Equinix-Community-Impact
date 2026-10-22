@@ -25,6 +25,7 @@ npm run build && npm run test:e2e # browser checks against the production build
 node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs] ["scroll=<y> full"]   # screenshot helper
 node tests/tools/glb-view.mjs <model.glb> <out.png>                                    # render a building model from four angles
 node tests/tools/city-still.mjs <url> impact/public/media/city                          # the community still (from the live scene)
+node tests/tools/door-views.mjs <url> media-src/rooms                                   # the door view of each building (dive film first frames)
 ```
 
 The browser checks block every request that leaves the local host, then exercise the community journey, stories, history, copy actions, filters, reduced motion, mobile and a no-WebGL browser.
@@ -45,7 +46,9 @@ impact/                   Vite root: the experience
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
+    content/rooms.js      the six rooms you can step into: panorama, dive film, captions
     content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises, numbers, sources
+    room.js               stepping inside: approach, dive film, panorama viewer, captions, leave
     scene/city.js         the community model: loads the building GLBs, plinth, threads, camera stops, labels, interaction
   public/media/           web-ready images, films, posters, the building models (media/city/*.glb) and the tour theme (media/audio)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
@@ -55,6 +58,8 @@ media-src/                Higgsfield originals, prompts and asset-manifest.json
 scripts/build_media.py    rebuilds public/media images and films from the originals
 scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geometry, WebP textures)
 scripts/city_manifest.py  records the building pipeline in the asset manifest
+scripts/pano_tools.py     room panoramas: seam blend and web sizes, the perspective still, the fallback poster
+scripts/build_rooms.sh    encodes the dive films forwards and backwards for the web
 tests/                    unit and end-to-end tests, plus tools/glb-view.mjs
 ```
 

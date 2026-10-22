@@ -1,0 +1,230 @@
+/* Stepping inside: the room overlay with its film, panorama and captions. */
+.room {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  background: #0b0b0d;
+  color: #fff;
+  animation: room-in var(--d2) var(--ease);
+}
+.room[hidden] {
+  display: none;
+}
+@keyframes room-in {
+  from {
+    opacity: 0;
+  }
+}
+body.room-open {
+  overflow: hidden;
+}
+.room-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  outline: none;
+  cursor: grab;
+}
+.room-stage.is-dragging {
+  cursor: grabbing;
+}
+.room-film,
+.room-pano,
+.room-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.room-film {
+  object-fit: cover;
+  background: #0b0b0d;
+  opacity: 0;
+  transition: opacity var(--d2);
+}
+.room[data-phase='diving'] .room-film,
+.room[data-phase='leaving'] .room-film {
+  opacity: 1;
+}
+.room-pano canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.room-pano,
+.room-poster {
+  opacity: 0;
+  transition: opacity var(--d3) var(--ease);
+}
+.room[data-phase='inside'].has-pano .room-pano,
+.room[data-phase='inside']:not(.has-pano) .room-poster {
+  opacity: 1;
+}
+.room-poster {
+  object-fit: cover;
+}
+/* While the camera glides to the door the overlay is a dark veil over the model */
+.room[data-phase='approaching'] {
+  background: rgb(11 11 13 / 0.35);
+  backdrop-filter: blur(0px);
+}
+.room[data-phase='approaching'] .room-stage {
+  pointer-events: none;
+}
+
+.room-top {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 4px 4px 16px;
+  border-radius: var(--radius-pill);
+  background: rgb(20 20 24 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transition: opacity var(--d2);
+}
+.room[data-phase='inside'] .room-top {
+  opacity: 1;
+}
+.room-title {
+  margin: 0 10px 0 0;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.room-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 560;
+  cursor: pointer;
+  transition: background-color var(--d1);
+}
+.room-btn:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+.room-btn--leave {
+  background: #fff;
+  color: var(--ink);
+}
+.room-btn--leave:hover {
+  background: #f0f0f3;
+}
+.room-hint {
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  bottom: 24px;
+  margin: 0;
+  font-size: var(--t-xs);
+  color: rgb(255 255 255 / 0.65);
+  opacity: 0;
+  transition: opacity var(--d2) 1s;
+}
+.room[data-phase='inside'] .room-hint {
+  opacity: 1;
+}
+
+.room[data-phase='leaving'] .room-captions,
+.room[data-phase='leaving'] .room-top,
+.room[data-phase='leaving'] .room-hint {
+  opacity: 0;
+  transition: opacity var(--d1);
+}
+.room-captions {
+  position: absolute;
+  z-index: 2;
+  left: max(24px, 5vw);
+  bottom: max(24px, 6vh);
+  width: min(520px, calc(100% - 2 * max(24px, 5vw)));
+  pointer-events: none;
+}
+.room-line {
+  padding: var(--s-5) var(--s-6);
+  border-radius: var(--radius-lg);
+  background: rgb(20 20 24 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  backdrop-filter: saturate(1.4) blur(18px);
+  animation: room-line-in var(--d2) var(--ease);
+  pointer-events: auto;
+}
+@keyframes room-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+.room-line-text {
+  margin: 0;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.room-line--fact .room-line-text {
+  color: #ffd6d4;
+}
+.room-line--heat .room-line-text {
+  color: #ffe0b8;
+}
+.room-line-source {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-xs);
+  color: rgb(255 255 255 / 0.7);
+}
+.room-line-source a {
+  color: #ff8c86;
+  text-decoration: none;
+}
+.room-line .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+.room-line .btn--ghost {
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+/* A veil over the model while the film plays, so the join is soft */
+.room-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 80% at 50% 50%, transparent 55%, rgb(11 11 13 / 0.55) 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--d2);
+}
+.room[data-phase='diving'] .room-veil,
+.room[data-phase='leaving'] .room-veil {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .room-captions {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+  }
+  .room-line {
+    padding: var(--s-4) var(--s-5);
+  }
+  .room-hint {
+    display: none;
+  }
+}
