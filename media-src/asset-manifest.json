@@ -1097,7 +1097,7 @@
   },
   "rooms": {
     "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film (Kling 3.0 Omni Frames, first frame a render of the live model at the door, last frame the panorama centre). Raw files are re-downloadable from each generation; web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
-    "estimatedCredits": 28,
+    "estimatedCredits": 78,
     "items": [
       {
         "key": "room-hospital-pano",
@@ -1118,31 +1118,6 @@
         "estimatedCredits": 3,
         "status": "selected",
         "usage": "360 panorama of the hospital room; also the dive film last frame (perspective crop) and the no-WebGL still",
-        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
-      },
-      {
-        "key": "room-hospital-dive",
-        "generationId": "40aff7d8-53d2-4a46-84ab-bc18f561d1fd",
-        "model": "Kling O3 (Frames)",
-        "jobType": "kling_o3_flf",
-        "createdAt": "2026-10-22T02:22:28.982016Z",
-        "settings": {
-          "duration": 8,
-          "mode": "pro",
-          "sound": "off",
-          "aspect_ratio": "16:9"
-        },
-        "promptFile": "media-src/rooms/dive.txt",
-        "inputs": [
-          "media-src/rooms/hospital.door.png (render of the live model)",
-          "media-src/rooms/hospital.room.png (perspective crop of the panorama)"
-        ],
-        "original": "media-src/rooms/hospital.dive.mp4",
-        "web": "impact/public/media/rooms/hospital-dive{,-out}.{mp4,webm}",
-        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_022228_40aff7d8-53d2-4a46-84ab-bc18f561d1fd.mp4",
-        "estimatedCredits": 10,
-        "status": "selected",
-        "usage": "Dive film into the hospital room; played backwards to leave",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
       },
       {
@@ -1248,6 +1223,156 @@
         "estimatedCredits": 3,
         "status": "selected",
         "usage": "360 panorama of the datacenter room; also the dive film last frame (perspective crop) and the no-WebGL still",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-hospital-dive",
+        "generationId": "40aff7d8-53d2-4a46-84ab-bc18f561d1fd",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:22:28.982016Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/hospital.door.png (render of the live model)",
+          "media-src/rooms/hospital.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/hospital.dive.mp4",
+        "web": "impact/public/media/rooms/hospital-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_022228_40aff7d8-53d2-4a46-84ab-bc18f561d1fd.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the hospital room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-research-dive",
+        "generationId": "949fd8e2-1894-42c4-87a4-57e06cb76fb7",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:28:03.842756Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/research.door.png (render of the live model)",
+          "media-src/rooms/research.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/research.dive.mp4",
+        "web": "impact/public/media/rooms/research-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_022803_949fd8e2-1894-42c4-87a4-57e06cb76fb7.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the research room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-learning-dive",
+        "generationId": "74c57ff4-f5df-4838-bfbe-d7847ca42eca",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:31:52.794174Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/learning.door.png (render of the live model)",
+          "media-src/rooms/learning.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/learning.dive.mp4",
+        "web": "impact/public/media/rooms/learning-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_023152_74c57ff4-f5df-4838-bfbe-d7847ca42eca.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the learning room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-homes-dive",
+        "generationId": "c5a4e8c2-40da-41b1-8b8d-b0c7e3f897e3",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:35:47.067768Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/homes.door.png (render of the live model)",
+          "media-src/rooms/homes.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/homes.dive.mp4",
+        "web": "impact/public/media/rooms/homes-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_023547_c5a4e8c2-40da-41b1-8b8d-b0c7e3f897e3.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the homes room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-aquatic-dive",
+        "generationId": "08c4c403-c3e1-43d9-8819-66708f394ba9",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:38:42.307855Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/aquatic.door.png (render of the live model)",
+          "media-src/rooms/aquatic.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/aquatic.dive.mp4",
+        "web": "impact/public/media/rooms/aquatic-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_023842_08c4c403-c3e1-43d9-8819-66708f394ba9.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the aquatic room; played backwards to leave",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-datacenter-dive",
+        "generationId": "3fc6ee65-7ed2-4f1e-8e2e-6aeefd951492",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-22T02:41:53.699894Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive.txt",
+        "inputs": [
+          "media-src/rooms/datacenter.door.png (render of the live model)",
+          "media-src/rooms/datacenter.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/datacenter.dive.mp4",
+        "web": "impact/public/media/rooms/datacenter-dive{,-out}.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_024153_3fc6ee65-7ed2-4f1e-8e2e-6aeefd951492.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the datacenter room; played backwards to leave",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
       }
     ]
