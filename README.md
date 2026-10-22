@@ -1,6 +1,6 @@
 # Equinix: Infrastructure for human possibility
 
-An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model you explore, or let play as a tour with music: six stops, each with its red thread (amber for recovered heat) and a sourced story about care, discovery, opportunity, community and responsible growth.
+An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model you turn, zoom and step inside, or let play as a tour with music: six places, each with its red thread (amber for recovered heat), a room you can enter and a sourced story about care, discovery, opportunity, community and responsible growth.
 
 This is a prototype. The community is an illustrative composite; its buildings, images and films are AI generated and labelled as such. Facts come from the linked Equinix sources. See [HANDOVER.md](HANDOVER.md) for creative decisions, tool use, provenance, validation and open editorial items.
 
@@ -15,7 +15,7 @@ npm run build        # static site in dist/
 npm run preview      # serve dist/ at http://localhost:4173
 ```
 
-Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no smooth scrolling, the camera cutting between stops instead of travelling, the sunlight still.
+Use the "Pause motion" control, or the system reduced-motion setting, to see the static version: no smooth scrolling, the camera cutting between places instead of travelling, the sunlight still.
 
 ## Test
 
@@ -47,9 +47,9 @@ impact/                   Vite root: the experience
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
     content/rooms.js      the six rooms you can step into: panorama, dive film, captions
-    content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises, numbers, sources
+    content/render.js     HTML for the model's opening card and controls, chapters, story detail, gallery, promises, numbers, sources
     room.js               stepping inside: approach, dive film, panorama viewer, captions, leave
-    scene/city.js         the community model: loads the building GLBs, plinth, threads, camera stops, labels, interaction
+    scene/city.js         the community model: loads the building GLBs, plinth, threads, free orbit (drag, wheel, pinch, keys), door views, labels
   public/media/           web-ready images, films, posters, the building models (media/city/*.glb) and the tour theme (media/audio)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
   city/                   building concept prompts and generation records (renders and raw GLBs are re-downloadable, not committed)

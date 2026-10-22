@@ -54,36 +54,20 @@ export function journeySteps() {
 }
 
 export function journeyHTML() {
-  const steps = journeySteps();
-  const card = (s, i) => `<article class="journey-card${i % 2 ? ' journey-card--right' : ''}" data-step="${i}" hidden aria-labelledby="journey-${s.id}">
-      <p class="eyebrow">${s.number} <span class="muted">${esc(s.label)}</span></p>
-      <h3 class="title--md" id="journey-${s.id}">${esc(s.placeName)}</h3>
-      <p class="journey-moment">${esc(s.moment)}</p>
-      <p class="journey-summary muted">${esc(s.summary)}</p>
-      <p class="journey-thread"><span class="thread-swatch${s.heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${s.heat ? 'Recovered heat' : s.id === 'datacenter' ? 'Where every thread begins' : 'Connected to the data center'}</p>
-      <div class="actions">
-        <button type="button" class="btn btn--primary btn--small" data-room-enter="${s.place}">Step inside</button>
-        ${s.story ? `<a class="btn btn--link btn--small" href="#/story/${s.story}" data-story-trigger="${s.story}">Open the story</a>` : `<a class="btn btn--link btn--small" href="#/promises">Our five promises</a>`}
-      </div>
-    </article>`;
   return `<div class="journey-cards">
-    <article class="journey-card journey-card--intro" data-step="-1" aria-labelledby="journey-intro">
+    <article class="journey-card journey-card--intro" aria-labelledby="journey-intro">
       <p class="eyebrow">The community</p>
       <h3 class="title--md" id="journey-intro">Six places. One thread.</h3>
-      <p class="journey-moment">A data center is part of the community around it. Choose a place and step inside, or let the tour play.</p>
+      <p class="journey-moment">A data center is part of the community around it. Look around the model, then click a building to step inside.</p>
+      <p class="journey-how muted">Drag to turn it. Click the model, then scroll to zoom. On a phone, use two fingers.</p>
       <div class="actions">
         <button type="button" class="btn btn--primary btn--small" data-play>Play the tour</button>
-        <button type="button" class="btn btn--link btn--small" data-go="0">Start at the hospital</button>
       </div>
     </article>
-    ${steps.map(card).join('')}
+    <aside class="tour-caption" hidden aria-live="polite"></aside>
   </div>
-  <div class="journey-bar" role="group" aria-label="Tour controls">
-    <button type="button" class="bar-btn" data-step-dir="-1" aria-label="Previous place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <nav class="journey-nav" aria-label="Places">${steps
-      .map((s, i) => `<button type="button" class="journey-dot" data-go="${i}" aria-label="${esc(s.placeName)}" aria-current="false"><i></i><span>${esc(s.placeName)}</span></button>`)
-      .join('')}</nav>
-    <button type="button" class="bar-btn" data-step-dir="1" aria-label="Next place"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="m5 2 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="journey-bar" role="group" aria-label="Model controls">
+    <button type="button" class="bar-btn" data-reset-view aria-label="Reset the view"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="1.6" fill="currentColor"/></svg></button>
     <span class="bar-sep" aria-hidden="true"></span>
     <button type="button" class="bar-btn bar-btn--play" data-play aria-pressed="false" aria-label="Play the tour"><svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2.2v9.6L11.4 7Z" fill="currentColor"/></svg><svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2.5h2.4v9H3.5zM8.1 2.5h2.4v9H8.1z" fill="currentColor"/></svg></button>
     <button type="button" class="bar-btn" data-mute aria-pressed="false" aria-label="Mute the music"><svg class="icon-sound" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="M10 4.5a3.5 3.5 0 0 1 0 5M11.6 2.6a6 6 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><svg class="icon-muted" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="m10 5 3 4m0-4-3 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>

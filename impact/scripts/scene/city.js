@@ -97,7 +97,6 @@ export function supportsWebGL2() {
 }
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const smooth = (t) => t * t * (3 - 2 * t);
 
 function orbitPosition(view, out = new THREE.Vector3()) {
   const [tx, ty, tz] = view.target;
@@ -207,7 +206,7 @@ function buildThreads(scene) {
  * @param {string} opts.assetBase  URL prefix for the GLB files
  * @param {Map<string, HTMLElement>} opts.labels place id to label element
  */
-export function createCityScene(container, { assetBase = 'media/city/', labels = new Map(), onReady, onFail, onSelect, onHover, motion = () => true } = {}) {
+export function createCityScene(container, { assetBase = 'media/city/', labels = new Map(), onReady, onFail, onSelect, onHover, onInteract, motion = () => true } = {}) {
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
@@ -304,9 +303,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   // Camera state
   const cur = { pos: orbitPosition(VIEWS.overview), target: new THREE.Vector3(...VIEWS.overview.target), shift: 0 };
   const want = { pos: cur.pos.clone(), target: cur.target.clone(), shift: 0 };
-  const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  // The view the visitor controls: an orbit around a target. Drag turns it,
+  // the wheel or a pinch zooms it, the tour and the doors set it.
+  const LIMITS = { el: [0.08, 1.25], dist: [9, 60] };
+  const free = { target: [...VIEWS.overview.target], dist: VIEWS.overview.dist, az: VIEWS.overview.az, el: VIEWS.overview.el };
+  let saved = null; // the free view to return to after a door
+  let byHand = false; // the last change came from a drag, pinch, wheel or key: follow it closely
+  let atDoor = false; // at a building's door (the room is opening): the hand is ignored
+  let savedFocus = 'overview';
   let focus = 'overview';
-  let view = VIEWS.overview;
   let drift = false;
   let driftAngle = 0;
   let hovered = null;
@@ -335,45 +340,12 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   ro.observe(container);
   resize();
 
-  /** Blend between two stops. `side` shifts the subject so a card can sit beside it. */
-  function viewAt(a, b, t, side) {
-    const va = VIEWS[a];
-    const vb = VIEWS[b];
-    const k = smooth(clamp(t));
-    const target = new THREE.Vector3(...va.target).lerp(new THREE.Vector3(...vb.target), k);
-    const view = { target: target.toArray(), dist: va.dist + (vb.dist - va.dist) * k, az: va.az + (vb.az - va.az) * k, el: va.el + (vb.el - va.el) * k };
-    want.pos.copy(orbitPosition(view));
-    want.target.copy(target);
-    want.shift = side;
-  }
-
   let threadsHidden = false;
   function revealThreads(ids, instant) {
     for (const [id, th] of Object.entries(threads)) {
       th.target = !threadsHidden && ids.includes(id) ? 1 : 0;
       if (instant) th.shown = th.target;
     }
-  }
-
-  /** Progress through the journey, 0 (overview) to 1 (last stop). */
-  const stops = ['overview'];
-  function setStops(list) {
-    stops.length = 0;
-    stops.push('overview', ...list);
-  }
-  function setProgress(p, { side = 0 } = {}) {
-    const n = stops.length - 1;
-    const x = clamp(p) * n;
-    const i = Math.min(Math.floor(x), n - 1);
-    const t = x - i;
-    viewAt(stops[i], stops[Math.min(i + 1, n)], t, side);
-    const near = t < 0.5 ? stops[i] : stops[Math.min(i + 1, n)];
-    if (near !== focus) {
-      focus = near;
-      revealThreads(threadsForFocus[focus] || [], false);
-      for (const [id, el] of labels) el.classList.toggle('is-focus', id === focus);
-    }
-    dirty = true;
   }
 
   /** Glide to a building's door; resolves when the camera has settled. */
@@ -385,10 +357,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   function approach(name, { instant = false } = {}) {
     const v = DOORS[name];
     if (!v) return Promise.resolve();
+    if (!atDoor) {
+      saved = { ...free, target: [...free.target] };
+      savedFocus = focus;
+    }
     focus = name;
-    view = v;
     driftAngle = 0;
     drift = false;
+    atDoor = true;
+    setFree(v);
     want.pos.copy(orbitPosition(v));
     want.target.set(...v.target);
     want.shift = 0;
@@ -419,19 +396,61 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     return renderer.domElement.toDataURL('image/png');
   }
 
-  function setFocus(name, { instant = false, side = 0 } = {}) {
+  /** Point the camera at the free view (plus the tour's slow orbit, if any). */
+  function applyFree() {
+    want.pos.copy(orbitPosition({ ...free, az: free.az + driftAngle }));
+    want.target.set(...free.target);
+    want.shift = 0;
+    dirty = true;
+    tick();
+  }
+  function setFree(v) {
+    free.target = [...v.target];
+    free.dist = v.dist;
+    free.az = v.az;
+    free.el = v.el;
+  }
+  function setFocus(name, { instant = false } = {}) {
     const v = VIEWS[name] || VIEWS.overview;
     glide = null;
+    byHand = false;
+    atDoor = false;
     focus = name;
-    view = v;
     driftAngle = 0;
-    want.pos.copy(orbitPosition(v));
-    want.target.set(...v.target);
-    want.shift = side;
+    setFree(v);
     revealThreads(threadsForFocus[name] || [], instant);
     for (const [id, el] of labels) el.classList.toggle('is-focus', id === name);
     if (instant) instantNext = true;
-    dirty = true;
+    applyFree();
+  }
+  /** Turn the view by hand (drag, keys): azimuth and elevation in radians. */
+  function nudge(dAz, dEl) {
+    if (atDoor) return;
+    byHand = true;
+    free.az += dAz;
+    free.el = clamp(free.el + dEl, LIMITS.el[0], LIMITS.el[1]);
+    applyFree();
+  }
+  /** Zoom by a factor on the orbit distance (below 1 comes closer). */
+  function zoom(factor) {
+    if (atDoor) return;
+    byHand = true;
+    free.dist = clamp(free.dist * factor, LIMITS.dist[0], LIMITS.dist[1]);
+    applyFree();
+  }
+  /** Back from a door to the view the visitor had before it. */
+  function back({ instant = false } = {}) {
+    glide = null;
+    byHand = false;
+    atDoor = false;
+    if (saved) setFree(saved);
+    saved = null;
+    focus = savedFocus;
+    driftAngle = 0;
+    revealThreads(threadsForFocus[focus] || [], instant);
+    for (const [id, el] of labels) el.classList.toggle('is-focus', id === focus);
+    if (instant) instantNext = true;
+    applyFree();
   }
 
   function placeLabels() {
@@ -460,36 +479,115 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     return o?.userData.place || null;
   }
 
-  function onPointerMove(event) {
-    if (DOORS[focus]) return; // at a door the cursor neither tilts the view nor picks
-    const r = renderer.domElement.getBoundingClientRect();
-    pointer.tx = ((event.clientX - r.left) / r.width) * 2 - 1;
-    pointer.ty = ((event.clientY - r.top) / r.height) * 2 - 1;
-    const id = ready ? pick(event) : null;
+  // ---- Interaction --------------------------------------------------------
+  // Mouse: drag turns the model, the wheel zooms once the model has been
+  // clicked (so scrolling past it still scrolls the page), a click on a
+  // building selects it. Touch: one finger scrolls the page, two fingers turn
+  // and pinch. The tour stops at the first touch of any of these.
+  const pointers = new Map();
+  let drag = null; // { x, y, moved }
+  let pinch = null; // { dist, cx, cy }
+  let suppressClick = false;
+  let engaged = false;
+  function setEngaged(on) {
+    engaged = on;
+    container.toggleAttribute('data-lenis-prevent', on);
+    container.classList.toggle('is-engaged', on);
+  }
+  function hoverAt(event) {
+    const id = ready && !atDoor ? pick(event) : null;
     if (id !== hovered) {
       hovered = id;
       renderer.domElement.style.cursor = id ? 'pointer' : '';
       for (const [pid, el] of labels) el.classList.toggle('is-hover', pid === id);
       onHover?.(id);
     }
-    dirty = true;
+  }
+  function onPointerDown(event) {
+    if (atDoor) return;
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (event.pointerType === 'mouse') {
+      if (event.button !== 0) return;
+      drag = { x: event.clientX, y: event.clientY, moved: false };
+      setEngaged(true);
+      container.setPointerCapture?.(event.pointerId);
+    } else if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinch = { dist: Math.hypot(a.x - b.x, a.y - b.y), cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2 };
+      drag = null;
+    }
+  }
+  function onPointerMove(event) {
+    if (pointers.has(event.pointerId)) pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (atDoor) return;
+    if (drag && event.pointerType === 'mouse') {
+      const dx = event.clientX - drag.x;
+      const dy = event.clientY - drag.y;
+      drag.x = event.clientX;
+      drag.y = event.clientY;
+      if (!drag.moved && Math.hypot(dx, dy) < 3) return;
+      if (!drag.moved) {
+        drag.moved = true;
+        container.classList.add('is-dragging');
+        onInteract?.('drag');
+      }
+      nudge(-dx * 0.006, dy * 0.005);
+      return;
+    }
+    if (pinch && pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      const cx = (a.x + b.x) / 2;
+      const cy = (a.y + b.y) / 2;
+      byHand = true;
+      if (dist > 0 && pinch.dist > 0) free.dist = clamp((free.dist * pinch.dist) / dist, LIMITS.dist[0], LIMITS.dist[1]);
+      free.az -= (cx - pinch.cx) * 0.008;
+      free.el = clamp(free.el + (cy - pinch.cy) * 0.006, LIMITS.el[0], LIMITS.el[1]);
+      pinch = { dist, cx, cy };
+      onInteract?.('pinch');
+      applyFree();
+      return;
+    }
+    if (event.pointerType === 'mouse') hoverAt(event);
+  }
+  function onPointerUp(event) {
+    pointers.delete(event.pointerId);
+    if (drag?.moved) suppressClick = true;
+    drag = null;
+    if (pointers.size < 2) pinch = null;
+    container.classList.remove('is-dragging');
   }
   function onPointerLeave() {
-    pointer.tx = pointer.ty = 0;
+    setEngaged(false);
     if (hovered) {
       hovered = null;
       renderer.domElement.style.cursor = '';
       for (const el of labels.values()) el.classList.remove('is-hover');
       onHover?.(null);
     }
-    dirty = true;
+  }
+  function onWheel(event) {
+    if (!engaged || atDoor) return; // let the page scroll
+    event.preventDefault();
+    zoom(Math.exp(clamp(event.deltaY, -120, 120) * 0.0016));
+    onInteract?.('wheel');
   }
   function onClick(event) {
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    if (atDoor) return;
     const id = pick(event);
     if (id) onSelect?.(id);
   }
+  renderer.domElement.style.touchAction = 'pan-y';
+  container.addEventListener('pointerdown', onPointerDown);
   container.addEventListener('pointermove', onPointerMove, { passive: true });
+  container.addEventListener('pointerup', onPointerUp);
+  container.addEventListener('pointercancel', onPointerUp);
   container.addEventListener('pointerleave', onPointerLeave);
+  container.addEventListener('wheel', onWheel, { passive: false });
   renderer.domElement.addEventListener('click', onClick);
 
   const tmp = new THREE.Vector3();
@@ -498,7 +596,8 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   function frame(now) {
     raf = 0;
     frames++;
-    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000) || 0.016);
+    const rawDt = Math.max(0, (now - last) / 1000) || 0.016;
+    const dt = Math.min(0.05, rawDt);
     last = now;
     if (!visible) return;
     const moving = motion();
@@ -506,14 +605,12 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     // A slow orbit while the tour plays, so each stop keeps breathing
     if (drift && moving) {
       driftAngle += dt * 0.035;
-      want.pos.copy(orbitPosition({ ...view, az: view.az + driftAngle }));
+      want.pos.copy(orbitPosition({ ...free, az: free.az + driftAngle }));
     }
-    // Camera eases toward the wanted view; the cursor adds a gentle parallax
-    const k = instantNext ? 1 : 1 - Math.exp(-dt * 2.6);
-    const kp = instantNext ? 1 : 1 - Math.exp(-dt * 4);
+    // Camera eases toward the wanted view: cinematically for the tour and
+    // the doors, and close on the hand's heels when the visitor turns it
+    const k = instantNext ? 1 : byHand ? 1 - Math.exp(-Math.min(0.25, rawDt) * 14) : 1 - Math.exp(-dt * 2.6);
     instantNext = false;
-    pointer.x += (pointer.tx - pointer.x) * kp;
-    pointer.y += (pointer.ty - pointer.y) * kp;
     cur.shift += (want.shift - cur.shift) * k;
     if (glide) {
       const t = Math.min(1, (now - glide.start) / glide.length);
@@ -533,10 +630,6 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     right.setFromMatrixColumn(camera.matrix, 0);
     const span = cur.pos.distanceTo(cur.target) * 0.34;
     lookAt.addScaledVector(right, cur.shift * span * (container.clientWidth > 760 ? 1 : 0));
-    if (moving && !DOORS[focus]) {
-      camera.position.addScaledVector(right, pointer.x * 0.9);
-      camera.position.y += -pointer.y * 0.5;
-    }
     camera.lookAt(lookAt);
 
     // Threads fade in and carry a bead of light
@@ -560,9 +653,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     placeLabels();
 
     const arrived = cur.pos.distanceToSquared(want.pos) < 1e-4 && !glide;
-    const settled = arrived && Math.abs(pointer.x - pointer.tx) < 1e-3 && Math.abs(pointer.y - pointer.ty) < 1e-3;
-    // The door view ignores the cursor, so arriving is enough: waiting for the
-    // parallax to rest too left the approach hanging while the mouse moved.
+    const settled = arrived && cur.target.distanceToSquared(want.target) < 1e-4;
     if (arrived && settledResolvers.length) {
       const done = settledResolvers;
       settledResolvers = [];
@@ -608,10 +699,12 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   });
 
   return {
-    setStops,
-    setProgress,
     setFocus,
     approach,
+    back,
+    nudge,
+    zoom,
+    setEngaged,
     snapshot,
     /** Show or hide every thread (used by the crop renderer). */
     setThreadsVisible(on) {
@@ -627,10 +720,14 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       drift = on;
       if (!on) {
         driftAngle = 0;
-        want.pos.copy(orbitPosition(view));
+        applyFree();
       }
       dirty = true;
       tick();
+    },
+    /** The free view: azimuth, elevation, distance and target. */
+    get view() {
+      return { az: free.az, el: free.el, dist: free.dist, target: [...free.target], engaged };
     },
     setVisible,
     resize,
@@ -649,8 +746,12 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       clearInterval(ticker);
       cancelAnimationFrame(raf);
       ro.disconnect();
+      container.removeEventListener('pointerdown', onPointerDown);
       container.removeEventListener('pointermove', onPointerMove);
+      container.removeEventListener('pointerup', onPointerUp);
+      container.removeEventListener('pointercancel', onPointerUp);
       container.removeEventListener('pointerleave', onPointerLeave);
+      container.removeEventListener('wheel', onWheel);
       renderer.dispose();
       pmrem.dispose();
     },

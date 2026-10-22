@@ -23,53 +23,58 @@ const notify = createToast($('#toast'));
 setupCopy(notify, (id) => storyURL(id));
 
 // ---------------------------------------------------------------------------
-// The community: an explorer with six stops and a tour that plays
+// The community: a model you explore freely, with a tour that can play
 // ---------------------------------------------------------------------------
-const steps = journeySteps();
+const steps = journeySteps(); // the places the tour visits, in order
 const stage = $('#stage');
 const explorer = $('#explorer');
 const journey = $('.journey');
-const cards = $$('.journey-card');
-const dots = $$('.journey-dot');
 const playButtons = $$('[data-play]');
 const muteButton = $('[data-mute]');
+const tourCaption = $('.tour-caption');
 const theme = $('#theme');
 const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-const TOUR_DWELL = 9000; // ms at each stop while the tour plays
+const TOUR_DWELL = 9000; // ms at each place while the tour plays
 let scene = null;
 let sceneLoading = false;
-let activeStep = -1; // -1 is the overview
 let playing = false;
+let tourIndex = -1; // -1 is the overview
 let tourTimer = 0;
 let muted = false; // not remembered: a tour should never open silent by surprise
 
-function showStep(i) {
-  activeStep = i;
-  explorer.dataset.step = String(i);
-  cards.forEach((c) => {
-    c.hidden = Number(c.dataset.step) !== i;
-  });
-  dots.forEach((d) => d.setAttribute('aria-current', String(Number(d.dataset.go) === i)));
-  const place = i < 0 ? 'overview' : steps[i].place;
-  scene?.setFocus(place, { instant: !store.get().motion, side: i < 0 ? 0 : i % 2 === 0 ? -1 : 1 });
+function setCaption(s) {
+  tourCaption.replaceChildren();
+  tourCaption.hidden = !s;
+  if (!s) return;
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'eyebrow';
+  eyebrow.textContent = `${s.number} ${s.label}`;
+  const title = document.createElement('p');
+  title.className = 'tour-caption-title';
+  title.textContent = s.placeName;
+  const text = document.createElement('p');
+  text.className = 'tour-caption-text';
+  text.textContent = s.moment;
+  tourCaption.append(eyebrow, title, text);
+}
+/** The tour's camera: a place from the list, or the overview. */
+function showTourStop(i) {
+  tourIndex = i;
+  const s = i < 0 ? null : steps[i];
+  scene?.setFocus(s ? s.place : 'overview', { instant: !store.get().motion });
+  for (const [place, el] of labels) el.classList.toggle('is-focus', !!s && place === s.place);
+  setCaption(s);
+}
+/** Back to the opening view, by hand. */
+function resetView() {
+  stopTour();
+  tourIndex = -1;
+  explorer.classList.remove('is-explored');
+  scene?.setFocus('overview', { instant: !store.get().motion });
+  for (const el of labels.values()) el.classList.remove('is-focus');
 }
 
-/** Move to a stop. User moves stop the tour; the tour's own moves do not. */
-function goToStep(i, { byTour = false } = {}) {
-  const next = Math.max(-1, Math.min(steps.length - 1, i));
-  if (!byTour) stopTour();
-  if (next === activeStep) return;
-  showStep(next);
-}
-function stepBy(dir) {
-  goToStep(activeStep + dir);
-}
-function goToPlace(place) {
-  const i = steps.findIndex((s) => s.place === place);
-  if (i >= 0) goToStep(i);
-}
-
-// The tour: one stop after another, around and around, with music
+// The tour: one place after another, around and around, with music
 function setPlayingUI() {
   for (const b of playButtons) {
     b.setAttribute('aria-pressed', String(playing));
@@ -86,11 +91,11 @@ function startTour() {
   fadeMusic(true);
   if (muted) notify('The tour is playing without music. Use the sound control to turn it on.');
   const advance = () => {
-    const next = activeStep >= steps.length - 1 ? -1 : activeStep + 1;
-    goToStep(next, { byTour: true });
+    const next = tourIndex >= steps.length - 1 ? -1 : tourIndex + 1;
+    showTourStop(next);
     tourTimer = setTimeout(advance, next < 0 ? TOUR_DWELL * 0.7 : TOUR_DWELL);
   };
-  tourTimer = setTimeout(advance, activeStep < 0 ? 1200 : TOUR_DWELL);
+  tourTimer = setTimeout(advance, 1200);
 }
 function stopTour() {
   if (!playing) return;
@@ -99,6 +104,8 @@ function stopTour() {
   setPlayingUI();
   scene?.setDrift(false);
   fadeMusic(false);
+  setCaption(null);
+  for (const el of labels.values()) el.classList.remove('is-focus');
 }
 function toggleTour() {
   playing ? stopTour() : startTour();
@@ -134,31 +141,38 @@ function setMuted(on) {
 }
 setMuted(muted);
 setPlayingUI();
-showStep(-1);
 
 // Controls
 document.addEventListener('click', (e) => {
-  const go = e.target.closest('[data-go]');
-  if (go) return goToStep(Number(go.dataset.go));
-  const dir = e.target.closest('[data-step-dir]');
-  if (dir) return stepBy(Number(dir.dataset.stepDir));
   if (e.target.closest('[data-play]')) return toggleTour();
   if (e.target.closest('[data-mute]')) return setMuted(!muted);
+  if (e.target.closest('[data-reset-view]')) return resetView();
 });
 // A building, or its name, is a door: click it and you step inside
 function enterPlace(place) {
-  goToPlace(place);
-  room.enter(place);
+  room.enter(place, { trigger: labels.get(place) || null });
 }
 for (const [place, el] of labels) el.addEventListener('click', () => enterPlace(place));
+// The keyboard turns and zooms the model; space plays or pauses the tour
 explorer.addEventListener('keydown', (e) => {
-  if (e.target !== explorer && e.target.closest('.journey-card')) return;
-  if (e.key === 'ArrowRight') stepBy(1);
-  else if (e.key === 'ArrowLeft') stepBy(-1);
-  else if (e.key === ' ' && e.target === explorer) toggleTour();
+  const onControl = e.target !== explorer && e.target.closest('button, a');
+  if (e.key === 'ArrowRight') scene?.nudge(0.12, 0);
+  else if (e.key === 'ArrowLeft') scene?.nudge(-0.12, 0);
+  else if (e.key === 'ArrowUp') scene?.nudge(0, 0.08);
+  else if (e.key === 'ArrowDown') scene?.nudge(0, -0.08);
+  else if (e.key === '+' || e.key === '=') scene?.zoom(0.85);
+  else if (e.key === '-' || e.key === '_') scene?.zoom(1.18);
+  else if (e.key === 'Home') resetView();
+  else if (e.key === ' ' && !onControl) toggleTour();
   else return;
+  if (e.key.startsWith('Arrow') || e.key === 'Home') onExplore();
   e.preventDefault();
 });
+/** Any hand on the model: the tour stops, the opening card gives way. */
+function onExplore() {
+  if (playing) stopTour();
+  explorer.classList.add('is-explored');
+}
 
 function supportsWebGL2() {
   try {
@@ -182,7 +196,7 @@ async function loadScene() {
       motion: () => store.get().motion,
       onReady: () => {
         stage.dataset.sceneState = 'ready';
-        showStep(activeStep);
+        if (playing) showTourStop(tourIndex);
         scene.setDrift(playing && store.get().motion);
       },
       onFail: (err) => {
@@ -190,6 +204,7 @@ async function loadScene() {
         stage.dataset.sceneState = 'fallback';
       },
       onSelect: enterPlace,
+      onInteract: onExplore,
     });
     if (!scene) stage.dataset.sceneState = 'fallback';
   } catch (err) {
@@ -248,16 +263,12 @@ const room = createRoom($('#room'), {
   webgl: supportsWebGL2(),
   approach: (place) => {
     stopTour();
-    cards.forEach((c) => {
-      c.hidden = true;
-    });
     if (scene && store.get().motion) return scene.approach(place);
     scene?.approach(place, { instant: true });
     return Promise.resolve();
   },
-  onLeft: (place) => {
-    const i = steps.findIndex((s) => s.place === place);
-    showStep(i >= 0 ? i : activeStep);
+  onLeft: () => {
+    scene?.back({ instant: !store.get().motion });
   },
   openStory: (id) => dialog.open(id),
 });
@@ -299,7 +310,7 @@ function buildScroll() {
   teardownScroll();
   if (!store.get().motion) {
     $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
-    scene?.setFocus(activeStep < 0 ? 'overview' : steps[activeStep].place, { instant: true });
+    scene?.setDrift(false);
     return;
   }
 
@@ -629,15 +640,15 @@ window.__impact = {
   get scene() {
     return scene;
   },
-  get step() {
-    return activeStep;
+  get tourStop() {
+    return tourIndex;
   },
   get playing() {
     return playing;
   },
-  goToStep,
   startTour,
   stopTour,
+  resetView,
   get fabric() {
     return fabric;
   },

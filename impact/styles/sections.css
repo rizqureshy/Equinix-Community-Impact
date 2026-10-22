@@ -189,7 +189,7 @@
   transition: opacity var(--d2);
   pointer-events: none;
 }
-.explorer[data-step='-1'] .hero-stats {
+.explorer:not(.is-playing):not(.is-explored) .hero-stats {
   opacity: 1;
 }
 .stat {
@@ -248,6 +248,62 @@
 }
 .journey-card--intro {
   width: min(460px, calc(100% - 2 * var(--gutter)));
+}
+.explorer.is-explored .journey-card--intro,
+.explorer.is-playing .journey-card--intro {
+  display: none;
+}
+.journey-how {
+  margin-top: var(--s-3);
+  font-size: var(--t-xs);
+}
+.tour-caption {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 92px;
+  width: min(400px, calc(100% - 2 * var(--gutter)));
+  padding: var(--s-5) var(--s-6);
+  border-radius: var(--radius-lg);
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: saturate(1.6) blur(18px);
+  pointer-events: none;
+  animation: caption-in var(--d2) var(--ease);
+}
+.tour-caption[hidden] {
+  display: none;
+}
+@keyframes caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+.tour-caption .eyebrow {
+  margin-bottom: var(--s-2);
+}
+.tour-caption-title {
+  margin: 0;
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.tour-caption-text {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-sm);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+/* The model under the hand */
+.scene-host {
+  cursor: grab;
+}
+.scene-host.is-dragging {
+  cursor: grabbing;
+}
+.scene-host.is-dragging .place-label {
+  pointer-events: none;
 }
 .journey-card .actions {
   margin-top: var(--s-4);
@@ -338,49 +394,6 @@
 .bar-btn[aria-pressed='true'] .icon-muted {
   display: block;
 }
-.journey-dot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  cursor: pointer;
-}
-.journey-dot i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--line-strong);
-  transition: transform var(--d1), background-color var(--d1);
-}
-.journey-dot[aria-current='true'] i {
-  background: var(--red);
-  transform: scale(1.4);
-}
-.journey-dot span {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: var(--ink);
-  color: #fff;
-  font-size: var(--t-xs);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--d1), transform var(--d1) var(--ease);
-}
-.journey-dot:hover span,
-.journey-dot:focus-visible span {
-  opacity: 1;
-  transform: translateX(-50%);
-}
-
 /* ---- Statement ---------------------------------------------------------------- */
 .statement {
   padding: var(--s-10) 0;
@@ -1288,12 +1301,6 @@
     gap: 0;
     padding: 3px;
   }
-  .journey-dot {
-    width: 28px;
-  }
-  .journey-dot span {
-    display: none;
-  }
   .bar-btn {
     width: 40px;
   }
@@ -1302,6 +1309,16 @@
   }
   .journey-card--intro {
     bottom: 88px;
+  }
+  .tour-caption {
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 76px;
+    width: auto;
+    padding: var(--s-4) var(--s-5);
+  }
+  .journey-how {
+    display: none;
   }
   .stage-note {
     display: none;
