@@ -201,11 +201,30 @@ try {
   const copy = await p.evaluate(() => document.body.innerText);
   check(!copy.includes('—'), 'page copy has no em dashes');
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
+  // Training and resources: placeholders are labelled, the live link is marked, the route lands
+  await p.goto(`${BASE}#/training`);
+  let resourcesTop = Infinity;
+  for (let i = 0; i < 24 && Math.abs(resourcesTop) >= 40; i++) {
+    await wait(250);
+    resourcesTop = await p.evaluate(() => document.querySelector('#training').getBoundingClientRect().top);
+  }
+  check(Math.abs(resourcesTop) < 40, 'the training route lands on the section', `${Math.round(resourcesTop)}px`);
+  check(await p.evaluate(() => document.querySelectorAll('.resource .resource-state').length === 5 && document.querySelectorAll('.resource-state--live').length === 1 && document.querySelectorAll('.roleplay').length === 4), 'downloadable placeholders, one live link and four role plays are listed');
+  check(await p.evaluate(() => document.querySelector('.site-nav a[href="engage.html"]') && document.querySelector('.resource-group--engage a[href="engage.html"]')), 'the Engage page is linked from the nav and the resources');
   // Sunlight: a diffused light sits over the page, blended in, never in the way
   check(await p.evaluate(() => { const l = document.querySelector('#weather-light'); const cs = getComputedStyle(l); return cs.mixBlendMode === 'multiply' && cs.pointerEvents === 'none' && cs.position === 'fixed'; }), 'a diffused sunlight sits over the page and takes no clicks');
   check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (sections)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (sections)', p.errors.slice(0, 3).join(' | '));
+  await p.context().close();
+
+  // ---- Engage page ----------------------------------------------------------
+  p = await open(browser, `${BASE}engage.html`);
+  await wait(1200);
+  check(await p.locator('#engage-title').isVisible(), 'the Engage page opens on its title');
+  check(await p.evaluate(() => { const f = document.querySelector('.engage-frame iframe'); return f && f.getAttribute('src').startsWith('https://engage.cloud.microsoft/embed/') && f.title === 'Viva Engage'; }), 'the Viva Engage feed is embedded');
+  check(p.external.every((u) => u.startsWith('https://engage.cloud.microsoft/')), 'the Engage page reaches only Viva Engage', p.external.filter((u) => !u.startsWith('https://engage.cloud.microsoft/')).slice(0, 3).join(', '));
+  check(p.errors.length === 0, 'no JavaScript errors on the Engage page', p.errors.join(' | '));
   await p.context().close();
 
   // ---- Direct story link and clipboard failure ---------------------------

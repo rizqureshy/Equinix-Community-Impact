@@ -5,11 +5,11 @@
 //                          since `community` is also a chapter topic)
 //   #/chapter/<topic>      a story chapter
 //   #/story/<id>           a story opened in the detail view
-//   #/stories | #/promises | #/people | #/share | #/sources
+//   #/stories | #/promises | #/people | #/training | #/share | #/sources
 //   #/explore and #/principles are older links, kept as aliases
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['journey', 'stories', 'promises', 'people', 'share', 'sources']);
+const SECTIONS = new Set(['journey', 'stories', 'promises', 'people', 'training', 'share', 'sources']);
 const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises' };
 const TOPICS = new Set(topics.map((t) => t.id));
 

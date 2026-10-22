@@ -34,6 +34,7 @@ The browser checks block every request that leaves the local host, then exercise
 ```text
 impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
+  engage.html             the Engage page: the Viva Engage community embedded
   styles/                 tokens.css, base.css, sections.css, weather.css
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
@@ -68,7 +69,7 @@ To change the community layout, edit `PLACES` (position, footprint, rotation) an
 
 ## Deploy
 
-The build is fully static and self-contained: Three.js, GSAP, fonts, images, films and models are bundled and served from the same host. No CDN, analytics or third-party runtime calls. Asset paths and story links are relative, so the same `dist/` works at a repository subpath or a host root.
+The build is fully static and self-contained: Three.js, GSAP, fonts, images, films and models are bundled and served from the same host. No CDN, analytics or third-party runtime calls, except the Viva Engage feed embedded on the Engage page. Asset paths and story links are relative, so the same `dist/` works at a repository subpath or a host root.
 
 - **GitHub Pages, simplest:** a ready-built copy lives in `docs/`. In the repository settings, open Pages, choose "Deploy from a branch", pick the branch and the `/docs` folder. Rebuild it after any change with `npm run build:docs` and commit the result.
 - **GitHub Pages, automated:** `.github/workflows/pages.yml` builds and deploys on pushes to `main` when Pages source is set to "GitHub Actions". Either way the site lives at `https://<owner>.github.io/Equinix-Community-Impact/`.

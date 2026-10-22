@@ -777,6 +777,159 @@
   background: var(--bg-soft);
 }
 
+/* ---- Training and resources -------------------------------------------- */
+.resources {
+  padding: var(--s-9) 0;
+  background: var(--bg-soft);
+}
+.resources-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--s-5);
+  margin-top: var(--s-8);
+}
+.resource-group {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+}
+.resource-group--engage {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+.resource-group--engage .title--md {
+  grid-column: 1;
+}
+.resource-group--engage .muted {
+  grid-column: 1;
+  max-width: 60ch;
+}
+.resource-group--engage .btn {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+.resource-list,
+.roleplay-list {
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.resource {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr auto;
+  grid-template-areas:
+    'type name state'
+    'type meta state';
+  column-gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--line);
+}
+.resource-type {
+  grid-area: type;
+  font-size: var(--t-xs);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.resource-name {
+  grid-area: name;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.resource-meta {
+  grid-area: meta;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+.resource-meta a {
+  color: var(--red);
+  text-decoration: none;
+}
+.resource-state {
+  grid-area: state;
+  justify-self: end;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px dashed var(--line-strong);
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.resource-state--live {
+  border-style: solid;
+  border-color: var(--red);
+  color: var(--red);
+}
+.roleplay {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--line);
+}
+.roleplay-num {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-size: var(--t-xs);
+  font-weight: 650;
+}
+.roleplay strong {
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: -0.015em;
+}
+.roleplay p {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-sm);
+}
+.roleplay .resource-state {
+  display: inline-block;
+  justify-self: start;
+}
+
+/* ---- Engage page ------------------------------------------------------- */
+.page-engage main {
+  padding-top: calc(var(--header-h) + var(--s-8));
+}
+.engage-intro {
+  padding-bottom: var(--s-7);
+}
+.engage-feed {
+  padding-bottom: var(--s-9);
+}
+.engage-frame {
+  height: min(78vh, 900px);
+  min-height: 480px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-soft);
+  box-shadow: var(--shadow-card);
+}
+.engage-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.engage-feed .note {
+  margin-top: var(--s-4);
+}
+.engage-feed .note a {
+  color: var(--red);
+}
+
 /* ---- Story gallery ------------------------------------------------------------------- */
 .collection {
   padding: var(--s-9) 0;
@@ -1009,6 +1162,17 @@
 
 /* ---- Small screens ------------------------------------------------------------------- */
 @media (max-width: 1000px) {
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+  .resource-group--engage {
+    grid-template-columns: 1fr;
+  }
+  .resource-group--engage .btn {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+  }
   .ledger {
     grid-template-columns: 1fr;
   }
@@ -1067,6 +1231,14 @@
   }
   .journey {
     padding-top: var(--s-8);
+  }
+  .resource {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'type state'
+      'name state'
+      'meta state';
+    row-gap: 2px;
   }
   .hero-stats {
     display: none;

@@ -17,6 +17,7 @@ describe('router', () => {
     expect(parseHash('#/chapter/care')).toEqual({ section: 'care', topic: 'care' });
     expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'resources', topic: 'resources' });
     expect(parseHash('#/people')).toEqual({ section: 'people' });
+    expect(parseHash('#/training')).toEqual({ section: 'training' });
   });
 
   it('falls back safely for unknown routes', () => {
