@@ -22,7 +22,8 @@ export function createFabric(host, { motion = () => true } = {}) {
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  // Neutral tone mapping keeps the red red; ACES would drift it to salmon
+  renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
   renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -31,14 +32,14 @@ export function createFabric(host, { motion = () => true } = {}) {
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.9;
+  scene.environmentIntensity = 0.55;
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
   camera.position.set(0, 0, 21);
 
-  const key = new THREE.DirectionalLight('#fff1e0', 2.6);
+  const key = new THREE.DirectionalLight('#fff4ea', 1.7);
   key.position.set(-6, 8, 10);
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#ffd8d4', 1.6);
+  const rim = new THREE.DirectionalLight('#ffc9c4', 1.1);
   rim.position.set(8, -4, -6);
   scene.add(rim);
 
@@ -56,20 +57,20 @@ export function createFabric(host, { motion = () => true } = {}) {
   // Satin: strong sheen, no hard clearcoat, some roughness so folds read as cloth
   const material = new THREE.MeshPhysicalMaterial({
     color: RED,
-    roughness: 0.36,
+    roughness: 0.38,
     metalness: 0,
-    sheen: 1,
-    sheenColor: new THREE.Color('#ffc4c0'),
+    sheen: 0.8,
+    sheenColor: new THREE.Color('#ff7a72'),
     sheenRoughness: 0.5,
-    clearcoat: 0.12,
+    clearcoat: 0.1,
     clearcoatRoughness: 0.5,
     side: THREE.DoubleSide,
   });
   const cloth = new THREE.Mesh(geometry, material);
   cloth.rotation.set(-0.08, 0.18, -0.22);
-  cloth.position.set(0.6, 0.4, 0);
+  cloth.position.set(0.6, 0, 0);
   scene.add(cloth);
-  scene.add(new THREE.HemisphereLight('#ffffff', '#5a1a1a', 0.5));
+  scene.add(new THREE.HemisphereLight('#ffffff', '#3a0d0d', 0.35));
 
   const pos = geometry.attributes.position;
   const TAU = Math.PI * 2;
@@ -83,8 +84,8 @@ export function createFabric(host, { motion = () => true } = {}) {
   function centre(u, t, out) {
     const free = 0.35 + u * 0.95;
     const x = (u - 0.5) * LENGTH;
-    const y = (Math.sin(u * TAU * 1.15 + t * 0.5) * 2.9 + Math.sin(u * TAU * 0.45 - t * 0.27) * 1.6) * free;
-    const z = (Math.sin(u * TAU * 0.85 + t * 0.4 + 1.2) * 2.4 + Math.sin(u * TAU * 1.7 - t * 0.6) * 0.7) * free;
+    const y = (Math.sin(u * TAU * 1.6 + t * 0.5) * 3.1 + Math.sin(u * TAU * 0.7 - t * 0.27) * 2.0 + Math.sin(u * TAU * 2.9 + t * 0.9) * 0.6) * free;
+    const z = (Math.sin(u * TAU * 1.3 + t * 0.4 + 1.2) * 2.6 + Math.sin(u * TAU * 2.4 - t * 0.6) * 0.9) * free;
     return out.set(x, y, z);
   }
   function shape(t) {
@@ -97,7 +98,7 @@ export function createFabric(host, { motion = () => true } = {}) {
       centre(Math.min(1, u + 0.004), t, C2);
       T.subVectors(C2, C).normalize();
       // A frame that turns about the centreline: the cloth rolls as it flies
-      const roll = Math.sin(u * TAU * 0.7 + t * 0.35) * 1.1 + u * 1.4 + t * 0.08;
+      const roll = Math.sin(u * TAU * 1.1 + t * 0.35) * 1.4 + u * 2.2 + t * 0.08;
       B.crossVectors(T, UP).normalize();
       N.crossVectors(B, T).normalize();
       const cr = Math.cos(roll);
@@ -107,7 +108,7 @@ export function createFabric(host, { motion = () => true } = {}) {
       const wy = N.y * cr + B.y * sr;
       const wz = N.z * cr + B.z * sr;
       // The width cups: edges curl toward the face, more at the free end
-      const cup = (v * v * 4) * 0.9 * Math.sin(u * TAU * 0.6 + t * 0.7) * (0.3 + u);
+      const cup = (v * v * 4) * 1.2 * Math.sin(u * TAU * 0.9 + t * 0.7) * (0.3 + u);
       // Small ripples riding on the cloth
       const ripple =
         (Math.sin(x * 1.1 + v * 3 + t * 1.5) * 0.22 + Math.sin(x * 2.3 - v * 5 + t * 2.4) * 0.08) * (0.3 + u) * gust;
@@ -147,7 +148,7 @@ export function createFabric(host, { motion = () => true } = {}) {
   ro.observe(host);
 
   function draw() {
-    cloth.position.y = 0.4 + scrollDrift;
+    cloth.position.y = scrollDrift;
     renderer.render(scene, camera);
   }
   function frame(now) {
@@ -175,8 +176,9 @@ export function createFabric(host, { motion = () => true } = {}) {
   addEventListener(
     'scroll',
     () => {
-      // The cloth rises slowly as the page scrolls, like something passing overhead
-      scrollDrift = Math.min(6, scrollY * 0.0025);
+      // The cloth sways within the viewport as the page scrolls, never leaving it
+      scrollDrift = Math.sin(scrollY * 0.0009) * 2.2;
+      cloth.rotation.z = -0.22 + Math.sin(scrollY * 0.0006) * 0.14;
       if (!motion()) draw();
     },
     { passive: true },
