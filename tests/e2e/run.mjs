@@ -201,6 +201,13 @@ try {
   const copy = await p.evaluate(() => document.body.innerText);
   check(!copy.includes('—'), 'page copy has no em dashes');
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
+  // The red fabric: behind the page, with a toggle that is remembered
+  await p.waitForFunction(() => document.querySelector('#fabric-layer').classList.contains('is-ready'), null, { timeout: 30000 }).catch(() => {});
+  check(await p.evaluate(() => document.documentElement.dataset.fabric === 'on' && document.querySelector('#fabric-layer canvas') && getComputedStyle(document.querySelector('#fabric-layer')).opacity === '1' && getComputedStyle(document.querySelector('#fabric-layer')).pointerEvents === 'none'), 'the red fabric flies behind the page and takes no clicks');
+  await p.locator('[data-fabric-toggle]').click();
+  await wait(300);
+  check(await p.evaluate(() => document.documentElement.dataset.fabric === 'off' && localStorage.getItem('impact-fabric') === 'off' && document.querySelector('[data-fabric-toggle]').getAttribute('aria-pressed') === 'false'), 'the fabric can be switched off and the choice is remembered');
+  await p.locator('[data-fabric-toggle]').click();
   // Sunlight: a diffused light sits over the page, blended in, never in the way
   check(await p.evaluate(() => { const l = document.querySelector('#weather-light'); const cs = getComputedStyle(l); return cs.mixBlendMode === 'multiply' && cs.pointerEvents === 'none' && cs.position === 'fixed'; }), 'a diffused sunlight sits over the page and takes no clicks');
   check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
@@ -249,6 +256,7 @@ try {
   p = await open(browser, BASE, phone);
   await wait(3000);
   check((await p.evaluate(() => document.documentElement.scrollWidth)) <= 390, 'no horizontal scroll at phone width');
+  check(await p.evaluate(() => getComputedStyle(document.querySelector('#fabric-layer')).display === 'none' && !document.querySelector('#fabric-layer canvas')), 'the fabric stays off on phones');
   await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'start' }));
   await p.evaluate(() => window.__impact.goToStep(1));
   await settled(p, 1);

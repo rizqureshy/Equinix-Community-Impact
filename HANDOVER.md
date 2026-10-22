@@ -20,6 +20,18 @@ A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Le
 - **Sources:** Achieved, Happening now, Committed, plus the source directory.
 - **Story dialog:** a modal panel (full screen on mobile) with focus handling, copy actions and sources. The mouse wheel scrolls the open story while the page behind stays put.
 
+## The red fabric (branch `claude/red-fabric`)
+
+An experiment you asked for, on its own branch so it can be compared and merged or dropped.
+
+- A length of red satin flies in a slow wind behind the whole page: a long, finely divided cloth whose points are moved each frame by four travelling waves of different lengths and speeds, a slow twist so it rolls over and shows both faces, and curling edges. It is lit as satin (sheen and a light clearcoat over the logo red) with a warm key and a pink rim, in its own transparent canvas fixed behind the content. It rises slowly as the page scrolls.
+- **Toggle:** "Fabric" in the header, remembered in the browser, so you can compare with and without. The cloth fades in once it is ready and fades out when switched off.
+- **Legibility:** sections with their own background cover it; where it passes behind the hero and the statement, a soft white veil sits under the text.
+- **Motion off:** the cloth holds its pose. **Phones:** off, to save the battery and the small screen.
+- It loads after first paint and only when wanted, and stops rendering when the tab is hidden or the toggle is off. It is a second WebGL context beside the community model; on weak machines that is the first thing to switch off.
+
+Files: `impact/scripts/fabric.js`, `impact/styles/fabric.css`, the layer and toggle in `index.html`, wiring in `app.js`.
+
 ## Sunlight (branch `claude/season-weather`)
 
 Built on top of the redesign as its own branch. A full season-and-weather layer (leaves, rain, winter, spring, a footer switch) was built first and then cut back at your request to the one thing that worked: the light.
@@ -100,7 +112,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 - **Browser checks (`npm run test:e2e`):** 62 pass in headless Chromium with software WebGL.
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Community:** the headline is usable on arrival; the explorer sits in the page flow with its own controls; the model renders; the still is in place before it; moving to a stop frames its place, card and label; dots, arrows, labels and the keyboard move between stops; previous from the first stop returns to the overview; the tour starts, moves on and plays music, mute is remembered, and choosing a place pauses it; a story opens from a card with its URL and focus handling; Back and Forward work.
-  - **Sunlight:** the light layer is in place, blended, and takes no clicks.
+  - **Sunlight and fabric:** the light layer is in place, blended, and takes no clicks; the fabric flies behind the page, can be switched off and remembered, and stays off on phones.
   - **Sections:** chapter and alias routes land where expected; navigation marks the current section; in the promises the row at the reading line shows its proof over a large photograph and choosing a promise moves to it; on phones every promise shows its photograph and proof inline; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
   - **Reduced motion:** no smooth scrolling, films paused, stops still change by control, the toggle works.
   - **Mobile:** no sideways scroll, the journey card fits the screen, stories open full width.

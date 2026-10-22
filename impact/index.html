@@ -14,12 +14,16 @@
         try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
+        var fabric = null;
+        try { fabric = localStorage.getItem('impact-fabric'); } catch (e) {}
+        document.documentElement.dataset.fabric = fabric || 'on';
       })();
     </script>
     <link rel="stylesheet" href="./styles/main.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="fabric-layer" id="fabric-layer" aria-hidden="true"></div>
     <div class="weather-light" id="weather-light" aria-hidden="true"></div>
 
     <header class="site-header">
@@ -36,6 +40,9 @@
       </nav>
       <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
         <span class="motion-icon" aria-hidden="true"></span><span class="motion-label">Pause motion</span>
+      </button>
+      <button type="button" class="fabric-toggle" aria-pressed="true" data-fabric-toggle aria-label="Red fabric background, on">
+        <span class="fabric-swatch" aria-hidden="true"></span><span>Fabric</span>
       </button>
     </header>
 

@@ -195,6 +195,47 @@ async function loadScene() {
 // Sunlight: a wash of low autumn light over the page
 const sunlight = createSunlight({ light: $('#weather-light'), motion: () => store.get().motion });
 
+// The red fabric behind the page: loaded after first paint, with a toggle
+const fabricLayer = $('#fabric-layer');
+const fabricToggle = $('[data-fabric-toggle]');
+let fabric = null;
+let fabricLoading = false;
+function fabricWanted() {
+  return root.dataset.fabric === 'on' && innerWidth > 760 && supportsWebGL2();
+}
+async function loadFabric() {
+  if (fabric || fabricLoading || !fabricWanted()) return;
+  fabricLoading = true;
+  try {
+    const { createFabric } = await import('./fabric.js');
+    fabric = createFabric(fabricLayer, { motion: () => store.get().motion });
+    if (fabric) fabricLayer.classList.add('is-ready');
+  } catch (err) {
+    console.warn('Fabric unavailable', err);
+  }
+  fabricLoading = false;
+}
+function setFabric(on) {
+  root.dataset.fabric = on ? 'on' : 'off';
+  fabricToggle.setAttribute('aria-pressed', String(on));
+  fabricToggle.setAttribute('aria-label', `Red fabric background, ${on ? 'on' : 'off'}`);
+  try {
+    localStorage.setItem('impact-fabric', on ? 'on' : 'off');
+  } catch {}
+  if (on) {
+    loadFabric();
+    fabric?.start();
+  } else {
+    // Let it fade out, then stop rendering
+    setTimeout(() => {
+      if (root.dataset.fabric === 'off') fabric?.stop();
+    }, 1100);
+  }
+}
+fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
+setFabric(root.dataset.fabric === 'on');
+if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
+
 // Load the scene once the community is within reach; pause everything when it leaves
 const near = new IntersectionObserver(
   (entries) => {
@@ -327,6 +368,7 @@ setupMotionToggle($('[data-motion-toggle]'), {
     buildScroll();
     syncVideos();
     sunlight.motionChanged();
+    fabric?.motionChanged();
   },
 });
 
@@ -566,4 +608,7 @@ window.__impact = {
   goToStep,
   startTour,
   stopTour,
+  get fabric() {
+    return fabric;
+  },
 };

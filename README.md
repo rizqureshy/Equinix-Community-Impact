@@ -34,12 +34,13 @@ The browser checks block every request that leaves the local host, then exercise
 ```text
 impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
-  styles/                 tokens.css, base.css, sections.css, weather.css
+  styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
     router.js             hash routes: #/community, #/chapter/<topic>, #/story/<id>, #/promises and others
     weather.js            sunlight: the diffused light over the page
+    fabric.js             the red satin flying behind the page (Three.js), with its header toggle
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
