@@ -49,7 +49,7 @@ export function createFabric(host, { motion = () => true } = {}) {
   // centreline moves, the cloth's width turns about it (so both faces
   // show), and small ripples ride on top.
   const LENGTH = 30;
-  const WIDTH = 7;
+  const WIDTH = 9;
   const SEG_X = 220;
   const SEG_Y = 36;
   const geometry = new THREE.PlaneGeometry(LENGTH, WIDTH, SEG_X, SEG_Y);
@@ -57,14 +57,16 @@ export function createFabric(host, { motion = () => true } = {}) {
   // Satin: strong sheen, no hard clearcoat, some roughness so folds read as cloth
   const material = new THREE.MeshPhysicalMaterial({
     color: RED,
-    roughness: 0.38,
+    roughness: 0.62,
     metalness: 0,
-    sheen: 0.8,
-    sheenColor: new THREE.Color('#ff7a72'),
-    sheenRoughness: 0.5,
-    clearcoat: 0.1,
-    clearcoatRoughness: 0.5,
+    sheen: 0.5,
+    sheenColor: new THREE.Color('#ff8c86'),
+    sheenRoughness: 0.7,
+    clearcoat: 0,
     side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.5,
+    depthWrite: false,
   });
   const cloth = new THREE.Mesh(geometry, material);
   cloth.rotation.set(-0.08, 0.18, -0.22);
@@ -108,7 +110,7 @@ export function createFabric(host, { motion = () => true } = {}) {
       const wy = N.y * cr + B.y * sr;
       const wz = N.z * cr + B.z * sr;
       // The width cups: edges curl toward the face, more at the free end
-      const cup = (v * v * 4) * 1.2 * Math.sin(u * TAU * 0.9 + t * 0.7) * (0.3 + u);
+      const cup = (v * v * 4) * 1.5 * Math.sin(u * TAU * 0.9 + t * 0.7) * (0.3 + u);
       // Small ripples riding on the cloth
       const ripple =
         (Math.sin(x * 1.1 + v * 3 + t * 1.5) * 0.22 + Math.sin(x * 2.3 - v * 5 + t * 2.4) * 0.08) * (0.3 + u) * gust;
@@ -116,8 +118,14 @@ export function createFabric(host, { motion = () => true } = {}) {
       const fx = B.x * cr - N.x * sr;
       const fy = B.y * cr - N.y * sr;
       const fz = B.z * cr - N.z * sr;
-      const across = v * WIDTH * (0.85 + 0.15 * Math.sin(u * TAU + t * 0.3));
-      const outward = cup + ripple;
+      // The width swells and narrows along the length, and each edge wanders on
+      // its own, so the silhouette is never a parallel band
+      const swell = 0.7 + 0.3 * Math.sin(u * TAU * 1.3 + t * 0.33) + 0.12 * Math.sin(u * TAU * 3.1 - t * 0.5);
+      const edge = v > 0 ? Math.sin(u * TAU * 2.2 + t * 0.8) : Math.sin(u * TAU * 1.7 - t * 0.6 + 2);
+      const across = v * WIDTH * swell + Math.sign(v) * (v * v * 4) * edge * 0.9;
+      // Edges flutter faster and further than the middle
+      const flutter = (v * v * 4) * Math.sin(x * 2.6 + t * 3.2 + v * 9) * 0.35 * (0.3 + u);
+      const outward = cup + ripple + flutter;
       pos.array[i * 3] = C.x + wx * across + fx * outward;
       pos.array[i * 3 + 1] = C.y + wy * across + fy * outward;
       pos.array[i * 3 + 2] = C.z + wz * across + fz * outward;

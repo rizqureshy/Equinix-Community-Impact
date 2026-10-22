@@ -154,11 +154,16 @@ try {
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
   await wait(1600); // let the smooth scroll finish before scrolling by hand
   // The ledger: the row at the reading line is current and its proof shows
-  await p.evaluate(() => {
-    const r = document.querySelectorAll('.ledger-row')[3].getBoundingClientRect();
-    scrollTo(0, r.top + scrollY - innerHeight * 0.3);
-  });
-  await wait(1800);
+  // Scroll to the fourth promise and give the smooth scroll time to settle
+  for (let i = 0; i < 12; i++) {
+    await p.evaluate(() => {
+      const r = document.querySelectorAll('.ledger-row')[3].getBoundingClientRect();
+      scrollTo(0, r.top + scrollY - innerHeight * 0.3);
+    });
+    await wait(500);
+    if ((await p.evaluate(() => document.querySelector('.ledger').dataset.active)) === '3') break;
+  }
+  await wait(600);
   const ledgerState = await p.evaluate(() => {
     const img = document.querySelector('.proof:not([hidden]) .proof-art');
     return {
@@ -203,7 +208,7 @@ try {
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
   // The red fabric: behind the page, with a toggle that is remembered
   await p.waitForFunction(() => document.querySelector('#fabric-layer').classList.contains('is-ready'), null, { timeout: 30000 }).catch(() => {});
-  check(await p.evaluate(() => document.documentElement.dataset.fabric === 'on' && document.querySelector('#fabric-layer canvas') && getComputedStyle(document.querySelector('#fabric-layer')).opacity === '1' && getComputedStyle(document.querySelector('#fabric-layer')).pointerEvents === 'none'), 'the red fabric flies behind the page and takes no clicks');
+  check(await p.evaluate(() => document.documentElement.dataset.fabric === 'on' && document.querySelector('#fabric-layer canvas') && Number(getComputedStyle(document.querySelector('#fabric-layer')).opacity) > 0.5 && getComputedStyle(document.querySelector('#fabric-layer')).pointerEvents === 'none'), 'the red fabric flies behind the page and takes no clicks');
   await p.locator('[data-fabric-toggle]').click();
   await wait(300);
   check(await p.evaluate(() => document.documentElement.dataset.fabric === 'off' && localStorage.getItem('impact-fabric') === 'off' && document.querySelector('[data-fabric-toggle]').getAttribute('aria-pressed') === 'false'), 'the fabric can be switched off and the choice is remembered');

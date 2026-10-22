@@ -13,7 +13,7 @@
   height: 100%;
 }
 :root[data-fabric='on'] .fabric-layer.is-ready {
-  opacity: 1;
+  opacity: 0.85;
 }
 /* Content sits above the fabric; sections with their own background still cover it */
 main,
@@ -34,7 +34,7 @@ main,
     inset: -8% -12%;
     z-index: -1;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0));
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0));
   }
 }
 .hero,
