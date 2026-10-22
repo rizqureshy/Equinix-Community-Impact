@@ -32,67 +32,94 @@ export function createFabric(host, { motion = () => true } = {}) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.9;
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-  camera.position.set(0, 0, 16);
+  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+  camera.position.set(0, 0, 21);
 
-  const key = new THREE.DirectionalLight('#fff1e0', 2.4);
+  const key = new THREE.DirectionalLight('#fff1e0', 2.6);
   key.position.set(-6, 8, 10);
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#ffd0d0', 1.2);
+  const rim = new THREE.DirectionalLight('#ffd8d4', 1.6);
   rim.position.set(8, -4, -6);
   scene.add(rim);
 
-  // The cloth: long and narrow, finely divided along its length
-  const LENGTH = 26;
-  const WIDTH = 3.6;
-  const SEG_X = 180;
-  const SEG_Y = 26;
+  // The cloth is built along a sweeping centreline that rises, dives and
+  // turns through space, so the whole length folds over like silk in a
+  // wind, rather than a flat band with ripples on it. Each frame: the
+  // centreline moves, the cloth's width turns about it (so both faces
+  // show), and small ripples ride on top.
+  const LENGTH = 30;
+  const WIDTH = 7;
+  const SEG_X = 220;
+  const SEG_Y = 36;
   const geometry = new THREE.PlaneGeometry(LENGTH, WIDTH, SEG_X, SEG_Y);
   const base = geometry.attributes.position.array.slice();
+  // Satin: strong sheen, no hard clearcoat, some roughness so folds read as cloth
   const material = new THREE.MeshPhysicalMaterial({
     color: RED,
-    roughness: 0.32,
+    roughness: 0.36,
     metalness: 0,
     sheen: 1,
-    sheenColor: new THREE.Color('#ff9a96'),
-    sheenRoughness: 0.45,
-    clearcoat: 0.35,
-    clearcoatRoughness: 0.4,
+    sheenColor: new THREE.Color('#ffc4c0'),
+    sheenRoughness: 0.5,
+    clearcoat: 0.12,
+    clearcoatRoughness: 0.5,
     side: THREE.DoubleSide,
   });
   const cloth = new THREE.Mesh(geometry, material);
-  cloth.rotation.set(-0.18, 0.22, -0.32);
-  cloth.position.set(1.2, 1.0, 0);
+  cloth.rotation.set(-0.08, 0.18, -0.22);
+  cloth.position.set(0.6, 0.4, 0);
   scene.add(cloth);
+  scene.add(new THREE.HemisphereLight('#ffffff', '#5a1a1a', 0.5));
 
-  // Wind: a few travelling waves of different lengths and speeds, plus a
-  // slow twist along the length and a large, lazy swing of the whole cloth
-  const waves = [
-    { k: 0.55, ky: 0.0, w: 0.9, a: 0.95 },
-    { k: 1.15, ky: 0.35, w: 1.6, a: 0.42 },
-    { k: 2.4, ky: 0.9, w: 2.7, a: 0.12 },
-    { k: 0.28, ky: 0.0, w: 0.35, a: 1.1 },
-  ];
   const pos = geometry.attributes.position;
+  const TAU = Math.PI * 2;
+  const C = new THREE.Vector3();
+  const C2 = new THREE.Vector3();
+  const T = new THREE.Vector3();
+  const N = new THREE.Vector3();
+  const B = new THREE.Vector3();
+  const UP = new THREE.Vector3(0, 1, 0);
+  /** The centreline of the cloth at u (0 held end, 1 free end) and time t. */
+  function centre(u, t, out) {
+    const free = 0.35 + u * 0.95;
+    const x = (u - 0.5) * LENGTH;
+    const y = (Math.sin(u * TAU * 1.15 + t * 0.5) * 2.9 + Math.sin(u * TAU * 0.45 - t * 0.27) * 1.6) * free;
+    const z = (Math.sin(u * TAU * 0.85 + t * 0.4 + 1.2) * 2.4 + Math.sin(u * TAU * 1.7 - t * 0.6) * 0.7) * free;
+    return out.set(x, y, z);
+  }
   function shape(t) {
+    const gust = 0.8 + 0.2 * Math.sin(t * 0.29) * Math.sin(t * 0.16 + 1.1);
     for (let i = 0; i < pos.count; i++) {
       const x = base[i * 3];
-      const y = base[i * 3 + 1];
-      const u = (x + LENGTH / 2) / LENGTH; // 0 at the trailing end, 1 at the leading edge
-      const flutter = 0.35 + u * 0.9; // the free end moves most
-      let z = 0;
-      let dy = 0;
-      for (const wv of waves) {
-        z += Math.sin(x * wv.k + y * wv.ky + t * wv.w) * wv.a * flutter;
-      }
-      // A slow twist so the cloth rolls over and shows both faces
-      const twist = Math.sin(x * 0.22 + t * 0.4) * 0.9 * (0.2 + u);
-      dy = y * Math.cos(twist) - y;
-      z += y * Math.sin(twist);
-      // Edges curl a little more than the middle
-      z += Math.sign(y) * Math.pow(Math.abs(y) / (WIDTH / 2), 3) * 0.25 * Math.sin(x * 0.8 + t * 1.2);
-      pos.array[i * 3 + 1] = y + dy + Math.sin(x * 0.35 + t * 0.5) * 0.35 * u;
-      pos.array[i * 3 + 2] = z;
+      const v = base[i * 3 + 1] / WIDTH; // -0.5 .. 0.5 across the cloth
+      const u = (x + LENGTH / 2) / LENGTH;
+      centre(u, t, C);
+      centre(Math.min(1, u + 0.004), t, C2);
+      T.subVectors(C2, C).normalize();
+      // A frame that turns about the centreline: the cloth rolls as it flies
+      const roll = Math.sin(u * TAU * 0.7 + t * 0.35) * 1.1 + u * 1.4 + t * 0.08;
+      B.crossVectors(T, UP).normalize();
+      N.crossVectors(B, T).normalize();
+      const cr = Math.cos(roll);
+      const sr = Math.sin(roll);
+      // width direction = N*cos(roll) + B*sin(roll)
+      const wx = N.x * cr + B.x * sr;
+      const wy = N.y * cr + B.y * sr;
+      const wz = N.z * cr + B.z * sr;
+      // The width cups: edges curl toward the face, more at the free end
+      const cup = (v * v * 4) * 0.9 * Math.sin(u * TAU * 0.6 + t * 0.7) * (0.3 + u);
+      // Small ripples riding on the cloth
+      const ripple =
+        (Math.sin(x * 1.1 + v * 3 + t * 1.5) * 0.22 + Math.sin(x * 2.3 - v * 5 + t * 2.4) * 0.08) * (0.3 + u) * gust;
+      // face direction = B*cos(roll) - N*sin(roll)
+      const fx = B.x * cr - N.x * sr;
+      const fy = B.y * cr - N.y * sr;
+      const fz = B.z * cr - N.z * sr;
+      const across = v * WIDTH * (0.85 + 0.15 * Math.sin(u * TAU + t * 0.3));
+      const outward = cup + ripple;
+      pos.array[i * 3] = C.x + wx * across + fx * outward;
+      pos.array[i * 3 + 1] = C.y + wy * across + fy * outward;
+      pos.array[i * 3 + 2] = C.z + wz * across + fz * outward;
     }
     pos.needsUpdate = true;
     geometry.computeVertexNormals();
@@ -112,7 +139,7 @@ export function createFabric(host, { motion = () => true } = {}) {
     renderer.domElement.style.height = `${h}px`;
     camera.aspect = w / h;
     // Keep the cloth's apparent size steady across viewport widths
-    camera.position.z = w < 900 ? 22 : 16;
+    camera.position.z = w < 900 ? 27 : 21;
     camera.updateProjectionMatrix();
     draw();
   }
@@ -120,7 +147,7 @@ export function createFabric(host, { motion = () => true } = {}) {
   ro.observe(host);
 
   function draw() {
-    cloth.position.y = 1.0 + scrollDrift;
+    cloth.position.y = 0.4 + scrollDrift;
     renderer.render(scene, camera);
   }
   function frame(now) {
