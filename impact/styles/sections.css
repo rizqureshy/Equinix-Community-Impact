@@ -577,48 +577,13 @@
   padding: var(--s-9) 0;
   background: var(--bg-soft);
 }
-/* The promises ledger: list with the thread, sticky proof panel */
+/* The promises: numbered list beside a sticky photograph with the proof */
 .ledger {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--s-8);
   margin-top: var(--s-8);
   align-items: start;
-}
-.ledger-list-wrap {
-  position: relative;
-  padding-left: 44px;
-}
-.ledger-thread {
-  position: absolute;
-  top: 0;
-  left: 4px;
-  width: 24px;
-  height: 100%;
-  overflow: visible;
-}
-.ledger-thread-track {
-  stroke: var(--line-strong);
-  stroke-width: 2;
-  fill: none;
-}
-.ledger-thread-draw {
-  stroke: var(--red);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  fill: none;
-  stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - var(--drawn, 0));
-}
-:root[data-motion='off'] .ledger-thread-draw {
-  stroke-dashoffset: 0;
-}
-:root[data-motion='off'] .ledger-body {
-  grid-template-rows: 1fr;
-  transition: none;
-}
-:root[data-motion='off'] .ledger-head {
-  color: var(--ink);
 }
 .ledger-list {
   margin: 0;
@@ -626,30 +591,11 @@
   list-style: none;
 }
 .ledger-row {
-  position: relative;
   padding: var(--s-5) 0;
   border-top: 1px solid var(--line);
 }
 .ledger-row:last-child {
   border-bottom: 1px solid var(--line);
-}
-.ledger-row::before {
-  /* The node on the thread, lit when the row is current */
-  content: '';
-  position: absolute;
-  left: -36px;
-  top: calc(var(--s-5) + 0.6em);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--bg-soft);
-  border: 2px solid var(--line-strong);
-  transition: background-color var(--d1), border-color var(--d1), transform var(--d2) var(--ease);
-}
-.ledger-row[aria-current='true']::before {
-  background: var(--red);
-  border-color: var(--red);
-  transform: scale(1.25);
 }
 .ledger-head {
   display: grid;
@@ -664,7 +610,7 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color var(--d1);
+  transition: color var(--d2);
 }
 .ledger-row[aria-current='true'] .ledger-head,
 .ledger-head:hover {
@@ -675,6 +621,7 @@
   font-weight: 650;
   letter-spacing: 0.04em;
   color: var(--ink-3);
+  transition: color var(--d2);
 }
 .ledger-row[aria-current='true'] .ledger-num {
   color: var(--red);
@@ -685,26 +632,18 @@
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
-.ledger-body {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--d2) var(--ease);
-}
-.ledger-body > * {
-  overflow: hidden;
-  min-height: 0;
-}
-.ledger-row[aria-current='true'] .ledger-body {
-  grid-template-rows: 1fr;
-}
 .ledger-promise {
   margin: 0;
   padding: var(--s-3) 0 0 calc(3.2rem + var(--s-3));
   max-width: 34rem;
   font-size: var(--t-md);
+  color: var(--ink-3);
+  transition: color var(--d2);
+}
+.ledger-row[aria-current='true'] .ledger-promise {
   color: var(--ink-2);
 }
-.ledger-inline-proof {
+.ledger-inline {
   display: none;
 }
 .ledger-kind {
@@ -716,15 +655,17 @@
 }
 .ledger-panel {
   position: sticky;
-  top: calc(var(--header-h) + 40px);
+  top: calc(var(--header-h) + 32px);
 }
 .proof {
   position: relative;
   margin: 0;
+  height: min(78vh, 780px);
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-soft);
   box-shadow: var(--shadow-card);
+  isolation: isolate;
   animation: proof-in var(--d2) var(--ease);
 }
 .proof[hidden] {
@@ -737,37 +678,42 @@
   }
 }
 .proof-art {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-.proof-card {
   position: absolute;
-  left: var(--s-5);
-  right: var(--s-5);
-  bottom: var(--s-5);
-  display: grid;
-  gap: var(--s-2);
-  padding: var(--s-5);
-  border-radius: var(--radius);
-  background: var(--glass);
-  border: 1px solid var(--glass-line);
-  box-shadow: var(--shadow-float);
-  backdrop-filter: saturate(1.6) blur(18px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 60%;
 }
-.proof-card .eyebrow {
+/* The copy sits in the quiet sky at the top of each photograph */
+.proof-copy {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-6) var(--s-6) var(--s-8);
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.9) 0%, rgb(255 255 255 / 0.72) 55%, rgb(255 255 255 / 0) 100%);
+}
+.proof-copy .eyebrow {
   margin: 0;
+}
+.proof-headline {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.6rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 .proof-text {
   margin: 0;
-  font-size: var(--t-lg);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  max-width: 34ch;
+  font-size: var(--t-md);
+  color: var(--ink-2);
 }
-.proof-card .note a,
+.proof-copy .note a,
 .proof-note a {
   color: var(--red);
   text-decoration: none;
@@ -1066,29 +1012,42 @@
   .ledger {
     grid-template-columns: 1fr;
   }
-  .ledger-panel,
-  .ledger-thread {
+  .ledger-panel {
     display: none;
-  }
-  .ledger-list-wrap {
-    padding-left: 0;
-  }
-  .ledger-row::before {
-    display: none;
-  }
-  .ledger-body,
-  .ledger-row[aria-current='true'] .ledger-body {
-    grid-template-rows: 1fr;
   }
   .ledger-head {
     color: var(--ink);
     cursor: default;
   }
-  .ledger-inline-proof {
-    display: block;
-    margin: var(--s-3) 0 0 calc(3.2rem + var(--s-3));
+  .ledger-promise {
+    color: var(--ink-2);
+  }
+  .ledger-inline {
+    display: grid;
+    grid-template-columns: minmax(0, 42%) 1fr;
+    gap: var(--s-4);
+    align-items: start;
+    margin: var(--s-4) 0 0 calc(3.2rem + var(--s-3));
+  }
+  .ledger-inline img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .ledger-inline figcaption {
+    display: grid;
+    gap: 6px;
     max-width: 34rem;
     font-size: var(--t-sm);
+    color: var(--ink-2);
+  }
+  .ledger-inline strong {
+    font-size: var(--t-lg);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
   }
   .numbers {
     grid-template-columns: 1fr 1fr;

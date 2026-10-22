@@ -25,7 +25,6 @@ npm run build && npm run test:e2e # browser checks against the production build
 node tests/e2e/shot.mjs <url> <out.png> [width] [height] [waitMs] ["scroll=<y> full"]   # screenshot helper
 node tests/tools/glb-view.mjs <model.glb> <out.png>                                    # render a building model from four angles
 node tests/tools/city-still.mjs <url> impact/public/media/city                          # the community still (from the live scene)
-node tests/tools/city-crops.mjs <url> impact/public/media                               # the five crops behind the promises
 ```
 
 The browser checks block every request that leaves the local host, then exercise the community journey, stories, history, copy actions, filters, reduced motion, mobile and a no-WebGL browser.
@@ -44,7 +43,7 @@ impact/                   Vite root: the experience
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
-    content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises ledger, numbers, sources
+    content/render.js     HTML for the journey cards, chapters, story detail, gallery, promises, numbers, sources
     scene/city.js         the community model: loads the building GLBs, plinth, threads, camera stops, labels, interaction
   public/media/           web-ready images, films, posters, the building models (media/city/*.glb) and the tour theme (media/audio)
 media-src/                Higgsfield originals, prompts and asset-manifest.json

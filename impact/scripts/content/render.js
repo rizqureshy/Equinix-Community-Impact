@@ -236,22 +236,25 @@ export function collectionHTML() {
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
 /**
- * The promises as a ledger: a numbered list the thread draws through, and a
- * sticky panel that shows the proof for the active promise over a crop of
- * the community model. Without motion, or on small screens, each proof sits
- * under its promise.
+ * The promises: a numbered list beside a sticky panel that shows, for the
+ * promise at the reading line, a photograph with the proof set large over
+ * it. On narrow screens, or without motion, each promise carries its proof
+ * and photograph inline.
  */
 export function principlesHTML() {
   const rows = principles
     .map(
       (p, i) => `<li class="ledger-row" data-promise="${i}" ${i === 0 ? 'aria-current="true"' : ''}>
-        <button type="button" class="ledger-head" data-promise-go="${i}" aria-expanded="${i === 0}" aria-controls="promise-${i}">
+        <button type="button" class="ledger-head" data-promise-go="${i}" aria-controls="promise-${i}">
           <span class="ledger-num" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
           <span class="ledger-name">${esc(p.name)}</span>
         </button>
         <div class="ledger-body" id="promise-${i}">
           <p class="ledger-promise">${esc(p.promise)}</p>
-          <p class="ledger-inline-proof"><span class="ledger-kind">${esc(p.kind)}</span>${esc(p.proof)}</p>
+          <figure class="ledger-inline">
+            <img src="media/${p.art}-640.webp" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="640" height="960">
+            <figcaption><span class="ledger-kind">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></span><strong>${esc(p.headline)}</strong>${esc(p.proof)}</figcaption>
+          </figure>
         </div>
       </li>`,
     )
@@ -259,9 +262,10 @@ export function principlesHTML() {
   const proofs = principles
     .map(
       (p, i) => `<figure class="proof" data-proof="${i}" ${i ? 'hidden' : ''}>
-        <img class="proof-art" src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 1000px) 45vw, 100vw" alt="" loading="lazy" decoding="async" width="1280" height="960">
-        <figcaption class="proof-card">
+        <img class="proof-art" src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 1000px) 44vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="1800">
+        <figcaption class="proof-copy">
           <p class="eyebrow">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></p>
+          <p class="proof-headline">${esc(p.headline)}</p>
           <p class="proof-text">${esc(p.proof)}</p>
           <p class="note">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
         </figcaption>
@@ -269,12 +273,9 @@ export function principlesHTML() {
     )
     .join('');
   return `<div class="ledger" data-active="0">
-    <div class="ledger-list-wrap">
-      <svg class="ledger-thread" viewBox="0 0 24 1000" preserveAspectRatio="none" aria-hidden="true"><path class="ledger-thread-track" d="M12 0 V1000"/><path class="ledger-thread-draw" d="M12 0 V1000" pathLength="1"/></svg>
-      <ol class="ledger-list">${rows}</ol>
-    </div>
+    <ol class="ledger-list">${rows}</ol>
     <div class="ledger-panel" aria-live="polite">${proofs}
-      <p class="note proof-note">The model is an illustrative community, not the places named.</p>
+      <p class="note proof-note">Photographs are illustrative and AI generated, not the places or people named.</p>
     </div>
   </div>
   <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;

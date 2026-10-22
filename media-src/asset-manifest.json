@@ -847,8 +847,8 @@
     ]
   },
   "promises": {
-    "notes": "Five soft morning photographs generated for promise cards, then retired: the promises are now a ledger with crops rendered from the community model (tests/tools/city-crops.mjs, no credits). Originals kept; scripts/build_media.py promises rebuilds web versions if wanted.",
-    "estimatedCredits": 13.75,
+    "notes": "Two sets. The soft morning set (promise-1..5) was made for cards and retired. The kept set (kept-1..5, portrait, editorial documentary style, media-src/promises/style-kept.txt) stands beside each promise in the sticky panel. The model crops used in between were removed. Web versions by scripts/build_media.py promises.",
+    "estimatedCredits": 27.5,
     "items": [
       {
         "key": "promise-1",
@@ -959,6 +959,116 @@
         "status": "reserve",
         "usage": "Photograph behind promise 5 (digital); retired from the page when the promises became a ledger with crops of the community model. Original kept in media-src/promises.",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not documentary."
+      },
+      {
+        "key": "kept-1",
+        "generationId": "b4fd7517-9b36-4507-9841-ac212b8ef301",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-22T00:16:28.433698Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 688,
+          "height": 1024
+        },
+        "promptFile": "media-src/promises/k1-infrastructure.txt",
+        "styleFile": "media-src/promises/style-kept.txt",
+        "original": "media-src/promises/k1-infrastructure.png",
+        "web": "impact/public/media/kept-1-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph beside promise 1 (infrastructure) in the sticky panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "kept-2",
+        "generationId": "3f54864e-71d1-4ee0-b50e-d2cdf545698e",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-22T00:16:51.096022Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 688,
+          "height": 1024
+        },
+        "promptFile": "media-src/promises/k2-power.txt",
+        "styleFile": "media-src/promises/style-kept.txt",
+        "original": "media-src/promises/k2-power.png",
+        "web": "impact/public/media/kept-2-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph beside promise 2 (power) in the sticky panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "kept-3",
+        "generationId": "d830477c-323e-4d5b-8fcd-0c16fa7c56a0",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-22T00:17:15.096267Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 688,
+          "height": 1024
+        },
+        "promptFile": "media-src/promises/k3-jobs.txt",
+        "styleFile": "media-src/promises/style-kept.txt",
+        "original": "media-src/promises/k3-jobs.png",
+        "web": "impact/public/media/kept-3-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph beside promise 3 (jobs) in the sticky panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "kept-4",
+        "generationId": "843c2364-d513-43a4-8da2-62ca09c861d4",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-22T00:17:35.442965Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 688,
+          "height": 1024
+        },
+        "promptFile": "media-src/promises/k4-nature.txt",
+        "styleFile": "media-src/promises/style-kept.txt",
+        "original": "media-src/promises/k4-nature.png",
+        "web": "impact/public/media/kept-4-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph beside promise 4 (nature) in the sticky panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "kept-5",
+        "generationId": "0f284e85-d026-47f8-bc1c-ec660dd12329",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-22T00:17:58.666971Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "width": 688,
+          "height": 1024
+        },
+        "promptFile": "media-src/promises/k5-digital.txt",
+        "styleFile": "media-src/promises/style-kept.txt",
+        "original": "media-src/promises/k5-digital.png",
+        "web": "impact/public/media/kept-5-{640,1200}.webp",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "usage": "Photograph beside promise 5 (digital) in the sticky panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
       }
     ]
   },

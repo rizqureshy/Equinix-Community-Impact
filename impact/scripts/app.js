@@ -465,8 +465,8 @@ const counter = new IntersectionObserver(
 $$('.number-digits').forEach((n) => counter.observe(n));
 
 // ---------------------------------------------------------------------------
-// The promises ledger: the row nearest the reading line is current, its
-// proof shows in the sticky panel, and the thread draws down the list
+// The promises: the row nearest the reading line is current and its
+// photograph and proof show in the sticky panel
 // ---------------------------------------------------------------------------
 const ledger = $('.ledger');
 const ledgerRows = $$('.ledger-row');
@@ -477,10 +477,8 @@ function setPromise(i) {
   activePromise = i;
   ledger.dataset.active = String(i);
   ledgerRows.forEach((r, j) => {
-    const on = j === i;
-    if (on) r.setAttribute('aria-current', 'true');
+    if (j === i) r.setAttribute('aria-current', 'true');
     else r.removeAttribute('aria-current');
-    $('.ledger-head', r).setAttribute('aria-expanded', String(on));
   });
   proofs.forEach((f, j) => {
     f.hidden = j !== i;
@@ -494,10 +492,6 @@ function updateLedger() {
     if (r.getBoundingClientRect().top <= line) best = i;
   });
   setPromise(best);
-  const wrap = $('.ledger-list-wrap');
-  const r = wrap.getBoundingClientRect();
-  const drawn = clamp((line - r.top) / r.height);
-  wrap.style.setProperty('--drawn', String(store.get().motion ? drawn : 1));
 }
 addEventListener('scroll', updateLedger, { passive: true });
 addEventListener('resize', updateLedger);

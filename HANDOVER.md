@@ -14,7 +14,7 @@ A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Le
 - **Statement:** "Equinix is not a visitor in these places…" lights up word by word.
 - **Five chapters:** headline, moment, a rounded film, then the story with the connection, the two sets of contributions and the scoped figure, plus links to the other stories in the chapter.
 - **In numbers:** four headline figures that count up, each with scope and source. The prefix and suffix (the $, M and +) sit as smaller red marks so the numerals never overflow, and a short thread draws across each tile as it arrives, carrying a travelling bead (amber for heat).
-- **Five promises, as a ledger:** the U.S. Community Principles as a numbered list in large type with the red thread drawing down the gutter; the promise at the reading line opens to its full sentence and lights its node. A sticky panel beside it shows the proof: the kind of evidence, the place, the sentence itself and the source link, set as a record card over a crop of our own community model (rendered from the scene, no credits). Clicking a promise scrolls to it. On narrow screens and without motion it is a plain list with every proof inline. The five photographs made earlier were retired as too generic; they remain in `media-src/promises/`.
+- **Five promises:** a numbered list in large type beside a sticky panel. The promise at the reading line is current; its panel shows a tall photograph with the proof set large over the quiet sky at the top: a headline in a few words, the proof sentence, the kind of evidence, the place and the source. Clicking a promise scrolls to it. The five photographs were generated for this page in one editorial documentary style (low October sun, a small red detail in each) and are captioned as illustrative. On narrow screens and without motion the panel gives way to each promise carrying its photograph and proof inline. The thread that an earlier version drew down the list is gone.
 - **People:** film, leadership quote, roles and Kayla's path.
 - **Story gallery:** 11 cards in a swipeable rail, with filters, an empty state and copy actions.
 - **Sources:** Achieved, Happening now, Committed, plus the source directory.
@@ -66,8 +66,9 @@ Generation ran through the Higgsfield CLI after a browser sign-in (the connector
 | 7 models | Tripo H3.1 image to 3D (detailed geometry and texture, PBR) | The seven buildings | 63 |
 | 7 models, unused | Tripo H3.1 | Duplicates: the first hospital job's wait hung past its limit and its id was lost; a batch of five creates reported nothing and was re-run, but had in fact been accepted. The results exist in the workspace and were not downloaded | 63 |
 | 1 track, 120 s | Sonilo Music | The calm corporate theme for the tour (`media-src/audio/community-theme.txt`), normalised and faded for the web as Opus and MP3 | 3.75 |
-| 5 stills | GPT Image 2.5 (high, 3:2) | Soft photographs for the five promises in one shared style (`media-src/promises/style.txt`); retired the same day in favour of crops of the model, kept in reserve | 13.75 |
-| **This round** | | | **162.75 of the 250 allowed** (916 → 753.25 credits) |
+| 5 stills | GPT Image 2.5 (high, 3:2) | Soft photographs for the five promises in one shared style (`media-src/promises/style.txt`); retired, kept in reserve | 13.75 |
+| 5 stills | GPT Image 2.5 (high, 2:3) | Editorial documentary photographs beside the five promises (`media-src/promises/style-kept.txt`), in use | 13.75 |
+| **This round** | | | **176.5 of the 250 allowed** (916 → 739.5 credits) |
 
 Earlier rounds spent 212 credits on the stills and films that remain in use (chapter and people films, story images). Every output is recorded in `media-src/asset-manifest.json` (the `city` section for this round) with its generation id, model, settings, prompt file, status and use.
 
@@ -100,11 +101,11 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Community:** the headline is usable on arrival; the explorer sits in the page flow with its own controls; the model renders; the still is in place before it; moving to a stop frames its place, card and label; dots, arrows, labels and the keyboard move between stops; previous from the first stop returns to the overview; the tour starts, moves on and plays music, mute is remembered, and choosing a place pauses it; a story opens from a card with its URL and focus handling; Back and Forward work.
   - **Sunlight:** the light layer is in place, blended, and takes no clicks.
-  - **Sections:** chapter and alias routes land where expected; navigation marks the current section; in the promises ledger the row at the reading line shows its proof, the thread draws with the scroll and choosing a promise moves to it; on phones every proof shows inline; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
+  - **Sections:** chapter and alias routes land where expected; navigation marks the current section; in the promises the row at the reading line shows its proof over a large photograph and choosing a promise moves to it; on phones every promise shows its photograph and proof inline; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
   - **Reduced motion:** no smooth scrolling, films paused, stops still change by control, the toggle works.
   - **Mobile:** no sideways scroll, the journey card fits the screen, stories open full width.
   - **No WebGL:** the still is shown and the controls still work.
-- **Screenshots inspected:** hero, the explorer at the overview and several stops, numbers and the promises ledger at two positions at 1440 px; the explorer, a stop and the promises at 390 px; each building from four angles before and after compression; the five promise photographs as a contact sheet.
+- **Screenshots inspected:** hero, the explorer at the overview and several stops, numbers and the promises at two positions at 1440 px; the explorer, a stop and the promises at 390 px; each building from four angles before and after compression; the five promise photographs as a contact sheet.
 
 **Not yet checked**
 

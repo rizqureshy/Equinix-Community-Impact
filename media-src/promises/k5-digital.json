@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-22T00:17:58.666971Z",
+    "display_name": "GPT Image 2.5",
+    "id": "0f284e85-d026-47f8-bc1c-ec660dd12329",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_001758_0f284e85-d026-47f8-bc1c-ec660dd12329_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Editorial documentary photograph for a premium corporate report, portrait framing, low late-October sun from the side, long soft shadows, warm white and pale oak palette with slate greys, one small red detail somewhere natural (a jacket, a bicycle, a lanyard), real people with faces turned away or softly out of focus, composed with generous negative space at the top for text, shallow depth of field, photoreal, no text, no logos, no signage, no readable screens. Subject: a bright community centre room where volunteers in plain shirts help a grandmother and a teenager at laptops around a wooden table, a red lanyard on one volunteer, warm window light, seen from slightly behind.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_001758_0f284e85-d026-47f8-bc1c-ec660dd12329.png",
+    "status": "completed"
+  }
+]

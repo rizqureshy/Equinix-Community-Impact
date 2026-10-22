@@ -26,9 +26,10 @@ STILLS = {
 }
 WIDTHS = (1200, 640)
 
-# Soft photographs made for the five promises (media-src/promises). Not used
-# on the page since the ledger; run `build_media.py promises` to rebuild them.
-PROMISES = {f'promise-{i}': f'p{i}-{n}.png' for i, n in enumerate(['infrastructure', 'power', 'jobs', 'nature', 'digital'], 1)}
+# Photographs beside the five promises (media-src/promises): the `kept` set is
+# on the page; the earlier soft set is kept in reserve.
+PROMISES = {f'kept-{i}': f'k{i}-{n}.png' for i, n in enumerate(['infrastructure', 'power', 'jobs', 'nature', 'digital'], 1)}
+PROMISES_RESERVE = {f'promise-{i}': f'p{i}-{n}.png' for i, n in enumerate(['infrastructure', 'power', 'jobs', 'nature', 'digital'], 1)}
 
 
 def still(name, src, crop, folder=SRC):

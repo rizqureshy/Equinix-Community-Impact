@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-22T00:17:15.096267Z",
+    "display_name": "GPT Image 2.5",
+    "id": "d830477c-323e-4d5b-8fcd-0c16fa7c56a0",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_001715_d830477c-323e-4d5b-8fcd-0c16fa7c56a0_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Editorial documentary photograph for a premium corporate report, portrait framing, low late-October sun from the side, long soft shadows, warm white and pale oak palette with slate greys, one small red detail somewhere natural (a jacket, a bicycle, a lanyard), real people with faces turned away or softly out of focus, composed with generous negative space at the top for text, shallow depth of field, photoreal, no text, no logos, no signage, no readable screens. Subject: three secondary school students aged 16 to 18 with lanyards following a technician mentor along a bright white data center corridor, seen from behind, the mentor gesturing toward tall equipment behind glass, one student holding a notebook.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_001715_d830477c-323e-4d5b-8fcd-0c16fa7c56a0.png",
+    "status": "completed"
+  }
+]

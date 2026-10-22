@@ -159,14 +159,17 @@ try {
     scrollTo(0, r.top + scrollY - innerHeight * 0.3);
   });
   await wait(1800);
-  const ledgerState = await p.evaluate(() => ({
-    active: document.querySelector('.ledger').dataset.active,
-    current: document.querySelector('.ledger-row[aria-current="true"]')?.dataset.promise,
-    proof: document.querySelector('.proof:not([hidden]) .proof-text')?.textContent,
-    drawn: Number(getComputedStyle(document.querySelector('.ledger-list-wrap')).getPropertyValue('--drawn')),
-  }));
+  const ledgerState = await p.evaluate(() => {
+    const img = document.querySelector('.proof:not([hidden]) .proof-art');
+    return {
+      active: document.querySelector('.ledger').dataset.active,
+      current: document.querySelector('.ledger-row[aria-current="true"]')?.dataset.promise,
+      proof: document.querySelector('.proof:not([hidden]) .proof-text')?.textContent,
+      photo: img && img.complete && img.naturalWidth > 0 && img.getBoundingClientRect().height > 400,
+    };
+  });
   check(ledgerState.active === '3' && ledgerState.current === '3' && /water-based cooling/.test(ledgerState.proof), 'the promise at the reading line shows its proof', JSON.stringify(ledgerState));
-  check(ledgerState.drawn > 0.4 && ledgerState.drawn < 1, 'the thread draws down the ledger with the scroll', String(ledgerState.drawn));
+  check(ledgerState.photo === true, 'a large photograph stands behind the proof', JSON.stringify(ledgerState));
   await p.locator('[data-promise-go="1"]').click();
   await wait(2200);
   check((await p.evaluate(() => document.querySelector('.ledger').dataset.active)) === '1', 'choosing a promise moves the ledger to it');
@@ -261,7 +264,7 @@ try {
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');
   await p.keyboard.press('Escape');
   await wait(500);
-  check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline-proof')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its proof inline');
+  check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its photograph and proof inline');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   await browser.close();
 
