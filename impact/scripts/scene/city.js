@@ -158,7 +158,7 @@ function buildGround(scene) {
     ground.add(trunk, leaf);
   }
   scene.add(ground);
-  return { ground, roadMat };
+  return ground;
 }
 
 // ---------------------------------------------------------------------------
@@ -182,85 +182,6 @@ function buildThreads(scene) {
   }
   scene.add(group);
   return threads;
-}
-
-// ---------------------------------------------------------------------------
-// Leaves: a handful of small sprites drifting over the plinth
-// ---------------------------------------------------------------------------
-function leafTexture(kind) {
-  const c = document.createElement('canvas');
-  c.width = c.height = 64;
-  const g = c.getContext('2d');
-  g.clearRect(0, 0, 64, 64);
-  if (kind === 'flake') {
-    g.fillStyle = 'rgba(255,255,255,0.95)';
-    g.beginPath();
-    g.arc(32, 32, 9, 0, Math.PI * 2);
-    g.fill();
-  } else {
-    g.fillStyle = kind === 'petal' ? '#f0c6d0' : '#b9793f';
-    g.beginPath();
-    g.moveTo(32, 6);
-    g.bezierCurveTo(12, 16, 8, 38, 28, 58);
-    g.bezierCurveTo(50, 46, 58, 26, 32, 6);
-    g.fill();
-    g.strokeStyle = 'rgba(0,0,0,0.18)';
-    g.lineWidth = 1.5;
-    g.beginPath();
-    g.moveTo(32, 8);
-    g.lineTo(28, 56);
-    g.stroke();
-  }
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-}
-
-function buildLeaves(scene) {
-  const COUNT = 7;
-  const group = new THREE.Group();
-  const material = new THREE.SpriteMaterial({ map: leafTexture('leaf'), transparent: true, depthWrite: false, opacity: 0.9 });
-  const items = [];
-  for (let i = 0; i < COUNT; i++) {
-    const s = new THREE.Sprite(material);
-    const item = { s, x: 0, y: 0, z: 0, phase: Math.random() * Math.PI * 2, speed: 0.4 + Math.random() * 0.5, drift: 0.25 + Math.random() * 0.4, size: 0.42 + Math.random() * 0.25 };
-    reset(item, true);
-    group.add(s);
-    items.push(item);
-  }
-  function reset(item, anywhere = false) {
-    item.x = -14 + Math.random() * 28;
-    item.z = -12 + Math.random() * 24;
-    item.y = anywhere ? 1 + Math.random() * 8 : 8 + Math.random() * 2;
-    item.s.scale.setScalar(item.size);
-  }
-  let visible = true;
-  scene.add(group);
-  return {
-    setKind(kind) {
-      material.map?.dispose();
-      material.map = leafTexture(kind);
-      material.opacity = kind === 'flake' ? 0.8 : 0.9;
-      material.needsUpdate = true;
-      for (const item of items) item.size = kind === 'flake' ? 0.2 + Math.random() * 0.1 : 0.42 + Math.random() * 0.25;
-      for (const item of items) item.s.scale.setScalar(item.size);
-    },
-    setVisible(v) {
-      visible = v;
-      group.visible = v;
-    },
-    update(dt) {
-      if (!visible) return;
-      for (const item of items) {
-        item.phase += dt * 1.4;
-        item.y -= dt * item.speed;
-        item.x += Math.sin(item.phase) * dt * item.drift + dt * 0.35;
-        item.z += Math.cos(item.phase * 0.7) * dt * 0.2;
-        if (item.y < 0.15) reset(item);
-        item.s.position.set(item.x, item.y, item.z);
-      }
-    },
-  };
 }
 
 // ---------------------------------------------------------------------------
@@ -298,9 +219,9 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 220);
 
-  // Light: a soft studio key with a wide shadow, plus a cool fill
-  const key = new THREE.DirectionalLight('#fff6ea', 2.2);
-  key.position.set(-14, 26, 16);
+  // Light: a low, warm autumn sun with long soft shadows, plus a cool fill
+  const key = new THREE.DirectionalLight('#ffe4c0', 2.5);
+  key.position.set(-18, 18, 18);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.camera.left = key.shadow.camera.bottom = -22;
@@ -311,41 +232,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   key.shadow.normalBias = 0.02;
   key.shadow.radius = 4;
   scene.add(key);
-  const fill = new THREE.DirectionalLight('#dfe8ff', 0.5);
+  const fill = new THREE.DirectionalLight('#dfe8ff', 0.4);
   fill.position.set(18, 10, -12);
   scene.add(fill);
   const hemi = new THREE.HemisphereLight('#ffffff', '#d9d9de', 0.35);
   scene.add(hemi);
 
-  /** Light and ground per weather: a warm low autumn sun, a cool wet day, winter and spring. */
-  const WEATHER = {
-    'autumn-sun': { key: ['#ffe4c0', 2.5, [-18, 18, 18]], fill: ['#dfe8ff', 0.4], hemi: 0.35, env: 0.5, road: [1.0, 0], leaves: 'leaf' },
-    'autumn-rain': { key: ['#dde4ee', 1.3, [-12, 26, 14]], fill: ['#cfd8e6', 0.7], hemi: 0.55, env: 0.75, road: [0.35, 0.1], leaves: 'leaf' },
-    winter: { key: ['#eef3fb', 2.0, [-20, 14, 16]], fill: ['#d6e2f4', 0.5], hemi: 0.4, env: 0.55, road: [0.9, 0], leaves: 'flake' },
-    spring: { key: ['#fff9ec', 2.3, [-14, 28, 16]], fill: ['#e4f0e0', 0.45], hemi: 0.4, env: 0.55, road: [1.0, 0], leaves: 'petal' },
-  };
-  let leafKind = 'leaf';
-  function setWeather(kind) {
-    const w = WEATHER[kind] || WEATHER['autumn-sun'];
-    key.color.set(w.key[0]);
-    key.intensity = w.key[1];
-    key.position.set(...w.key[2]);
-    fill.color.set(w.fill[0]);
-    fill.intensity = w.fill[1];
-    hemi.intensity = w.hemi;
-    scene.environmentIntensity = w.env;
-    roadMat.roughness = w.road[0];
-    roadMat.metalness = w.road[1];
-    roadMat.needsUpdate = true;
-    leafKind = w.leaves;
-    leaves.setKind(leafKind);
-    dirty = true;
-    tick();
-  }
 
-  const { roadMat } = buildGround(scene);
+  buildGround(scene);
   const threads = buildThreads(scene);
-  const leaves = buildLeaves(scene);
 
   // Buildings
   const buildings = {}; // id -> group
@@ -592,12 +487,6 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       }
     }
 
-    leaves.setVisible(moving);
-    if (moving) {
-      leaves.update(dt);
-      animating = true;
-    }
-
     renderer.render(scene, camera);
     placeLabels();
 
@@ -645,7 +534,6 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     setStops,
     setProgress,
     setFocus,
-    setWeather,
     /** Show or hide every thread (used by the crop renderer). */
     setThreadsVisible(on) {
       for (const th of Object.values(threads)) {

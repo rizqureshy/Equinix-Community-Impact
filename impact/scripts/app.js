@@ -8,7 +8,7 @@ import { createStore, topicTarget } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
 import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
-import { createWeather } from './weather.js';
+import { createSunlight } from './weather.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -40,10 +40,7 @@ let sceneLoading = false;
 let activeStep = -1; // -1 is the overview
 let playing = false;
 let tourTimer = 0;
-let muted = false;
-try {
-  muted = localStorage.getItem('impact-sound') === 'off';
-} catch {}
+let muted = false; // not remembered: a tour should never open silent by surprise
 
 function showStep(i) {
   activeStep = i;
@@ -86,6 +83,7 @@ function startTour() {
   setPlayingUI();
   scene?.setDrift(store.get().motion);
   fadeMusic(true);
+  if (muted) notify('The tour is playing without music. Use the sound control to turn it on.');
   const advance = () => {
     const next = activeStep >= steps.length - 1 ? -1 : activeStep + 1;
     goToStep(next, { byTour: true });
@@ -113,7 +111,7 @@ function fadeMusic(on) {
   const target = on && !muted ? 0.55 : 0;
   if (target > 0) {
     if (theme.preload === 'none') theme.preload = 'auto';
-    theme.play().catch(() => {});
+    theme.play().catch(() => notify('The browser blocked the music. Press play again to allow it.', { error: true }));
   }
   const from = theme.volume;
   const started = performance.now();
@@ -131,9 +129,6 @@ function setMuted(on) {
   muted = on;
   muteButton.setAttribute('aria-pressed', String(on));
   muteButton.setAttribute('aria-label', on ? 'Unmute the music' : 'Mute the music');
-  try {
-    localStorage.setItem('impact-sound', on ? 'off' : 'on');
-  } catch {}
   if (playing) fadeMusic(!on);
 }
 setMuted(muted);
@@ -181,7 +176,6 @@ async function loadScene() {
       motion: () => store.get().motion,
       onReady: () => {
         stage.dataset.sceneState = 'ready';
-        scene.setWeather(weather.kind);
         showStep(activeStep);
         scene.setDrift(playing && store.get().motion);
       },
@@ -198,22 +192,8 @@ async function loadScene() {
   }
 }
 
-// Season and weather: a wash of light, a leaf now and then, and the model's light follows
-const weatherButtons = $$('[data-weather]');
-const weather = createWeather({
-  light: $('#weather-light'),
-  particles: $('#weather-particles'),
-  rain: $('#weather-rain'),
-  motion: () => store.get().motion,
-  onChange: (kind) => {
-    weatherButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.weather === kind)));
-    scene?.setWeather(kind);
-  },
-});
-document.addEventListener('click', (e) => {
-  const b = e.target.closest('[data-weather]');
-  if (b) weather.set(b.dataset.weather);
-});
+// Sunlight: a wash of low autumn light over the page
+const sunlight = createSunlight({ light: $('#weather-light'), motion: () => store.get().motion });
 
 // Load the scene once the community is within reach; pause everything when it leaves
 const near = new IntersectionObserver(
@@ -346,7 +326,7 @@ setupMotionToggle($('[data-motion-toggle]'), {
     store.set({ motion: on });
     buildScroll();
     syncVideos();
-    weather.motionChanged();
+    sunlight.motionChanged();
   },
 });
 
@@ -592,5 +572,4 @@ window.__impact = {
   goToStep,
   startTour,
   stopTour,
-  weather,
 };

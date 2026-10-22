@@ -84,14 +84,3 @@ describe('sharing', () => {
     vi.unstubAllGlobals();
   });
 });
-
-describe('weather', () => {
-  it('suggests a season from the date', async () => {
-    const { weatherFor, WEATHERS } = await import('../../impact/scripts/weather.js');
-    expect(weatherFor(new Date('2026-10-21'))).toBe('autumn-sun');
-    expect(weatherFor(new Date('2026-01-15'))).toBe('winter');
-    expect(weatherFor(new Date('2026-04-02'))).toBe('spring');
-    expect(weatherFor(new Date('2026-07-10'))).toBe('autumn-sun');
-    for (const k of Object.keys(WEATHERS)) expect(WEATHERS[k].label).toBeTruthy();
-  });
-});

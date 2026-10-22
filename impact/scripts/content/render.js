@@ -85,7 +85,7 @@ export function journeyHTML() {
     <button type="button" class="bar-btn bar-btn--play" data-play aria-pressed="false" aria-label="Play the tour"><svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2.2v9.6L11.4 7Z" fill="currentColor"/></svg><svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2.5h2.4v9H3.5zM8.1 2.5h2.4v9H8.1z" fill="currentColor"/></svg></button>
     <button type="button" class="bar-btn" data-mute aria-pressed="false" aria-label="Mute the music"><svg class="icon-sound" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="M10 4.5a3.5 3.5 0 0 1 0 5M11.6 2.6a6 6 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><svg class="icon-muted" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="m10 5 3 4m0-4-3 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
   </div>
-  <audio id="theme" loop preload="none" aria-hidden="true"><source src="media/audio/community-theme.ogg" type="audio/ogg; codecs=opus"><source src="media/audio/community-theme.mp3" type="audio/mpeg"></audio>`;
+  <audio id="theme" loop preload="none" aria-hidden="true"><source src="media/audio/community-theme.mp3" type="audio/mpeg"><source src="media/audio/community-theme.ogg" type="audio/ogg; codecs=opus"></audio>`;
 }
 
 // ---------------------------------------------------------------------------

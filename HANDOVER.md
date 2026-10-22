@@ -20,18 +20,15 @@ A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Le
 - **Sources:** Achieved, Happening now, Committed, plus the source directory.
 - **Story dialog:** a modal panel (full screen on mobile) with focus handling, copy actions and sources. The mouse wheel scrolls the open story while the page behind stays put.
 
-## Season and weather (branch `claude/season-weather`)
+## Sunlight (branch `claude/season-weather`)
 
-Built on top of the redesign as its own branch, so it can be reviewed and merged separately.
+Built on top of the redesign as its own branch. A full season-and-weather layer (leaves, rain, winter, spring, a footer switch) was built first and then cut back at your request to the one thing that worked: the light.
 
-- **A diffused light** sits high and to the right of the page, blended into whatever is beneath it (`mix-blend-mode: multiply`), and drifts a few pixels with the cursor and the scroll. Autumn sun is warm; autumn rain, winter and spring each shift its colour.
-- **The model's light follows:** a low warm key light and longer shadows for autumn sun; a cool, dim, higher key with brighter fill and wet, slightly reflective roads in the rain; a pale cool light in winter; a fresh light in spring. Seven small sprites drift over the plinth: leaves in autumn, flakes in winter, petals in spring.
-- **Leaves on the page:** at most four at a time, one every seven to nineteen seconds, in the oak and rust of the model, each on its own slow fall with a sway and a turn. Snow comes a little more often and smaller; petals in spring. Nothing is drawn over text for long because each leaf keeps moving.
-- **Rain:** fine, faint streaks near the top of the viewport, fading out by mid-screen.
-- **The switch** is in the footer (Autumn sun, Autumn rain, Winter light, Spring). The page opens in the season the date suggests (northern hemisphere) and remembers a choice in the browser. Live local weather was left out on purpose: the site makes no network calls, and a weather service would add one; it is a small addition if wanted.
-- **Motion off and reduced motion:** the light stays, still; no particles; rain stops moving.
+- **A diffused low autumn sun** sits high and to the right of the page, blended into whatever is beneath it (`mix-blend-mode: multiply`), and drifts a few pixels with the cursor and the scroll. It warms the white canvas and the cards without colouring the text.
+- **The model is lit the same way:** a lower, warmer key light with longer, softer shadows on the plinth.
+- **Motion off and reduced motion:** the light stays, still.
 
-Files: `impact/scripts/weather.js`, `impact/styles/weather.css`, the `setWeather` and leaf sprites in `scene/city.js`, layers and the footer switch in `index.html`.
+Files: `impact/scripts/weather.js` (`createSunlight`), `impact/styles/weather.css`, the key light in `scene/city.js`, the layer in `index.html`.
 
 ## Creative direction
 
@@ -98,11 +95,11 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 
 **Checks run**
 
-- **Unit tests (`npm test`):** 18 pass (content model, routing including the old link aliases, state, sharing, the season from the date).
+- **Unit tests (`npm test`):** 17 pass (content model, routing including the old link aliases, state, sharing).
 - **Browser checks (`npm run test:e2e`):** 62 pass in headless Chromium with software WebGL.
   - **Network and errors:** no requests leave the host, no missing assets, no JavaScript errors.
   - **Community:** the headline is usable on arrival; the explorer sits in the page flow with its own controls; the model renders; the still is in place before it; moving to a stop frames its place, card and label; dots, arrows, labels and the keyboard move between stops; previous from the first stop returns to the overview; the tour starts, moves on and plays music, mute is remembered, and choosing a place pauses it; a story opens from a card with its URL and focus handling; Back and Forward work.
-  - **Season and weather:** the page opens in the season of the date; the light layer is in place with no rain in the sun; rain can be chosen and is remembered; never more than four leaves at once; no leaves with reduced motion.
+  - **Sunlight:** the light layer is in place, blended, and takes no clicks.
   - **Sections:** chapter and alias routes land where expected; navigation marks the current section; in the promises ledger the row at the reading line shows its proof, the thread draws with the scroll and choosing a promise moves to it; on phones every proof shows inline; copy works with a fallback when the clipboard is denied; the wheel scrolls the open story; gallery filters work with an empty state and reset; controls are at least 44 px; the copy has no em dashes.
   - **Reduced motion:** no smooth scrolling, films paused, stops still change by control, the toggle works.
   - **Mobile:** no sideways scroll, the journey card fits the screen, stories open full width.

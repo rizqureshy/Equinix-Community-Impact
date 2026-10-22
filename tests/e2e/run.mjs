@@ -123,7 +123,7 @@ try {
   check((await step(p)) === 0 && (await p.evaluate(() => !document.querySelector('#theme').paused)), 'the tour moves on and the music plays', `${await step(p)} paused=${await p.evaluate(() => document.querySelector('#theme').paused)}`);
   await p.locator('[data-mute]').click();
   await wait(1200);
-  check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === 'off'), 'mute silences the music and is remembered');
+  check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === null), 'mute silences the music and is not remembered between visits');
   await p.locator('.journey-dot[data-go="3"]').dispatchEvent('click');
   await wait(600);
   check(await p.evaluate(() => !window.__impact.playing) && (await step(p)) === 3, 'choosing a place pauses the tour');
@@ -198,17 +198,8 @@ try {
   const copy = await p.evaluate(() => document.body.innerText);
   check(!copy.includes('—'), 'page copy has no em dashes');
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
-  // Season and weather: set from the date, switchable, remembered, quiet
-  const w0 = await p.evaluate(() => document.documentElement.dataset.weather);
-  check(w0 === 'autumn-sun', 'the page opens in the season of the date', w0);
-  check(await p.evaluate(() => getComputedStyle(document.querySelector('#weather-light')).mixBlendMode === 'multiply' && document.querySelector('#weather-rain').hidden), 'a diffused light sits over the page and there is no rain in the sun');
-  await p.evaluate(() => document.querySelector('.site-footer').scrollIntoView());
-  await wait(800);
-  await p.locator('[data-weather="autumn-rain"]').click();
-  await wait(600);
-  check(await p.evaluate(() => document.documentElement.dataset.weather === 'autumn-rain' && !document.querySelector('#weather-rain').hidden && localStorage.getItem('impact-weather') === 'autumn-rain'), 'rain can be chosen and is remembered');
-  check(await p.evaluate(() => document.querySelectorAll('.weather-particle').length <= 4), 'never more than a few leaves at once');
-  await p.locator('[data-weather="autumn-sun"]').click();
+  // Sunlight: a diffused light sits over the page, blended in, never in the way
+  check(await p.evaluate(() => { const l = document.querySelector('#weather-light'); const cs = getComputedStyle(l); return cs.mixBlendMode === 'multiply' && cs.pointerEvents === 'none' && cs.position === 'fixed'; }), 'a diffused sunlight sits over the page and takes no clicks');
   check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (sections)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (sections)', p.errors.slice(0, 3).join(' | '));
@@ -240,8 +231,7 @@ try {
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
   check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
   check(await p.evaluate(() => [...document.querySelectorAll('video.film')].every((v) => v.paused)), 'films stay paused with reduced motion');
-  await wait(2500);
-  check(await p.evaluate(() => document.querySelectorAll('.weather-particle').length === 0 && getComputedStyle(document.querySelector('#weather-particles')).display === 'none'), 'no leaves fall with reduced motion');
+
   await waitScene(p);
   await p.locator('.journey-dot[data-go="3"]').dispatchEvent('click');
   await wait(600);
