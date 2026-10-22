@@ -145,7 +145,12 @@ document.addEventListener('click', (e) => {
   if (e.target.closest('[data-play]')) return toggleTour();
   if (e.target.closest('[data-mute]')) return setMuted(!muted);
 });
-for (const [place, el] of labels) el.addEventListener('click', () => goToPlace(place));
+// A building, or its name, is a door: click it and you step inside
+function enterPlace(place) {
+  goToPlace(place);
+  room.enter(place);
+}
+for (const [place, el] of labels) el.addEventListener('click', () => enterPlace(place));
 explorer.addEventListener('keydown', (e) => {
   if (e.target !== explorer && e.target.closest('.journey-card')) return;
   if (e.key === 'ArrowRight') stepBy(1);
@@ -184,11 +189,7 @@ async function loadScene() {
         console.warn('Community scene unavailable', err);
         stage.dataset.sceneState = 'fallback';
       },
-      onSelect: (place) => {
-        const i = steps.findIndex((s) => s.place === place);
-        if (i === activeStep) room.enter(place);
-        else goToPlace(place);
-      },
+      onSelect: enterPlace,
     });
     if (!scene) stage.dataset.sceneState = 'fallback';
   } catch (err) {

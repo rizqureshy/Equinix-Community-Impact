@@ -88,8 +88,13 @@ try {
   const visiblePlace = await p.evaluate(() => [...document.querySelectorAll('.place-label:not(.is-offscreen):not(.is-focus)')].map((l) => l.dataset.place).find((pl) => pl !== 'shops'));
   // dispatched rather than pointer-clicked: floating labels can drift under the pointer while the camera eases
   await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click');
-  await wait(4000);
-  check(visiblePlace && (await focus(p)) === visiblePlace && (await step(p)) !== 4, 'place labels move to their stop', `${visiblePlace} ${await step(p)} ${await focus(p)}`);
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  const labelRoom = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place }));
+  check(visiblePlace && labelRoom.phase === 'inside' && labelRoom.place === visiblePlace, 'a building or its name steps you inside', `${visiblePlace} ${JSON.stringify(labelRoom)}`);
+  await p.evaluate(() => window.__impact.room.leave());
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await wait(800);
+  check((await focus(p)) === visiblePlace && (await step(p)) !== 4, 'leaving lands on that stop', `${visiblePlace} ${await step(p)} ${await focus(p)}`);
   const before = await step(p);
   await p.locator('[data-step-dir="1"]').click();
   await settled(p, before + 1);
@@ -115,6 +120,11 @@ try {
   check(!(await isOpen(p)), 'browser back closes the story again');
   // Stepping inside: approach, dive film, the room with captions, leave
   await p.locator('[data-room-enter="hospital"]').click();
+  // The visitor's mouse keeps moving over the model during the approach; that must not hold the door
+  for (let i = 0; i < 6; i++) {
+    await p.mouse.move(600 + i * 30, 300 + i * 20);
+    await wait(150);
+  }
   await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
   const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
   check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));

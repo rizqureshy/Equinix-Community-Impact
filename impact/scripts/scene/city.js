@@ -404,7 +404,13 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     glide = { from: cur.pos.clone(), fromTarget: cur.target.clone(), start: performance.now(), length: APPROACH_MS };
     dirty = true;
     tick();
-    return new Promise((resolve) => settledResolvers.push(resolve));
+    return new Promise((resolve) => {
+      settledResolvers.push(resolve);
+      // The glide is clock-timed, so by now the camera is at the door whatever
+      // the frame rate; never leave the visitor waiting on a frame that may
+      // not come (the model paused off screen, a stalled tab).
+      setTimeout(resolve, APPROACH_MS + 400);
+    });
   }
 
   /** The current frame as a PNG data URL (used to render the door views). */
@@ -455,6 +461,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   }
 
   function onPointerMove(event) {
+    if (DOORS[focus]) return; // at a door the cursor neither tilts the view nor picks
     const r = renderer.domElement.getBoundingClientRect();
     pointer.tx = ((event.clientX - r.left) / r.width) * 2 - 1;
     pointer.ty = ((event.clientY - r.top) / r.height) * 2 - 1;
@@ -552,8 +559,11 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     renderer.render(scene, camera);
     placeLabels();
 
-    const settled = cur.pos.distanceToSquared(want.pos) < 1e-4 && Math.abs(pointer.x - pointer.tx) < 1e-3 && Math.abs(pointer.y - pointer.ty) < 1e-3;
-    if (settled && !glide && settledResolvers.length) {
+    const arrived = cur.pos.distanceToSquared(want.pos) < 1e-4 && !glide;
+    const settled = arrived && Math.abs(pointer.x - pointer.tx) < 1e-3 && Math.abs(pointer.y - pointer.ty) < 1e-3;
+    // The door view ignores the cursor, so arriving is enough: waiting for the
+    // parallax to rest too left the approach hanging while the mouse moved.
+    if (arrived && settledResolvers.length) {
       const done = settledResolvers;
       settledResolvers = [];
       done.forEach((r) => r());
