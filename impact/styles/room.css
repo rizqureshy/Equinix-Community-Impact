@@ -228,3 +228,8 @@ body.room-open {
     display: none;
   }
 }
+
+/* The narrator's control */
+.room-btn--voice[aria-pressed='false'] {
+  color: rgb(255 255 255 / 0.6);
+}

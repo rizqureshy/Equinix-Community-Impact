@@ -26,6 +26,8 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
   const leaveBtn = overlay.querySelector('[data-room-leave]');
   const nextBtn = overlay.querySelector('[data-room-next]');
   const hint = overlay.querySelector('.room-hint');
+  const voiceEl = overlay.querySelector('.room-voice');
+  const voiceBtn = overlay.querySelector('[data-room-voice]');
 
   let current = null; // room
   let phase = 'closed'; // closed | approaching | diving | inside | leaving
@@ -35,6 +37,36 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
   let pano = null; // { renderer, scene, camera, mesh, texture }
   let raf = 0;
   let look = { yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, dragging: false, lx: 0, ly: 0 };
+  let voiceOn = true; // the narrator reads each caption; a control in the room turns it off
+
+  // ---- narration ----------------------------------------------------------
+  function setVoice(on) {
+    voiceOn = on;
+    voiceBtn.setAttribute('aria-pressed', String(on));
+    voiceBtn.textContent = on ? 'Voice on' : 'Voice off';
+    if (!on) {
+      stopVoice();
+      if (phase === 'inside') scheduleNext(false);
+    } else if (phase === 'inside' && current && lineIndex >= 0 && lineIndex < current.lines.length) {
+      scheduleNext(speak(lineIndex));
+    }
+  }
+  function stopVoice() {
+    voiceEl.onended = null;
+    voiceEl.onerror = null;
+    voiceEl.pause();
+    voiceEl.removeAttribute('src');
+  }
+  /** Read caption `i` aloud; false when there is nothing to play. */
+  function speak(i) {
+    if (!voiceOn || !current?.voice) return false;
+    voiceEl.onended = null;
+    voiceEl.onerror = null;
+    voiceEl.src = `${current.voice}-${i + 1}.mp3`;
+    voiceEl.currentTime = 0;
+    voiceEl.play().catch(() => {});
+    return true;
+  }
 
   // ---- panorama -----------------------------------------------------------
   function ensurePano() {
@@ -158,7 +190,10 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
       }`;
       captions.appendChild(el);
       nextBtn.textContent = lineIndex === room.lines.length - 1 ? 'The full story' : 'Next';
+      scheduleNext(speak(lineIndex));
+      return;
     } else {
+      stopVoice();
       const story = getStory(room.story);
       const el = document.createElement('div');
       el.className = 'room-line room-line--end';
@@ -166,12 +201,21 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
       captions.appendChild(el);
       nextBtn.textContent = 'Leave';
     }
-    scheduleNext();
+    scheduleNext(false);
   }
-  function scheduleNext() {
+  /** Move on when the narrator has finished (plus a breath), or after 7 s when silent. */
+  function scheduleNext(speaking) {
     clearTimeout(lineTimer);
     if (!motion() || !current || lineIndex >= current.lines.length) return;
-    lineTimer = setTimeout(() => showLine(lineIndex + 1), 7000);
+    const advance = (ms) => {
+      clearTimeout(lineTimer);
+      lineTimer = setTimeout(() => showLine(lineIndex + 1), ms);
+    };
+    if (speaking) {
+      voiceEl.onended = () => advance(1500);
+      voiceEl.onerror = () => advance(7000);
+      advance(25000); // never stall on a clip that fails to end
+    } else advance(7000);
   }
   function next() {
     if (!current) return;
@@ -244,6 +288,7 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
   async function leave() {
     if (!current || phase === 'closed' || phase === 'leaving') return;
     clearTimeout(lineTimer);
+    stopVoice();
     const room = current;
     const wasInside = phase === 'inside';
     setPhase('leaving');
@@ -264,6 +309,7 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
 
   overlay.addEventListener('click', (e) => {
     if (e.target.closest('[data-room-leave]')) leave();
+    else if (e.target.closest('[data-room-voice]')) setVoice(!voiceOn);
     else if (e.target.closest('[data-room-next]')) next();
     else if (e.target.closest('[data-room-story]')) {
       const id = e.target.closest('[data-room-story]').dataset.roomStory;
@@ -277,8 +323,15 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     }
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) clearTimeout(lineTimer);
-    else scheduleNext();
+    if (document.hidden) {
+      clearTimeout(lineTimer);
+      voiceEl.pause();
+    } else if (phase === 'inside') {
+      if (voiceOn && voiceEl.getAttribute('src') && voiceEl.paused && !voiceEl.ended) {
+        voiceEl.play().catch(() => {});
+        scheduleNext(true);
+      } else scheduleNext(false);
+    }
   });
 
   return {
@@ -294,5 +347,9 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     get line() {
       return lineIndex;
     },
+    get voice() {
+      return voiceOn;
+    },
+    setVoice,
   };
 }

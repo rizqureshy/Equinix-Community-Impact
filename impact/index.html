@@ -170,13 +170,18 @@
           </div>
           <div class="resource-group" data-reveal>
             <h3 class="title--md">Role play: how to talk about Equinix community impact</h3>
-            <p class="muted">Short practice scenarios, each tied to a story on this page. Yoodli exercises will be linked here.</p>
+            <p class="muted">Short practice scenarios, each tied to a story on this page. Practise them out loud with the coach: it plays the other person, then steps out and gives feedback against the five promises and the sourced figures.</p>
             <ol class="roleplay-list">
-              <li class="roleplay"><span class="roleplay-num">1</span><div><strong>A customer asks what we give back.</strong><p class="muted">Open with 3verest or Children&rsquo;s Cancer Institute: what the connection makes possible, then one promise. Two minutes.</p><span class="resource-state">Yoodli exercise, placeholder</span></div></li>
-              <li class="roleplay"><span class="roleplay-num">2</span><div><strong>A neighbour worries about power and water.</strong><p class="muted">Lead with the Community Principles: ComEd, dry cooling, the Minooka bike path. Acknowledge, then specifics.</p><span class="resource-state">Yoodli exercise, placeholder</span></div></li>
-              <li class="roleplay"><span class="roleplay-num">3</span><div><strong>A student asks what a data center job looks like.</strong><p class="muted">Kayla&rsquo;s path and Pathways to Tech, in your own words. One minute.</p><span class="resource-state">Yoodli exercise, placeholder</span></div></li>
-              <li class="roleplay"><span class="roleplay-num">4</span><div><strong>A journalist asks for a number.</strong><p class="muted">Use one figure with its scope and period, and name the source. Practise saying the caveat naturally.</p><span class="resource-state">Yoodli exercise, placeholder</span></div></li>
+              <li class="roleplay"><span class="roleplay-num">1</span><div><strong>A customer asks what we give back.</strong><p class="muted">Open with 3verest or Children&rsquo;s Cancer Institute: what the connection makes possible, then one promise. Two minutes.</p><button type="button" class="btn btn--link btn--small" data-coach-open>Practise with the coach</button></div></li>
+              <li class="roleplay"><span class="roleplay-num">2</span><div><strong>A neighbour worries about power and water.</strong><p class="muted">Lead with the Community Principles: ComEd, dry cooling, the Minooka bike path. Acknowledge, then specifics.</p><button type="button" class="btn btn--link btn--small" data-coach-open>Practise with the coach</button></div></li>
+              <li class="roleplay"><span class="roleplay-num">3</span><div><strong>A student asks what a data center job looks like.</strong><p class="muted">Kayla&rsquo;s path and Pathways to Tech, in your own words. One minute.</p><button type="button" class="btn btn--link btn--small" data-coach-open>Practise with the coach</button></div></li>
+              <li class="roleplay"><span class="roleplay-num">4</span><div><strong>A journalist asks for a number.</strong><p class="muted">Use one figure with its scope and period, and name the source. Practise saying the caveat naturally.</p><button type="button" class="btn btn--link btn--small" data-coach-open>Practise with the coach</button></div></li>
             </ol>
+            <div class="coach" id="coach">
+              <button type="button" class="btn btn--primary" data-coach-open>Practise with the coach</button>
+              <p class="note coach-note">The coach is a conversational voice agent (ElevenLabs) that knows only this page's stories, promises and sourced figures. Choose who it plays, talk or type, then ask for feedback. Conversations are recorded by ElevenLabs for review. Yoodli exercises can be linked alongside later.</p>
+              <div class="coach-host" id="coach-host" hidden></div>
+            </div>
           </div>
           <div class="resource-group resource-group--engage" data-reveal>
             <h3 class="title--md">Engage</h3>
@@ -241,10 +246,12 @@
       </div>
       <div class="room-top">
         <h2 class="room-title">Inside</h2>
+        <button type="button" class="room-btn room-btn--voice" data-room-voice aria-pressed="true">Voice on</button>
         <button type="button" class="room-btn" data-room-next>Next</button>
         <button type="button" class="room-btn room-btn--leave" data-room-leave>Leave</button>
       </div>
       <div class="room-captions" aria-live="polite"></div>
+      <audio class="room-voice" preload="none" aria-hidden="true"></audio>
       <p class="room-hint note" hidden>Drag to look around</p>
     </section>
 

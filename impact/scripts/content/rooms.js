@@ -13,6 +13,7 @@ const room = (place, title, story, lines, { heat = false } = {}) => ({
   pano: `media/rooms/${place}-pano`,
   dive: `media/rooms/${place}-dive`,
   poster: `media/rooms/${place}-room-1280.webp`,
+  voice: `media/voice/${place}`, // <place>-1.mp3, -2, -3: one spoken line per caption
   lines,
 });
 

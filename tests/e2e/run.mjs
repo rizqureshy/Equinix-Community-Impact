@@ -157,6 +157,15 @@ try {
   const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
   check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));
   check(roomState.title === 'The reading room' && (await p.evaluate(() => document.activeElement?.hasAttribute('data-room-leave'))), 'the room names itself and focus lands on Leave');
+  await wait(800);
+  const spoken = await p.evaluate(() => { const v = document.querySelector('.room-voice'); return { src: v.getAttribute('src') || '', paused: v.paused, pressed: document.querySelector('[data-room-voice]').getAttribute('aria-pressed') }; });
+  check(/hospital-1\.mp3$/.test(spoken.src) && !spoken.paused && spoken.pressed === 'true', 'the narrator reads the caption aloud', JSON.stringify(spoken));
+  await p.locator('[data-room-voice]').click();
+  await wait(300);
+  check(await p.evaluate(() => document.querySelector('.room-voice').paused && !document.querySelector('.room-voice').getAttribute('src') && !window.__impact.room.voice), 'the voice control silences the narrator');
+  await p.locator('[data-room-voice]').click();
+  await wait(600);
+  check(await p.evaluate(() => window.__impact.room.voice && !document.querySelector('.room-voice').paused), 'and brings the narrator back on the same caption');
   const lineBefore = await p.evaluate(() => window.__impact.room.line);
   await p.locator('[data-room-next]').click();
   await wait(600);
@@ -178,6 +187,7 @@ try {
   check(await p.evaluate(() => window.__impact.playing && document.querySelector('.bar-btn[data-play]').getAttribute('aria-pressed') === 'true'), 'the tour starts from the control bar');
   check((await p.evaluate(() => window.__impact.tourStop)) === 0 && (await focus(p)) === 'hospital' && (await p.evaluate(() => !document.querySelector('#theme').paused)), 'the tour moves on and the music plays', `${await p.evaluate(() => window.__impact.tourStop)} ${await focus(p)} paused=${await p.evaluate(() => document.querySelector('#theme').paused)}`);
   check(await p.evaluate(() => !document.querySelector('.tour-caption').hidden && /Hospital/.test(document.querySelector('.tour-caption-title')?.textContent || '') && document.querySelector('.place-label.is-focus')?.dataset.place === 'hospital'), 'the tour names the place it is at');
+  check(await p.evaluate(() => /hospital-1\.mp3$/.test(window.__impact.narration.src) && !window.__impact.narration.paused && document.querySelector('#theme').volume < 0.3), 'the narrator speaks at each place and the music ducks under it', await p.evaluate(() => `${window.__impact.narration.src} vol=${document.querySelector('#theme').volume}`));
   await p.locator('[data-mute]').click();
   await wait(1200);
   check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === null), 'mute silences the music and is not remembered between visits');
@@ -315,6 +325,18 @@ try {
   const scrolled = await p.evaluate(() => Math.max(...['#story-drawer', '.drawer-panel', '.drawer-content'].map((s) => document.querySelector(s).scrollTop)));
   check(scrolled > 100, 'the mouse wheel scrolls the open story', `${scrolled}px`);
   check(p.errors.length === 0, 'no JavaScript errors on direct link', p.errors.join(' | '));
+  await p.context().close();
+
+  // ---- The coach (Training) ----------------------------------------------
+  p = await open(browser, `${BASE}#/training`);
+  await p.route('**/convai-widget-embed*', (route) => route.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  await wait(1200);
+  check((await p.locator('[data-coach-open]').count()) >= 5 && (await p.evaluate(() => document.querySelector('#coach-host').hidden)), 'every role-play scenario offers the coach, loaded only on request');
+  await p.locator('#coach [data-coach-open]').first().dispatchEvent('click');
+  await wait(800);
+  const coach = await p.evaluate(() => ({ loaded: window.__impact.coachLoaded, agent: document.querySelector('elevenlabs-convai')?.getAttribute('agent-id'), shown: !document.querySelector('#coach-host').hidden, script: !!document.querySelector('script[src*="convai-widget-embed"]') }));
+  check(coach.loaded && coach.agent === 'agent_3001m5kqwwswfbgs0w7err64yw6v' && coach.shown && coach.script, 'the coach widget mounts with its agent', JSON.stringify(coach));
+  check(p.errors.length === 0, 'no JavaScript errors (coach)', p.errors.join(' | '));
   await p.context().close();
 
   // ---- Reduced motion -----------------------------------------------------

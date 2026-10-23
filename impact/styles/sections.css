@@ -394,6 +394,20 @@
 .bar-btn[aria-pressed='true'] .icon-muted {
   display: block;
 }
+/* ---- The coach (Training) --------------------------------------------- */
+.coach {
+  margin-top: var(--s-5);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+.coach-note {
+  max-width: 62ch;
+  margin-top: var(--s-3);
+}
+.coach-host[hidden] {
+  display: none;
+}
+
 /* ---- Statement ---------------------------------------------------------------- */
 .statement {
   padding: var(--s-10) 0;

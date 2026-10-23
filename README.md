@@ -46,11 +46,11 @@ impact/                   Vite root: the experience
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
-    content/rooms.js      the six rooms you can step into: panorama, dive film, captions
+    content/rooms.js      the six rooms you can step into: panorama, dive film, captions, narration
     content/render.js     HTML for the model's opening card and controls, chapters, story detail, gallery, promises, numbers, sources
     room.js               stepping inside: approach, dive film, panorama viewer, captions, leave
     scene/city.js         the community model: loads the building GLBs, plinth, threads, free orbit (drag, wheel, pinch, keys), door views, labels
-  public/media/           web-ready images, films, posters, the building models (media/city/*.glb) and the tour theme (media/audio)
+  public/media/           web-ready images, films, posters, the building models (media/city/*.glb), the tour theme (media/audio) and the narrator's lines (media/voice)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
   city/                   building concept prompts and generation records (renders and raw GLBs are re-downloadable, not committed)
   promises/               prompts and originals for the five promise photographs
@@ -60,6 +60,7 @@ scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geom
 scripts/city_manifest.py  records the building pipeline in the asset manifest
 scripts/pano_tools.py     room panoramas: seam blend and web sizes, the perspective still, the fallback poster
 scripts/build_rooms.sh    encodes the dive films in, and the exit films (forward where people appear, else the dive reversed)
+scripts/coach-digest.mjs  builds the coach's knowledge base (media-src/voice/coach-knowledge.md) from the story module
 tests/                    unit and end-to-end tests, plus tools/glb-view.mjs
 ```
 

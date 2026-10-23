@@ -18,3 +18,4 @@ media-src/audio/*.src
 # Rooms: panorama renders, door renders and raw dive films are re-downloadable or re-renderable
 media-src/rooms/*.png
 media-src/rooms/*.mp4
+media-src/voice/*.mp3

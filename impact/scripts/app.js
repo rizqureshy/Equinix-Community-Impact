@@ -34,13 +34,35 @@ const muteButton = $('[data-mute]');
 const tourCaption = $('.tour-caption');
 const theme = $('#theme');
 const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-const TOUR_DWELL = 9000; // ms at each place while the tour plays
+const TOUR_DWELL = 10000; // ms at each place while the tour plays (the longest spoken line is 9 s)
 let scene = null;
 let sceneLoading = false;
 let playing = false;
 let tourIndex = -1; // -1 is the overview
 let tourTimer = 0;
 let muted = false; // not remembered: a tour should never open silent by surprise
+
+// The narrator: one spoken line per place while the tour plays; the music ducks under it
+const narration = new Audio();
+narration.preload = 'none';
+let ducked = false;
+narration.addEventListener('ended', () => duck(false));
+narration.addEventListener('error', () => duck(false));
+function duck(on) {
+  ducked = on;
+  if (playing) fadeMusic(true);
+}
+function narrate(s) {
+  narration.pause();
+  if (!s || muted || !store.get().motion) {
+    duck(false);
+    return;
+  }
+  narration.src = s.place === 'datacenter' ? 'media/voice/tour-datacenter.mp3' : `media/voice/${s.place}-1.mp3`;
+  narration.currentTime = 0;
+  duck(true);
+  narration.play().catch(() => duck(false));
+}
 
 function setCaption(s) {
   tourCaption.replaceChildren();
@@ -64,6 +86,7 @@ function showTourStop(i) {
   scene?.setFocus(s ? s.place : 'overview', { instant: !store.get().motion });
   for (const [place, el] of labels) el.classList.toggle('is-focus', !!s && place === s.place);
   setCaption(s);
+  narrate(s);
 }
 /** Back to the opening view, by hand. */
 function resetView() {
@@ -103,6 +126,8 @@ function stopTour() {
   clearTimeout(tourTimer);
   setPlayingUI();
   scene?.setDrift(false);
+  narration.pause();
+  ducked = false;
   fadeMusic(false);
   setCaption(null);
   for (const el of labels.values()) el.classList.remove('is-focus');
@@ -116,7 +141,7 @@ let fadeTimer = 0;
 function fadeMusic(on) {
   if (!theme) return;
   clearInterval(fadeTimer);
-  const target = on && !muted ? 0.55 : 0;
+  const target = on && !muted ? (ducked ? 0.16 : 0.55) : 0;
   if (target > 0) {
     if (theme.preload === 'none') theme.preload = 'auto';
     theme.play().catch(() => notify('The browser blocked the music. Press play again to allow it.', { error: true }));
@@ -135,6 +160,10 @@ function fadeMusic(on) {
 }
 function setMuted(on) {
   muted = on;
+  if (on) {
+    narration.pause();
+    ducked = false;
+  }
   muteButton.setAttribute('aria-pressed', String(on));
   muteButton.setAttribute('aria-label', on ? 'Unmute the music' : 'Mute the music');
   if (playing) fadeMusic(!on);
@@ -256,6 +285,33 @@ function setFabric(on) {
 fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
 setFabric(root.dataset.fabric === 'on');
 if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
+
+// The coach: an ElevenLabs conversational agent, loaded only when asked for
+const COACH_AGENT = 'agent_3001m5kqwwswfbgs0w7err64yw6v';
+const coachHost = $('#coach-host');
+let coachLoaded = false;
+function openCoach() {
+  if (!coachHost) return;
+  coachHost.hidden = false;
+  if (!coachLoaded) {
+    coachLoaded = true;
+    const widget = document.createElement('elevenlabs-convai');
+    widget.setAttribute('agent-id', COACH_AGENT);
+    coachHost.appendChild(widget);
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+    script.async = true;
+    script.onerror = () => {
+      coachLoaded = false;
+      notify('The coach could not load. Check the connection and try again.', { error: true });
+    };
+    document.body.appendChild(script);
+  }
+  coachHost.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+}
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-coach-open]')) openCoach();
+});
 
 // Stepping inside a building: the room overlay
 const room = createRoom($('#room'), {
@@ -651,6 +707,12 @@ window.__impact = {
   resetView,
   get fabric() {
     return fabric;
+  },
+  get narration() {
+    return narration;
+  },
+  get coachLoaded() {
+    return coachLoaded;
   },
   room,
 };
