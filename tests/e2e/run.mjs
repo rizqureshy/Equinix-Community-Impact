@@ -45,7 +45,7 @@ async function open(browser, url, { viewport = { width: 1440, height: 900 }, ...
 }
 const isOpen = (p) => p.evaluate(() => document.querySelector('#story-drawer').open);
 const sceneState = (p) => p.evaluate(() => document.querySelector('#stage').dataset.sceneState);
-const waitScene = (p) => p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { timeout: 30000 });
+const waitScene = (p) => p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { polling: 100, timeout: 30000 });
 const focus = (p) => p.evaluate(() => window.__impact.scene?.focus);
 const view = (p) => p.evaluate(() => window.__impact.scene?.view);
 /** Wait until the camera has reached the view it wants. */
@@ -117,11 +117,11 @@ try {
   const visiblePlace = await p.evaluate(() => [...document.querySelectorAll('.place-label:not(.is-offscreen)')].map((l) => l.dataset.place).find((pl) => pl !== 'shops'));
   // dispatched rather than pointer-clicked: floating labels can drift under the pointer while the camera eases
   await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   const labelRoom = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place }));
   check(visiblePlace && labelRoom.phase === 'inside' && labelRoom.place === visiblePlace, 'a building or its name steps you inside', `${visiblePlace} ${JSON.stringify(labelRoom)}`);
   await p.evaluate(() => window.__impact.room.leave());
-  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await wait(800);
   const vb = await view(p);
   check((await focus(p)) === 'overview' && Math.abs(vb.az - vr.az) < 1e-6 && vb.dist === vr.dist, 'leaving returns to the view you had before the door', JSON.stringify(vb));
@@ -153,7 +153,7 @@ try {
     await p.mouse.move(cc.x - 100 + i * 30, cc.y - 60 + i * 20);
     await wait(150);
   }
-  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
   check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));
   check(roomState.title === 'The reading room' && (await p.evaluate(() => document.activeElement?.hasAttribute('data-room-leave'))), 'the room names itself and focus lands on Leave');
@@ -177,28 +177,39 @@ try {
   await wait(600);
   check(await p.evaluate(() => !!document.querySelector('[data-room-story="3verest"]')), 'the last card offers the full story');
   await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   check(await p.evaluate(() => window.__impact.room.phase === 'closed' && document.querySelector('#room').hidden && window.__impact.scene.focus === 'overview' && !document.body.classList.contains('room-open')), 'leaving plays you out and back to the model');
   check(await p.evaluate(() => document.activeElement?.dataset?.place === 'hospital'), 'focus returns to the place you chose');
 
-  // The tour: visits the places with music and a caption, stops at the first touch
+  // The tour: into each building in turn, hands free, with pause, skip and a way out
+  const tourState = () => p.evaluate(() => ({ playing: window.__impact.playing, paused: window.__impact.paused, stop: window.__impact.tourStop, phase: window.__impact.room.phase, place: window.__impact.room.place, guided: window.__impact.room.guided, roomPaused: window.__impact.room.paused, voiceSrc: document.querySelector('.room-voice').getAttribute('src') || '', voicePaused: document.querySelector('.room-voice').paused, themePaused: document.querySelector('#theme').paused, themeVol: document.querySelector('#theme').volume, pauseShown: !!document.querySelector('[data-room-pause]').offsetParent, pauseText: document.querySelector('[data-room-pause]').textContent, barPressed: document.querySelector('.bar-btn[data-play]').getAttribute('aria-pressed') }));
   await p.locator('.bar-btn[data-play]').click();
-  await wait(2800);
-  check(await p.evaluate(() => window.__impact.playing && document.querySelector('.bar-btn[data-play]').getAttribute('aria-pressed') === 'true'), 'the tour starts from the control bar');
-  check((await p.evaluate(() => window.__impact.tourStop)) === 0 && (await focus(p)) === 'hospital' && (await p.evaluate(() => !document.querySelector('#theme').paused)), 'the tour moves on and the music plays', `${await p.evaluate(() => window.__impact.tourStop)} ${await focus(p)} paused=${await p.evaluate(() => document.querySelector('#theme').paused)}`);
-  check(await p.evaluate(() => !document.querySelector('.tour-caption').hidden && /Hospital/.test(document.querySelector('.tour-caption-title')?.textContent || '') && document.querySelector('.place-label.is-focus')?.dataset.place === 'hospital'), 'the tour names the place it is at');
-  check(await p.evaluate(() => /hospital-1\.mp3$/.test(window.__impact.narration.src) && !window.__impact.narration.paused && document.querySelector('#theme').volume < 0.3), 'the narrator speaks at each place and the music ducks under it', await p.evaluate(() => `${window.__impact.narration.src} vol=${document.querySelector('#theme').volume}`));
-  await p.locator('[data-mute]').click();
-  await wait(1200);
-  check(await p.evaluate(() => document.querySelector('#theme').paused && localStorage.getItem('impact-sound') === null), 'mute silences the music and is not remembered between visits');
-  // start the drag away from the floating labels, on bare model
-  const ct = await stageCentre(p);
-  await p.mouse.move(ct.x - 320, ct.y + 220);
-  await p.mouse.down();
-  await p.mouse.move(ct.x - 240, ct.y + 220, { steps: 5 });
-  await p.mouse.up();
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside' && window.__impact.room.place === 'hospital', null, { polling: 100, timeout: 60000 }).catch(() => {});
+  await wait(900);
+  let ts = await tourState();
+  check(ts.playing && ts.stop === 0 && ts.guided && ts.phase === 'inside' && ts.place === 'hospital' && ts.pauseShown && !ts.themePaused && ts.barPressed === 'true', 'the tour steps into the first building and tells its story there', JSON.stringify(ts));
+  check(/hospital-1\.mp3$/.test(ts.voiceSrc) && !ts.voicePaused && ts.themeVol < 0.3, 'the narrator speaks inside and the music ducks under it', `${ts.voiceSrc} vol=${ts.themeVol}`);
+  await p.locator('[data-room-pause]').dispatchEvent('click');
+  await wait(400);
+  ts = await tourState();
+  check(ts.playing && ts.paused && ts.roomPaused && ts.voicePaused && ts.pauseText === 'Resume' && ts.barPressed === 'false', 'Pause holds the tour inside the room', JSON.stringify(ts));
+  await p.locator('[data-room-pause]').dispatchEvent('click');
   await wait(600);
-  check(await p.evaluate(() => !window.__impact.playing && document.querySelector('.tour-caption').hidden), 'a hand on the model pauses the tour');
+  ts = await tourState();
+  check(ts.playing && !ts.paused && !ts.roomPaused && !ts.voicePaused && ts.pauseText === 'Pause', 'Resume carries on where it was', JSON.stringify(ts));
+  await p.locator('[data-mute]').dispatchEvent('click');
+  await wait(1200);
+  ts = await tourState();
+  check(ts.themePaused && ts.voiceSrc === '' && ts.playing && (await p.evaluate(() => localStorage.getItem('impact-sound') === null)), 'mute silences the music and the narrator, keeps the tour going and is not remembered', JSON.stringify(ts));
+  await p.locator('[data-room-skip]').dispatchEvent('click');
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside' && window.__impact.room.place === 'research', null, { polling: 100, timeout: 90000 }).catch(() => {});
+  ts = await tourState();
+  check(ts.playing && ts.stop === 1 && ts.place === 'research' && ts.phase === 'inside', 'Skip plays you out and into the next building', JSON.stringify(ts));
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
+  await wait(800);
+  ts = await tourState();
+  check(!ts.playing && ts.phase === 'closed' && (await focus(p)) === 'overview' && (await p.evaluate(() => document.querySelector('.tour-caption').hidden)), 'Escape ends the tour and hands the model back', JSON.stringify(ts));
   check(p.external.length === 0, 'no requests leave the host (journey)', p.external.slice(0, 3).join(', '));
   check(p.failed.length === 0, 'no missing local assets (journey)', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors (journey)', p.errors.slice(0, 3).join(' | '));
@@ -275,7 +286,7 @@ try {
   check(!copy.includes('—'), 'page copy has no em dashes');
   check(!/powering hospitals/i.test(copy), 'page copy never claims to power hospitals');
   // The red fabric: behind the page, with a toggle that is remembered
-  await p.waitForFunction(() => document.querySelector('#fabric-layer').classList.contains('is-ready'), null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(() => document.querySelector('#fabric-layer').classList.contains('is-ready'), null, { polling: 100, timeout: 30000 }).catch(() => {});
   check(await p.evaluate(() => document.documentElement.dataset.fabric === 'on' && document.querySelector('#fabric-layer canvas') && Number(getComputedStyle(document.querySelector('#fabric-layer')).opacity) > 0.5 && getComputedStyle(document.querySelector('#fabric-layer')).pointerEvents === 'none'), 'the red fabric flies behind the page and takes no clicks');
   await p.locator('[data-fabric-toggle]').click();
   await wait(300);
@@ -348,11 +359,12 @@ try {
 
   await waitScene(p);
   await p.locator('.bar-btn[data-play]').click();
-  await wait(1800);
-  check((await p.evaluate(() => window.__impact.tourStop)) === 0 && (await focus(p)) === 'hospital' && (await arrived(p, 4000)), 'the tour cuts between places with reduced motion', `${await p.evaluate(() => window.__impact.tourStop)} ${await focus(p)}`);
-  await p.locator('[data-reset-view]').click();
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 20000 }).catch(() => {});
+  check((await p.evaluate(() => window.__impact.tourStop === 0 && window.__impact.room.guided && window.__impact.room.place === 'hospital' && document.querySelector('#room').dataset.phase === 'inside')), 'the tour cuts straight inside with reduced motion', await p.evaluate(() => `${window.__impact.tourStop} ${window.__impact.room.phase} ${window.__impact.room.place}`));
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 15000 }).catch(() => {});
   await wait(300);
-  check((await focus(p)) === 'overview' && !(await p.evaluate(() => window.__impact.playing)), 'reset stops the tour and returns to the overview with reduced motion');
+  check((await focus(p)) === 'overview' && !(await p.evaluate(() => window.__impact.playing)), 'Escape ends the tour and returns to the overview with reduced motion');
   await p.locator('[data-motion-toggle]').click();
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'on', 'motion control toggles motion');
   check(p.errors.length === 0, 'no JavaScript errors with reduced motion', p.errors.join(' | '));
@@ -380,11 +392,11 @@ try {
   await wait(600);
   await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
   await p.locator('.place-label[data-place="hospital"]').dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   const phoneRoom = await p.evaluate(() => { const c = document.querySelector('.room-line').getBoundingClientRect(); return { phase: window.__impact.room.phase, fits: c.left >= 0 && c.right <= 390 && c.bottom <= 844 }; });
   check(phoneRoom.phase === 'inside' && phoneRoom.fits, 'the room and its captions fit a phone screen', JSON.stringify(phoneRoom));
   await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.keyboard.press('Escape');
   await wait(500);
   check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its photograph and proof inline');
@@ -398,11 +410,11 @@ try {
   check((await sceneState(p)) === 'fallback', 'without WebGL the still of the community is shown');
   check(await p.evaluate(() => [...document.querySelectorAll('.place-label')].every((l) => l.offsetHeight > 0)), 'the place names are listed without WebGL');
   await p.locator('.place-label[data-place="aquatic"]').dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { timeout: 45000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   await wait(1500);
   check(await p.evaluate(() => window.__impact.room.phase === 'inside' && !document.querySelector('#room').classList.contains('has-pano') && Number(getComputedStyle(document.querySelector('.room-poster')).opacity) > 0.9 && !!document.querySelector('.room-line')), 'without WebGL the room shows as a still with its captions');
   await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   check(p.failed.length === 0, 'no missing local assets without WebGL', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors without WebGL', p.errors.join(' | '));
   await noGL.close();

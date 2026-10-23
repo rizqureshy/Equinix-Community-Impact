@@ -13,10 +13,13 @@ const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<
  * @param {() => boolean} opts.motion
  * @param {boolean} opts.webgl    whether a panorama can be rendered
  * @param {(place: string) => Promise<void>} opts.approach  glide the model to the door; resolves when there
- * @param {(place: string) => void} opts.onLeft  called once the visitor is back on the model
+ * @param {(place: string, info: {guided: boolean, byUser: boolean}) => void} opts.onLeft  called once the visitor is back on the model
  * @param {(id: string) => void} opts.openStory
+ * @param {() => boolean} [opts.muted]  when true the narrator stays silent (the tour's mute)
+ * @param {(speaking: boolean) => void} [opts.onVoice]  the narrator started or stopped (to duck music)
+ * @param {(action: 'pause'|'resume'|'skip') => void} [opts.onControl]  the tour controls in the room's bar
  */
-export function createRoom(overlay, { motion = () => true, webgl = true, approach, onLeft, openStory }) {
+export function createRoom(overlay, { motion = () => true, webgl = true, approach, onLeft, openStory, muted = () => false, onVoice, onControl }) {
   const stage = overlay.querySelector('.room-stage');
   const film = overlay.querySelector('.room-film');
   const panoHost = overlay.querySelector('.room-pano');
@@ -28,6 +31,10 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
   const hint = overlay.querySelector('.room-hint');
   const voiceEl = overlay.querySelector('.room-voice');
   const voiceBtn = overlay.querySelector('[data-room-voice]');
+  const pauseBtn = overlay.querySelector('[data-room-pause]');
+  const warmer = document.createElement('video'); // fetches the next dive film ahead of the tour
+  warmer.muted = true;
+  warmer.preload = 'auto';
 
   let current = null; // room
   let phase = 'closed'; // closed | approaching | diving | inside | leaving
@@ -38,6 +45,12 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
   let raf = 0;
   let look = { yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, dragging: false, lx: 0, ly: 0 };
   let voiceOn = true; // the narrator reads each caption; a control in the room turns it off
+  let guided = false; // on the tour: the room runs itself and leaves when the story is told
+  let paused = false; // the tour is paused inside the room
+  let leavingByUser = false;
+  const END_CARD_MS = 2600; // how long the tour rests on the end card before leaving
+  let resumeWaiters = [];
+  const waitIfPaused = () => (paused ? new Promise((r) => resumeWaiters.push(r)) : Promise.resolve());
 
   // ---- narration ----------------------------------------------------------
   function setVoice(on) {
@@ -56,15 +69,17 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     voiceEl.onerror = null;
     voiceEl.pause();
     voiceEl.removeAttribute('src');
+    onVoice?.(false);
   }
   /** Read caption `i` aloud; false when there is nothing to play. */
   function speak(i) {
-    if (!voiceOn || !current?.voice) return false;
+    if (!voiceOn || muted() || !current?.voice) return false;
     voiceEl.onended = null;
     voiceEl.onerror = null;
     voiceEl.src = `${current.voice}-${i + 1}.mp3`;
     voiceEl.currentTime = 0;
     voiceEl.play().catch(() => {});
+    onVoice?.(true);
     return true;
   }
 
@@ -203,23 +218,82 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     }
     scheduleNext(false);
   }
-  /** Move on when the narrator has finished (plus a breath), or after 7 s when silent. */
+  /** Move on when the narrator has finished (plus a breath), or after 7 s when silent.
+   *  On the tour the end card rests a moment, then the room leaves by itself. */
   function scheduleNext(speaking) {
     clearTimeout(lineTimer);
-    if (!motion() || !current || lineIndex >= current.lines.length) return;
+    if (!current || paused) return;
+    const atEnd = lineIndex >= current.lines.length;
+    if (atEnd) {
+      if (guided) lineTimer = setTimeout(() => leave(), END_CARD_MS);
+      return;
+    }
+    if (!motion() && !guided) return;
     const advance = (ms) => {
       clearTimeout(lineTimer);
       lineTimer = setTimeout(() => showLine(lineIndex + 1), ms);
     };
     if (speaking) {
-      voiceEl.onended = () => advance(1500);
-      voiceEl.onerror = () => advance(7000);
+      voiceEl.onended = () => {
+        onVoice?.(false);
+        advance(1500);
+      };
+      voiceEl.onerror = () => {
+        onVoice?.(false);
+        advance(7000);
+      };
       advance(25000); // never stall on a clip that fails to end
     } else advance(7000);
   }
+  /** Hold the tour where it is: captions stop advancing, the voice and any film wait. */
+  function pause() {
+    if (paused) return;
+    paused = true;
+    overlay.classList.add('is-paused');
+    pauseBtn.textContent = 'Resume';
+    pauseBtn.setAttribute('aria-pressed', 'true');
+    clearTimeout(lineTimer);
+    voiceEl.pause();
+    if (phase === 'diving' || phase === 'leaving') film.pause();
+  }
+  function resume() {
+    if (!paused) return;
+    paused = false;
+    overlay.classList.remove('is-paused');
+    pauseBtn.textContent = 'Pause';
+    pauseBtn.setAttribute('aria-pressed', 'false');
+    const waiters = resumeWaiters;
+    resumeWaiters = [];
+    waiters.forEach((r) => r());
+    if (phase === 'diving' || phase === 'leaving') {
+      film.play().catch(() => {});
+      return;
+    }
+    if (phase !== 'inside') return;
+    if (voiceOn && !muted() && voiceEl.getAttribute('src') && voiceEl.paused && !voiceEl.ended) {
+      voiceEl.play().catch(() => {});
+      onVoice?.(true);
+      scheduleNext(true);
+    } else scheduleNext(false);
+  }
+  /** The sound control went off: stop the current line and carry on silently. */
+  function silence() {
+    if (phase === 'inside' && voiceEl.getAttribute('src')) {
+      stopVoice();
+      scheduleNext(false);
+    }
+  }
+  /** Fetch a place's dive film now so the tour does not stall at its door. */
+  function warm(place) {
+    const room = roomFor(place);
+    if (!room || !motion()) return;
+    const webm = film.canPlayType('video/webm') !== '';
+    warmer.src = `${room.dive}.${webm ? 'webm' : 'mp4'}`;
+    warmer.load();
+  }
   function next() {
     if (!current) return;
-    if (lineIndex >= current.lines.length) return leave();
+    if (lineIndex >= current.lines.length) return leave({ byUser: true });
     showLine(lineIndex + 1);
   }
 
@@ -248,10 +322,17 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     });
   }
 
-  async function enter(place, { trigger = null } = {}) {
+  async function enter(place, { trigger = null, guided: onTour = false } = {}) {
     const room = roomFor(place);
     if (!room || phase !== 'closed') return;
     current = room;
+    guided = onTour;
+    paused = false;
+    leavingByUser = false;
+    overlay.classList.toggle('is-guided', guided);
+    overlay.classList.remove('is-paused');
+    pauseBtn.textContent = 'Pause';
+    pauseBtn.setAttribute('aria-pressed', 'false');
     returnFocus = trigger || document.activeElement;
     titleEl.textContent = room.title;
     poster.src = room.poster;
@@ -261,11 +342,13 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     setPhase('approaching');
     // Load the panorama while the camera glides to the door
     const texture = ensurePano() ? loadPanoTexture(room).catch(() => null) : Promise.resolve(null);
-    await (approach ? approach(place) : Promise.resolve());
+    await (approach ? approach(place, { guided }) : Promise.resolve());
     if (phase !== 'approaching') return;
+    await waitIfPaused();
     setPhase('diving');
     await playFilm(room);
     if (phase !== 'diving') return;
+    await waitIfPaused();
     const t = await texture;
     if (pano && t) {
       pano.texture?.dispose();
@@ -282,13 +365,14 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     hint.hidden = !(pano && t);
     if (pano && t && !raf) raf = requestAnimationFrame(renderPano);
     showLine(0);
-    leaveBtn.focus();
+    (guided ? pauseBtn : leaveBtn).focus();
   }
 
-  async function leave() {
+  async function leave({ byUser = false } = {}) {
     if (!current || phase === 'closed' || phase === 'leaving') return;
     clearTimeout(lineTimer);
     stopVoice();
+    leavingByUser = byUser;
     const room = current;
     const wasInside = phase === 'inside';
     setPhase('leaving');
@@ -302,32 +386,38 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     film.innerHTML = '';
     captions.replaceChildren();
     setPhase('closed');
+    const wasGuided = guided;
+    guided = false;
+    paused = false;
+    overlay.classList.remove('is-guided', 'is-paused');
     current = null;
-    onLeft?.(room.place);
-    returnFocus?.focus?.();
+    onLeft?.(room.place, { guided: wasGuided, byUser: leavingByUser });
+    if (!wasGuided || leavingByUser) returnFocus?.focus?.();
   }
 
   overlay.addEventListener('click', (e) => {
-    if (e.target.closest('[data-room-leave]')) leave();
+    if (e.target.closest('[data-room-leave]')) leave({ byUser: true });
+    else if (e.target.closest('[data-room-pause]')) onControl?.(paused ? 'resume' : 'pause');
+    else if (e.target.closest('[data-room-skip]')) onControl?.('skip');
     else if (e.target.closest('[data-room-voice]')) setVoice(!voiceOn);
     else if (e.target.closest('[data-room-next]')) next();
     else if (e.target.closest('[data-room-story]')) {
       const id = e.target.closest('[data-room-story]').dataset.roomStory;
-      leave().then(() => openStory?.(id));
+      leave({ byUser: true }).then(() => openStory?.(id));
     }
   });
   overlay.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      leave();
+      leave({ byUser: true });
     }
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       clearTimeout(lineTimer);
       voiceEl.pause();
-    } else if (phase === 'inside') {
-      if (voiceOn && voiceEl.getAttribute('src') && voiceEl.paused && !voiceEl.ended) {
+    } else if (phase === 'inside' && !paused) {
+      if (voiceOn && !muted() && voiceEl.getAttribute('src') && voiceEl.paused && !voiceEl.ended) {
         voiceEl.play().catch(() => {});
         scheduleNext(true);
       } else scheduleNext(false);
@@ -350,6 +440,16 @@ export function createRoom(overlay, { motion = () => true, webgl = true, approac
     get voice() {
       return voiceOn;
     },
+    get guided() {
+      return guided;
+    },
+    get paused() {
+      return paused;
+    },
     setVoice,
+    pause,
+    resume,
+    silence,
+    warm,
   };
 }

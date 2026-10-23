@@ -233,3 +233,20 @@ body.room-open {
 .room-btn--voice[aria-pressed='false'] {
   color: rgb(255 255 255 / 0.6);
 }
+
+/* On the tour the room carries the tour's controls; by hand they stay away */
+.room-btn--tour {
+  display: none;
+}
+.room.is-guided .room-btn--tour {
+  display: inline-block;
+}
+.room.is-guided [data-room-next] {
+  display: none;
+}
+.room.is-paused .room-captions {
+  opacity: 0.85;
+}
+.room-btn[data-room-pause] {
+  min-width: 88px; /* Pause and Resume take the same room, so nothing shifts under the pointer */
+}

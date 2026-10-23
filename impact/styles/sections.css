@@ -295,6 +295,10 @@
   line-height: 1.45;
   color: var(--ink-2);
 }
+.tour-caption .actions {
+  margin-top: var(--s-4);
+  pointer-events: auto;
+}
 /* The model under the hand */
 .scene-host {
   cursor: grab;

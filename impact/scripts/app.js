@@ -34,7 +34,6 @@ const muteButton = $('[data-mute]');
 const tourCaption = $('.tour-caption');
 const theme = $('#theme');
 const labels = new Map($$('.place-label').map((el) => [el.dataset.place, el]));
-const TOUR_DWELL = 10000; // ms at each place while the tour plays (the longest spoken line is 9 s)
 let scene = null;
 let sceneLoading = false;
 let playing = false;
@@ -42,51 +41,36 @@ let tourIndex = -1; // -1 is the overview
 let tourTimer = 0;
 let muted = false; // not remembered: a tour should never open silent by surprise
 
-// The narrator: one spoken line per place while the tour plays; the music ducks under it
-const narration = new Audio();
-narration.preload = 'none';
+// The music ducks while the narrator speaks
 let ducked = false;
-narration.addEventListener('ended', () => duck(false));
-narration.addEventListener('error', () => duck(false));
 function duck(on) {
   ducked = on;
   if (playing) fadeMusic(true);
 }
-function narrate(s) {
-  narration.pause();
-  if (!s || muted || !store.get().motion) {
-    duck(false);
-    return;
-  }
-  narration.src = s.place === 'datacenter' ? 'media/voice/tour-datacenter.mp3' : `media/voice/${s.place}-1.mp3`;
-  narration.currentTime = 0;
-  duck(true);
-  narration.play().catch(() => duck(false));
-}
 
-function setCaption(s) {
+/** The end card after the last place, or nothing. */
+function setCaption(kind) {
   tourCaption.replaceChildren();
-  tourCaption.hidden = !s;
-  if (!s) return;
+  tourCaption.hidden = !kind;
+  if (!kind) return;
   const eyebrow = document.createElement('p');
   eyebrow.className = 'eyebrow';
-  eyebrow.textContent = `${s.number} ${s.label}`;
+  eyebrow.textContent = 'The tour';
   const title = document.createElement('p');
   title.className = 'tour-caption-title';
-  title.textContent = s.placeName;
+  title.textContent = 'Six places, one thread.';
   const text = document.createElement('p');
   text.className = 'tour-caption-text';
-  text.textContent = s.moment;
-  tourCaption.append(eyebrow, title, text);
-}
-/** The tour's camera: a place from the list, or the overview. */
-function showTourStop(i) {
-  tourIndex = i;
-  const s = i < 0 ? null : steps[i];
-  scene?.setFocus(s ? s.place : 'overview', { instant: !store.get().motion });
-  for (const [place, el] of labels) el.classList.toggle('is-focus', !!s && place === s.place);
-  setCaption(s);
-  narrate(s);
+  text.textContent = 'That is the whole community. Turn the model, step into any building again, or play the tour from the start.';
+  const actions = document.createElement('div');
+  actions.className = 'actions';
+  const again = document.createElement('button');
+  again.type = 'button';
+  again.className = 'btn btn--primary btn--small';
+  again.dataset.play = '';
+  again.textContent = 'Play again';
+  actions.append(again);
+  tourCaption.append(eyebrow, title, text, actions);
 }
 /** Back to the opening view, by hand. */
 function resetView() {
@@ -97,43 +81,89 @@ function resetView() {
   for (const el of labels.values()) el.classList.remove('is-focus');
 }
 
-// The tour: one place after another, around and around, with music
+// The tour: into each building in turn, the story told, out again and on to
+// the next, hands free. Pause holds it where it is; Skip moves on; Leave,
+// Escape or a hand on the model ends it.
+let paused = false;
 function setPlayingUI() {
   for (const b of playButtons) {
-    b.setAttribute('aria-pressed', String(playing));
-    if (b.classList.contains('bar-btn')) b.setAttribute('aria-label', playing ? 'Pause the tour' : 'Play the tour');
-    else b.textContent = playing ? 'Pause the tour' : 'Play the tour';
+    b.setAttribute('aria-pressed', String(playing && !paused));
+    const label = !playing ? 'Play the tour' : paused ? 'Resume the tour' : 'Pause the tour';
+    if (b.classList.contains('bar-btn')) b.setAttribute('aria-label', label);
+    else b.textContent = label;
   }
   explorer.classList.toggle('is-playing', playing);
+  explorer.classList.toggle('is-paused', playing && paused);
 }
 function startTour() {
   if (playing) return;
   playing = true;
+  paused = false;
+  tourIndex = -1;
+  setCaption(null);
+  explorer.classList.add('is-explored');
   setPlayingUI();
-  scene?.setDrift(store.get().motion);
   fadeMusic(true);
-  if (muted) notify('The tour is playing without music. Use the sound control to turn it on.');
-  const advance = () => {
-    const next = tourIndex >= steps.length - 1 ? -1 : tourIndex + 1;
-    showTourStop(next);
-    tourTimer = setTimeout(advance, next < 0 ? TOUR_DWELL * 0.7 : TOUR_DWELL);
-  };
-  tourTimer = setTimeout(advance, 1200);
+  if (muted) notify('The tour is playing without sound. Use the sound control to turn it on.');
+  tourTimer = setTimeout(nextPlace, 600);
+}
+/** Step into the next place on the tour, or finish. */
+function nextPlace() {
+  clearTimeout(tourTimer);
+  if (!playing || paused) return;
+  const next = tourIndex + 1;
+  if (next >= steps.length) return finishTour();
+  tourIndex = next;
+  const s = steps[next];
+  for (const [place, el] of labels) el.classList.toggle('is-focus', place === s.place);
+  room.enter(s.place, { guided: true });
+  if (steps[next + 1]) room.warm(steps[next + 1].place);
+}
+function finishTour() {
+  stopTour();
+  tourIndex = -1;
+  scene?.setFocus('overview', { instant: !store.get().motion });
+  setCaption('end');
+}
+function pauseTour() {
+  if (!playing || paused) return;
+  paused = true;
+  clearTimeout(tourTimer);
+  room.pause();
+  setPlayingUI();
+}
+function resumeTour() {
+  if (!playing || !paused) return;
+  paused = false;
+  setPlayingUI();
+  if (room.phase === 'closed') nextPlace();
+  else room.resume();
+}
+function skipPlace() {
+  if (!playing) return;
+  clearTimeout(tourTimer);
+  if (paused) {
+    paused = false;
+    setPlayingUI();
+  }
+  if (room.phase === 'closed') nextPlace();
+  else room.leave();
 }
 function stopTour() {
   if (!playing) return;
   playing = false;
+  paused = false;
   clearTimeout(tourTimer);
   setPlayingUI();
-  scene?.setDrift(false);
-  narration.pause();
   ducked = false;
   fadeMusic(false);
   setCaption(null);
   for (const el of labels.values()) el.classList.remove('is-focus');
 }
 function toggleTour() {
-  playing ? stopTour() : startTour();
+  if (!playing) startTour();
+  else if (paused) resumeTour();
+  else pauseTour();
 }
 
 let fadeTimer = 0;
@@ -161,8 +191,8 @@ function fadeMusic(on) {
 function setMuted(on) {
   muted = on;
   if (on) {
-    narration.pause();
     ducked = false;
+    room?.silence();
   }
   muteButton.setAttribute('aria-pressed', String(on));
   muteButton.setAttribute('aria-label', on ? 'Unmute the music' : 'Mute the music');
@@ -225,8 +255,6 @@ async function loadScene() {
       motion: () => store.get().motion,
       onReady: () => {
         stage.dataset.sceneState = 'ready';
-        if (playing) showTourStop(tourIndex);
-        scene.setDrift(playing && store.get().motion);
       },
       onFail: (err) => {
         console.warn('Community scene unavailable', err);
@@ -317,16 +345,25 @@ document.addEventListener('click', (e) => {
 const room = createRoom($('#room'), {
   motion: () => store.get().motion,
   webgl: supportsWebGL2(),
-  approach: (place) => {
-    stopTour();
+  approach: (place, { guided } = {}) => {
+    if (!guided) stopTour();
     if (scene && store.get().motion) return scene.approach(place);
     scene?.approach(place, { instant: true });
     return Promise.resolve();
   },
-  onLeft: () => {
+  onLeft: (place, { guided, byUser } = {}) => {
+    if (guided && playing && byUser) stopTour();
     scene?.back({ instant: !store.get().motion });
+    if (guided && playing && !byUser) tourTimer = setTimeout(nextPlace, 700);
   },
   openStory: (id) => dialog.open(id),
+  muted: () => muted,
+  onVoice: (speaking) => duck(speaking),
+  onControl: (action) => {
+    if (action === 'pause') pauseTour();
+    else if (action === 'resume') resumeTour();
+    else if (action === 'skip') skipPlace();
+  },
 });
 document.addEventListener('click', (e) => {
   const b = e.target.closest('[data-room-enter]');
@@ -708,9 +745,10 @@ window.__impact = {
   get fabric() {
     return fabric;
   },
-  get narration() {
-    return narration;
+  get paused() {
+    return paused;
   },
+  skipPlace,
   get coachLoaded() {
     return coachLoaded;
   },

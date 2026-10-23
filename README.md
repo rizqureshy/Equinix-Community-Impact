@@ -1,6 +1,6 @@
 # Equinix: Infrastructure for human possibility
 
-An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model you turn, zoom and step inside, or let play as a tour with music: six places, each with its red thread (amber for recovered heat), a room you can enter and a sourced story about care, discovery, opportunity, community and responsible growth.
+An internal, visual-first experience for Equinix CRO colleagues. A clean, Apple-like page where a community connected by Equinix is a live 3D model you turn, zoom and step inside, or let play as a narrated tour that walks you into each building with music: six places, each with its red thread (amber for recovered heat), a room you can enter and a sourced story about care, discovery, opportunity, community and responsible growth.
 
 This is a prototype. The community is an illustrative composite; its buildings, images and films are AI generated and labelled as such. Facts come from the linked Equinix sources. See [HANDOVER.md](HANDOVER.md) for creative decisions, tool use, provenance, validation and open editorial items.
 
