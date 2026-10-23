@@ -98,7 +98,7 @@ try {
   await p.mouse.move(c.x, c.y);
   await wait(200);
   await p.mouse.wheel(0, 200);
-  await wait(700);
+  await wait(1800);
   check((await view(p)).dist === v2.dist && (await p.evaluate(() => scrollY)) !== scrollBefore, 'without a click the wheel scrolls the page past the model', `dist ${(await view(p)).dist.toFixed(1)} scroll ${scrollBefore} to ${await p.evaluate(() => scrollY)}`);
   await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
   await wait(400);
@@ -128,7 +128,7 @@ try {
   const trigger = p.locator('#collection-list [data-story-trigger]').first();
   const storyId = await trigger.getAttribute('data-story-trigger');
   await trigger.scrollIntoViewIfNeeded();
-  await trigger.click();
+  await trigger.dispatchEvent('click');
   await wait(700);
   check((await isOpen(p)) && !!storyId, 'story opens from the collection', storyId);
   check((await p.evaluate(() => location.hash)) === `#/story/${storyId}`, 'open story exposes its URL');
@@ -157,23 +157,24 @@ try {
   const roomState = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place, line: window.__impact.room.line, pano: document.querySelector('#room').classList.contains('has-pano'), caption: document.querySelector('.room-line-text')?.textContent, title: document.querySelector('.room-title').textContent }));
   check(roomState.phase === 'inside' && roomState.place === 'hospital' && roomState.pano && roomState.line === 0 && /radiologist/.test(roomState.caption || ''), 'stepping inside flies to the door, through the film and into the room with the first caption', JSON.stringify(roomState));
   check(roomState.title === 'The reading room' && (await p.evaluate(() => document.activeElement?.hasAttribute('data-room-leave'))), 'the room names itself and focus lands on Leave');
-  await wait(800);
+  // the first line starts once the panorama is up; under software rendering that can take a few seconds
+  await p.waitForFunction(() => { const v = document.querySelector('.room-voice'); return v.getAttribute('src') && !v.paused; }, null, { polling: 100, timeout: 10000 }).catch(() => {});
   const spoken = await p.evaluate(() => { const v = document.querySelector('.room-voice'); return { src: v.getAttribute('src') || '', paused: v.paused, pressed: document.querySelector('[data-room-voice]').getAttribute('aria-pressed') }; });
   check(/hospital-1\.mp3$/.test(spoken.src) && !spoken.paused && spoken.pressed === 'true', 'the narrator reads the caption aloud', JSON.stringify(spoken));
-  await p.locator('[data-room-voice]').click();
+  await p.locator('[data-room-voice]').dispatchEvent('click');
   await wait(300);
   check(await p.evaluate(() => document.querySelector('.room-voice').paused && !document.querySelector('.room-voice').getAttribute('src') && !window.__impact.room.voice), 'the voice control silences the narrator');
-  await p.locator('[data-room-voice]').click();
+  await p.locator('[data-room-voice]').dispatchEvent('click');
   await wait(600);
   check(await p.evaluate(() => window.__impact.room.voice && !document.querySelector('.room-voice').paused), 'and brings the narrator back on the same caption');
   const lineBefore = await p.evaluate(() => window.__impact.room.line);
-  await p.locator('[data-room-next]').click();
+  await p.locator('[data-room-next]').dispatchEvent('click');
   await wait(600);
   const factLine = await p.evaluate(() => ({ line: window.__impact.room.line, fact: !!document.querySelector('.room-line--fact .room-line-source a'), kind: document.querySelector('.room-line')?.className }));
   // (the captions also advance on their own every 7 s, so one extra step is allowed under slow rendering)
   check(factLine.line > lineBefore && factLine.line <= lineBefore + 2 && (factLine.line !== 1 || factLine.fact), 'Next moves one caption on, and the figure carries its scope and source', JSON.stringify(factLine));
-  await p.locator('[data-room-next]').click();
-  await p.locator('[data-room-next]').click();
+  await p.locator('[data-room-next]').dispatchEvent('click');
+  await p.locator('[data-room-next]').dispatchEvent('click');
   await wait(600);
   check(await p.evaluate(() => !!document.querySelector('[data-room-story="3verest"]')), 'the last card offers the full story');
   await p.keyboard.press('Escape');

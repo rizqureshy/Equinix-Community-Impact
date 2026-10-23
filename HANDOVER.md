@@ -108,7 +108,7 @@ Generation ran through the Higgsfield CLI after a browser sign-in (the connector
 
 Earlier rounds spent 212 credits on the stills and films that remain in use (chapter and people films, story images). Every output is recorded in `media-src/asset-manifest.json` (the `city` section for this round) with its generation id, model, settings, prompt file, status and use.
 
-**The building pipeline:** concept image → Tripo image-to-3D (about 1.9 million triangles, 65 MB each) → `scripts/build_city.sh` (meshopt geometry at 3% of the triangles, WebP textures at 1024 px) → about 0.8 MB per building, 5.4 MB for the town. The models load lazily when the community nears the viewport. `tests/tools/glb-view.mjs` renders any model from four angles for review.
+**The building pipeline:** concept image → Tripo image-to-3D (about 1.9 million triangles, 65 MB each) → `scripts/build_city.sh` (meshopt geometry at 12% of the triangles, WebP textures at 2048 px; raised from 3% and 1024 px on 23 October 2026 because the facades read as dented) → about 2.4 MB per building, 16 MB for the town. The models load lazily when the community nears the viewport. `tests/tools/glb-view.mjs` renders any model from four angles for review.
 
 Every generated image, film and model is captioned as illustrative and AI generated. None depicts a named person, customer or facility.
 
@@ -146,7 +146,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 
 **Not yet checked**
 
-- **Real-GPU performance:** frame rate, LCP and CLS on real hardware. Software rendering here is not representative. Mitigations: lazy model load, pixel ratio capped at 1.75 (1 on low-core devices), rendering only while visible and while something moves, 5.4 MB of models in total. The music (about 1 MB as Opus, 2 MB as MP3) loads only when the tour is played.
+- **Real-GPU performance:** frame rate, LCP and CLS on real hardware. Software rendering here is not representative. Mitigations: lazy model load, pixel ratio capped at 1.75 (1 on low-core devices), rendering only while visible and while something moves, 16 MB of models in total (lazy, after first paint). The music (about 1 MB as Opus, 2 MB as MP3) loads only when the tour is played.
 - **Audio on real devices:** the theme's level and loop were checked by ear only through the waveform; listen on speakers and headphones before sharing.
 - **Screen readers, Safari, Firefox, tablet widths.**
 
@@ -155,7 +155,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 - **Brand assets:** the supplied Equinix logos are in `impact/public/brand/` (vertical lockup in the footer, fortress mark as the favicon). The slim header uses a horizontal arrangement assembled from the supplied vertical file (mark left, wordmark right, shared baseline); replace it with the official horizontal lockup if one exists. The red is now the logo red `#E91C24`. The type remains a placeholder until brand type is supplied.
 - **Documentary media:** approved photography of real people and facilities would strengthen every chapter.
 - **Data center character:** see Creative direction; a new concept would give a more recognisable building.
-- **Model fidelity:** buildings are simplified to about 56,000 triangles each. `scripts/build_city.sh` can raise `--simplify-ratio` for more detail at a larger download; the raw 65 MB models are re-downloadable from each `resultUrl` in the manifest.
+- **Model fidelity:** buildings are simplified to about 230,000 triangles each with anisotropic texture filtering. `scripts/build_city.sh` can raise `--simplify-ratio` further at a larger download; the raw 65 MB models are re-downloadable from each `resultUrl` in the manifest.
 - **Mobile hero type:** at phone width the headline wraps to four lines; a shorter second line or a smaller size would tidy it.
 - **Higgsfield access:** the CLI sign-in lived in this session's container. Future sessions need to sign in again.
 - **Repository visibility:** the repository is public. Uploaded PDFs and the sales slides are kept out of git (`media-src/sources/` is ignored), as are the concept renders and raw models. Decide hosting and access before enabling Pages.

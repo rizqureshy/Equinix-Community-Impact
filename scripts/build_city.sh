@@ -15,8 +15,8 @@ for n in "${names[@]}"; do
   out="impact/public/media/city/$n.glb"
   npx gltf-transform optimize "$in" "$out" \
     --compress meshopt --meshopt-level high \
-    --texture-compress webp --texture-size 1024 \
-    --simplify true --simplify-ratio 0.03 --simplify-error 0.001 \
+    --texture-compress webp --texture-size 2048 \
+    --simplify true --simplify-ratio 0.12 --simplify-error 0.001 \
     --palette false
   printf '%s: %s -> %s bytes\n' "$n" "$(stat -c %s "$in")" "$(stat -c %s "$out")"
 done

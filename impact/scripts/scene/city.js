@@ -329,6 +329,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
 
   // Buildings
   const buildings = {}; // id -> group
+  const pickProxies = []; // one invisible box per building: picking never touches the real triangles
   const anchors = {}; // id -> Vector3 (label anchor above the roof)
   const loader = new GLTFLoader();
   loader.setMeshoptDecoder(MeshoptDecoder);
@@ -343,6 +344,11 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
         if (o.material) {
           o.material.envMapIntensity = 0.6;
           if ('roughness' in o.material) o.material.roughness = Math.max(o.material.roughness, 0.55);
+          // Roofs and facades at grazing angles stay sharp
+          const maxAniso = renderer.capabilities.getMaxAnisotropy();
+          for (const key of ['map', 'normalMap', 'roughnessMap', 'metalnessMap']) {
+            if (o.material[key]) o.material[key].anisotropy = Math.min(8, maxAniso);
+          }
         }
       }
     });
@@ -356,6 +362,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     model.position.set(-centre.x, -box.min.y, -centre.z);
     const group = new THREE.Group();
     group.add(model);
+    // A box the size of the building for hover and click: raycasting the
+    // full mesh at this detail would cost tens of milliseconds a move
+    box.setFromObject(model);
+    const proxySize = box.getSize(new THREE.Vector3());
+    const proxy = new THREE.Mesh(new THREE.BoxGeometry(proxySize.x, proxySize.y, proxySize.z), new THREE.MeshBasicMaterial({ visible: false }));
+    proxy.position.copy(box.getCenter(new THREE.Vector3()));
+    proxy.userData.place = id;
+    group.add(proxy);
+    pickProxies.push(proxy);
     group.position.set(...def.pos);
     group.rotation.y = def.rot;
     group.userData.place = id;
@@ -545,10 +560,8 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     const r = renderer.domElement.getBoundingClientRect();
     ndc.set(((event.clientX - r.left) / r.width) * 2 - 1, -((event.clientY - r.top) / r.height) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
-    const hits = raycaster.intersectObjects(Object.values(buildings), true);
-    let o = hits[0]?.object;
-    while (o && !o.userData.place) o = o.parent;
-    return o?.userData.place || null;
+    const hits = raycaster.intersectObjects(pickProxies, false);
+    return hits[0]?.object.userData.place || null;
   }
 
   // ---- Interaction --------------------------------------------------------

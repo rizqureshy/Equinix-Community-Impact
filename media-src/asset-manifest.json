@@ -563,7 +563,8 @@
         "original": "media-src/city/b1-hospital.glb",
         "web": "impact/public/media/city/b1-hospital.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185408_e0292c87-1388-4bee-b2cb-804b9303facd.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b1-hospital",
@@ -606,7 +607,8 @@
         "original": "media-src/city/b2-research.glb",
         "web": "impact/public/media/city/b2-research.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185340_6dbacae7-d1ae-45c3-9cae-38caf162f9a2.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b2-research",
@@ -649,7 +651,8 @@
         "original": "media-src/city/b3-learning.glb",
         "web": "impact/public/media/city/b3-learning.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185350_8d8706c4-8752-42f8-898e-142e5923571d.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b3-learning",
@@ -692,7 +695,8 @@
         "original": "media-src/city/b4-homes.glb",
         "web": "impact/public/media/city/b4-homes.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185354_bc3535f3-007d-4ef5-b823-f054bf465914.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b4-homes",
@@ -735,7 +739,8 @@
         "original": "media-src/city/b5-shops.glb",
         "web": "impact/public/media/city/b5-shops.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185359_70e97470-96df-4009-b261-ccd5bf499d92.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b5-shops",
@@ -778,7 +783,8 @@
         "original": "media-src/city/b6-aquatic.glb",
         "web": "impact/public/media/city/b6-aquatic.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185404_5da6fae8-f7bb-44ed-9bc7-19ec3bc0e6d0.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b6-aquatic",
@@ -821,7 +827,8 @@
         "original": "media-src/city/b7-datacenter.glb",
         "web": "impact/public/media/city/b7-datacenter.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_183718_50beb452-06e0-4a67-aec7-0b3886c19b2d.glb",
-        "usage": "Building in the live community model (Three.js)"
+        "usage": "Building in the live community model (Three.js)",
+        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
       },
       {
         "key": "b7-datacenter",

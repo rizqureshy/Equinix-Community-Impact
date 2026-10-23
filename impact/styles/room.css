@@ -247,6 +247,7 @@ body.room-open {
 .room.is-paused .room-captions {
   opacity: 0.85;
 }
-.room-btn[data-room-pause] {
-  min-width: 88px; /* Pause and Resume take the same room, so nothing shifts under the pointer */
+.room-btn[data-room-pause],
+.room-btn[data-room-voice] {
+  min-width: 88px; /* Pause/Resume and Voice on/off take the same room, so nothing shifts under the pointer */
 }
