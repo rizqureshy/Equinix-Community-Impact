@@ -42,7 +42,7 @@ Research, routes and costs are in `design/enter-the-story.md`. What was built:
 - **Fallbacks:** without WebGL the room is a still with the captions; with motion off the approach is instant and the films are skipped; on phones the captions sit at the bottom and the room is draggable. Films and panoramas load only when a room is entered.
 - **Honest limits:** you cannot walk; you stand in one spot and look. The dive films are a dissolve from the model into the room rather than a true pass through the door (Kling joins the two frames its own way). Walkable rooms need Gaussian-splat worlds from tools outside Higgsfield; noted in the proposal for a later round.
 
-Credits this round: six panoramas at 3, six dive films at 10, five forward exit films at 10, 128 of the 250 allowed. Files: `impact/scripts/room.js`, `impact/styles/room.css`, `impact/scripts/content/rooms.js` (captions), `DOORS` and `approach` in `scene/city.js`, `scripts/pano_tools.py`, `scripts/build_rooms.sh`, `tests/tools/door-views.mjs`.
+Credits this round: six panoramas at 3, six dive films at 10, five forward exit films at 10, one arrival-under-a-sky test at 10 (not used; the backdrop renderer stays in the scene as `setBackdrop`), 138 of the 250 allowed. Files: `impact/scripts/room.js`, `impact/styles/room.css`, `impact/scripts/content/rooms.js` (captions), `DOORS` and `approach` in `scene/city.js`, `scripts/pano_tools.py`, `scripts/build_rooms.sh`, `tests/tools/door-views.mjs`.
 
 ## The red fabric (branch `claude/red-fabric`)
 

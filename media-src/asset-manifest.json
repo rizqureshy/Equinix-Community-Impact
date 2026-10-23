@@ -1097,7 +1097,7 @@
   },
   "rooms": {
     "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film (Kling 3.0 Omni Frames, first frame a render of the live model at the door, last frame the panorama centre). Raw files are re-downloadable from each generation; web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
-    "estimatedCredits": 128,
+    "estimatedCredits": 138,
     "items": [
       {
         "key": "room-hospital-pano",
@@ -1499,6 +1499,31 @@
         "status": "selected",
         "usage": "Forward exit film out of the datacenter room, so nobody walks backwards; replaces the reversed dive",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 22 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-hospital-dive-sky-test",
+        "generationId": "9bce2e28-c597-4f01-a4f3-1fc921defb18",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-23T16:53:08.737289Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive-sky.txt",
+        "inputs": [
+          "media-src/rooms/hospital.door-sky.png (door view rendered inside a sky, land and tree line)",
+          "media-src/rooms/hospital.room.png"
+        ],
+        "original": "media-src/rooms/hospital.dive-sky.mp4",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261023_165308_9bce2e28-c597-4f01-a4f3-1fc921defb18.mp4",
+        "estimatedCredits": 10,
+        "status": "not used",
+        "usage": "Test of an arrival under a sky; Kling still dissolved rather than walked, so the current dive stays",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 23 October 2026. Illustrative only."
       }
     ]
   },

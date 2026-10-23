@@ -253,6 +253,78 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
 
 
   buildGround(scene);
+
+  // A world around the model for the door views: a soft sky, land beyond the
+  // plinth and a distant tree line, so a dive film has somewhere to travel
+  // through. Off by default; the page keeps its white.
+  let backdrop = null;
+  function buildBackdrop() {
+    const group = new THREE.Group();
+    const gradient = (stops, w = 4, h = 512) => {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d');
+      const grad = g.createLinearGradient(0, 0, 0, h);
+      for (const [t, col] of stops) grad.addColorStop(t, col);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, w, h);
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    };
+    const sky = new THREE.Mesh(
+      new THREE.SphereGeometry(420, 32, 24),
+      new THREE.MeshBasicMaterial({ map: gradient([[0, '#9fbfe4'], [0.42, '#d7e5f4'], [0.5, '#f2efe8'], [1, '#e8e6df']]), side: THREE.BackSide, toneMapped: false, fog: false }),
+    );
+    group.add(sky);
+    const land = new THREE.Mesh(new THREE.CircleGeometry(400, 64), new THREE.MeshStandardMaterial({ color: '#d9d8cc', roughness: 1 }));
+    land.rotation.x = -Math.PI / 2;
+    land.position.y = -1.25;
+    land.receiveShadow = true;
+    group.add(land);
+    // The tree line: a soft band of silhouettes on a ring, far enough to read as a horizon
+    const c = document.createElement('canvas');
+    c.width = 2048;
+    c.height = 256;
+    const g = c.getContext('2d');
+    g.clearRect(0, 0, c.width, c.height);
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 260; i++) {
+      const x = rnd() * c.width;
+      const rad = 18 + rnd() * 34;
+      const y = c.height - 40 - rnd() * 30;
+      const shade = 70 + Math.floor(rnd() * 40);
+      g.fillStyle = `rgba(${shade}, ${shade + 22}, ${shade - 6}, ${0.55 + rnd() * 0.35})`;
+      g.beginPath();
+      g.ellipse(x, y, rad * 0.9, rad, 0, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.fillStyle = 'rgba(78, 96, 70, 0.9)';
+    g.fillRect(0, c.height - 46, c.width, 46);
+    const treeTex = new THREE.CanvasTexture(c);
+    treeTex.colorSpace = THREE.SRGBColorSpace;
+    treeTex.wrapS = THREE.RepeatWrapping;
+    treeTex.repeat.x = 3;
+    const trees = new THREE.Mesh(
+      new THREE.CylinderGeometry(70, 70, 16, 96, 1, true),
+      new THREE.MeshBasicMaterial({ map: treeTex, transparent: true, side: THREE.BackSide, toneMapped: false, depthWrite: false }),
+    );
+    trees.position.y = 6.5;
+    group.add(trees);
+    return group;
+  }
+  function setBackdrop(on) {
+    if (on && !backdrop) {
+      backdrop = buildBackdrop();
+      scene.add(backdrop);
+    }
+    if (backdrop) backdrop.visible = on;
+    scene.fog = on ? new THREE.Fog('#e9ebe4', 70, 180) : null;
+    dirty = true;
+    tick();
+  }
   const threads = buildThreads(scene);
 
   // Buildings
@@ -702,6 +774,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     setFocus,
     approach,
     back,
+    setBackdrop,
     nudge,
     zoom,
     setEngaged,

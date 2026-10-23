@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-23T16:53:08.737289Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "9bce2e28-c597-4f01-a4f3-1fc921defb18",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "41061cf1-f219-4569-9511-2e6e0c9aaacf",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/41061cf1-f219-4569-9511-2e6e0c9aaacf.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "e69eafaf-6d72-42f3-b2d2-cd74a178963a",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/e69eafaf-6d72-42f3-b2d2-cd74a178963a.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move in two beats, no cuts. First beat: the clean white architectural scale model in the first frame becomes a real place: the sky and the distant trees stay, the small building grows to full size, real materials and daylight arrive, and the camera walks steadily forward along the ground toward the entrance. Second beat: the camera passes through the open doorway and the view resolves into the real, full-size interior shown in the last frame, with the lighting warming and the people settling into place as we arrive. Steady, slow, cinematic, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261023_165308_9bce2e28-c597-4f01-a4f3-1fc921defb18.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261023_165308_9bce2e28-c597-4f01-a4f3-1fc921defb18_thumbnail.webp"
+  }
+]
