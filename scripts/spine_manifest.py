@@ -11,10 +11,10 @@ for j in sorted((root / 'media-src/spine').glob('*.json')):
     d = load(j)
     items.append({
         'key': f'spine-{k}', 'generationId': d.get('id'), 'model': d.get('display_name', 'GPT Image 2.5'), 'jobType': d.get('job_type', 'gpt_image_2_5'), 'createdAt': d.get('created_at'),
-        'settings': {'aspect_ratio': '3:2', 'quality': 'high', 'resolution': '1k'}, 'promptFile': f'media-src/spine/{k}.txt',
+        'settings': ({'aspect_ratio': '16:9', 'resolution': '2k'} if k.endswith('-wide') else {'aspect_ratio': '3:2', 'quality': 'high', 'resolution': '1k'}), 'promptFile': f'media-src/spine/{k.replace("-wide", "")}.txt',
         'original': f'media-src/spine/{k}.png', 'web': f'impact/public/media/spine/{k}.webp', 'resultUrl': d.get('result_url'),
-        'estimatedCredits': 1.5, 'status': 'selected',
-        'usage': f'Card image for the "{k}" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel',
+        'estimatedCredits': 3 if k.endswith('-wide') else 1.5, 'status': 'selected',
+        'usage': ('Full-screen finale image for the five promises on the Spine of Impact prototype' if k.endswith('-wide') else f'Card image for the "{k}" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel'),
         'provenance': 'AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named.',
     })
 m['spine'] = {'description': 'Spine of Impact prototype: one illustrative still per milestone, composed onto 3D cards with a caption. Raw PNGs stay out of git; WebP copies live in impact/public/media/spine.', 'items': items, 'estimatedCredits': round(sum(i['estimatedCredits'] for i in items), 2)}

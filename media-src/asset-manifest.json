@@ -2257,6 +2257,25 @@
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
       },
       {
+        "key": "spine-promises-2027-wide",
+        "generationId": "e10f0954-7f36-4188-af1e-ed1f9202a6d3",
+        "model": "FLUX 3 Image",
+        "jobType": "flux_3_image",
+        "createdAt": "2026-10-24T05:59:02.440859Z",
+        "settings": {
+          "aspect_ratio": "16:9",
+          "resolution": "2k"
+        },
+        "promptFile": "media-src/spine/promises-2027.txt",
+        "original": "media-src/spine/promises-2027-wide.png",
+        "web": "impact/public/media/spine/promises-2027-wide.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_055902_e10f0954-7f36-4188-af1e-ed1f9202a6d3.png",
+        "estimatedCredits": 3,
+        "status": "selected",
+        "usage": "Full-screen finale image for the five promises on the Spine of Impact prototype",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
         "key": "spine-promises-2027",
         "generationId": "2f359512-1bb2-4911-975a-dac1837f70ea",
         "model": "GPT Image 2.5",
@@ -2397,6 +2416,6 @@
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
       }
     ],
-    "estimatedCredits": 39.0
+    "estimatedCredits": 42.0
   }
 }

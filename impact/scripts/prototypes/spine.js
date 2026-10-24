@@ -3,6 +3,7 @@
 import * as T from 'three';
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/fraunces';
+import { principles } from '../content/stories.js';
 
 const root = document.documentElement;
 const css = (n) => getComputedStyle(root).getPropertyValue(n).trim();
@@ -55,7 +56,7 @@ const sun = new T.DirectionalLight(0xffffff, 1.8); sun.position.set(5, 10, 4); s
 // The ribbon: a long sweeping curve.
 const pts = []; const N = 14;
 for (let i = 0; i <= N; i++) { const u = i / N; pts.push(new T.Vector3(Math.sin(u * Math.PI * 1.7) * 26, Math.sin(u * Math.PI * 3.1) * 5 + u * 6, -u * 220)); }
-const curve = new T.CatmullRomCurve3(pts, false, 'catmullrom', 0.6);
+const curve = new T.CatmullRomCurve3(pts, false, 'centripetal');
 const RED = new T.Color('#e91c24');
 const ribbonMat = new T.MeshStandardMaterial({ color: RED, roughness: 0.45, metalness: 0.05, emissive: RED, emissiveIntensity: 0 });
 scene.add(new T.Mesh(new T.TubeGeometry(curve, 600, 0.2, 12, false), ribbonMat));
@@ -153,13 +154,14 @@ function musicOff() { musicTarget = 0; }
 // Travel state.
 let t = 0, target = 0.004, touring = false, mapMode = false, focused = null, wasTouring = false;
 const AHEAD = 0.03; // the ribbon distance at which a card ahead is readable, and the plaque speaks for it
+let finaleOn = false;
 const clamp = (v) => Math.max(0, Math.min(1, v));
 const hint = document.getElementById('hint');
 let moved = false;
 const rideBtn = document.getElementById('ride'), mapBtn = document.getElementById('map');
 function stopTour() { if (!touring) return; touring = false; rideBtn.setAttribute('aria-pressed', 'false'); rideBtn.textContent = 'Tour'; musicOff(); }
 function startTour() { touring = true; if (target > 0.995) { target = 0; t = 0; } rideBtn.setAttribute('aria-pressed', 'true'); rideBtn.textContent = 'Pause'; mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); musicOn(); moved = true; }
-rideBtn.addEventListener('click', () => { unfocus(false); touring ? stopTour() : startTour(); });
+rideBtn.addEventListener('click', () => { if (finaleOn) { endFinale(true); return; } unfocus(false); touring ? stopTour() : startTour(); });
 mapBtn.addEventListener('click', () => { unfocus(false); mapMode = !mapMode; mapBtn.setAttribute('aria-pressed', String(mapMode)); if (mapMode) stopTour(); });
 
 // Focus on a card: the camera turns to it and the story comes forward.
@@ -182,15 +184,38 @@ function unfocus(resume) {
   wasTouring = false;
 }
 document.getElementById('back').addEventListener('click', () => unfocus(true));
-window.addEventListener('keydown', (e) => { if (e.key === 'Escape') unfocus(true); });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (finaleOn) endFinale(false); else unfocus(true); } });
 
+
+// Finale: the last card grows from where it sits on screen to fill the whole screen, and the tour stops there.
+const finaleEl = document.getElementById('finale'), fImg = document.getElementById('fImg');
+const fList = document.getElementById('fList');
+principles.forEach((pr, i) => { const li = document.createElement('li'); li.style.transitionDelay = `${0.5 + i * 0.55}s`; const n = document.createElement('i'); n.textContent = String(i + 1); const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = pr.name; const sp = document.createElement('span'); sp.textContent = pr.promise; d.append(b, sp); li.append(n, d); fList.appendChild(li); });
+const corner = new T.Vector3();
+function cardRect(n) {
+  const w = stage.clientWidth, h = stage.clientHeight; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { corner.set(sx * CARD_W / 2, sy * CARD_H / 2, 0); n.card.localToWorld(corner); corner.project(camera); const px = (corner.x + 1) / 2 * w, py = (1 - corner.y) / 2 * h; x0 = Math.min(x0, px); y0 = Math.min(y0, py); x1 = Math.max(x1, px); y1 = Math.max(y1, py); }
+  return { left: x0, top: y0, width: Math.max(40, x1 - x0), height: Math.max(26, y1 - y0) };
+}
+function startFinale() {
+  finaleOn = true; stopTour(); musicOff(); const n = nodes.at(-1); const r = cardRect(n);
+  fImg.src = `../media/spine/${n.m.img}-wide.webp`;
+  Object.assign(fImg.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+  finaleEl.classList.remove('full', 'text'); finaleEl.classList.add('on'); document.body.classList.add('finale-on');
+  requestAnimationFrame(() => requestAnimationFrame(() => { finaleEl.classList.add('full'); setTimeout(() => finaleEl.classList.add('text'), 1400); }));
+}
+function endFinale(restart) {
+  if (!finaleOn) return; finaleOn = false; finaleEl.classList.remove('on', 'full', 'text'); document.body.classList.remove('finale-on');
+  if (restart) { target = 0; t = 0; startTour(); } else { target = 0.96; }
+}
+document.getElementById('again').addEventListener('click', () => endFinale(true));
 // Pointer: scroll and drag travel, click opens a card.
 const ray = new T.Raycaster(), ndc = new T.Vector2(); let pointer = null;
 function pick() { if (!pointer) return null; const r = stage.getBoundingClientRect(); ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(cardMeshes, false)[0]; return hit ? nodes[hit.object.userData.node] : null; }
-stage.addEventListener('wheel', (e) => { e.preventDefault(); unfocus(false); target = clamp(target + e.deltaY * 0.00012); stopTour(); moved = true; }, { passive: false });
+stage.addEventListener('wheel', (e) => { e.preventDefault(); if (finaleOn) { if (e.deltaY < 0) endFinale(false); return; } unfocus(false); target = clamp(target + e.deltaY * 0.00012); stopTour(); moved = true; }, { passive: false });
 let drag = null;
 stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, t: target, dist: 0 }; stage.setPointerCapture(e.pointerId); });
-stage.addEventListener('pointermove', (e) => { pointer = { x: e.clientX, y: e.clientY }; if (!drag) return; drag.dist = Math.max(drag.dist, Math.hypot(e.clientX - drag.x, e.clientY - drag.y)); if (drag.dist > 6) { unfocus(false); target = clamp(drag.t + (drag.y - e.clientY) * 0.0009); stopTour(); moved = true; } });
+stage.addEventListener('pointermove', (e) => { pointer = { x: e.clientX, y: e.clientY }; if (!drag) return; drag.dist = Math.max(drag.dist, Math.hypot(e.clientX - drag.x, e.clientY - drag.y)); if (drag.dist > 6) { if (finaleOn) { endFinale(false); drag = null; return; } unfocus(false); target = clamp(drag.t + (drag.y - e.clientY) * 0.0009); stopTour(); moved = true; } });
 const endDrag = (e) => { if (drag && drag.dist <= 6 && e.type === 'pointerup') { pointer = { x: e.clientX, y: e.clientY }; const n = pick(); if (n) focus(n); else if (focused) unfocus(true); } drag = null; };
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 stage.addEventListener('pointerleave', () => { pointer = null; });
@@ -198,7 +223,7 @@ window.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key =
 
 // Track with ticks.
 const track = document.getElementById('track'), done = document.getElementById('done');
-M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', 'var(--accent)'); b.style.left = (tOf(m.y) * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
+M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', 'var(--accent)'); b.style.left = (tOf(m.y) * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { endFinale(false); stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
 for (let y = Y0; y <= 2026; y += 4) { const s = document.createElement('span'); s.className = 'yr'; s.style.left = (tOf(y) * 100) + '%'; s.textContent = y; track.appendChild(s); }
 
 // Plaque (the short card shown while riding past).
@@ -228,16 +253,12 @@ const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-70, 90, 120)), m
 let last = performance.now(), clock = 0;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
-  if (touring) {
-    // Fast between stories, slow while a card is alongside so it can be read.
-    const gap = nodes.reduce((m, n) => Math.min(m, Math.abs(n.t - (target + AHEAD))), 1);
-    const k = Math.max(0, Math.min(1, gap / 0.02)); const speed = 0.006 + (0.034 - 0.006) * k * k;
-    target = clamp(target + dt * speed); if (target >= 1) stopTour();
-  }
+  if (touring) { target = clamp(target + dt * 0.011); if (target >= 1) { stopTour(); } }
+  if (!finaleOn && !mapMode && !focused && t > 0.985 && target >= 0.999) startFinale();
   const ease = (k) => (reduce ? 1 : 1 - Math.exp(-dt * k));
-  t += (target - t) * ease(3.6);
+  t += (target - t) * ease(2.4);
   const tt = Math.min(0.9999, Math.max(0, t));
-  const p = curve.getPointAt(tt), ahead = curve.getPointAt(Math.min(0.9999, tt + 0.012)), tan = curve.getTangentAt(tt);
+  const p = curve.getPointAt(tt), ahead = curve.getPointAt(Math.min(0.9999, tt + 0.02)), tan = curve.getTangentAt(tt);
   const side = tmp.crossVectors(tan, up).normalize();
   if (mapMode) { camPos.lerp(mapPos, ease(3)); camLook.lerp(mapLook, ease(3)); }
   else if (focused) {
@@ -247,7 +268,7 @@ function frame(now) {
     const narrow = stage.clientWidth < 760; const shift = narrow ? 0 : -2.4;
     const want = cardWorld.clone().add(tn.clone().multiplyScalar(-10)).add(up.clone().multiplyScalar(0.3)).add(sd.clone().multiplyScalar(shift * 0.3));
     camPos.lerp(want, ease(4)); camLook.lerp(cardWorld.clone().add(sd.clone().multiplyScalar(shift)).add(up.clone().multiplyScalar(narrow ? 0.9 : 0.1)), ease(4.5));
-  } else { const want = p.clone().add(up.clone().multiplyScalar(2.4)).add(side.clone().multiplyScalar(-1.6)).add(tan.clone().multiplyScalar(-6)); camPos.lerp(want, ease(24)); camLook.lerp(ahead.clone().add(up.clone().multiplyScalar(1.6)), ease(24)); }
+  } else { const want = p.clone().add(up.clone().multiplyScalar(2.4)).add(side.clone().multiplyScalar(-1.6)).add(tan.clone().multiplyScalar(-6)); camPos.lerp(want, ease(5)); camLook.lerp(ahead.clone().add(up.clone().multiplyScalar(1.6)), ease(4)); }
   camera.position.copy(camPos); camera.lookAt(camLook);
   // Cards face the camera; the nearest milestone brightens; cards fade when too near or too far.
   let best = null, bd = 1;
