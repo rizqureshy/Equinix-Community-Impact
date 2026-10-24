@@ -183,7 +183,7 @@ function buildThreads(scene) {
   const bead = new THREE.SphereGeometry(0.16, 14, 10);
   for (const def of threadDefinitions()) {
     const curve = new THREE.CatmullRomCurve3(def.points, false, 'centripetal');
-    const color = def.kind === 'heat' ? palette.amber : palette.red;
+    const color = palette.red; // every thread, heat included, is Equinix red
     const geo = new THREE.TubeGeometry(curve, 120, def.kind === 'heat' ? 0.09 : 0.065, 8, false);
     const material = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.6, roughness: 0.4, transparent: true, opacity: 0 });
     const mesh = new THREE.Mesh(geo, material);
