@@ -74,26 +74,26 @@
   #stage.hover { cursor: pointer; }
   .finale { position: fixed; inset: 0; pointer-events: none; opacity: 0; z-index: 3; }
   .finale.on { opacity: 1; pointer-events: auto; }
-  .finale img { position: absolute; object-fit: cover; border-radius: 18px; transition: left 1.8s cubic-bezier(.3,.6,.2,1), top 1.8s cubic-bezier(.3,.6,.2,1), width 1.8s cubic-bezier(.3,.6,.2,1), height 1.8s cubic-bezier(.3,.6,.2,1), border-radius 1.8s ease; }
-  .finale.full img { left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; }
-  .finale-text { position: absolute; z-index: 2; left: max(28px, env(safe-area-inset-left, 0px)); bottom: calc(36px + env(safe-area-inset-bottom, 0px)); width: min(640px, calc(100vw - 56px)); color: #fff; display: grid; gap: 10px; opacity: 0; transform: translateY(16px); transition: opacity .9s ease .6s, transform .9s ease .6s; text-shadow: 0 1px 24px rgba(0,0,0,0.5); }
+  .finale img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease; }
+  .finale.on img { opacity: 1; }
+  .finale-text { position: absolute; z-index: 2; left: max(32px, env(safe-area-inset-left, 0px)); bottom: calc(40px + env(safe-area-inset-bottom, 0px)); width: min(760px, calc(100vw - 64px)); color: #fff; display: grid; gap: 10px; opacity: 0; transform: translateY(16px); transition: opacity .9s ease .6s, transform .9s ease .6s; text-shadow: 0 1px 24px rgba(0,0,0,0.5); }
   .finale.text .finale-text { opacity: 1; transform: none; }
-  .finale-text .chip { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; display: flex; gap: 10px; align-items: center; color: rgba(255,255,255,0.85); }
+  .finale-text .chip { display: none; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; display: flex; gap: 10px; align-items: center; color: rgba(255,255,255,0.85); }
   .finale-text .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); display: inline-block; }
-  .finale-text h2 { font-family: var(--display); font-weight: 300; font-size: clamp(30px, 4.6vw, 52px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
-  .finale-text ol { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .finale-text li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; opacity: 0; transform: translateY(10px); transition: opacity .7s ease, transform .7s ease; }
+  .finale-text h2 { font-family: var(--body); font-weight: 500; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 6px; color: rgba(255,255,255,0.8); }
+  .finale-text ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+  .finale-text li { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: baseline; opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s ease; }
   .finale.text .finale-text li { opacity: 1; transform: none; }
-  .finale-text li i { font-style: normal; font-family: var(--display); font-size: 22px; line-height: 1; color: var(--accent); }
-  .finale-text li b { display: block; font-weight: 600; font-size: 15px; }
-  .finale-text li span { display: block; font-size: 13.5px; line-height: 1.45; color: rgba(255,255,255,0.82); }
+  .finale-text li i { font-style: normal; font-family: var(--display); font-weight: 300; font-size: 34px; line-height: 1; color: var(--accent); }
+  .finale-text li b { display: block; font-family: var(--display); font-weight: 500; font-size: clamp(24px, 3.2vw, 40px); line-height: 1.05; letter-spacing: -0.015em; }
+  .finale-text li span { display: block; font-size: clamp(14px, 1.3vw, 17px); line-height: 1.4; margin-top: 4px; color: rgba(255,255,255,0.86); }
   .finale-actions { display: flex; gap: 10px; margin-top: 8px; }
   .finale-actions .btn { color: #fff; background: rgba(0,0,0,0.35); border-color: rgba(255,255,255,0.35); text-decoration: none; }
   .finale-text .story-note { position: static; justify-self: start; }
   .finale::after { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 75%), linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0) 60%); opacity: 0; transition: opacity 1.2s ease .4s; pointer-events: none; }
   .finale.text::after { opacity: 1; }
   body.finale-on .year, body.finale-on .plaque, body.finale-on .hint { opacity: 0; }
-  @media (max-width: 760px) { .finale-text li span { font-size: 12.5px; } .finale-text h2 { font-size: 26px; } }
+  @media (max-width: 760px) { .finale-text li { grid-template-columns: 30px 1fr; gap: 8px; } .finale-text li i { font-size: 24px; } .finale-text ol { gap: 10px; } }
   .hint { position: absolute; left: 50%; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; text-align: center; transition: opacity .6s; }
   .hint.off { opacity: 0; }
   @media (max-width: 760px) {
@@ -129,13 +129,6 @@
   </div>
   <div class="year" id="year">2010<small id="wing">Heat for homes</small></div>
   <div class="hint" id="hint">Scroll or drag to travel. Click a card to open its story.</div>
-  <aside class="plaque" id="plaque" aria-live="polite">
-    <div class="chip"><i></i><span id="pChip"></span></div>
-    <h2 id="pTitle"></h2>
-    <div class="fig" id="pFig"></div>
-    <p id="pScope"></p>
-    <a id="pSrc" href="#" target="_blank" rel="noopener">Source</a>
-  </aside>
   <section class="story" id="story" aria-live="polite" aria-label="Milestone story">
     <div class="story-media"><img id="sImg" alt="" decoding="async" /><span class="story-note">Illustrative image, AI generated</span></div>
     <div class="story-body">

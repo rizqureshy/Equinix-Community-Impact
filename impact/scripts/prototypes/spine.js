@@ -11,8 +11,7 @@ const col = (n) => new T.Color(css(n));
 const dark = () => (matchMedia('(prefers-color-scheme: dark)').matches ? root.dataset.theme !== 'light' : root.dataset.theme === 'dark');
 
 // Impact milestones only. Every entry is dated, scoped and sourced in the research doc.
-const Y0 = 2010, Y1 = 2027;
-const WINGS = { planet: ['Energy and heat', '--planet'], connect: ['Connection', '--connect'], community: ['Community', '--community'], alwayson: ['Always on', '--alwayson'] };
+const WINGS = { planet: 'Energy and heat', connect: 'Connection', community: 'Community', alwayson: 'Always on' };
 const M = [
   { y: 2010.4, w: 'planet', img: 'helsinki-2010', t: 'The first data center to heat homes', f: 'since 2010', fl: 'Helsinki Kanavaranta, with Helen', s: 'Named by Equinix as the world’s first data centre heating project; homes have been warmed from it since 2010.', u: 'https://newsroom.equinix.com/2023-07-13-Repurposing-Heat-for-Community-Use-Heat-Export-Project-Powered-by-Equinix-Sets-Stage-for-Further-Cooperation' },
   { y: 2011.2, w: 'alwayson', img: 'tohoku-2011', t: 'Tokyo stays up through the Tohoku earthquake', f: 'free ports', fl: 'so carriers could rebuild capacity', s: 'TY1 and TY2 undamaged; Equinix Japan offered free exchange VLANs and ports after subsea cables were cut. March 2011.', u: 'https://equinix.mediaroom.com/2011-03-15-Equinix-To-Offer-Free-Internet-Exchange-Service-In-Japan-For-Networks-Restoration' },
@@ -39,9 +38,19 @@ const M = [
   { y: 2026.45, w: 'planet', img: 'dublin-2026', t: 'Dublin: the first hydrogen power trial', f: '< 1.3', fl: 'site PUE during the trial', s: 'Two green-hydrogen units supporting cooling at DB3 for 12 weeks. June 2026.', u: 'https://newsroom.equinix.com/2026-06-19-Equinix-Trials-Landmark-Hydrogen-Power-Solution-at-Dublin-Data-Centre' },
   { y: 2026.62, w: 'community', img: 'georgia-2026', t: 'Georgia: neighbours’ bills will not rise', f: '100%', fl: 'of grid costs paid, for 20 years', s: 'Hampton: Equinix funds a substation and two lines and pays all costs for its demand. August 2026.', u: 'https://investor.equinix.com/news-events/press-releases/detail/1118/equinix-partners-with-central-georgia-electric-membership' },
   { y: 2026.8, w: 'community', img: 'skills-2026', t: 'Skills that travel further than the buildings', f: '1.6M', fl: 'people trained in digital skills in 2025', s: 'By Foundation grantees, calendar 2025, reported August 2026 with a further $50M commitment.', u: 'https://investor.equinix.com/news-events/press-releases/detail/1120/equinix-commits-additional-50-million-to-the-equinix' },
-  { y: 2027, w: 'community', img: 'promises-2027', t: 'The five promises', f: '5', fl: 'commitments to the places we call home', s: 'Where the spine ends: the promises, each hung beside the exhibit that proves it.', u: 'https://equinixtogether.com/community-principles/', end: true },
+  { y: 2027, w: 'community', img: 'promises-2027-wide', t: 'The five promises', f: '5', fl: 'commitments to the places we call home', s: 'Where the spine ends: the promises, each hung beside the exhibit that proves it.', u: 'https://equinixtogether.com/community-principles/', end: true },
 ];
-const tOf = (y) => (y - Y0) / (Y1 - Y0);
+
+// Story spacing: every milestone gets at least a minimum run of ribbon, so busy years are not squeezed,
+// and the ride opens with a stretch of empty space before the first card. Years are then read back
+// from these anchors, so the counter and the track still follow the calendar.
+const Y0 = 2008, Y1 = 2027, GAP = 0.036, LEAD = 0.12;
+const raw = []; let prev = LEAD - GAP;
+M.forEach((m) => { const t0 = (m.y - Y0) / (Y1 - Y0); const t = Math.max(t0 * 0.85, prev + GAP); raw.push(t); prev = t; });
+const nodeT = raw.map((t) => t / prev);
+const anchors = [{ t: 0, y: Y0 }, ...M.map((m, i) => ({ t: nodeT[i], y: m.y }))];
+const yearAt = (t) => { for (let i = 1; i < anchors.length; i++) { if (t <= anchors[i].t) { const a = anchors[i - 1], b = anchors[i]; return a.y + (b.y - a.y) * ((t - a.t) / (b.t - a.t)); } } return Y1; };
+const tAt = (y) => { for (let i = 1; i < anchors.length; i++) { if (y <= anchors[i].y) { const a = anchors[i - 1], b = anchors[i]; return a.t + (b.t - a.t) * ((y - a.y) / (b.y - a.y)); } } return 1; };
 
 // Scene.
 const stage = document.getElementById('stage');
@@ -49,29 +58,30 @@ const canvas = document.getElementById('c');
 const renderer = new T.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 const scene = new T.Scene();
-const camera = new T.PerspectiveCamera(50, 1, 0.1, 600);
+const camera = new T.PerspectiveCamera(50, 1, 0.1, 700);
 scene.add(new T.HemisphereLight(0xffffff, 0x8a8a8a, 2.6));
 const sun = new T.DirectionalLight(0xffffff, 1.8); sun.position.set(5, 10, 4); scene.add(sun);
 
-// The ribbon: a long sweeping curve.
-const pts = []; const N = 14;
-for (let i = 0; i <= N; i++) { const u = i / N; pts.push(new T.Vector3(Math.sin(u * Math.PI * 1.7) * 26, Math.sin(u * Math.PI * 3.1) * 5 + u * 6, -u * 220)); }
+// The ribbon: a long sweeping curve, longer than before so the late years have room.
+const pts = []; const N = 16, LEN = 320;
+for (let i = 0; i <= N; i++) { const u = i / N; pts.push(new T.Vector3(Math.sin(u * Math.PI * 1.7) * 28, Math.sin(u * Math.PI * 3.1) * 5 + u * 6, -u * LEN)); }
 const curve = new T.CatmullRomCurve3(pts, false, 'centripetal');
 const RED = new T.Color('#e91c24');
 const ribbonMat = new T.MeshStandardMaterial({ color: RED, roughness: 0.45, metalness: 0.05, emissive: RED, emissiveIntensity: 0 });
-scene.add(new T.Mesh(new T.TubeGeometry(curve, 600, 0.2, 12, false), ribbonMat));
+// The drawn tube starts a little behind the first point, so the ride never looks back at a cut end.
+const tubePts = [pts[0].clone().multiplyScalar(2).sub(pts[1]), ...pts];
+scene.add(new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(tubePts, false, 'centripetal'), 860, 0.2, 12, false), ribbonMat));
 const haloTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'); const r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.3, 'rgba(255,255,255,0.35)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new T.CanvasTexture(c); })();
 const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.beginPath(); g.arc(16, 16, 14, 0, Math.PI * 2); g.fill(); return new T.CanvasTexture(c); })();
 
 // Dust: drifting points around the path, kept small so the scene stays crisp.
-const DUST = 3600; const dustPos = new Float32Array(DUST * 3);
+const DUST = 4200; const dustPos = new Float32Array(DUST * 3);
 for (let i = 0; i < DUST; i++) { const p = curve.getPointAt(Math.random()); const r = 6 + Math.random() * 40; const a = Math.random() * Math.PI * 2; dustPos[i * 3] = p.x + Math.cos(a) * r; dustPos[i * 3 + 1] = p.y + (Math.random() - 0.5) * 30; dustPos[i * 3 + 2] = p.z + Math.sin(a) * r; }
 const dustGeo = new T.BufferGeometry(); dustGeo.setAttribute('position', new T.BufferAttribute(dustPos, 3));
 const dustMat = new T.PointsMaterial({ size: 0.2, map: dotTex, transparent: true, opacity: 0.5, depthWrite: false, sizeAttenuation: true });
 const dust = new T.Points(dustGeo, dustMat); scene.add(dust);
 
-
-// Cards: an image with a small caption, composed on a canvas.
+// Cards: an image with a small caption, composed on a canvas. The last card is 16:9 and carries no caption.
 const CW = 960, CH = 640, RADIUS = 36;
 const images = new Map();
 function loadImage(key) {
@@ -83,51 +93,52 @@ function loadImage(key) {
 }
 function wrap(g, text, maxW) { const out = []; let cur = ''; for (const word of text.split(' ')) { const t = cur ? cur + ' ' + word : word; if (g.measureText(t).width > maxW && cur) { out.push(cur); cur = word; } else cur = t; } if (cur) out.push(cur); return out; }
 function drawCard(n) {
-  const c = n.canvas, g = c.getContext('2d'); const rec = images.get(n.m.img); const tint = RED;
-  g.clearRect(0, 0, CW, CH); g.save(); g.beginPath(); g.roundRect(0, 0, CW, CH, RADIUS); g.clip();
+  const c = n.canvas, g = c.getContext('2d'); const rec = images.get(n.m.img); const W = c.width, H = c.height;
+  g.clearRect(0, 0, W, H); g.save(); g.beginPath(); g.roundRect(0, 0, W, H, n.m.end ? 0 : RADIUS); g.clip();
   if (rec && rec.ok) {
-    const iw = rec.im.naturalWidth, ih = rec.im.naturalHeight, s = Math.max(CW / iw, CH / ih); g.drawImage(rec.im, (CW - iw * s) / 2, (CH - ih * s) / 2, iw * s, ih * s);
+    const iw = rec.im.naturalWidth, ih = rec.im.naturalHeight, s = Math.max(W / iw, H / ih); g.drawImage(rec.im, (W - iw * s) / 2, (H - ih * s) / 2, iw * s, ih * s);
   } else {
-    const grad = g.createLinearGradient(0, 0, CW, CH); grad.addColorStop(0, `#${tint.clone().lerp(new T.Color(dark() ? '#000000' : '#ffffff'), 0.55).getHexString()}`); grad.addColorStop(1, `#${tint.clone().lerp(new T.Color(dark() ? '#000000' : '#ffffff'), 0.2).getHexString()}`); g.fillStyle = grad; g.fillRect(0, 0, CW, CH);
+    const grad = g.createLinearGradient(0, 0, W, H); grad.addColorStop(0, `#${RED.clone().lerp(new T.Color(dark() ? '#000000' : '#ffffff'), 0.55).getHexString()}`); grad.addColorStop(1, `#${RED.clone().lerp(new T.Color(dark() ? '#000000' : '#ffffff'), 0.2).getHexString()}`); g.fillStyle = grad; g.fillRect(0, 0, W, H);
   }
-  const band = g.createLinearGradient(0, CH * 0.5, 0, CH); band.addColorStop(0, 'rgba(0,0,0,0)'); band.addColorStop(1, 'rgba(0,0,0,0.72)'); g.fillStyle = band; g.fillRect(0, 0, CW, CH);
-  g.fillStyle = `#${tint.getHexString()}`; g.fillRect(0, CH - 10, CW, 10);
-  g.textBaseline = 'alphabetic'; g.font = `500 44px 'Inter Tight Variable', Arial, sans-serif`;
-  const lines = wrap(g, n.m.t, CW - 88).slice(0, 2); const top = CH - 54 - (lines.length - 1) * 52;
-  g.fillStyle = '#ffffff'; lines.forEach((l, i) => g.fillText(l, 44, top + i * 52));
-  g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = `600 24px 'Inter Tight Variable', Arial, sans-serif`;
-  g.fillText(`${Math.floor(n.m.y)}  ·  ${WINGS[n.m.w][0].toUpperCase()}`, 44, top - 58);
+  if (!n.m.end) {
+    const band = g.createLinearGradient(0, H * 0.5, 0, H); band.addColorStop(0, 'rgba(0,0,0,0)'); band.addColorStop(1, 'rgba(0,0,0,0.72)'); g.fillStyle = band; g.fillRect(0, 0, W, H);
+    g.fillStyle = `#${RED.getHexString()}`; g.fillRect(0, H - 10, W, 10);
+    g.textBaseline = 'alphabetic'; g.font = `500 44px 'Inter Tight Variable', Arial, sans-serif`;
+    const lines = wrap(g, n.m.t, W - 88).slice(0, 2); const top = H - 54 - (lines.length - 1) * 52;
+    g.fillStyle = '#ffffff'; lines.forEach((l, i) => g.fillText(l, 44, top + i * 52));
+    g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = `600 24px 'Inter Tight Variable', Arial, sans-serif`;
+    g.fillText(`${Math.floor(n.m.y)}  ·  ${WINGS[n.m.w].toUpperCase()}`, 44, top - 58);
+  }
   g.restore(); n.tex.needsUpdate = true;
 }
 
 // Milestone nodes.
-const CARD_W = 4.8, CARD_H = 3.2;
+const CARD_W = 4.8, CARD_H = 3.2, END_W = 6.4, END_H = 3.6;
 const nodes = M.map((m, i) => {
-  const t = tOf(m.y); const p = curve.getPointAt(Math.min(0.9999, t)); const tan = curve.getTangentAt(Math.min(0.9999, t));
-  const side = new T.Vector3().crossVectors(tan, new T.Vector3(0, 1, 0)).normalize().multiplyScalar(i % 2 ? 3.8 : -3.8);
-  const lift = i % 4 < 2 ? 1.7 : 3.1;
+  const t = nodeT[i]; const p = curve.getPointAt(Math.min(0.9999, t)); const tan = curve.getTangentAt(Math.min(0.9999, t));
+  const side = new T.Vector3().crossVectors(tan, new T.Vector3(0, 1, 0)).normalize().multiplyScalar(m.end ? 0 : (i % 2 ? 3.8 : -3.8));
+  const lift = m.end ? 2.0 : (i % 4 < 2 ? 1.7 : 3.1);
   const g = new T.Group(); g.position.copy(p);
-  const core = new T.Mesh(new T.SphereGeometry(m.end ? 0.7 : 0.3, 24, 24), new T.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.9, roughness: 0.3 }));
-  const halo = new T.Sprite(new T.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, opacity: 0.18 })); halo.scale.set(m.end ? 3 : 1.5, m.end ? 3 : 1.5, 1);
-  const foot = side.clone().add(new T.Vector3(0, lift - CARD_H / 2 - 0.22, 0));
+  const core = new T.Mesh(new T.SphereGeometry(m.end ? 0.4 : 0.3, 24, 24), new T.MeshStandardMaterial({ color: RED, emissive: RED, emissiveIntensity: 0.9, roughness: 0.3 }));
+  const halo = new T.Sprite(new T.SpriteMaterial({ map: haloTex, color: RED, transparent: true, depthWrite: false, opacity: 0.18 })); halo.scale.set(1.5, 1.5, 1);
+  const foot = side.clone().add(new T.Vector3(0, lift - (m.end ? END_H : CARD_H) / 2 - 0.22, 0));
   const leader = new T.QuadraticBezierCurve3(new T.Vector3(0, 0, 0), new T.Vector3(side.x * 0.12, foot.y * 0.72, side.z * 0.12), foot);
-  const stem = new T.Group();
-  const stemMat = new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, fog: false });
-  stem.add(new T.Mesh(new T.TubeGeometry(leader, 24, 0.018, 6, false), stemMat));
-  const dot = new T.Mesh(new T.SphereGeometry(0.07, 12, 12), stemMat); dot.position.copy(foot); stem.add(dot);
-  stem.material = stemMat;
-  const canvasEl = document.createElement('canvas'); canvasEl.width = CW; canvasEl.height = CH;
+  const stemMat = new T.MeshBasicMaterial({ color: RED, transparent: true, opacity: 0.55, fog: false });
+  const stem = new T.Group(); stem.add(new T.Mesh(new T.TubeGeometry(leader, 24, 0.018, 6, false), stemMat));
+  const dot = new T.Mesh(new T.SphereGeometry(0.07, 12, 12), stemMat); dot.position.copy(foot); stem.add(dot); stem.material = stemMat; stem.visible = !m.end;
+  const canvasEl = document.createElement('canvas'); canvasEl.width = m.end ? 1920 : CW; canvasEl.height = m.end ? 1080 : CH;
   const tex = new T.CanvasTexture(canvasEl); tex.colorSpace = T.SRGBColorSpace; tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  const card = new T.Mesh(new T.PlaneGeometry(CARD_W, CARD_H), new T.MeshBasicMaterial({ map: tex, transparent: true, side: T.DoubleSide, fog: false }));
+  const card = new T.Mesh(new T.PlaneGeometry(m.end ? END_W : CARD_W, m.end ? END_H : CARD_H), new T.MeshBasicMaterial({ map: tex, transparent: true, side: T.DoubleSide, fog: false }));
   card.position.copy(side).add(new T.Vector3(0, lift, 0)); card.userData.node = i;
   g.add(core, halo, stem, card); scene.add(g);
   const n = { m, t, g, core, halo, stem, card, canvas: canvasEl, tex, p };
   loadImage(m.img); drawCard(n); return n;
 });
 const cardMeshes = nodes.map((n) => n.card);
+const endNode = nodes.at(-1);
 
 // Year beacons along the ribbon.
-const beacons = []; for (let y = Y0; y <= 2026; y++) { const p = curve.getPointAt(tOf(y)); const s = new T.Sprite(new T.SpriteMaterial({ map: dotTex, transparent: true, opacity: 0.5, depthWrite: false })); s.scale.set(0.22, 0.22, 1); s.position.copy(p).add(new T.Vector3(0, -0.55, 0)); scene.add(s); beacons.push({ s, y }); }
+const beacons = []; for (let y = 2010; y <= 2026; y++) { const p = curve.getPointAt(tAt(y)); const s = new T.Sprite(new T.SpriteMaterial({ map: dotTex, transparent: true, opacity: 0.5, depthWrite: false })); s.scale.set(0.22, 0.22, 1); s.position.copy(p).add(new T.Vector3(0, -0.55, 0)); scene.add(s); beacons.push({ s, y }); }
 
 // Theme application.
 function applyTheme() {
@@ -135,7 +146,7 @@ function applyTheme() {
   ribbonMat.emissiveIntensity = dark() ? 0.35 : 0.05;
   dustMat.color = dark() ? new T.Color('#9fb0d8') : new T.Color('#8f8a7e'); dustMat.opacity = dark() ? 0.4 : 0.3;
   beacons.forEach((b) => { b.s.material.color = col('--muted'); });
-  nodes.forEach((n) => { const c = RED; n.core.material.color.copy(c); n.core.material.emissive.copy(c); n.halo.material.color.copy(c); n.stem.material.color.copy(c); drawCard(n); });
+  nodes.forEach(drawCard);
   document.getElementById('theme').textContent = dark() ? 'Day' : 'Night';
 }
 if (!root.dataset.theme) root.dataset.theme = 'dark'; // The universe opens at night; Day is one tap away.
@@ -152,9 +163,7 @@ function musicOn() { musicTarget = 0.5; if (music.paused) { music.volume = 0; mu
 function musicOff() { musicTarget = 0; }
 
 // Travel state.
-let t = 0, target = 0.004, touring = false, mapMode = false, focused = null, wasTouring = false;
-const AHEAD = 0.03; // the ribbon distance at which a card ahead is readable, and the plaque speaks for it
-let finaleOn = false;
+let t = 0, target = 0.002, touring = false, mapMode = false, focused = null, wasTouring = false, finaleOn = false;
 const clamp = (v) => Math.max(0, Math.min(1, v));
 const hint = document.getElementById('hint');
 let moved = false;
@@ -162,16 +171,15 @@ const rideBtn = document.getElementById('ride'), mapBtn = document.getElementByI
 function stopTour() { if (!touring) return; touring = false; rideBtn.setAttribute('aria-pressed', 'false'); rideBtn.textContent = 'Tour'; musicOff(); }
 function startTour() { touring = true; if (target > 0.995) { target = 0; t = 0; } rideBtn.setAttribute('aria-pressed', 'true'); rideBtn.textContent = 'Pause'; mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); musicOn(); moved = true; }
 rideBtn.addEventListener('click', () => { if (finaleOn) { endFinale(true); return; } unfocus(false); touring ? stopTour() : startTour(); });
-mapBtn.addEventListener('click', () => { unfocus(false); mapMode = !mapMode; mapBtn.setAttribute('aria-pressed', String(mapMode)); if (mapMode) stopTour(); });
+mapBtn.addEventListener('click', () => { endFinale(false); unfocus(false); mapMode = !mapMode; mapBtn.setAttribute('aria-pressed', String(mapMode)); if (mapMode) stopTour(); });
 
 // Focus on a card: the camera turns to it and the story comes forward.
 const story = document.getElementById('story');
 function focus(n) {
-  if (focused === n) return; focused = n; wasTouring = touring; if (touring) { touring = false; rideBtn.textContent = 'Resume'; }
+  if (focused === n || n.m.end) return; focused = n; wasTouring = touring; if (touring) { touring = false; rideBtn.textContent = 'Resume'; }
   target = n.t; document.body.classList.add('focused');
-  story.style.setProperty('--c', 'var(--accent)');
   const img = document.getElementById('sImg'); img.src = `../media/spine/${n.m.img}.webp`; img.alt = '';
-  document.getElementById('sChip').textContent = `${Math.floor(n.m.y)} · ${WINGS[n.m.w][0]}`;
+  document.getElementById('sChip').textContent = `${Math.floor(n.m.y)} · ${WINGS[n.m.w]}`;
   document.getElementById('sTitle').textContent = n.m.t;
   document.getElementById('sFig').innerHTML = `${n.m.f}<small>${n.m.fl}</small>`;
   document.getElementById('sScope').textContent = n.m.s;
@@ -186,60 +194,39 @@ function unfocus(resume) {
 document.getElementById('back').addEventListener('click', () => unfocus(true));
 window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (finaleOn) endFinale(false); else unfocus(true); } });
 
-
-// Finale: the last card grows from where it sits on screen to fill the whole screen, and the tour stops there.
+// Finale: the last card sits on the line and swells as the camera glides to a stop; the full-screen
+// image then fades over it and the five promises appear in large type.
 const finaleEl = document.getElementById('finale'), fImg = document.getElementById('fImg');
+fImg.src = `../media/spine/${endNode.m.img}.webp`;
 const fList = document.getElementById('fList');
-principles.forEach((pr, i) => { const li = document.createElement('li'); li.style.transitionDelay = `${0.5 + i * 0.55}s`; const n = document.createElement('i'); n.textContent = String(i + 1); const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = pr.name; const sp = document.createElement('span'); sp.textContent = pr.promise; d.append(b, sp); li.append(n, d); fList.appendChild(li); });
-const corner = new T.Vector3();
-function cardRect(n) {
-  const w = stage.clientWidth, h = stage.clientHeight; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { corner.set(sx * CARD_W / 2, sy * CARD_H / 2, 0); n.card.localToWorld(corner); corner.project(camera); const px = (corner.x + 1) / 2 * w, py = (1 - corner.y) / 2 * h; x0 = Math.min(x0, px); y0 = Math.min(y0, py); x1 = Math.max(x1, px); y1 = Math.max(y1, py); }
-  return { left: x0, top: y0, width: Math.max(40, x1 - x0), height: Math.max(26, y1 - y0) };
-}
+principles.forEach((pr, i) => { const li = document.createElement('li'); li.style.transitionDelay = `${0.6 + i * 0.7}s`; const n = document.createElement('i'); n.textContent = String(i + 1); const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = pr.name; const sp = document.createElement('span'); sp.textContent = pr.promise; d.append(b, sp); li.append(n, d); fList.appendChild(li); });
 function startFinale() {
-  finaleOn = true; stopTour(); musicOff(); const n = nodes.at(-1); const r = cardRect(n);
-  fImg.src = `../media/spine/${n.m.img}-wide.webp`;
-  Object.assign(fImg.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
-  finaleEl.classList.remove('full', 'text'); finaleEl.classList.add('on'); document.body.classList.add('finale-on');
-  requestAnimationFrame(() => requestAnimationFrame(() => { finaleEl.classList.add('full'); setTimeout(() => finaleEl.classList.add('text'), 1400); }));
+  finaleOn = true; stopTour(); musicOff();
+  finaleEl.classList.add('on'); document.body.classList.add('finale-on');
+  setTimeout(() => finaleEl.classList.add('text'), 900);
 }
 function endFinale(restart) {
-  if (!finaleOn) return; finaleOn = false; finaleEl.classList.remove('on', 'full', 'text'); document.body.classList.remove('finale-on');
-  if (restart) { target = 0; t = 0; startTour(); } else { target = 0.96; }
+  if (!finaleOn) return; finaleOn = false; finaleEl.classList.remove('on', 'text'); document.body.classList.remove('finale-on');
+  if (restart) { target = 0; t = 0; startTour(); } else { target = 0.93; }
 }
 document.getElementById('again').addEventListener('click', () => endFinale(true));
+
 // Pointer: scroll and drag travel, click opens a card.
 const ray = new T.Raycaster(), ndc = new T.Vector2(); let pointer = null;
-function pick() { if (!pointer) return null; const r = stage.getBoundingClientRect(); ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(cardMeshes, false)[0]; return hit ? nodes[hit.object.userData.node] : null; }
-stage.addEventListener('wheel', (e) => { e.preventDefault(); if (finaleOn) { if (e.deltaY < 0) endFinale(false); return; } unfocus(false); target = clamp(target + e.deltaY * 0.00012); stopTour(); moved = true; }, { passive: false });
+function pick() { if (!pointer) return null; const r = stage.getBoundingClientRect(); ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(cardMeshes, false)[0]; const n = hit ? nodes[hit.object.userData.node] : null; return n && !n.m.end ? n : null; }
+stage.addEventListener('wheel', (e) => { e.preventDefault(); if (finaleOn) { if (e.deltaY < 0) endFinale(false); return; } unfocus(false); target = clamp(target + e.deltaY * 0.00009); stopTour(); moved = true; }, { passive: false });
 let drag = null;
 stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, t: target, dist: 0 }; stage.setPointerCapture(e.pointerId); });
-stage.addEventListener('pointermove', (e) => { pointer = { x: e.clientX, y: e.clientY }; if (!drag) return; drag.dist = Math.max(drag.dist, Math.hypot(e.clientX - drag.x, e.clientY - drag.y)); if (drag.dist > 6) { if (finaleOn) { endFinale(false); drag = null; return; } unfocus(false); target = clamp(drag.t + (drag.y - e.clientY) * 0.0009); stopTour(); moved = true; } });
+stage.addEventListener('pointermove', (e) => { pointer = { x: e.clientX, y: e.clientY }; if (!drag) return; drag.dist = Math.max(drag.dist, Math.hypot(e.clientX - drag.x, e.clientY - drag.y)); if (drag.dist > 6) { if (finaleOn) { endFinale(false); drag = null; return; } unfocus(false); target = clamp(drag.t + (drag.y - e.clientY) * 0.0007); stopTour(); moved = true; } });
 const endDrag = (e) => { if (drag && drag.dist <= 6 && e.type === 'pointerup') { pointer = { x: e.clientX, y: e.clientY }; const n = pick(); if (n) focus(n); else if (focused) unfocus(true); } drag = null; };
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 stage.addEventListener('pointerleave', () => { pointer = null; });
-window.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { unfocus(false); target = clamp(target + 0.02); stopTour(); moved = true; e.preventDefault(); } if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { unfocus(false); target = clamp(target - 0.02); stopTour(); e.preventDefault(); } if (e.key === 'Home') target = 0; if (e.key === 'End') target = 1; });
+window.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { unfocus(false); target = clamp(target + 0.015); stopTour(); moved = true; e.preventDefault(); } if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { unfocus(false); target = clamp(target - 0.015); stopTour(); e.preventDefault(); } if (e.key === 'Home') target = 0; if (e.key === 'End') target = 1; });
 
 // Track with ticks.
 const track = document.getElementById('track'), done = document.getElementById('done');
-M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', 'var(--accent)'); b.style.left = (tOf(m.y) * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { endFinale(false); stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
-for (let y = Y0; y <= 2026; y += 4) { const s = document.createElement('span'); s.className = 'yr'; s.style.left = (tOf(y) * 100) + '%'; s.textContent = y; track.appendChild(s); }
-
-// Plaque (the short card shown while riding past).
-const plaque = document.getElementById('plaque'); let activeNode = null;
-function showPlaque(n) {
-  if (activeNode === n) return; activeNode = n;
-  if (!focused) nodes.forEach((x) => x.tick.classList.toggle('on', x === n));
-  if (!n) { plaque.classList.remove('show'); return; }
-  plaque.style.setProperty('--c', 'var(--accent)');
-  document.getElementById('pChip').textContent = `${Math.floor(n.m.y)} · ${WINGS[n.m.w][0]}`;
-  document.getElementById('pTitle').textContent = n.m.t;
-  document.getElementById('pFig').innerHTML = `${n.m.f}<small>${n.m.fl}</small>`;
-  document.getElementById('pScope').textContent = n.m.s;
-  document.getElementById('pSrc').href = n.m.u;
-  plaque.classList.add('show');
-}
+M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', 'var(--accent)'); b.style.left = (nodeT[i] * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { endFinale(false); stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; if (m.end) target = 1; else focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
+for (let y = 2010; y <= 2026; y += 4) { const s = document.createElement('span'); s.className = 'yr'; s.style.left = (tAt(y) * 100) + '%'; s.textContent = y; track.appendChild(s); }
 
 // Resize.
 function fit() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
@@ -248,45 +235,49 @@ new ResizeObserver(fit).observe(stage); fit();
 // Frame loop.
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const yearEl = document.getElementById('year'), wingEl = document.getElementById('wing');
-const camPos = new T.Vector3(), camLook = new T.Vector3(), tmp = new T.Vector3(), up = new T.Vector3(0, 1, 0), cardWorld = new T.Vector3();
-const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-70, 90, 120)), mapLook = curve.getPointAt(0.5);
+const camPos = new T.Vector3(), camLook = new T.Vector3(), tmp = new T.Vector3(), up = new T.Vector3(0, 1, 0), cardWorld = new T.Vector3(), endWorld = new T.Vector3();
+const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-90, 110, 150)), mapLook = curve.getPointAt(0.5);
 let last = performance.now(), clock = 0;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
-  if (touring) { target = clamp(target + dt * 0.011); if (target >= 1) { stopTour(); } }
-  if (!finaleOn && !mapMode && !focused && t > 0.985 && target >= 0.999) startFinale();
+  if (touring) { target = clamp(target + dt * 0.0085); if (target >= 1) stopTour(); }
   const ease = (k) => (reduce ? 1 : 1 - Math.exp(-dt * k));
   t += (target - t) * ease(2.4);
   const tt = Math.min(0.9999, Math.max(0, t));
   const p = curve.getPointAt(tt), ahead = curve.getPointAt(Math.min(0.9999, tt + 0.02)), tan = curve.getTangentAt(tt);
   const side = tmp.crossVectors(tan, up).normalize();
+  // The ending: over the last stretch the camera drifts onto the line and settles on the final card, which swells to fill the view.
+  const fin = clamp((tt - 0.955) / 0.044); const finE = fin * fin * (3 - 2 * fin);
+  endNode.card.getWorldPosition(endWorld);
   if (mapMode) { camPos.lerp(mapPos, ease(3)); camLook.lerp(mapLook, ease(3)); }
   else if (focused) {
-    // Frame the card: camera a little behind it on the ribbon, looking forward, the card held to one side
-    // so the story (left) or the plaque (right) has room.
     const n = focused; n.card.getWorldPosition(cardWorld); const tn = curve.getTangentAt(Math.min(0.9999, n.t)); const sd = new T.Vector3().crossVectors(tn, up).normalize();
     const narrow = stage.clientWidth < 760; const shift = narrow ? 0 : -2.4;
     const want = cardWorld.clone().add(tn.clone().multiplyScalar(-10)).add(up.clone().multiplyScalar(0.3)).add(sd.clone().multiplyScalar(shift * 0.3));
     camPos.lerp(want, ease(4)); camLook.lerp(cardWorld.clone().add(sd.clone().multiplyScalar(shift)).add(up.clone().multiplyScalar(narrow ? 0.9 : 0.1)), ease(4.5));
-  } else { const want = p.clone().add(up.clone().multiplyScalar(2.4)).add(side.clone().multiplyScalar(-1.6)).add(tan.clone().multiplyScalar(-6)); camPos.lerp(want, ease(5)); camLook.lerp(ahead.clone().add(up.clone().multiplyScalar(1.6)), ease(4)); }
+  } else {
+    const want = p.clone().add(up.clone().multiplyScalar(2.4 - 0.4 * finE)).add(side.clone().multiplyScalar(-1.6 * (1 - finE))).add(tan.clone().multiplyScalar(-6));
+    const look = ahead.clone().add(up.clone().multiplyScalar(1.6)).lerp(endWorld, finE);
+    camPos.lerp(want, ease(5)); camLook.lerp(look, ease(4));
+  }
   camera.position.copy(camPos); camera.lookAt(camLook);
-  // Cards face the camera; the nearest milestone brightens; cards fade when too near or too far.
+  // Cards face the camera; the nearest milestone brightens; cards fade once they pass the camera.
   let best = null, bd = 1;
   nodes.forEach((n) => {
-    n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); const da = Math.abs(n.t - (tt + AHEAD)); if (da < bd) { bd = da; best = n; }
+    n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); const da = Math.abs(n.t - (tt + 0.03)); if (da < bd) { bd = da; best = n; }
     const k = Math.max(0, 1 - d / 0.02); n.halo.material.opacity = 0.12 + k * 0.2; n.core.scale.setScalar(1 + k * 0.35);
-    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n ? 1 : Math.max(0, Math.min(1, (dist - 3) / 2.5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
-    // Cards already passed fade out at once, so nothing flies across the HUD; in focus, everything but the chosen card steps back.
-    const passed = mapMode || focused ? 1 : Math.max(0, Math.min(1, (n.t - tt + 0.036) / 0.012));
+    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n || n.m.end ? 1 : Math.max(0, Math.min(1, (dist - 3) / 2.5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
+    const passed = mapMode || focused || n.m.end ? 1 : Math.max(0, Math.min(1, (n.t - tt + 0.036) / 0.012));
     const near = (focused && focused !== n ? Math.max(0, Math.min(1, (dist - 16) / 10)) : 1) * passed;
-    n.card.material.opacity = vis * near; n.card.scale.setScalar(1 + k * 0.15); n.stem.material.opacity = 0.6 * vis * near;
+    n.card.material.opacity = vis * near; n.stem.material.opacity = 0.55 * vis * near;
+    n.card.scale.setScalar(n.m.end ? 1 + finE * 1.25 : 1 + k * 0.15);
   });
-  showPlaque(!mapMode && !focused && bd < 0.011 ? best : null);
+  if (!finaleOn && !mapMode && !focused && tt >= 0.996 && target >= 0.999) startFinale();
   stage.classList.toggle('hover', !drag && !!pick());
   dust.rotation.y = Math.sin(clock * 0.02) * 0.02; dust.position.y = Math.sin(clock * 0.3) * 0.4;
-  const year = Y0 + tt * (Y1 - Y0);
-  yearEl.firstChild.nodeValue = String(Math.min(2026, Math.floor(year)));
-  wingEl.textContent = best ? WINGS[best.m.w][0] : '';
+  const year = yearAt(tt);
+  yearEl.firstChild.nodeValue = String(Math.min(2026, Math.max(2010, Math.floor(year))));
+  wingEl.textContent = best && !best.m.end ? WINGS[best.m.w] : '';
   done.style.width = (tt * 100) + '%';
   hint.classList.toggle('off', moved);
   // Music eases toward its target; mute holds it silent without stopping the tour.
