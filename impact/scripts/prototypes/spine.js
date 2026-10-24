@@ -82,7 +82,7 @@ function loadImage(key) {
 }
 function wrap(g, text, maxW) { const out = []; let cur = ''; for (const word of text.split(' ')) { const t = cur ? cur + ' ' + word : word; if (g.measureText(t).width > maxW && cur) { out.push(cur); cur = word; } else cur = t; } if (cur) out.push(cur); return out; }
 function drawCard(n) {
-  const c = n.canvas, g = c.getContext('2d'); const rec = images.get(n.m.img); const tint = col(WINGS[n.m.w][1]);
+  const c = n.canvas, g = c.getContext('2d'); const rec = images.get(n.m.img); const tint = RED;
   g.clearRect(0, 0, CW, CH); g.save(); g.beginPath(); g.roundRect(0, 0, CW, CH, RADIUS); g.clip();
   if (rec && rec.ok) {
     const iw = rec.im.naturalWidth, ih = rec.im.naturalHeight, s = Math.max(CW / iw, CH / ih); g.drawImage(rec.im, (CW - iw * s) / 2, (CH - ih * s) / 2, iw * s, ih * s);
@@ -134,7 +134,7 @@ function applyTheme() {
   ribbonMat.emissiveIntensity = dark() ? 0.35 : 0.05;
   dustMat.color = dark() ? new T.Color('#9fb0d8') : new T.Color('#8f8a7e'); dustMat.opacity = dark() ? 0.4 : 0.3;
   beacons.forEach((b) => { b.s.material.color = col('--muted'); });
-  nodes.forEach((n) => { const c = col(WINGS[n.m.w][1]); n.core.material.color.copy(c); n.core.material.emissive.copy(c); n.halo.material.color.copy(c); n.stem.material.color.copy(c); drawCard(n); });
+  nodes.forEach((n) => { const c = RED; n.core.material.color.copy(c); n.core.material.emissive.copy(c); n.halo.material.color.copy(c); n.stem.material.color.copy(c); drawCard(n); });
   document.getElementById('theme').textContent = dark() ? 'Day' : 'Night';
 }
 if (!root.dataset.theme) root.dataset.theme = 'dark'; // The universe opens at night; Day is one tap away.
@@ -152,6 +152,7 @@ function musicOff() { musicTarget = 0; }
 
 // Travel state.
 let t = 0, target = 0.004, touring = false, mapMode = false, focused = null, wasTouring = false;
+const AHEAD = 0.03; // the ribbon distance at which a card ahead is readable, and the plaque speaks for it
 const clamp = (v) => Math.max(0, Math.min(1, v));
 const hint = document.getElementById('hint');
 let moved = false;
@@ -166,7 +167,7 @@ const story = document.getElementById('story');
 function focus(n) {
   if (focused === n) return; focused = n; wasTouring = touring; if (touring) { touring = false; rideBtn.textContent = 'Resume'; }
   target = n.t; document.body.classList.add('focused');
-  story.style.setProperty('--c', `var(${WINGS[n.m.w][1]})`);
+  story.style.setProperty('--c', 'var(--accent)');
   const img = document.getElementById('sImg'); img.src = `../media/spine/${n.m.img}.webp`; img.alt = '';
   document.getElementById('sChip').textContent = `${Math.floor(n.m.y)} · ${WINGS[n.m.w][0]}`;
   document.getElementById('sTitle').textContent = n.m.t;
@@ -197,7 +198,7 @@ window.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key =
 
 // Track with ticks.
 const track = document.getElementById('track'), done = document.getElementById('done');
-M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', `var(${WINGS[m.w][1]})`); b.style.left = (tOf(m.y) * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
+M.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.setProperty('--c', 'var(--accent)'); b.style.left = (tOf(m.y) * 100) + '%'; b.title = m.t; b.setAttribute('aria-label', `${Math.floor(m.y)}: ${m.t}`); b.addEventListener('click', () => { stopTour(); mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); moved = true; focus(nodes[i]); }); track.appendChild(b); nodes[i].tick = b; });
 for (let y = Y0; y <= 2026; y += 4) { const s = document.createElement('span'); s.className = 'yr'; s.style.left = (tOf(y) * 100) + '%'; s.textContent = y; track.appendChild(s); }
 
 // Plaque (the short card shown while riding past).
@@ -206,7 +207,7 @@ function showPlaque(n) {
   if (activeNode === n) return; activeNode = n;
   if (!focused) nodes.forEach((x) => x.tick.classList.toggle('on', x === n));
   if (!n) { plaque.classList.remove('show'); return; }
-  plaque.style.setProperty('--c', `var(${WINGS[n.m.w][1]})`);
+  plaque.style.setProperty('--c', 'var(--accent)');
   document.getElementById('pChip').textContent = `${Math.floor(n.m.y)} · ${WINGS[n.m.w][0]}`;
   document.getElementById('pTitle').textContent = n.m.t;
   document.getElementById('pFig').innerHTML = `${n.m.f}<small>${n.m.fl}</small>`;
@@ -227,7 +228,12 @@ const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-70, 90, 120)), m
 let last = performance.now(), clock = 0;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
-  if (touring) { target = clamp(target + dt * 0.016); if (target >= 1) stopTour(); }
+  if (touring) {
+    // Fast between stories, slow while a card is alongside so it can be read.
+    const gap = nodes.reduce((m, n) => Math.min(m, Math.abs(n.t - (target + AHEAD))), 1);
+    const k = Math.max(0, Math.min(1, gap / 0.02)); const speed = 0.006 + (0.034 - 0.006) * k * k;
+    target = clamp(target + dt * speed); if (target >= 1) stopTour();
+  }
   const ease = (k) => (reduce ? 1 : 1 - Math.exp(-dt * k));
   t += (target - t) * ease(3.6);
   const tt = Math.min(0.9999, Math.max(0, t));
@@ -246,11 +252,11 @@ function frame(now) {
   // Cards face the camera; the nearest milestone brightens; cards fade when too near or too far.
   let best = null, bd = 1;
   nodes.forEach((n) => {
-    n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); if (d < bd) { bd = d; best = n; }
+    n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); const da = Math.abs(n.t - (tt + AHEAD)); if (da < bd) { bd = da; best = n; }
     const k = Math.max(0, 1 - d / 0.02); n.halo.material.opacity = 0.12 + k * 0.2; n.core.scale.setScalar(1 + k * 0.35);
-    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n ? 1 : Math.max(0, Math.min(1, (dist - 7) / 6)) * Math.max(0, Math.min(1, (90 - dist) / 30));
+    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n ? 1 : Math.max(0, Math.min(1, (dist - 3) / 2.5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
     // Cards already passed fade out at once, so nothing flies across the HUD; in focus, everything but the chosen card steps back.
-    const passed = mapMode || focused ? 1 : Math.max(0, Math.min(1, (n.t - tt - 0.012) / 0.018));
+    const passed = mapMode || focused ? 1 : Math.max(0, Math.min(1, (n.t - tt + 0.036) / 0.012));
     const near = (focused && focused !== n ? Math.max(0, Math.min(1, (dist - 16) / 10)) : 1) * passed;
     n.card.material.opacity = vis * near; n.card.scale.setScalar(1 + k * 0.15); n.stem.material.opacity = 0.6 * vis * near;
   });

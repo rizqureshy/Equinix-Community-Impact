@@ -46,7 +46,7 @@
   .track .yr { position: absolute; top: -18px; font-size: 10.5px; color: var(--muted); transform: translateX(-50%); letter-spacing: 0.04em; }
   .key { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); top: calc(72px + env(safe-area-inset-top, 0px)); display: grid; gap: 4px; font-size: 11.5px; color: var(--muted); text-align: right; }
   .key span::after { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 8px; background: var(--c); }
-  .plaque { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 16px); width: min(360px, calc(100vw - 40px)); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px 18px; backdrop-filter: blur(14px); opacity: 0; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); pointer-events: none; display: grid; gap: 8px; }
+  .plaque { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 16px); width: min(330px, calc(100vw - 40px)); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px 18px; backdrop-filter: blur(14px); opacity: 0; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); pointer-events: none; display: grid; gap: 8px; }
   .plaque.show { opacity: 1; transform: translate(0, 0); pointer-events: auto; }
   .plaque .chip { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
   .plaque .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); display: inline-block; }
@@ -106,12 +106,6 @@
     </div>
   </div>
   <div class="year" id="year">2010<small id="wing">Heat for homes</small></div>
-  <div class="key">
-    <span style="--c: var(--planet)">Energy and heat</span>
-    <span style="--c: var(--connect)">Connection</span>
-    <span style="--c: var(--community)">Community</span>
-    <span style="--c: var(--alwayson)">Always on</span>
-  </div>
   <div class="hint" id="hint">Scroll or drag to travel. Click a card to open its story.</div>
   <aside class="plaque" id="plaque" aria-live="polite">
     <div class="chip"><i></i><span id="pChip"></span></div>
