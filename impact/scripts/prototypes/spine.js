@@ -56,7 +56,8 @@ const sun = new T.DirectionalLight(0xffffff, 1.8); sun.position.set(5, 10, 4); s
 const pts = []; const N = 14;
 for (let i = 0; i <= N; i++) { const u = i / N; pts.push(new T.Vector3(Math.sin(u * Math.PI * 1.7) * 26, Math.sin(u * Math.PI * 3.1) * 5 + u * 6, -u * 220)); }
 const curve = new T.CatmullRomCurve3(pts, false, 'catmullrom', 0.6);
-const ribbonMat = new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.1, emissive: 0xffffff, emissiveIntensity: 0 });
+const RED = new T.Color('#e91c24');
+const ribbonMat = new T.MeshStandardMaterial({ color: RED, roughness: 0.45, metalness: 0.05, emissive: RED, emissiveIntensity: 0 });
 scene.add(new T.Mesh(new T.TubeGeometry(curve, 600, 0.2, 12, false), ribbonMat));
 const haloTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'); const r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.3, 'rgba(255,255,255,0.35)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new T.CanvasTexture(c); })();
 const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.beginPath(); g.arc(16, 16, 14, 0, Math.PI * 2); g.fill(); return new T.CanvasTexture(c); })();
@@ -68,9 +69,6 @@ const dustGeo = new T.BufferGeometry(); dustGeo.setAttribute('position', new T.B
 const dustMat = new T.PointsMaterial({ size: 0.2, map: dotTex, transparent: true, opacity: 0.5, depthWrite: false, sizeAttenuation: true });
 const dust = new T.Points(dustGeo, dustMat); scene.add(dust);
 
-// Nebulae: a faint tint of the wing colour around each milestone.
-const nebulae = [];
-M.forEach((m) => { for (let k = 0; k < 2; k++) { const p = curve.getPointAt(Math.min(0.999, tOf(m.y) + (Math.random() - 0.5) * 0.03)); const s = new T.Sprite(new T.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, opacity: 0.1 })); const r = 18 + Math.random() * 24; s.scale.set(r, r, 1); s.position.set(p.x + (Math.random() - 0.5) * 30, p.y + (Math.random() - 0.5) * 18, p.z + (Math.random() - 0.5) * 16); s.userData.w = m.w; scene.add(s); nebulae.push(s); } });
 
 // Cards: an image with a small caption, composed on a canvas.
 const CW = 960, CH = 640, RADIUS = 36;
@@ -93,10 +91,11 @@ function drawCard(n) {
   }
   const band = g.createLinearGradient(0, CH * 0.5, 0, CH); band.addColorStop(0, 'rgba(0,0,0,0)'); band.addColorStop(1, 'rgba(0,0,0,0.72)'); g.fillStyle = band; g.fillRect(0, 0, CW, CH);
   g.fillStyle = `#${tint.getHexString()}`; g.fillRect(0, CH - 10, CW, 10);
-  g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = `600 26px 'Inter Tight Variable', Arial, sans-serif`; g.textBaseline = 'alphabetic';
-  g.fillText(`${Math.floor(n.m.y)}  ·  ${WINGS[n.m.w][0].toUpperCase()}`, 44, CH - 112);
-  g.fillStyle = '#ffffff'; g.font = `500 44px 'Inter Tight Variable', Arial, sans-serif`;
-  const lines = wrap(g, n.m.t, CW - 88).slice(0, 2); lines.forEach((l, i) => g.fillText(l, 44, CH - 54 - (lines.length - 1 - i) * 50));
+  g.textBaseline = 'alphabetic'; g.font = `500 44px 'Inter Tight Variable', Arial, sans-serif`;
+  const lines = wrap(g, n.m.t, CW - 88).slice(0, 2); const top = CH - 54 - (lines.length - 1) * 52;
+  g.fillStyle = '#ffffff'; lines.forEach((l, i) => g.fillText(l, 44, top + i * 52));
+  g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = `600 24px 'Inter Tight Variable', Arial, sans-serif`;
+  g.fillText(`${Math.floor(n.m.y)}  ·  ${WINGS[n.m.w][0].toUpperCase()}`, 44, top - 58);
   g.restore(); n.tex.needsUpdate = true;
 }
 
@@ -105,16 +104,20 @@ const CARD_W = 4.8, CARD_H = 3.2;
 const nodes = M.map((m, i) => {
   const t = tOf(m.y); const p = curve.getPointAt(Math.min(0.9999, t)); const tan = curve.getTangentAt(Math.min(0.9999, t));
   const side = new T.Vector3().crossVectors(tan, new T.Vector3(0, 1, 0)).normalize().multiplyScalar(i % 2 ? 3.8 : -3.8);
-  const lift = i % 4 < 2 ? 2.6 : 4.8;
+  const lift = i % 4 < 2 ? 1.7 : 3.1;
   const g = new T.Group(); g.position.copy(p);
   const core = new T.Mesh(new T.SphereGeometry(m.end ? 0.7 : 0.3, 24, 24), new T.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.9, roughness: 0.3 }));
-  const halo = new T.Sprite(new T.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, opacity: 0.35 })); halo.scale.set(m.end ? 5 : 2.4, m.end ? 5 : 2.4, 1);
-  const reach = side.clone().add(new T.Vector3(0, lift - 0.3, 0));
-  const stem = new T.Mesh(new T.CylinderGeometry(0.025, 0.025, 1, 6), new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 }));
-  stem.position.copy(reach.clone().multiplyScalar(0.5)); stem.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), reach.clone().normalize()); stem.scale.y = reach.length();
+  const halo = new T.Sprite(new T.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false, opacity: 0.18 })); halo.scale.set(m.end ? 3 : 1.5, m.end ? 3 : 1.5, 1);
+  const foot = side.clone().add(new T.Vector3(0, lift - CARD_H / 2 - 0.22, 0));
+  const leader = new T.QuadraticBezierCurve3(new T.Vector3(0, 0, 0), new T.Vector3(side.x * 0.12, foot.y * 0.72, side.z * 0.12), foot);
+  const stem = new T.Group();
+  const stemMat = new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, fog: false });
+  stem.add(new T.Mesh(new T.TubeGeometry(leader, 24, 0.018, 6, false), stemMat));
+  const dot = new T.Mesh(new T.SphereGeometry(0.07, 12, 12), stemMat); dot.position.copy(foot); stem.add(dot);
+  stem.material = stemMat;
   const canvasEl = document.createElement('canvas'); canvasEl.width = CW; canvasEl.height = CH;
-  const tex = new T.CanvasTexture(canvasEl); tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  const card = new T.Mesh(new T.PlaneGeometry(CARD_W, CARD_H), new T.MeshBasicMaterial({ map: tex, transparent: true, side: T.DoubleSide }));
+  const tex = new T.CanvasTexture(canvasEl); tex.colorSpace = T.SRGBColorSpace; tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const card = new T.Mesh(new T.PlaneGeometry(CARD_W, CARD_H), new T.MeshBasicMaterial({ map: tex, transparent: true, side: T.DoubleSide, fog: false }));
   card.position.copy(side).add(new T.Vector3(0, lift, 0)); card.userData.node = i;
   g.add(core, halo, stem, card); scene.add(g);
   const n = { m, t, g, core, halo, stem, card, canvas: canvasEl, tex, p };
@@ -127,10 +130,9 @@ const beacons = []; for (let y = Y0; y <= 2026; y++) { const p = curve.getPointA
 
 // Theme application.
 function applyTheme() {
-  const bg = col('--bg'); scene.background = bg; scene.fog = new T.FogExp2(bg.getHex(), dark() ? 0.0085 : 0.011);
-  const rib = dark() ? new T.Color('#aeb6c8') : new T.Color('#b9b4a8'); ribbonMat.color.copy(rib); ribbonMat.emissive.copy(rib); ribbonMat.emissiveIntensity = dark() ? 0.3 : 0;
-  dustMat.color = dark() ? new T.Color('#9fb0d8') : new T.Color('#8f8a7e'); dustMat.opacity = dark() ? 0.55 : 0.4;
-  nebulae.forEach((s) => { s.material.color = col(WINGS[s.userData.w][1]); s.material.opacity = dark() ? 0.1 : 0.07; });
+  const bg = col('--bg'); scene.background = bg; scene.fog = new T.FogExp2(bg.getHex(), dark() ? 0.0045 : 0.006);
+  ribbonMat.emissiveIntensity = dark() ? 0.35 : 0.05;
+  dustMat.color = dark() ? new T.Color('#9fb0d8') : new T.Color('#8f8a7e'); dustMat.opacity = dark() ? 0.4 : 0.3;
   beacons.forEach((b) => { b.s.material.color = col('--muted'); });
   nodes.forEach((n) => { const c = col(WINGS[n.m.w][1]); n.core.material.color.copy(c); n.core.material.emissive.copy(c); n.halo.material.color.copy(c); n.stem.material.color.copy(c); drawCard(n); });
   document.getElementById('theme').textContent = dark() ? 'Day' : 'Night';
@@ -149,14 +151,13 @@ function musicOn() { musicTarget = 0.5; if (music.paused) { music.volume = 0; mu
 function musicOff() { musicTarget = 0; }
 
 // Travel state.
-let t = 0, target = 0.004, touring = false, mapMode = false, dwell = 0, dwellNode = null, focused = null, wasTouring = false;
-const visited = new Set();
+let t = 0, target = 0.004, touring = false, mapMode = false, focused = null, wasTouring = false;
 const clamp = (v) => Math.max(0, Math.min(1, v));
 const hint = document.getElementById('hint');
 let moved = false;
 const rideBtn = document.getElementById('ride'), mapBtn = document.getElementById('map');
 function stopTour() { if (!touring) return; touring = false; rideBtn.setAttribute('aria-pressed', 'false'); rideBtn.textContent = 'Tour'; musicOff(); }
-function startTour() { touring = true; if (target > 0.995) { target = 0; t = 0; visited.clear(); } rideBtn.setAttribute('aria-pressed', 'true'); rideBtn.textContent = 'Pause'; mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); musicOn(); moved = true; }
+function startTour() { touring = true; if (target > 0.995) { target = 0; t = 0; } rideBtn.setAttribute('aria-pressed', 'true'); rideBtn.textContent = 'Pause'; mapMode = false; mapBtn.setAttribute('aria-pressed', 'false'); musicOn(); moved = true; }
 rideBtn.addEventListener('click', () => { unfocus(false); touring ? stopTour() : startTour(); });
 mapBtn.addEventListener('click', () => { unfocus(false); mapMode = !mapMode; mapBtn.setAttribute('aria-pressed', String(mapMode)); if (mapMode) stopTour(); });
 
@@ -176,7 +177,7 @@ function focus(n) {
 }
 function unfocus(resume) {
   if (!focused) return; focused = null; document.body.classList.remove('focused'); story.classList.remove('show');
-  if (wasTouring && resume) { touring = true; rideBtn.textContent = 'Pause'; dwell = 0.6; } else if (wasTouring) { stopTour(); rideBtn.setAttribute('aria-pressed', 'false'); }
+  if (wasTouring && resume) { touring = true; rideBtn.textContent = 'Pause'; } else if (wasTouring) { stopTour(); rideBtn.setAttribute('aria-pressed', 'false'); }
   wasTouring = false;
 }
 document.getElementById('back').addEventListener('click', () => unfocus(true));
@@ -226,21 +227,19 @@ const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-70, 90, 120)), m
 let last = performance.now(), clock = 0;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
-  if (touring) {
-    if (dwell > 0) dwell -= dt; else { target = clamp(target + dt * 0.022); const near = nodes.find((n) => !visited.has(n) && Math.abs(n.t - target) < 0.004); if (near) { visited.add(near); dwell = 4.2; dwellNode = near; target = near.t; } if (target >= 1) stopTour(); }
-  }
+  if (touring) { target = clamp(target + dt * 0.016); if (target >= 1) stopTour(); }
   const ease = (k) => (reduce ? 1 : 1 - Math.exp(-dt * k));
   t += (target - t) * ease(3.6);
   const tt = Math.min(0.9999, Math.max(0, t));
   const p = curve.getPointAt(tt), ahead = curve.getPointAt(Math.min(0.9999, tt + 0.012)), tan = curve.getTangentAt(tt);
   const side = tmp.crossVectors(tan, up).normalize();
   if (mapMode) { camPos.lerp(mapPos, ease(3)); camLook.lerp(mapLook, ease(3)); }
-  else if (focused || (touring && dwell > 0 && dwellNode)) {
+  else if (focused) {
     // Frame the card: camera a little behind it on the ribbon, looking forward, the card held to one side
     // so the story (left) or the plaque (right) has room.
-    const n = focused || dwellNode; n.card.getWorldPosition(cardWorld); const tn = curve.getTangentAt(Math.min(0.9999, n.t)); const sd = new T.Vector3().crossVectors(tn, up).normalize();
-    const narrow = stage.clientWidth < 760; const shift = narrow ? 0 : (focused ? -2.4 : 1.7);
-    const want = cardWorld.clone().add(tn.clone().multiplyScalar(focused ? -10 : -11)).add(up.clone().multiplyScalar(0.3)).add(sd.clone().multiplyScalar(shift * 0.3));
+    const n = focused; n.card.getWorldPosition(cardWorld); const tn = curve.getTangentAt(Math.min(0.9999, n.t)); const sd = new T.Vector3().crossVectors(tn, up).normalize();
+    const narrow = stage.clientWidth < 760; const shift = narrow ? 0 : -2.4;
+    const want = cardWorld.clone().add(tn.clone().multiplyScalar(-10)).add(up.clone().multiplyScalar(0.3)).add(sd.clone().multiplyScalar(shift * 0.3));
     camPos.lerp(want, ease(4)); camLook.lerp(cardWorld.clone().add(sd.clone().multiplyScalar(shift)).add(up.clone().multiplyScalar(narrow ? 0.9 : 0.1)), ease(4.5));
   } else { const want = p.clone().add(up.clone().multiplyScalar(2.4)).add(side.clone().multiplyScalar(-1.6)).add(tan.clone().multiplyScalar(-6)); camPos.lerp(want, ease(24)); camLook.lerp(ahead.clone().add(up.clone().multiplyScalar(1.6)), ease(24)); }
   camera.position.copy(camPos); camera.lookAt(camLook);
@@ -248,9 +247,11 @@ function frame(now) {
   let best = null, bd = 1;
   nodes.forEach((n) => {
     n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); if (d < bd) { bd = d; best = n; }
-    const k = Math.max(0, 1 - d / 0.02); n.halo.material.opacity = 0.25 + k * 0.4; n.core.scale.setScalar(1 + k * 0.5);
-    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n || (touring && dwellNode === n) ? 1 : Math.max(0, Math.min(1, (dist - 4) / 5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
-    const framed = focused || (touring && dwell > 0 ? dwellNode : null); const near = framed && framed !== n ? Math.max(0, Math.min(1, (dist - 6) / 6)) : 1;
+    const k = Math.max(0, 1 - d / 0.02); n.halo.material.opacity = 0.12 + k * 0.2; n.core.scale.setScalar(1 + k * 0.35);
+    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n ? 1 : Math.max(0, Math.min(1, (dist - 7) / 6)) * Math.max(0, Math.min(1, (90 - dist) / 30));
+    // Cards already passed fade out at once, so nothing flies across the HUD; in focus, everything but the chosen card steps back.
+    const passed = mapMode || focused ? 1 : Math.max(0, Math.min(1, (n.t - tt - 0.012) / 0.018));
+    const near = (focused && focused !== n ? Math.max(0, Math.min(1, (dist - 16) / 10)) : 1) * passed;
     n.card.material.opacity = vis * near; n.card.scale.setScalar(1 + k * 0.15); n.stem.material.opacity = 0.6 * vis * near;
   });
   showPlaque(!mapMode && !focused && bd < 0.011 ? best : null);

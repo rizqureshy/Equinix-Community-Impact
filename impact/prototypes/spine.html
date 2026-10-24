@@ -11,15 +11,15 @@
   /* Layout: a full-screen ride along a ribbon of time; HUD pinned to the edges; one plaque that slides in when a milestone is reached. */
   :root {
     --bg: #f4f3ef; --fg: #1b1a18; --muted: #6b6861; --panel: rgba(255,255,255,0.82); --line: rgba(27,26,24,0.12);
-    --accent: #d33a2f;
+    --accent: #e91c24;
     --planet: #2e8b57; --connect: #2f6fd3; --community: #e3832b; --alwayson: #7c7768;
     --glow: 0.55;
     --display: 'Fraunces Variable', Georgia, serif; --body: 'Inter Tight Variable', -apple-system, 'Helvetica Neue', Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #ff6a5c; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
+    :root:not([data-theme="light"]) { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #e91c24; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
   }
-  :root[data-theme="dark"] { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #ff6a5c; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
+  :root[data-theme="dark"] { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #e91c24; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
   html, body { height: 100%; }
   body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; overflow: hidden; }
   * { box-sizing: border-box; }
@@ -29,7 +29,8 @@
   .hud { position: fixed; inset: 0; pointer-events: none; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   .top { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); right: max(20px, env(safe-area-inset-right, 0px)); top: calc(18px + env(safe-area-inset-top, 0px)); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
   .brand { font-family: var(--display); font-weight: 300; font-size: 20px; letter-spacing: -0.01em; }
-  .brand small { display: block; font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .brand .logo { display: block; height: 14px; width: auto; }
+  .brand small { display: block; font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
   .year { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); bottom: calc(66px + env(safe-area-inset-bottom, 0px)); font-family: var(--display); font-weight: 300; font-size: clamp(64px, 12vw, 132px); line-height: 0.9; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; opacity: 0.9; }
   .year small { display: block; font-family: var(--body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
   .controls { pointer-events: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
@@ -43,14 +44,14 @@
   .track .tick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .track .tick.on { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 30%, transparent); }
   .track .yr { position: absolute; top: -18px; font-size: 10.5px; color: var(--muted); transform: translateX(-50%); letter-spacing: 0.04em; }
-  .key { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(66px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 4px; font-size: 11.5px; color: var(--muted); text-align: right; }
+  .key { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); top: calc(72px + env(safe-area-inset-top, 0px)); display: grid; gap: 4px; font-size: 11.5px; color: var(--muted); text-align: right; }
   .key span::after { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 8px; background: var(--c); }
-  .plaque { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); top: 50%; transform: translate(24px, -50%); width: min(400px, calc(100vw - 40px)); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px 18px; backdrop-filter: blur(14px); opacity: 0; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); pointer-events: none; display: grid; gap: 8px; }
-  .plaque.show { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+  .plaque { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 16px); width: min(360px, calc(100vw - 40px)); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px 18px; backdrop-filter: blur(14px); opacity: 0; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); pointer-events: none; display: grid; gap: 8px; }
+  .plaque.show { opacity: 1; transform: translate(0, 0); pointer-events: auto; }
   .plaque .chip { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
   .plaque .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); display: inline-block; }
-  .plaque h2 { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.12; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
-  .plaque .fig { font-family: var(--display); font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.02em; margin-top: 2px; }
+  .plaque h2 { font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 1.12; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .plaque .fig { font-family: var(--display); font-weight: 300; font-size: 38px; line-height: 1; letter-spacing: -0.02em; margin-top: 2px; }
   .plaque .fig small { display: block; font-family: var(--body); font-size: 12.5px; color: var(--muted); margin-top: 4px; letter-spacing: 0; }
   .plaque p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
   .plaque a { color: var(--fg); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
@@ -82,7 +83,8 @@
     body.has-plaque .year { opacity: 0; }
     .year { transition: opacity .3s; }
     .hint { display: none; }
-    .brand small { display: none; }
+    .brand .logo { display: block; height: 14px; width: auto; }
+  .brand small { display: none; }
     .story { left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: auto; top: auto; bottom: calc(70px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 24px); max-height: calc(100% - 150px); }
     .story.show { transform: translate(0, 0); }
     .story h2 { font-size: 22px; } .story .fig { font-size: 38px; }
@@ -95,7 +97,7 @@
 
 <div class="hud">
   <div class="top">
-    <div class="brand">Spine of Impact<small>What a data center gives back, 2010 to 2026. Images are illustrative.</small></div>
+    <div class="brand"><img class="logo" src="../brand/equinix-logo-horizontal.svg" alt="Equinix" width="124" height="13" decoding="async" /><small>Spine of Impact. What a data center gives back, 2010 to 2026. Images are illustrative.</small></div>
     <div class="controls">
       <button class="btn" id="ride" type="button" aria-pressed="false">Tour</button>
       <button class="btn" id="mute" type="button" aria-pressed="false">Mute</button>
