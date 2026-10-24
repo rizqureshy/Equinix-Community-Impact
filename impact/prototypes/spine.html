@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Spine of Impact | prototype</title>
+    <meta name="description" content="Prototype: a ride along a ribbon of time through Equinix community impact, 2010 to 2026. Placeholder art, sourced milestones." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="../brand/equinix-fortress.svg" />
+<style>
+  /* Layout: a full-screen ride along a ribbon of time; HUD pinned to the edges; one plaque that slides in when a milestone is reached. */
+  :root {
+    --bg: #f4f3ef; --fg: #1b1a18; --muted: #6b6861; --panel: rgba(255,255,255,0.82); --line: rgba(27,26,24,0.12);
+    --accent: #d33a2f;
+    --planet: #2e8b57; --connect: #2f6fd3; --community: #e3832b; --alwayson: #7c7768;
+    --glow: 0.55;
+    --display: 'Fraunces Variable', Georgia, serif; --body: 'Inter Tight Variable', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #ff6a5c; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #ff6a5c; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; overflow: hidden; }
+  * { box-sizing: border-box; }
+  #stage { position: fixed; inset: 0; touch-action: none; cursor: grab; }
+  #stage:active { cursor: grabbing; }
+  canvas { display: block; width: 100%; height: 100%; }
+  .hud { position: fixed; inset: 0; pointer-events: none; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .top { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); right: max(20px, env(safe-area-inset-right, 0px)); top: calc(18px + env(safe-area-inset-top, 0px)); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .brand { font-family: var(--display); font-weight: 300; font-size: 20px; letter-spacing: -0.01em; }
+  .brand small { display: block; font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .year { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); bottom: calc(66px + env(safe-area-inset-bottom, 0px)); font-family: var(--display); font-weight: 300; font-size: clamp(64px, 12vw, 132px); line-height: 0.9; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; opacity: 0.9; }
+  .year small { display: block; font-family: var(--body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+  .controls { pointer-events: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .btn { font: 600 12.5px var(--body); color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; cursor: pointer; backdrop-filter: blur(10px); }
+  .btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .track { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(30px + env(safe-area-inset-bottom, 0px)); height: 22px; pointer-events: auto; }
+  .track .rail { position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: var(--line); }
+  .track .done { position: absolute; left: 0; top: 10px; height: 2px; background: var(--fg); width: 0; }
+  .track .tick { position: absolute; top: 7px; width: 8px; height: 8px; border-radius: 50%; transform: translateX(-50%); background: var(--c); cursor: pointer; border: 0; padding: 0; }
+  .track .tick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .track .tick.on { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 30%, transparent); }
+  .track .yr { position: absolute; top: -18px; font-size: 10.5px; color: var(--muted); transform: translateX(-50%); letter-spacing: 0.04em; }
+  .key { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(66px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 4px; font-size: 11.5px; color: var(--muted); text-align: right; }
+  .key span::after { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 8px; background: var(--c); }
+  .plaque { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); top: 50%; transform: translate(24px, -50%); width: min(400px, calc(100vw - 40px)); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px 18px; backdrop-filter: blur(14px); opacity: 0; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); pointer-events: none; display: grid; gap: 8px; }
+  .plaque.show { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+  .plaque .chip { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+  .plaque .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); display: inline-block; }
+  .plaque h2 { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.12; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .plaque .fig { font-family: var(--display); font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.02em; margin-top: 2px; }
+  .plaque .fig small { display: block; font-family: var(--body); font-size: 12.5px; color: var(--muted); margin-top: 4px; letter-spacing: 0; }
+  .plaque p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .plaque a { color: var(--fg); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
+  .hint { position: absolute; left: 50%; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; text-align: center; transition: opacity .6s; }
+  .hint.off { opacity: 0; }
+  @media (max-width: 760px) {
+    .key { display: none; }
+    .year { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); font-size: 56px; }
+    .plaque { right: max(16px, env(safe-area-inset-right, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: auto; top: auto; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 24px); padding: 16px 18px; }
+    .plaque.show { transform: translate(0, 0); }
+    .plaque .fig { font-size: 34px; }
+    body.has-plaque .year { opacity: 0; }
+    .year { transition: opacity .3s; }
+    .hint { display: none; }
+    .brand small { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .plaque { transition: none; } }
+</style>
+  </head>
+  <body>
+<div id="stage"><canvas id="c"></canvas></div>
+
+<div class="hud">
+  <div class="top">
+    <div class="brand">Spine of Impact<small>What a data center gives back, 2010 to 2026</small></div>
+    <div class="controls">
+      <button class="btn" id="ride" type="button" aria-pressed="false">Ride</button>
+      <button class="btn" id="map" type="button" aria-pressed="false">Map</button>
+      <button class="btn" id="theme" type="button">Night</button>
+    </div>
+  </div>
+  <div class="year" id="year">2010<small id="wing">Heat for homes</small></div>
+  <div class="key">
+    <span style="--c: var(--planet)">Energy and heat</span>
+    <span style="--c: var(--connect)">Connection</span>
+    <span style="--c: var(--community)">Community</span>
+    <span style="--c: var(--alwayson)">Always on</span>
+  </div>
+  <div class="hint" id="hint">Scroll or drag to travel the spine</div>
+  <aside class="plaque" id="plaque" aria-live="polite">
+    <div class="chip"><i></i><span id="pChip"></span></div>
+    <h2 id="pTitle"></h2>
+    <div class="fig" id="pFig"></div>
+    <p id="pScope"></p>
+    <a id="pSrc" href="#" target="_blank" rel="noopener">Source</a>
+  </aside>
+  <div class="track" id="track"><div class="rail"></div><div class="done" id="done"></div></div>
+</div>
+    <script type="module" src="../scripts/prototypes/spine.js"></script>
+  </body>
+</html>

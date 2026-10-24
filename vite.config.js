@@ -40,6 +40,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),
         engage: resolve(import.meta.dirname, 'impact/engage.html'),
+        spine: resolve(import.meta.dirname, 'impact/prototypes/spine.html'),
       },
     },
   },

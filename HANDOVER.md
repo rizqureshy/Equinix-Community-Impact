@@ -31,6 +31,10 @@ Built with the ElevenLabs connector on 23 October 2026, on top of `claude/enter-
 - **Not done:** Yoodli stays a placeholder note in the same panel. The coach's library voice could not be set from here (library voices must first be added to the workspace); Eleanor or Ophelia would suit if you add one in ElevenLabs and tell me.
 - **Checks:** the narrator reads the first caption and the Voice control silences and restores it; the tour steps into the first building, speaks there with the music ducked, pauses and resumes inside the room, goes silent on mute, skips to the next building, and ends on Escape with the model handed back; with reduced motion it cuts straight inside; the coach loads only on request and mounts with its agent id; no requests leave the host apart from that click.
 
+## Prototype: the Spine of Impact (branch `claude/voice-and-coach`)
+
+A standalone page at `prototypes/spine.html` (source `impact/prototypes/spine.html` and `impact/scripts/prototypes/spine.js`), not linked from the site. It is a research-stage concept for redesigning the five promises area: a ride along a ribbon of time through community impact only, 2010 to 2026, with 26 dated, scoped, sourced milestones from the impact library research. Scroll or drag to travel, Ride for hands-free, Map for the whole ribbon, Day or Night to compare. Everything in it is placeholder art drawn in code on the repo's three.js: no generated media, no credits spent, no narration yet. The four earlier option sketches (building, corridor, spine, globe) remain as a Claude artifact and were not added.
+
 ## Stepping inside (branch `claude/enter-the-story`)
 
 Research, routes and costs are in `design/enter-the-story.md`. What was built:
