@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-24T05:21:51.014169Z",
+    "display_name": "GPT Image 2.5",
+    "id": "e51f3f61-ba53-41f4-ac02-3a3eca6f5b9b",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052151_e51f3f61-ba53-41f4-ac02-3a3eca6f5b9b_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "height": 688,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a Helsinki apartment block in winter dusk with warm lit windows, snow on the balconies, a district heating plant chimney in soft haze.\n\nSoft, airy documentary photograph, high-key and light, pale muted palette with warm morning haze, shallow depth of field, calm and hopeful, lots of negative space, natural light, no text, no logos, no signage, no readable screens, no identifiable faces, photoreal, editorial.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052151_e51f3f61-ba53-41f4-ac02-3a3eca6f5b9b.png",
+    "status": "completed"
+  }
+]

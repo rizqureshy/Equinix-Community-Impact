@@ -54,6 +54,23 @@
   .plaque .fig small { display: block; font-family: var(--body); font-size: 12.5px; color: var(--muted); margin-top: 4px; letter-spacing: 0; }
   .plaque p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
   .plaque a { color: var(--fg); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
+  .story { position: absolute; left: max(20px, env(safe-area-inset-left, 0px)); top: 50%; transform: translate(-24px, -50%); width: min(520px, calc(100vw - 40px)); max-height: calc(100% - 140px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; backdrop-filter: blur(16px); opacity: 0; transition: opacity .35s ease, transform .5s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+  .story.show { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+  .story-media { position: relative; aspect-ratio: 3 / 2; max-width: 100%; background: var(--line); border-radius: 20px 20px 0 0; overflow: hidden; }
+  .story-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .story-note { position: absolute; left: 12px; bottom: 10px; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,0.42); padding: 4px 8px; border-radius: 999px; }
+  .story-body { padding: 18px 22px 20px; display: grid; gap: 8px; }
+  .story .chip { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+  .story .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); display: inline-block; }
+  .story h2 { font-family: var(--display); font-weight: 400; font-size: 28px; line-height: 1.1; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .story .fig { font-family: var(--display); font-weight: 300; font-size: 52px; line-height: 1; letter-spacing: -0.02em; }
+  .story .fig small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .story p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .story-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 6px; }
+  .story a { color: var(--fg); font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
+  body.focused .plaque { opacity: 0; pointer-events: none; }
+  body.focused .year { opacity: 0; }
+  #stage.hover { cursor: pointer; }
   .hint { position: absolute; left: 50%; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; text-align: center; transition: opacity .6s; }
   .hint.off { opacity: 0; }
   @media (max-width: 760px) {
@@ -66,6 +83,9 @@
     .year { transition: opacity .3s; }
     .hint { display: none; }
     .brand small { display: none; }
+    .story { left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: auto; top: auto; bottom: calc(70px + env(safe-area-inset-bottom, 0px)); transform: translate(0, 24px); max-height: calc(100% - 150px); }
+    .story.show { transform: translate(0, 0); }
+    .story h2 { font-size: 22px; } .story .fig { font-size: 38px; }
   }
   @media (prefers-reduced-motion: reduce) { .plaque { transition: none; } }
 </style>
@@ -75,9 +95,10 @@
 
 <div class="hud">
   <div class="top">
-    <div class="brand">Spine of Impact<small>What a data center gives back, 2010 to 2026</small></div>
+    <div class="brand">Spine of Impact<small>What a data center gives back, 2010 to 2026. Images are illustrative.</small></div>
     <div class="controls">
-      <button class="btn" id="ride" type="button" aria-pressed="false">Ride</button>
+      <button class="btn" id="ride" type="button" aria-pressed="false">Tour</button>
+      <button class="btn" id="mute" type="button" aria-pressed="false">Mute</button>
       <button class="btn" id="map" type="button" aria-pressed="false">Map</button>
       <button class="btn" id="theme" type="button">Night</button>
     </div>
@@ -89,7 +110,7 @@
     <span style="--c: var(--community)">Community</span>
     <span style="--c: var(--alwayson)">Always on</span>
   </div>
-  <div class="hint" id="hint">Scroll or drag to travel the spine</div>
+  <div class="hint" id="hint">Scroll or drag to travel. Click a card to open its story.</div>
   <aside class="plaque" id="plaque" aria-live="polite">
     <div class="chip"><i></i><span id="pChip"></span></div>
     <h2 id="pTitle"></h2>
@@ -97,6 +118,17 @@
     <p id="pScope"></p>
     <a id="pSrc" href="#" target="_blank" rel="noopener">Source</a>
   </aside>
+  <section class="story" id="story" aria-live="polite" aria-label="Milestone story">
+    <div class="story-media"><img id="sImg" alt="" decoding="async" /><span class="story-note">Illustrative image, AI generated</span></div>
+    <div class="story-body">
+      <div class="chip"><i></i><span id="sChip"></span></div>
+      <h2 id="sTitle"></h2>
+      <div class="fig" id="sFig"></div>
+      <p id="sScope"></p>
+      <div class="story-actions"><a id="sSrc" href="#" target="_blank" rel="noopener">Source</a><button class="btn" id="back" type="button">Back to the spine</button></div>
+    </div>
+  </section>
+  <audio id="music" loop preload="none"><source src="../media/audio/community-theme.ogg" type="audio/ogg" /><source src="../media/audio/community-theme.mp3" type="audio/mpeg" /></audio>
   <div class="track" id="track"><div class="rail"></div><div class="done" id="done"></div></div>
 </div>
     <script type="module" src="../scripts/prototypes/spine.js"></script>

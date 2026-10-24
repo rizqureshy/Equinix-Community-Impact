@@ -1872,5 +1872,531 @@
       "llm": "claude-sonnet-5-5",
       "embed": "impact/scripts/app.js openCoach()"
     }
+  },
+  "spine": {
+    "description": "Spine of Impact prototype: one illustrative still per milestone, composed onto 3D cards with a caption. Raw PNGs stay out of git; WebP copies live in impact/public/media/spine.",
+    "items": [
+      {
+        "key": "spine-clean-energy-2015",
+        "generationId": "c1340951-e0d7-41f6-91e2-31f4c3542cf7",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:15:17.015935Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/clean-energy-2015.txt",
+        "original": "media-src/spine/clean-energy-2015.png",
+        "web": "impact/public/media/spine/clean-energy-2015.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051517_c1340951-e0d7-41f6-91e2-31f4c3542cf7.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"clean-energy-2015\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-climate-2021",
+        "generationId": "78ea5d96-f849-4bdb-82fb-5ce1380511ec",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:15:42.952034Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/climate-2021.txt",
+        "original": "media-src/spine/climate-2021.png",
+        "web": "impact/public/media/spine/climate-2021.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051542_78ea5d96-f849-4bdb-82fb-5ce1380511ec.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"climate-2021\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-community-2015",
+        "generationId": "2c953e9d-8c9f-4a9f-9f3f-8c356755a992",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:16:10.329631Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/community-2015.txt",
+        "original": "media-src/spine/community-2015.png",
+        "web": "impact/public/media/spine/community-2015.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051610_2c953e9d-8c9f-4a9f-9f3f-8c356755a992.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"community-2015\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-curie-2019",
+        "generationId": "67eb23fa-90b9-4088-8cae-c6681630cc28",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:16:36.724266Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/curie-2019.txt",
+        "original": "media-src/spine/curie-2019.png",
+        "web": "impact/public/media/spine/curie-2019.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051636_67eb23fa-90b9-4088-8cae-c6681630cc28.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"curie-2019\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-dublin-2026",
+        "generationId": "4fac27c4-0a79-4075-9030-b9c76fa196d5",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:17:03.047035Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/dublin-2026.txt",
+        "original": "media-src/spine/dublin-2026.png",
+        "web": "impact/public/media/spine/dublin-2026.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051703_4fac27c4-0a79-4075-9030-b9c76fa196d5.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"dublin-2026\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-espoo-2023",
+        "generationId": "02fe3076-172b-4b15-ba7f-8d0694191e7d",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:17:29.252742Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/espoo-2023.txt",
+        "original": "media-src/spine/espoo-2023.png",
+        "web": "impact/public/media/spine/espoo-2023.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051729_02fe3076-172b-4b15-ba7f-8d0694191e7d.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"espoo-2023\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-foundation-2022",
+        "generationId": "49897ab1-9a7b-44dc-8227-3d2c28857282",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:17:55.512417Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/foundation-2022.txt",
+        "original": "media-src/spine/foundation-2022.png",
+        "web": "impact/public/media/spine/foundation-2022.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051755_49897ab1-9a7b-44dc-8227-3d2c28857282.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"foundation-2022\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-frankfurt-2023",
+        "generationId": "7a35883a-e8f4-4bd0-9051-c850fa2bf257",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:18:21.893817Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/frankfurt-2023.txt",
+        "original": "media-src/spine/frankfurt-2023.png",
+        "web": "impact/public/media/spine/frankfurt-2023.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051821_7a35883a-e8f4-4bd0-9051-c850fa2bf257.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"frankfurt-2023\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-genoa-2022",
+        "generationId": "8ca44902-8df1-426b-8045-8b2f43670f9e",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:18:48.194963Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/genoa-2022.txt",
+        "original": "media-src/spine/genoa-2022.png",
+        "web": "impact/public/media/spine/genoa-2022.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051848_8ca44902-8df1-426b-8045-8b2f43670f9e.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"genoa-2022\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-georgia-2026",
+        "generationId": "0b25f9ce-426d-476f-8984-287ed4a6a024",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:19:14.389265Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/georgia-2026.txt",
+        "original": "media-src/spine/georgia-2026.png",
+        "web": "impact/public/media/spine/georgia-2026.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051914_0b25f9ce-426d-476f-8984-287ed4a6a024.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"georgia-2026\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-giga-2025",
+        "generationId": "3b58ebcc-936d-4a94-adcb-2d75e4dcfd71",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:19:40.640282Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/giga-2025.txt",
+        "original": "media-src/spine/giga-2025.png",
+        "web": "impact/public/media/spine/giga-2025.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_051940_3b58ebcc-936d-4a94-adcb-2d75e4dcfd71.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"giga-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-harvey-2017",
+        "generationId": "92903e32-7827-4b34-be7b-cb85f04462c4",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:20:06.794122Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/harvey-2017.txt",
+        "original": "media-src/spine/harvey-2017.png",
+        "web": "impact/public/media/spine/harvey-2017.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052006_92903e32-7827-4b34-be7b-cb85f04462c4.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"harvey-2017\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-heat-2025",
+        "generationId": "ef34b1cc-e02c-4154-b1a5-6c1b51de94a6",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:20:32.506879Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/heat-2025.txt",
+        "original": "media-src/spine/heat-2025.png",
+        "web": "impact/public/media/spine/heat-2025.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052032_ef34b1cc-e02c-4154-b1a5-6c1b51de94a6.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"heat-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-heat-call-2024",
+        "generationId": "ed42a074-1497-4a74-b4d6-56ca516a4d3c",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:20:58.824403Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/heat-call-2024.txt",
+        "original": "media-src/spine/heat-call-2024.png",
+        "web": "impact/public/media/spine/heat-call-2024.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052058_ed42a074-1497-4a74-b4d6-56ca516a4d3c.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"heat-call-2024\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-helsinki-2010",
+        "generationId": "1518e1a3-b7f1-4e32-909a-bb86d2c2bbc3",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:21:24.857216Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/helsinki-2010.txt",
+        "original": "media-src/spine/helsinki-2010.png",
+        "web": "impact/public/media/spine/helsinki-2010.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052124_1518e1a3-b7f1-4e32-909a-bb86d2c2bbc3.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"helsinki-2010\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-helsinki-2024",
+        "generationId": "e51f3f61-ba53-41f4-ac02-3a3eca6f5b9b",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:21:51.014169Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/helsinki-2024.txt",
+        "original": "media-src/spine/helsinki-2024.png",
+        "web": "impact/public/media/spine/helsinki-2024.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052151_e51f3f61-ba53-41f4-ac02-3a3eca6f5b9b.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"helsinki-2024\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-learning-labs-2026",
+        "generationId": "4a07865d-8869-4563-9dc8-ed75c1c92cdc",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:22:17.206955Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/learning-labs-2026.txt",
+        "original": "media-src/spine/learning-labs-2026.png",
+        "web": "impact/public/media/spine/learning-labs-2026.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052217_4a07865d-8869-4563-9dc8-ed75c1c92cdc.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"learning-labs-2026\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-nigeria-2024",
+        "generationId": "083223f0-d068-4750-a274-9ccc0e68599d",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:22:43.130661Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/nigeria-2024.txt",
+        "original": "media-src/spine/nigeria-2024.png",
+        "web": "impact/public/media/spine/nigeria-2024.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052243_083223f0-d068-4750-a274-9ccc0e68599d.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"nigeria-2024\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-procurement-2025",
+        "generationId": "5dc6a6da-8b1a-4fda-8a5d-e459731422b9",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:23:09.170669Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/procurement-2025.txt",
+        "original": "media-src/spine/procurement-2025.png",
+        "web": "impact/public/media/spine/procurement-2025.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052309_5dc6a6da-8b1a-4fda-8a5d-e459731422b9.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"procurement-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-promises-2027",
+        "generationId": "2f359512-1bb2-4911-975a-dac1837f70ea",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:23:34.711376Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/promises-2027.txt",
+        "original": "media-src/spine/promises-2027.png",
+        "web": "impact/public/media/spine/promises-2027.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052334_2f359512-1bb2-4911-975a-dac1837f70ea.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"promises-2027\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-sandy-2012",
+        "generationId": "d499c9ac-88cf-472a-88f6-6083a8b69f2e",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:24:00.944042Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/sandy-2012.txt",
+        "original": "media-src/spine/sandy-2012.png",
+        "web": "impact/public/media/spine/sandy-2012.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052400_d499c9ac-88cf-472a-88f6-6083a8b69f2e.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"sandy-2012\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-skills-2026",
+        "generationId": "bb39a407-1680-4f94-b3d8-0f57ba005b98",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:24:27.075707Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/skills-2026.txt",
+        "original": "media-src/spine/skills-2026.png",
+        "web": "impact/public/media/spine/skills-2026.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052427_bb39a407-1680-4f94-b3d8-0f57ba005b98.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"skills-2026\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-smap-2025",
+        "generationId": "53e16b6a-1eb9-424c-afba-56d8e156375a",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:24:53.358416Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/smap-2025.txt",
+        "original": "media-src/spine/smap-2025.png",
+        "web": "impact/public/media/spine/smap-2025.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052453_53e16b6a-1eb9-424c-afba-56d8e156375a.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"smap-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-texas-2021",
+        "generationId": "910d34ff-d7b2-4e87-8d1e-cead031fbb5c",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:25:19.644636Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/texas-2021.txt",
+        "original": "media-src/spine/texas-2021.png",
+        "web": "impact/public/media/spine/texas-2021.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052519_910d34ff-d7b2-4e87-8d1e-cead031fbb5c.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"texas-2021\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-tohoku-2011",
+        "generationId": "56633ea4-19ce-4194-bf92-55816ced1fd5",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:25:45.192349Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/tohoku-2011.txt",
+        "original": "media-src/spine/tohoku-2011.png",
+        "web": "impact/public/media/spine/tohoku-2011.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052545_56633ea4-19ce-4194-bf92-55816ced1fd5.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"tohoku-2011\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-volunteering-2025",
+        "generationId": "2fcc6851-3754-4b7e-ad66-cef24e8fb977",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-24T05:26:11.716457Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/spine/volunteering-2025.txt",
+        "original": "media-src/spine/volunteering-2025.png",
+        "web": "impact/public/media/spine/volunteering-2025.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052611_2fcc6851-3754-4b7e-ad66-cef24e8fb977.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Card image for the \"volunteering-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      }
+    ],
+    "estimatedCredits": 39.0
   }
 }

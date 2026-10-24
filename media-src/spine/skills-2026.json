@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-24T05:24:27.075707Z",
+    "display_name": "GPT Image 2.5",
+    "id": "bb39a407-1680-4f94-b3d8-0f57ba005b98",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052427_bb39a407-1680-4f94-b3d8-0f57ba005b98_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "height": 688,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a young woman in a hijab seen from behind at a laptop in a sunny library in Mumbai, a certificate pinned to the noticeboard (no readable text).\n\nSoft, airy documentary photograph, high-key and light, pale muted palette with warm morning haze, shallow depth of field, calm and hopeful, lots of negative space, natural light, no text, no logos, no signage, no readable screens, no identifiable faces, photoreal, editorial.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_052427_bb39a407-1680-4f94-b3d8-0f57ba005b98.png",
+    "status": "completed"
+  }
+]

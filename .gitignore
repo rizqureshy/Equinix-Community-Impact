@@ -19,3 +19,4 @@ media-src/audio/*.src
 media-src/rooms/*.png
 media-src/rooms/*.mp4
 media-src/voice/*.mp3
+media-src/spine/*.png
