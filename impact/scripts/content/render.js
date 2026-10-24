@@ -21,7 +21,6 @@ const formatDate = (iso) => {
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 };
 
-const ILLUSTRATIVE = 'Illustrative, AI generated. Not the organisation or people named.';
 
 /** Chapter framing around each lead story, and the place it lives in the city. */
 export const CHAPTERS = {
@@ -95,7 +94,7 @@ export function chapterHTML(topic, i) {
     <p class="lede">${esc(c.moment)}</p>
   </div>
   <div class="wrap chapter-media" data-reveal>
-    <figure class="frame">${film(c.film, story.media[0]?.alt || '')}<figcaption class="note">${ILLUSTRATIVE}</figcaption></figure>
+    <figure class="frame">${film(c.film, story.media[0]?.alt || '')}</figure>
   </div>
   <div class="wrap chapter-grid" data-reveal>
     <div class="chapter-copy">
@@ -132,7 +131,6 @@ function picture(media, { sizes = '(min-width: 900px) 640px, 92vw', cls = '' } =
   return `<figure class="media ${cls}">
     <img src="${esc(media.path)}" srcset="${esc(base)}-640.webp 640w, ${esc(media.path)} 1200w" sizes="${sizes}"
       alt="${esc(media.alt)}" width="1200" height="800" loading="lazy" decoding="async">
-    ${media.usage === 'illustrative' ? `<figcaption class="media-note">${ILLUSTRATIVE}</figcaption>` : ''}
   </figure>`;
 }
 

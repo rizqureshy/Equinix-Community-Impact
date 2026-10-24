@@ -1,5 +1,5 @@
 // Prototype: the Spine of Impact ride. Placeholder scene, sourced milestones,
-// illustrative AI images on the cards (see media-src/asset-manifest.json).
+// generated images on the cards (provenance in media-src/asset-manifest.json).
 import * as T from 'three';
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/fraunces';
@@ -215,6 +215,7 @@ function endFinale(restart) {
   if (restart) { target = 0; t = 0; startTour(); } else { target = 0.93; }
 }
 document.getElementById('again').addEventListener('click', () => endFinale(true));
+document.getElementById('leaveEnd').addEventListener('click', () => { if (embedded) window.parent.postMessage({ type: 'spine:leave' }, '*'); else location.href = '../#/promises'; });
 
 // Embedded on the main page: the parent asks us to begin (after its dive film) or to go quiet again.
 function beginFromParent() { preview = false; document.body.classList.remove('preview'); endFinale(false); unfocus(false); mapMode = false; target = 0; t = 0; camPos.copy(curve.getPointAt(0)).add(new T.Vector3(-1.6, 2.4, 6)); camLook.copy(curve.getPointAt(0.02)).add(new T.Vector3(0, 1.6, 0)); startTour(); }
