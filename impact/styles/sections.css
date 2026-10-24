@@ -40,6 +40,180 @@
   margin-top: var(--s-6);
 }
 
+/* ---- The promises: the Spine of Impact canvas ---------------------------- */
+.spine-frame {
+  position: relative;
+  height: min(78svh, 860px);
+  min-height: 520px;
+  margin: var(--s-7) var(--gutter) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #07090f;
+  box-shadow: var(--shadow-card);
+  transition: border-radius 0.6s ease;
+}
+.spine-embed,
+.spine-film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.spine-embed {
+  pointer-events: none;
+}
+.spine-frame[data-state="open"] .spine-embed {
+  pointer-events: auto;
+}
+.spine-film {
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.spine-frame[data-state="entering"] .spine-film {
+  opacity: 1;
+}
+.spine-begin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  font: 600 13px/1 var(--font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.spine-begin-ring {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  background: rgba(7, 9, 15, 0.35);
+  backdrop-filter: blur(6px);
+  position: relative;
+  transition: transform 0.4s ease, background 0.4s ease;
+}
+.spine-begin-ring::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 11px 0 11px 18px;
+  border-color: transparent transparent transparent #fff;
+}
+.spine-begin:hover .spine-begin-ring,
+.spine-begin:focus-visible .spine-begin-ring {
+  transform: scale(1.08);
+  background: var(--red);
+  border-color: var(--red);
+}
+.spine-begin:focus-visible {
+  outline: none;
+}
+.spine-frame:not([data-state="idle"]) .spine-begin {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  pointer-events: none;
+}
+.spine-note {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.spine-frame:not([data-state="idle"]) .spine-note {
+  opacity: 0;
+}
+/* Open: the frame leaves the page flow and fills the screen */
+body.spine-open .spine-frame {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  height: auto;
+  min-height: 0;
+  border-radius: 0;
+  z-index: 400;
+}
+body.spine-open {
+  overflow: hidden;
+}
+body.spine-open .site-header,
+body.spine-open .fabric-layer,
+body.spine-open .weather-light {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spine-frame {
+    transition: border-radius 0.6s ease, box-shadow 0.6s ease;
+  }
+}
+.promise-row {
+  list-style: none;
+  margin: var(--s-6) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+.promise-tile {
+  display: grid;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.promise-num {
+  font-family: var(--font-display, var(--font));
+  font-size: 22px;
+  color: var(--red);
+  line-height: 1;
+}
+.promise-name {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+}
+.promise-text {
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.promise-source {
+  margin-top: var(--s-4);
+}
+@media (max-width: 900px) {
+  .promise-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .spine-frame {
+    height: 70svh;
+    min-height: 460px;
+    margin-inline: 12px;
+  }
+}
+@media (max-width: 520px) {
+  .promise-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---- The community explorer ------------------------------------------------ */
 .journey {
   padding: var(--s-9) 0 var(--s-8);

@@ -20,3 +20,5 @@ media-src/rooms/*.png
 media-src/rooms/*.mp4
 media-src/voice/*.mp3
 media-src/spine/*.png
+media-src/spine/film/*.png
+media-src/spine/film/*.mp4

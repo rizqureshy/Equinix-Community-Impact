@@ -231,41 +231,15 @@ export function collectionHTML() {
 export function principlesHTML() {
   const rows = principles
     .map(
-      (p, i) => `<li class="ledger-row" data-promise="${i}" ${i === 0 ? 'aria-current="true"' : ''}>
-        <button type="button" class="ledger-head" data-promise-go="${i}" aria-controls="promise-${i}">
-          <span class="ledger-num" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
-          <span class="ledger-name">${esc(p.name)}</span>
-        </button>
-        <div class="ledger-body" id="promise-${i}">
-          <p class="ledger-promise">${esc(p.promise)}</p>
-          <figure class="ledger-inline">
-            <img src="media/${p.art}-640.webp" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="640" height="960">
-            <figcaption><span class="ledger-kind">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></span><strong>${esc(p.headline)}</strong>${esc(p.proof)}</figcaption>
-          </figure>
-        </div>
+      (p, i) => `<li class="promise-tile">
+        <span class="promise-num" aria-hidden="true">${i + 1}</span>
+        <strong class="promise-name">${esc(p.name)}</strong>
+        <span class="promise-text">${esc(p.promise)}</span>
       </li>`,
     )
     .join('');
-  const proofs = principles
-    .map(
-      (p, i) => `<figure class="proof" data-proof="${i}" ${i ? 'hidden' : ''}>
-        <img class="proof-art" src="media/${p.art}-1200.webp" srcset="media/${p.art}-640.webp 640w, media/${p.art}-1200.webp 1200w" sizes="(min-width: 1000px) 44vw, 100vw" alt="${esc(p.alt)}" loading="lazy" decoding="async" width="1200" height="1800">
-        <figcaption class="proof-copy">
-          <p class="eyebrow">${esc(p.kind)} <span class="muted">${esc(p.where)}</span></p>
-          <p class="proof-headline">${esc(p.headline)}</p>
-          <p class="proof-text">${esc(p.proof)}</p>
-          <p class="note">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-        </figcaption>
-      </figure>`,
-    )
-    .join('');
-  return `<div class="ledger" data-active="0">
-    <ol class="ledger-list">${rows}</ol>
-    <div class="ledger-panel" aria-live="polite">${proofs}
-      <p class="note proof-note">Photographs are illustrative and AI generated, not the places or people named.</p>
-    </div>
-  </div>
-  <p class="note promises-note">Equinix U.S. Community Principles. Not every action applies at every location. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Read the principles<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
+  return `<ol class="promise-row" aria-label="The five promises">${rows}</ol>
+    <p class="note center promise-source">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
 
 export const NUMBERS = [

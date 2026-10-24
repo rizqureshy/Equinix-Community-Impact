@@ -641,44 +641,51 @@ const counter = new IntersectionObserver(
 $$('.number-digits').forEach((n) => counter.observe(n));
 
 // ---------------------------------------------------------------------------
-// The promises: the row nearest the reading line is current and its
-// photograph and proof show in the sticky panel
+// The promises: the Spine of Impact. A quiet canvas until the visitor clicks;
+// then the frame fills the screen, the dive film plays, and the ride begins.
 // ---------------------------------------------------------------------------
-const ledger = $('.ledger');
-const ledgerRows = $$('.ledger-row');
-const proofs = $$('.proof');
-let activePromise = 0;
-function setPromise(i) {
-  if (i === activePromise) return;
-  activePromise = i;
-  ledger.dataset.active = String(i);
-  ledgerRows.forEach((r, j) => {
-    if (j === i) r.setAttribute('aria-current', 'true');
-    else r.removeAttribute('aria-current');
-  });
-  proofs.forEach((f, j) => {
-    f.hidden = j !== i;
-  });
+const spineFrame = $('#spine-frame');
+const spineEmbed = $('#spine-embed');
+const spineFilm = $('#spine-film');
+const spineBegin = $('#spine-begin');
+let spineTimer = null;
+const spineSend = (type) => spineEmbed?.contentWindow?.postMessage({ type }, '*');
+function spineStart() {
+  if (!spineFrame || spineFrame.dataset.state !== 'idle') return;
+  spineFrame.dataset.state = 'entering';
+  document.body.classList.add('spine-open');
+  lenis?.stop();
+  if (playing) fadeMusic(true);
+  const begin = () => {
+    if (spineFrame.dataset.state !== 'entering') return;
+    spineFrame.dataset.state = 'open';
+    spineSend('spine:start');
+    spineEmbed.focus();
+  };
+  const film = () => {
+    spineFilm.currentTime = 0;
+    const p = spineFilm.play();
+    if (p && p.catch) p.catch(() => begin());
+    spineFilm.onended = begin;
+    clearTimeout(spineTimer);
+    spineTimer = setTimeout(begin, 9500); // never leave the visitor waiting on a film that will not end
+  };
+  // Give the frame a moment to grow before the film starts
+  setTimeout(film, store.get().motion ? 650 : 0);
 }
-function updateLedger() {
-  if (!ledger || !isInView(ledger)) return;
-  const line = innerHeight * 0.42;
-  let best = 0;
-  ledgerRows.forEach((r, i) => {
-    if (r.getBoundingClientRect().top <= line) best = i;
-  });
-  setPromise(best);
+function spineStop() {
+  if (!spineFrame || spineFrame.dataset.state === 'idle') return;
+  clearTimeout(spineTimer);
+  spineFrame.dataset.state = 'idle';
+  document.body.classList.remove('spine-open');
+  spineFilm.pause();
+  spineSend('spine:preview');
+  lenis?.start();
+  spineBegin.focus();
 }
-addEventListener('scroll', updateLedger, { passive: true });
-addEventListener('resize', updateLedger);
-document.addEventListener('click', (e) => {
-  const head = e.target.closest('[data-promise-go]');
-  if (!head) return;
-  const i = Number(head.dataset.promiseGo);
-  setPromise(i);
-  const top = ledgerRows[i].getBoundingClientRect().top + scrollY - innerHeight * 0.4;
-  if (innerWidth > 1000) scrollToY(top);
-});
+spineBegin?.addEventListener('click', spineStart);
+addEventListener('message', (e) => { if (e.data && e.data.type === 'spine:leave') spineStop(); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && spineFrame?.dataset.state !== 'idle') spineStop(); });
 
 // ---------------------------------------------------------------------------
 // Story gallery: filters and rail buttons
@@ -721,7 +728,6 @@ document.addEventListener('click', (e) => {
 // ---------------------------------------------------------------------------
 buildScroll();
 applyRoute(parseHash(location.hash), { initial: true });
-updateLedger();
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
 // Exposed for automated checks only.

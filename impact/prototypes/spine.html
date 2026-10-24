@@ -94,6 +94,11 @@
   .finale.text::after { opacity: 1; }
   body.finale-on .year, body.finale-on .plaque, body.finale-on .hint { opacity: 0; }
   @media (max-width: 760px) { .finale-text li { grid-template-columns: 30px 1fr; gap: 8px; } .finale-text li i { font-size: 24px; } .finale-text ol { gap: 10px; } }
+  body.preview .hud { display: none; }
+  body.preview #stage { cursor: default; }
+  body.embedded .btn--leave { display: inline-block; }
+  .btn--leave[hidden] { display: none; }
+  body.embedded .btn--leave[hidden] { display: inline-block; }
   .hint { position: absolute; left: 50%; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; text-align: center; transition: opacity .6s; }
   .hint.off { opacity: 0; }
   @media (max-width: 760px) {
@@ -125,6 +130,7 @@
       <button class="btn" id="mute" type="button" aria-pressed="false">Mute</button>
       <button class="btn" id="map" type="button" aria-pressed="false">Map</button>
       <button class="btn" id="theme" type="button">Night</button>
+      <button class="btn btn--leave" id="leave" type="button" hidden>Leave</button>
     </div>
   </div>
   <div class="year" id="year">2010<small id="wing">Heat for homes</small></div>

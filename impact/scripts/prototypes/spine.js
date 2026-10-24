@@ -6,6 +6,11 @@ import '@fontsource-variable/fraunces';
 import { principles } from '../content/stories.js';
 
 const root = document.documentElement;
+const params = new URLSearchParams(location.search);
+let preview = params.get('mode') === 'preview'; // embedded on the main page: a quiet canvas until the visitor clicks
+const embedded = window.parent !== window;
+if (preview) document.body.classList.add('preview');
+if (embedded) document.body.classList.add('embedded');
 const css = (n) => getComputedStyle(root).getPropertyValue(n).trim();
 const col = (n) => new T.Color(css(n));
 const dark = () => (matchMedia('(prefers-color-scheme: dark)').matches ? root.dataset.theme !== 'light' : root.dataset.theme === 'dark');
@@ -142,7 +147,7 @@ const beacons = []; for (let y = 2010; y <= 2026; y++) { const p = curve.getPoin
 
 // Theme application.
 function applyTheme() {
-  const bg = col('--bg'); scene.background = bg; scene.fog = new T.FogExp2(bg.getHex(), dark() ? 0.0045 : 0.006);
+  const bg = col('--bg'); scene.background = bg; scene.fog = new T.FogExp2(bg.getHex(), preview ? 0.0022 : dark() ? 0.0045 : 0.006);
   ribbonMat.emissiveIntensity = dark() ? 0.35 : 0.05;
   dustMat.color = dark() ? new T.Color('#9fb0d8') : new T.Color('#8f8a7e'); dustMat.opacity = dark() ? 0.4 : 0.3;
   beacons.forEach((b) => { b.s.material.color = col('--muted'); });
@@ -192,7 +197,7 @@ function unfocus(resume) {
   wasTouring = false;
 }
 document.getElementById('back').addEventListener('click', () => unfocus(true));
-window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (finaleOn) endFinale(false); else unfocus(true); } });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (finaleOn) endFinale(false); else if (focused) unfocus(true); else if (embedded && !preview) window.parent.postMessage({ type: 'spine:leave' }, '*'); } });
 
 // Finale: the last card sits on the line and swells as the camera glides to a stop; the full-screen
 // image then fades over it and the five promises appear in large type.
@@ -211,17 +216,23 @@ function endFinale(restart) {
 }
 document.getElementById('again').addEventListener('click', () => endFinale(true));
 
+// Embedded on the main page: the parent asks us to begin (after its dive film) or to go quiet again.
+function beginFromParent() { preview = false; document.body.classList.remove('preview'); endFinale(false); unfocus(false); mapMode = false; target = 0; t = 0; camPos.copy(curve.getPointAt(0)).add(new T.Vector3(-1.6, 2.4, 6)); camLook.copy(curve.getPointAt(0.02)).add(new T.Vector3(0, 1.6, 0)); startTour(); }
+function quietForParent() { stopTour(); endFinale(false); unfocus(false); mapMode = false; preview = true; document.body.classList.add('preview'); target = 0; t = 0; }
+window.addEventListener('message', (e) => { const d = e.data || {}; if (d.type === 'spine:start') beginFromParent(); if (d.type === 'spine:preview') quietForParent(); });
+const leaveBtn = document.getElementById('leave'); if (leaveBtn) leaveBtn.addEventListener('click', () => { window.parent.postMessage({ type: 'spine:leave' }, '*'); });
+
 // Pointer: scroll and drag travel, click opens a card.
 const ray = new T.Raycaster(), ndc = new T.Vector2(); let pointer = null;
 function pick() { if (!pointer) return null; const r = stage.getBoundingClientRect(); ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(cardMeshes, false)[0]; const n = hit ? nodes[hit.object.userData.node] : null; return n && !n.m.end ? n : null; }
-stage.addEventListener('wheel', (e) => { e.preventDefault(); if (finaleOn) { if (e.deltaY < 0) endFinale(false); return; } unfocus(false); target = clamp(target + e.deltaY * 0.00009); stopTour(); moved = true; }, { passive: false });
+stage.addEventListener('wheel', (e) => { if (preview) return; e.preventDefault(); if (finaleOn) { if (e.deltaY < 0) endFinale(false); return; } unfocus(false); target = clamp(target + e.deltaY * 0.00009); stopTour(); moved = true; }, { passive: false });
 let drag = null;
-stage.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, t: target, dist: 0 }; stage.setPointerCapture(e.pointerId); });
+stage.addEventListener('pointerdown', (e) => { if (preview) return; drag = { x: e.clientX, y: e.clientY, t: target, dist: 0 }; stage.setPointerCapture(e.pointerId); });
 stage.addEventListener('pointermove', (e) => { pointer = { x: e.clientX, y: e.clientY }; if (!drag) return; drag.dist = Math.max(drag.dist, Math.hypot(e.clientX - drag.x, e.clientY - drag.y)); if (drag.dist > 6) { if (finaleOn) { endFinale(false); drag = null; return; } unfocus(false); target = clamp(drag.t + (drag.y - e.clientY) * 0.0007); stopTour(); moved = true; } });
 const endDrag = (e) => { if (drag && drag.dist <= 6 && e.type === 'pointerup') { pointer = { x: e.clientX, y: e.clientY }; const n = pick(); if (n) focus(n); else if (focused) unfocus(true); } drag = null; };
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 stage.addEventListener('pointerleave', () => { pointer = null; });
-window.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { unfocus(false); target = clamp(target + 0.015); stopTour(); moved = true; e.preventDefault(); } if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { unfocus(false); target = clamp(target - 0.015); stopTour(); e.preventDefault(); } if (e.key === 'Home') target = 0; if (e.key === 'End') target = 1; });
+window.addEventListener('keydown', (e) => { if (preview) return; if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { unfocus(false); target = clamp(target + 0.015); stopTour(); moved = true; e.preventDefault(); } if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { unfocus(false); target = clamp(target - 0.015); stopTour(); e.preventDefault(); } if (e.key === 'Home') target = 0; if (e.key === 'End') target = 1; });
 
 // Track with ticks.
 const track = document.getElementById('track'), done = document.getElementById('done');
@@ -249,7 +260,8 @@ function frame(now) {
   // The ending: over the last stretch the camera drifts onto the line and settles on the final card, which swells to fill the view.
   const fin = clamp((tt - 0.955) / 0.044); const finE = fin * fin * (3 - 2 * fin);
   endNode.card.getWorldPosition(endWorld);
-  if (mapMode) { camPos.lerp(mapPos, ease(3)); camLook.lerp(mapLook, ease(3)); }
+  if (preview) { const a = 0.9 + clock * 0.03; const c = curve.getPointAt(0.42); const want = c.clone().add(new T.Vector3(Math.cos(a) * 150, 64 + Math.sin(a * 0.6) * 6, Math.sin(a) * 150)); camPos.lerp(want, ease(1.2)); camLook.lerp(curve.getPointAt(0.46).clone().add(new T.Vector3(0, -6, 0)), ease(1.2)); }
+  else if (mapMode) { camPos.lerp(mapPos, ease(3)); camLook.lerp(mapLook, ease(3)); }
   else if (focused) {
     const n = focused; n.card.getWorldPosition(cardWorld); const tn = curve.getTangentAt(Math.min(0.9999, n.t)); const sd = new T.Vector3().crossVectors(tn, up).normalize();
     const narrow = stage.clientWidth < 760; const shift = narrow ? 0 : -2.4;
@@ -266,14 +278,14 @@ function frame(now) {
   nodes.forEach((n) => {
     n.card.quaternion.copy(camera.quaternion); const d = Math.abs(n.t - tt); const da = Math.abs(n.t - (tt + 0.03)); if (da < bd) { bd = da; best = n; }
     const k = Math.max(0, 1 - d / 0.02); n.halo.material.opacity = 0.12 + k * 0.2; n.core.scale.setScalar(1 + k * 0.35);
-    const dist = n.g.position.distanceTo(camera.position); const vis = mapMode || focused === n || n.m.end ? 1 : Math.max(0, Math.min(1, (dist - 3) / 2.5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
-    const passed = mapMode || focused || n.m.end ? 1 : Math.max(0, Math.min(1, (n.t - tt + 0.036) / 0.012));
+    const dist = n.g.position.distanceTo(camera.position); const vis = preview || mapMode || focused === n || n.m.end ? 1 : Math.max(0, Math.min(1, (dist - 3) / 2.5)) * Math.max(0, Math.min(1, (90 - dist) / 30));
+    const passed = preview || mapMode || focused || n.m.end ? 1 : Math.max(0, Math.min(1, (n.t - tt + 0.036) / 0.012));
     const near = (focused && focused !== n ? Math.max(0, Math.min(1, (dist - 16) / 10)) : 1) * passed;
     n.card.material.opacity = vis * near; n.stem.material.opacity = 0.55 * vis * near;
     n.card.scale.setScalar(n.m.end ? 1 + finE * 1.25 : 1 + k * 0.15);
   });
-  if (!finaleOn && !mapMode && !focused && tt >= 0.996 && target >= 0.999) startFinale();
-  stage.classList.toggle('hover', !drag && !!pick());
+  if (!preview && !finaleOn && !mapMode && !focused && tt >= 0.996 && target >= 0.999) startFinale();
+  stage.classList.toggle('hover', !preview && !drag && !!pick());
   dust.rotation.y = Math.sin(clock * 0.02) * 0.02; dust.position.y = Math.sin(clock * 0.3) * 0.4;
   const year = yearAt(tt);
   yearEl.firstChild.nodeValue = String(Math.min(2026, Math.max(2010, Math.floor(year))));

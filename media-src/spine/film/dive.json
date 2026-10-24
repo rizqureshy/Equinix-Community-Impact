@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-24T06:28:25.114638Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "82294639-3931-4e50-a222-ec820f559875",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "6a28e7d5-37f4-482f-87b0-527364b3eb41",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/6a28e7d5-37f4-482f-87b0-527364b3eb41.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "7a2a3441-761f-47c8-a5f6-5ce193ca8d00",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/7a2a3441-761f-47c8-a5f6-5ce193ca8d00.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move through a dark starfield: we begin far out, looking at a thin red ribbon of light curving through space with small glowing picture cards along it, then the camera accelerates smoothly forward and dives down toward the ribbon, stars streaming past, easing to settle just above and behind the red line as the first two cards come into view ahead, exactly as in the last frame. Steady, cinematic, no cuts, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_062825_82294639-3931-4e50-a222-ec820f559875.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_062825_82294639-3931-4e50-a222-ec820f559875_thumbnail.webp"
+  }
+]

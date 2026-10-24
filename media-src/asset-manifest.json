@@ -2414,8 +2414,33 @@
         "status": "selected",
         "usage": "Card image for the \"volunteering-2025\" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named."
+      },
+      {
+        "key": "spine-dive-film",
+        "generationId": "82294639-3931-4e50-a222-ec820f559875",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-24T06:28:25.114638Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/spine/film/dive.txt",
+        "inputs": [
+          "media-src/spine/film/far.png (render of the Spine in preview mode)",
+          "media-src/spine/film/near.png (render of the first frame of the ride)"
+        ],
+        "original": "media-src/spine/film/dive.mp4",
+        "web": "impact/public/media/spine/dive.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261024_062825_82294639-3931-4e50-a222-ec820f559875.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film on the promises section: plays over the canvas when the visitor presses Begin, then the Spine takes over",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026 from two renders of the site's own scene. Illustrative only."
       }
     ],
-    "estimatedCredits": 42.0
+    "estimatedCredits": 52.0
   }
 }

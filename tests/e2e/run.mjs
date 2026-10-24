@@ -232,32 +232,24 @@ try {
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
-  await wait(1600); // let the smooth scroll finish before scrolling by hand
-  // The ledger: the row at the reading line is current and its proof shows
-  // Scroll to the fourth promise and give the smooth scroll time to settle
-  for (let i = 0; i < 12; i++) {
-    await p.evaluate(() => {
-      const r = document.querySelectorAll('.ledger-row')[3].getBoundingClientRect();
-      scrollTo(0, r.top + scrollY - innerHeight * 0.3);
-    });
-    await wait(500);
-    if ((await p.evaluate(() => document.querySelector('.ledger').dataset.active)) === '3') break;
-  }
+  // The promises: a quiet Spine canvas with a begin button and the five promises beneath
+  const spineIdle = await p.evaluate(() => ({
+    state: document.querySelector('#spine-frame')?.dataset.state,
+    embed: document.querySelector('#spine-embed')?.getAttribute('src'),
+    tiles: document.querySelectorAll('.promise-tile').length,
+    begin: !!document.querySelector('#spine-begin'),
+  }));
+  check(spineIdle.state === 'idle' && /prototypes\/spine\.html\?mode=preview/.test(spineIdle.embed) && spineIdle.tiles === 5 && spineIdle.begin, 'the promises section holds the Spine canvas and five promise tiles', JSON.stringify(spineIdle));
+  await p.locator('#spine-begin').dispatchEvent('click');
+  await wait(800);
+  const spineOpen = await p.evaluate(() => ({ state: document.querySelector('#spine-frame').dataset.state, open: document.body.classList.contains('spine-open') }));
+  check(spineOpen.open && spineOpen.state !== 'idle', 'beginning the journey fills the screen with the Spine', JSON.stringify(spineOpen));
+  await wait(10500); // the dive film ends or times out, and the ride begins
+  const spineRunning = await p.evaluate(() => document.querySelector('#spine-frame').dataset.state);
+  check(spineRunning === 'open', 'after the film the Spine takes over', spineRunning);
+  await p.evaluate(() => window.postMessage({ type: 'spine:leave' }, '*')); // what the Spine's own Leave button sends
   await wait(600);
-  const ledgerState = await p.evaluate(() => {
-    const img = document.querySelector('.proof:not([hidden]) .proof-art');
-    return {
-      active: document.querySelector('.ledger').dataset.active,
-      current: document.querySelector('.ledger-row[aria-current="true"]')?.dataset.promise,
-      proof: document.querySelector('.proof:not([hidden]) .proof-text')?.textContent,
-      photo: img && img.complete && img.naturalWidth > 0 && img.getBoundingClientRect().height > 400,
-    };
-  });
-  check(ledgerState.active === '3' && ledgerState.current === '3' && /water-based cooling/.test(ledgerState.proof), 'the promise at the reading line shows its proof', JSON.stringify(ledgerState));
-  check(ledgerState.photo === true, 'a large photograph stands behind the proof', JSON.stringify(ledgerState));
-  await p.locator('[data-promise-go="1"]').click();
-  await wait(2200);
-  check((await p.evaluate(() => document.querySelector('.ledger').dataset.active)) === '1', 'choosing a promise moves the ledger to it');
+  check(await p.evaluate(() => document.querySelector('#spine-frame').dataset.state === 'idle' && !document.body.classList.contains('spine-open')), 'leaving the Spine returns to the page');
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
