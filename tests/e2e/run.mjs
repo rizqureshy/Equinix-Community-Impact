@@ -160,7 +160,8 @@ try {
   // the first line starts once the panorama is up; under software rendering that can take a few seconds
   await p.waitForFunction(() => { const v = document.querySelector('.room-voice'); return v.getAttribute('src') && !v.paused; }, null, { polling: 100, timeout: 10000 }).catch(() => {});
   const spoken = await p.evaluate(() => { const v = document.querySelector('.room-voice'); return { src: v.getAttribute('src') || '', paused: v.paused, pressed: document.querySelector('[data-room-voice]').getAttribute('aria-pressed') }; });
-  check(/hospital-1\.mp3$/.test(spoken.src) && !spoken.paused && spoken.pressed === 'true', 'the narrator reads the caption aloud', JSON.stringify(spoken));
+  // under software rendering the first line can already have handed over to the second by the time we look
+  check(/hospital-[12]\.mp3$/.test(spoken.src) && !spoken.paused && spoken.pressed === 'true', 'the narrator reads the caption aloud', JSON.stringify(spoken));
   await p.locator('[data-room-voice]').dispatchEvent('click');
   await wait(300);
   check(await p.evaluate(() => document.querySelector('.room-voice').paused && !document.querySelector('.room-voice').getAttribute('src') && !window.__impact.room.voice), 'the voice control silences the narrator');
@@ -392,7 +393,7 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.keyboard.press('Escape');
   await wait(500);
-  check(await p.evaluate(() => getComputedStyle(document.querySelector('.ledger-panel')).display === 'none' && [...document.querySelectorAll('.ledger-inline')].every((el) => el.offsetHeight > 0)), 'on phones every promise shows its photograph and proof inline');
+  check(await p.evaluate(() => { const f = document.querySelector('#spine-frame').getBoundingClientRect(); const tiles = [...document.querySelectorAll('.promise-tile')]; return f.width <= innerWidth && f.height >= 400 && tiles.length === 5 && tiles.every((t) => t.getBoundingClientRect().width > innerWidth * 0.8); }), 'on phones the Spine canvas fits the screen and the promises stack');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   await browser.close();
 
