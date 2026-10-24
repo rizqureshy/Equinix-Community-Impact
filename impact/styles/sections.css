@@ -305,10 +305,6 @@ body.spine-open .weather-light {
   background: var(--red);
   box-shadow: 0 0 0 3px rgb(227 28 37 / 0.14);
 }
-.place-dot--heat {
-  background: var(--amber);
-  box-shadow: 0 0 0 3px rgb(224 154 60 / 0.18);
-}
 .place-label--dc .place-dot {
   border-radius: 2px;
 }
