@@ -22,41 +22,40 @@
   h1 { font-weight: 700; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; max-width: 16ch; }
   .lede { color: var(--muted); max-width: 58ch; margin: 0; font-size: 17px; }
 
-  .stage { position: relative; aspect-ratio: 16 / 10; max-width: 100%; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.08); cursor: crosshair; }
-  .stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: linear-gradient(to top, #fff, rgba(255,255,255,0)); pointer-events: none; z-index: 40; }
-  .person { position: absolute; border: 0; padding: 0; background: none; cursor: pointer; transform-origin: 50% 30%; will-change: transform, filter; transition: filter .5s ease, opacity .5s ease; }
-  .person img { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 30px rgba(0,0,0,.10)); -webkit-mask-image: linear-gradient(to bottom, #000 62%, rgba(0,0,0,.6) 80%, transparent 97%); mask-image: linear-gradient(to bottom, #000 62%, rgba(0,0,0,.6) 80%, transparent 97%); }
+  .stage { position: relative; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.08); padding: 36px 0 0; }
+  .row { display: flex; align-items: flex-end; justify-content: center; padding: 0 3%; position: relative; }
+  .person { position: relative; flex: 0 0 auto; width: 21%; margin: 0 -2.6%; border: 0; padding: 0; background: none; cursor: pointer; transform-origin: 50% 85%; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  .person img { display: block; width: 100%; height: auto; filter: drop-shadow(0 14px 26px rgba(0,0,0,.12)); -webkit-mask-image: linear-gradient(to bottom, #000 66%, rgba(0,0,0,.7) 82%, transparent 98%); mask-image: linear-gradient(to bottom, #000 66%, rgba(0,0,0,.7) 82%, transparent 98%); }
+  .person.on { transform: translateY(-4%) scale(1.12); }
   .person:focus-visible { outline: none; }
   .person:focus-visible img { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 16px; }
-  .person .name { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(29,29,31,.75); padding: 4px 9px; border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .35s ease; }
-  .person.on .name { opacity: 1; }
-
-  .story { position: absolute; z-index: 50; bottom: 6%; width: min(380px, 42%); background: rgba(255,255,255,.86); backdrop-filter: blur(14px); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px 16px; display: grid; gap: 6px; pointer-events: none; opacity: 0; transform: translateY(10px); transition: opacity .4s ease, transform .5s cubic-bezier(.2,.7,.2,1), left .6s cubic-bezier(.2,.7,.2,1), right .6s cubic-bezier(.2,.7,.2,1); }
-  .story.show { opacity: 1; transform: none; }
-  .story .role { font-family: var(--display); font-weight: 500; font-size: 24px; line-height: 1.1; letter-spacing: -0.01em; }
-  .story .where { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .story .fig { font-family: var(--display); font-weight: 300; font-size: 40px; line-height: 1; letter-spacing: -0.02em; margin-top: 4px; }
-  .story .fig small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); margin-top: 3px; letter-spacing: 0; }
-  .story .line { font-size: 14px; color: var(--muted); line-height: 1.45; }
-  .story .src { font-size: 11.5px; color: var(--muted); }
-  .story .pin { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-  .story .inner { display: grid; gap: 6px; transition: opacity .25s ease, transform .25s ease; }
+  .marker { position: absolute; left: 0; bottom: 0; width: 56px; height: 3px; background: var(--accent); border-radius: 2px; transform: translateX(-50%); transition: left .5s cubic-bezier(.2,.7,.2,1), opacity .3s; opacity: 0; }
+  .story { border-top: 1px solid var(--line); padding: 22px 32px 26px; min-height: 190px; display: grid; }
+  .story .inner { display: grid; grid-template-columns: 1fr 1.6fr; gap: 8px 40px; align-items: start; transition: opacity .25s ease, transform .25s ease; }
   .story.swap .inner { opacity: 0; transform: translateY(6px); }
-
+  .story .where { grid-column: 1 / -1; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .story .head { font-family: var(--display); font-weight: 500; font-size: clamp(24px, 2.6vw, 34px); line-height: 1.08; letter-spacing: -0.01em; }
+  .story .fig { font-family: var(--display); font-weight: 300; font-size: 48px; line-height: 1; letter-spacing: -0.02em; margin-top: 8px; }
+  .story .fig small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); margin-top: 4px; letter-spacing: 0; }
+  .story .line { grid-column: 2; grid-row: 2 / span 2; font-size: 15px; color: var(--fg); line-height: 1.55; }
+  .story .src { grid-column: 1 / -1; font-size: 11.5px; color: var(--muted); }
   .hint { color: var(--muted); font-size: 13px; }
-  .roles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
+  .roles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
   .roles button { text-align: left; border: 0; background: none; padding: 12px 0 0; border-top: 1px solid var(--line); cursor: pointer; font: inherit; color: var(--fg); display: grid; gap: 2px; min-width: 0; }
   .roles button b { font-weight: 600; font-size: 14px; }
   .roles button span { font-size: 12.5px; color: var(--muted); }
   .roles button[aria-pressed="true"] b { color: var(--accent); }
 
   @media (max-width: 760px) {
-    .stage { aspect-ratio: auto; height: 78svh; border-radius: 18px; cursor: default; }
-    .row { position: absolute; inset: 0; display: flex; align-items: flex-start; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 4% 20vw 0; }
+    .stage { border-radius: 18px; padding-top: 18px; }
+    .row { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 20vw; }
     .row::-webkit-scrollbar { display: none; }
-    .person { position: relative; flex: 0 0 60vw; scroll-snap-align: center; margin: 0 -6vw; }
-    .story { left: 12px !important; right: 12px !important; width: auto; bottom: 10px; max-height: 46%; overflow: auto; }
-    .story .role { font-size: 20px; } .story .fig { font-size: 32px; }
+    .person { flex: 0 0 58vw; width: auto; margin: 0 -7vw; scroll-snap-align: center; }
+    .person.on { transform: translateY(-3%) scale(1.06); }
+    .story { padding: 16px 18px 20px; }
+    .story .inner { grid-template-columns: 1fr; gap: 6px; }
+    .story .line { grid-column: 1; grid-row: auto; font-size: 14px; }
+    .story .fig { font-size: 36px; }
     .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (prefers-reduced-motion: reduce) { .person, .story, .story .inner { transition: none; } }
@@ -70,11 +69,11 @@
           <div class="eyebrow">The people behind the connections</div>
           <h1>Our people are part of the story.</h1>
         </div>
-        <p class="lede">Ten colleagues, one group. Move across them and the one you look at comes forward with what they did for the community last year. Click to keep them there.</p>
+        <p class="lede">Six colleagues, one line. Move across them and the one you look at comes to the front with the story of what their work does for the community. Click to keep them there.</p>
       </header>
 
-      <div class="stage" id="stage" aria-label="A group of ten colleagues. Move across them, or use Tab, to bring one forward and read their story.">
-        <div class="row" id="row"></div>
+      <div class="stage" id="stage" aria-label="Six colleagues in a line. Move across them, or use Tab, to bring one to the front and read their story.">
+        <div class="row" id="row"><span class="marker" id="marker" aria-hidden="true"></span></div>
         <aside class="story" id="story" aria-live="polite"><div class="inner" id="storyInner"></div></aside>
       </div>
       <p class="hint" id="hint">Move your pointer across the group. Tab works too.</p>
