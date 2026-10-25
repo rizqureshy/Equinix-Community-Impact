@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Our People | prototype</title>
+    <meta name="description" content="Prototype for the People section: a group of colleagues where the one you look at comes forward with their story of impact." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="../brand/equinix-fortress.svg" />
+<style>
+  /* Layout: a page-wide white stage holding ten waist-up portraits in three depth rows; a story card beside whoever is in focus. */
+  :root {
+    --bg: #f6f5f2; --panel: #ffffff; --fg: #1d1d1f; --muted: #6b6861; --line: #e4e1da; --accent: #e91c24;
+    --display: 'Fraunces Variable', Georgia, serif; --body: 'Inter Tight Variable', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 36px max(16px, env(safe-area-inset-left, 0px)) 72px; display: grid; gap: 22px; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .brand img { display: block; height: 14px; width: auto; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 14px 0 6px; }
+  h1 { font-weight: 700; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; max-width: 16ch; }
+  .lede { color: var(--muted); max-width: 58ch; margin: 0; font-size: 17px; }
+
+  .stage { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.08); cursor: crosshair; }
+  .stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(to top, #fff, rgba(255,255,255,0)); pointer-events: none; z-index: 40; }
+  .person { position: absolute; border: 0; padding: 0; background: none; cursor: pointer; transform-origin: 50% 30%; will-change: transform, filter; transition: filter .5s ease, opacity .5s ease; }
+  .person img { display: block; width: 100%; height: auto; }
+  .person:focus-visible { outline: none; }
+  .person:focus-visible img { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 16px; }
+  .person .name { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(29,29,31,.75); padding: 4px 9px; border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .35s ease; }
+  .person.on .name { opacity: 1; }
+
+  .story { position: absolute; z-index: 50; bottom: 6%; width: min(380px, 42%); background: rgba(255,255,255,.86); backdrop-filter: blur(14px); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px 16px; display: grid; gap: 6px; pointer-events: none; opacity: 0; transform: translateY(10px); transition: opacity .4s ease, transform .5s cubic-bezier(.2,.7,.2,1), left .6s cubic-bezier(.2,.7,.2,1), right .6s cubic-bezier(.2,.7,.2,1); }
+  .story.show { opacity: 1; transform: none; }
+  .story .role { font-family: var(--display); font-weight: 500; font-size: 24px; line-height: 1.1; letter-spacing: -0.01em; }
+  .story .where { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .story .fig { font-family: var(--display); font-weight: 300; font-size: 40px; line-height: 1; letter-spacing: -0.02em; margin-top: 4px; }
+  .story .fig small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); margin-top: 3px; letter-spacing: 0; }
+  .story .line { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  .story .src { font-size: 11.5px; color: var(--muted); }
+  .story .pin { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .story .inner { display: grid; gap: 6px; transition: opacity .25s ease, transform .25s ease; }
+  .story.swap .inner { opacity: 0; transform: translateY(6px); }
+
+  .hint { color: var(--muted); font-size: 13px; }
+  .roles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
+  .roles button { text-align: left; border: 0; background: none; padding: 12px 0 0; border-top: 1px solid var(--line); cursor: pointer; font: inherit; color: var(--fg); display: grid; gap: 2px; min-width: 0; }
+  .roles button b { font-weight: 600; font-size: 14px; }
+  .roles button span { font-size: 12.5px; color: var(--muted); }
+  .roles button[aria-pressed="true"] b { color: var(--accent); }
+
+  @media (max-width: 760px) {
+    .stage { aspect-ratio: auto; height: 72svh; border-radius: 18px; cursor: default; }
+    .row { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 22vw; }
+    .row::-webkit-scrollbar { display: none; }
+    .person { position: relative; flex: 0 0 56vw; scroll-snap-align: center; margin: 0 -4vw; }
+    .story { left: 12px !important; right: 12px !important; width: auto; bottom: 10px; }
+    .story .role { font-size: 20px; } .story .fig { font-size: 32px; }
+    .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .person, .story, .story .inner { transition: none; } }
+</style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <div class="brand"><img src="../brand/equinix-logo-horizontal.svg" alt="Equinix" width="124" height="13" decoding="async" /></div>
+          <div class="eyebrow">The people behind the connections</div>
+          <h1>Our people are part of the story.</h1>
+        </div>
+        <p class="lede">Ten colleagues, one group. Move across them and the one you look at comes forward with what they did for the community last year. Click to keep them there.</p>
+      </header>
+
+      <div class="stage" id="stage" aria-label="A group of ten colleagues. Move across them, or use Tab, to bring one forward and read their story.">
+        <div class="row" id="row"></div>
+        <aside class="story" id="story" aria-live="polite"><div class="inner" id="storyInner"></div></aside>
+      </div>
+      <p class="hint" id="hint">Move your pointer across the group. Tab works too.</p>
+      <div class="roles" id="roles" aria-label="Choose a colleague by role"></div>
+    </div>
+    <script type="module" src="../scripts/prototypes/people.js"></script>
+  </body>
+</html>
