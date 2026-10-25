@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T19:54:58.22095Z",
+    "display_name": "GPT Image 2.5",
+    "id": "2a9edd2c-7bc0-459b-ab34-e5f8bc0b9912",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195458_2a9edd2c-7bc0-459b-ab34-e5f8bc0b9912_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "height": 688,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Product photograph of a plain red cotton T-shirt on a wooden hanger hanging on a single pale wooden peg on a plain white plaster wall, soft daylight from the left, lots of negative space, photoreal, no text, no logos.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195458_2a9edd2c-7bc0-459b-ab34-e5f8bc0b9912.png",
+    "status": "completed"
+  }
+]

@@ -2442,5 +2442,371 @@
       }
     ],
     "estimatedCredits": 52.0
+  },
+  "people-sketch": {
+    "description": "Sketch round for redesigning the People section: 12 placeholder figures and 6 kit objects, shown only in a Claude artifact until a direction is chosen. Raw PNGs stay out of git.",
+    "items": [
+      {
+        "key": "people-f01-night-electrician",
+        "generationId": "341cddc3-8f4b-435e-baf7-ad5be7e0a6ae",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:50:12.775816Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f01-night-electrician.txt",
+        "original": "media-src/people/f01-night-electrician.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195012_341cddc3-8f4b-435e-baf7-ad5be7e0a6ae.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f02-technician",
+        "generationId": "5a92464c-f5e7-45d3-a0d7-5b6b76bc3873",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:50:39.143449Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f02-technician.txt",
+        "original": "media-src/people/f02-technician.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195039_5a92464c-f5e7-45d3-a0d7-5b6b76bc3873.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f03-apprentice",
+        "generationId": "c1c69add-7768-4ea0-8a62-0b072187ebc2",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:50:57.337946Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f03-apprentice.txt",
+        "original": "media-src/people/f03-apprentice.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195057_c1c69add-7768-4ea0-8a62-0b072187ebc2.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f04-veteran-technician",
+        "generationId": "18c22269-f1af-4a9d-af95-31e4dfe767e6",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:51:23.344888Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f04-veteran-technician.txt",
+        "original": "media-src/people/f04-veteran-technician.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195123_18c22269-f1af-4a9d-af95-31e4dfe767e6.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f05-volunteer",
+        "generationId": "f6b36308-b8d4-4306-a310-3f16619bc8ef",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:51:41.177085Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f05-volunteer.txt",
+        "original": "media-src/people/f05-volunteer.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195141_f6b36308-b8d4-4306-a310-3f16619bc8ef.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f06-heat-engineer",
+        "generationId": "69c84140-c7bc-4873-851b-fca49751f7bc",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:52:07.268178Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f06-heat-engineer.txt",
+        "original": "media-src/people/f06-heat-engineer.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195207_69c84140-c7bc-4873-851b-fca49751f7bc.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f07-tour-guide",
+        "generationId": "e69bdbc2-d5f2-4817-a33d-f6d8971d5cad",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:52:25.503683Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f07-tour-guide.txt",
+        "original": "media-src/people/f07-tour-guide.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195225_e69bdbc2-d5f2-4817-a33d-f6d8971d5cad.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f08-account-colleague",
+        "generationId": "bb49388a-a32f-43c6-9705-5731fa604309",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:52:43.682339Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f08-account-colleague.txt",
+        "original": "media-src/people/f08-account-colleague.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195243_bb49388a-a32f-43c6-9705-5731fa604309.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f09-network-engineer",
+        "generationId": "1165271b-20d7-4269-ad43-1b88cdd2280a",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:53:02.50151Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f09-network-engineer.txt",
+        "original": "media-src/people/f09-network-engineer.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195302_1165271b-20d7-4269-ad43-1b88cdd2280a.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f10-security-officer",
+        "generationId": "aab61d09-4a7e-4690-ac0b-7eb51f051dd6",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:53:29.502345Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f10-security-officer.txt",
+        "original": "media-src/people/f10-security-officer.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195329_aab61d09-4a7e-4690-ac0b-7eb51f051dd6.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f11-cooling-engineer",
+        "generationId": "f7759b7f-9927-4276-a445-bc59cb73f74c",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:53:55.360385Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f11-cooling-engineer.txt",
+        "original": "media-src/people/f11-cooling-engineer.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195355_f7759b7f-9927-4276-a445-bc59cb73f74c.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-f12-energy-manager",
+        "generationId": "16ca435f-8e1d-4d5a-a619-f57392403b8f",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:54:13.729104Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/f12-energy-manager.txt",
+        "original": "media-src/people/f12-energy-manager.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195413_16ca435f-8e1d-4d5a-a619-f57392403b8f.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): a full-length figure for the Standing together line-up; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k01-hivis",
+        "generationId": "e66c679e-87ef-4fe6-83de-ece794c8729f",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:54:31.880412Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k01-hivis.txt",
+        "original": "media-src/people/k01-hivis.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195431_e66c679e-87ef-4fe6-83de-ece794c8729f.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k02-red-tshirt",
+        "generationId": "2a9edd2c-7bc0-459b-ab34-e5f8bc0b9912",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:54:58.22095Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k02-red-tshirt.txt",
+        "original": "media-src/people/k02-red-tshirt.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195458_2a9edd2c-7bc0-459b-ab34-e5f8bc0b9912.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k03-hard-hat",
+        "generationId": "0a3b1154-42e4-47c6-a04d-7fd08c1ca471",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:55:15.907827Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k03-hard-hat.txt",
+        "original": "media-src/people/k03-hard-hat.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195515_0a3b1154-42e4-47c6-a04d-7fd08c1ca471.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k04-lanyard",
+        "generationId": "8f4bdcba-2140-4569-b144-5180f45ddc04",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:55:34.213536Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k04-lanyard.txt",
+        "original": "media-src/people/k04-lanyard.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195534_8f4bdcba-2140-4569-b144-5180f45ddc04.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k05-parka",
+        "generationId": "4f07386f-865d-4826-af3e-56c75677513a",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:55:59.726584Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k05-parka.txt",
+        "original": "media-src/people/k05-parka.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195559_4f07386f-865d-4826-af3e-56c75677513a.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      },
+      {
+        "key": "people-k06-headset",
+        "generationId": "ea4064a9-2e00-4297-8f54-295e5581bad8",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T19:56:18.042011Z",
+        "settings": {
+          "aspect_ratio": "3:2",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/k06-headset.txt",
+        "original": "media-src/people/k06-headset.png",
+        "web": null,
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195618_ea4064a9-2e00-4297-8f54-295e5581bad8.png",
+        "estimatedCredits": 1.5,
+        "status": "sketch",
+        "usage": "People section sketches (Claude artifact \"Our People Sketches\"): an object on the kit wall; not on the site",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Illustrative only; not real colleagues."
+      }
+    ],
+    "estimatedCredits": 27.0
   }
 }

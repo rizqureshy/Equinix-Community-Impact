@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T19:50:12.775816Z",
+    "display_name": "GPT Image 2.5",
+    "id": "341cddc3-8f4b-435e-baf7-ad5be7e0a6ae",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195012_341cddc3-8f4b-435e-baf7-ad5be7e0a6ae_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a woman in her forties, electrical technician, high-visibility vest over a navy work shirt, work trousers and boots, white hard hat held under one arm.\n\nFull-length studio photograph of one person standing and facing the camera, relaxed and friendly, feet visible, plain seamless pure white background, soft even daylight, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195012_341cddc3-8f4b-435e-baf7-ad5be7e0a6ae.png",
+    "status": "completed"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T19:53:29.502345Z",
+    "display_name": "GPT Image 2.5",
+    "id": "aab61d09-4a7e-4690-ac0b-7eb51f051dd6",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195329_aab61d09-4a7e-4690-ac0b-7eb51f051dd6_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a woman in her forties, security officer, plain dark uniform shirt and trousers, radio clipped at the shoulder.\n\nFull-length studio photograph of one person standing and facing the camera, relaxed and friendly, feet visible, plain seamless pure white background, soft even daylight, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_195329_aab61d09-4a7e-4690-ac0b-7eb51f051dd6.png",
+    "status": "completed"
+  }
+]
