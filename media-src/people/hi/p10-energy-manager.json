@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T22:46:04.353261Z",
+    "display_name": "GPT Image 2.5",
+    "id": "2c4e60fb-e03c-48b8-8ded-f2bfa66b96e8",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224604_2c4e60fb-e03c-48b8-8ded-f2bfa66b96e8_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 2048,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a Latina woman in her fifties with a fuller figure and silver-streaked hair, energy manager, high-visibility jacket open over a white shirt, safety glasses in hand.\n\nStudio portrait of one person facing the camera with a warm, genuine smile and direct eye contact, shoulders relaxed, framed from just below the waist to above the head with generous space around them: both shoulders, both arms and both elbows fully inside the frame, clear plain white margin on the left, right and top, the person centred and filling about two thirds of the frame width. Plain seamless pure white background, soft even daylight from the front left, crisp focus on the face, very high detail, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 1360
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224604_2c4e60fb-e03c-48b8-8ded-f2bfa66b96e8.png",
+    "status": "completed"
+  }
+]

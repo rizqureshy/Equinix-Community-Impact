@@ -154,9 +154,8 @@ function applyTheme() {
   nodes.forEach(drawCard);
   document.getElementById('theme').textContent = dark() ? 'Day' : 'Night';
 }
-if (!root.dataset.theme) root.dataset.theme = 'dark'; // The universe opens at night; Day is one tap away.
+if (!root.dataset.theme) root.dataset.theme = 'light'; // The Spine opens in daylight, like the rest of the site; Night is one tap away.
 applyTheme();
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 document.getElementById('theme').addEventListener('click', () => { root.dataset.theme = dark() ? 'light' : 'dark'; applyTheme(); });
 
 // Music for the tour.
@@ -221,6 +220,7 @@ document.getElementById('leaveEnd').addEventListener('click', () => { if (embedd
 function beginFromParent() { preview = false; document.body.classList.remove('preview'); endFinale(false); unfocus(false); mapMode = false; target = 0; t = 0; camPos.copy(curve.getPointAt(0)).add(new T.Vector3(-1.6, 2.4, 6)); camLook.copy(curve.getPointAt(0.02)).add(new T.Vector3(0, 1.6, 0)); startTour(); }
 function quietForParent() { stopTour(); endFinale(false); unfocus(false); mapMode = false; preview = true; document.body.classList.add('preview'); target = 0; t = 0; }
 window.addEventListener('message', (e) => { const d = e.data || {}; if (d.type === 'spine:start') beginFromParent(); if (d.type === 'spine:preview') quietForParent(); });
+window.__spine = { renderer, scene, camera, get preview() { return preview; }, get t() { return t; } }; // for the browser checks
 const leaveBtn = document.getElementById('leave'); if (leaveBtn) leaveBtn.addEventListener('click', () => { window.parent.postMessage({ type: 'spine:leave' }, '*'); });
 
 // Pointer: scroll and drag travel, click opens a card.
@@ -251,7 +251,7 @@ const camPos = new T.Vector3(), camLook = new T.Vector3(), tmp = new T.Vector3()
 const mapPos = curve.getPointAt(0.5).clone().add(new T.Vector3(-90, 110, 150)), mapLook = curve.getPointAt(0.5);
 let last = performance.now(), clock = 0;
 function frame(now) {
-  const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
+  const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now; clock += dt; // never negative: inside an iframe the first frame's clock can read earlier than the script's start
   if (touring) { target = clamp(target + dt * 0.0085); if (target >= 1) stopTour(); }
   const ease = (k) => (reduce ? 1 : 1 - Math.exp(-dt * k));
   t += (target - t) * ease(2.4);

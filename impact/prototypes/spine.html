@@ -10,14 +10,11 @@
 <style>
   /* Layout: a full-screen ride along a ribbon of time; HUD pinned to the edges; one plaque that slides in when a milestone is reached. */
   :root {
-    --bg: #f4f3ef; --fg: #1b1a18; --muted: #6b6861; --panel: rgba(255,255,255,0.82); --line: rgba(27,26,24,0.12);
+    --bg: #ffffff; --fg: #1b1a18; --muted: #6b6861; --panel: rgba(255,255,255,0.82); --line: rgba(27,26,24,0.12);
     --accent: #e91c24;
     --planet: #2e8b57; --connect: #2f6fd3; --community: #e3832b; --alwayson: #7c7768;
     --glow: 0.55;
     --display: 'Fraunces Variable', Georgia, serif; --body: 'Inter Tight Variable', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #e91c24; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
   }
   :root[data-theme="dark"] { --bg: #07090f; --fg: #eef0f4; --muted: #9aa0ad; --panel: rgba(14,18,28,0.78); --line: rgba(238,240,244,0.14); --accent: #e91c24; --planet: #5fd49a; --connect: #74a6ff; --community: #ffb067; --alwayson: #b7b2a6; --glow: 1; color-scheme: dark; }
   html, body { height: 100%; }

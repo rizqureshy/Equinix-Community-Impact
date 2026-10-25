@@ -17,18 +17,21 @@ for j in sorted((root / 'media-src/spine').glob('*.json')):
         'usage': ('Full-screen finale image for the five promises on the Spine of Impact prototype' if k.endswith('-wide') else f'Card image for the "{k}" milestone on the Spine of Impact prototype (prototypes/spine.html); shown on the 3D card and in the story panel'),
         'provenance': 'AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026. Illustrative only; not the places, people or events named.',
     })
-film = root / 'media-src/spine/film/dive.json'
-if film.exists() and film.stat().st_size and (root / 'media-src/spine/film/dive.mp4').exists():
+def film_entry(folder, key, status, usage, day):
+    film = root / f'media-src/spine/film/{folder}dive.json'
+    if not (film.exists() and film.stat().st_size and (root / f'media-src/spine/film/{folder}dive.mp4').exists()): return None
     d = load(film)
-    items.append({
-        'key': 'spine-dive-film', 'generationId': d.get('id'), 'model': d.get('display_name', 'Kling O3 FLF'), 'jobType': d.get('job_type', 'kling_o3_flf'), 'createdAt': d.get('created_at'),
-        'settings': {'duration': 8, 'mode': 'pro', 'sound': 'off', 'aspect_ratio': '16:9'}, 'promptFile': 'media-src/spine/film/dive.txt',
-        'inputs': ['media-src/spine/film/far.png (render of the Spine in preview mode)', 'media-src/spine/film/near.png (render of the first frame of the ride)'],
-        'original': 'media-src/spine/film/dive.mp4', 'web': 'impact/public/media/spine/dive.{mp4,webm}', 'resultUrl': d.get('result_url'),
-        'estimatedCredits': 10, 'status': 'selected',
-        'usage': 'Dive film on the promises section: plays over the canvas when the visitor presses Begin, then the Spine takes over',
-        'provenance': 'AI generated with Higgsfield via the Higgsfield CLI on 24 October 2026 from two renders of the site\'s own scene. Illustrative only.',
-    })
+    return {
+        'key': key, 'generationId': d.get('id'), 'model': d.get('display_name', 'Kling O3 FLF'), 'jobType': d.get('job_type', 'kling_o3_flf'), 'createdAt': d.get('created_at'),
+        'settings': {'duration': 8, 'mode': 'pro', 'sound': 'off', 'aspect_ratio': '16:9'}, 'promptFile': f'media-src/spine/film/{folder}dive.txt',
+        'inputs': [f'media-src/spine/film/far.png (render of the Spine in preview mode, {"daylight" if day else "night"} theme)', f'media-src/spine/film/near.png (render of the first frame of the ride, {"daylight" if day else "night"} theme)'],
+        'original': f'media-src/spine/film/{folder}dive.mp4', 'web': 'impact/public/media/spine/dive.{mp4,webm}' if day else '(replaced)', 'resultUrl': d.get('result_url'),
+        'estimatedCredits': 10, 'status': status, 'usage': usage,
+        'provenance': f'AI generated with Higgsfield via the Higgsfield CLI on {"25" if day else "24"} October 2026 from two renders of the site\'s own scene. Illustrative only.',
+    }
+for e in (film_entry('night/', 'spine-dive-film-night', 'superseded by the daylight film', 'First dive film, made when the Spine opened at night; replaced when the Spine moved to the site\'s white theme', False),
+          film_entry('', 'spine-dive-film', 'selected', 'Dive film on the promises section: plays over the white canvas when the visitor presses Begin, then the Spine takes over', True)):
+    if e: items.append(e)
 m['spine'] = {'description': 'Spine of Impact prototype: one illustrative still per milestone, composed onto 3D cards with a caption. Raw PNGs stay out of git; WebP copies live in impact/public/media/spine.', 'items': items, 'estimatedCredits': round(sum(i['estimatedCredits'] for i in items), 2)}
 mp.write_text(json.dumps(m, indent=2) + '\n')
 print(len(items), 'entries,', m['spine']['estimatedCredits'], 'credits')

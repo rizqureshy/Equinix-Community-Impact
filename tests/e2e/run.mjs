@@ -241,6 +241,12 @@ try {
     begin: !!document.querySelector('#spine-begin'),
   }));
   check(spineIdle.state === 'idle' && /prototypes\/spine\.html\?mode=preview/.test(spineIdle.embed) && spineIdle.tiles === 5 && spineIdle.begin, 'the promises section holds the Spine canvas and five promise tiles', JSON.stringify(spineIdle));
+  // The embedded Spine really draws: render a frame and count ribbon-red pixels on the white canvas; the camera sits on its preview orbit
+  let spineFrameDoc = null; // the iframe loads lazily: wait for it and for its scene
+  for (let i = 0; i < 80 && !spineFrameDoc; i++) { spineFrameDoc = p.frames().find((f) => f.url().includes('spine.html')) || null; if (spineFrameDoc && !(await spineFrameDoc.evaluate(() => !!window.__spine).catch(() => false))) spineFrameDoc = null; if (!spineFrameDoc) await wait(250); }
+  await wait(2000);
+  const drawn = spineFrameDoc ? await spineFrameDoc.evaluate(() => new Promise((res) => requestAnimationFrame(() => { const { renderer, scene, camera } = window.__spine; renderer.render(scene, camera); const g = renderer.getContext(); const w = g.drawingBufferWidth, h = g.drawingBufferHeight; const px = new Uint8Array(w * h * 4); g.readPixels(0, 0, w, h, g.RGBA, g.UNSIGNED_BYTE, px); let red = 0, white = 0; for (let i = 0; i < px.length; i += 4) { if (px[i] > 180 && px[i + 1] < 90 && px[i + 2] < 90) red++; else if (px[i] > 245 && px[i + 1] > 245 && px[i + 2] > 245) white++; } res({ red, whiteShare: +(white / (w * h)).toFixed(2), dist: Math.round(camera.position.length()) }); }))).catch((e) => ({ err: String(e) })) : { err: 'no frame' };
+  check(drawn.red > 200 && drawn.whiteShare > 0.5 && drawn.dist < 600, 'the embedded Spine draws its red ribbon on a white canvas', JSON.stringify(drawn));
   await p.locator('#spine-begin').dispatchEvent('click');
   await wait(800);
   const spineOpen = await p.evaluate(() => ({ state: document.querySelector('#spine-frame').dataset.state, open: document.body.classList.contains('spine-open') }));
@@ -258,12 +264,12 @@ try {
   check(line.count === 6 && line.inside, 'the people line holds six colleagues and nobody is cut off at the edges', JSON.stringify(line));
   await p.locator('.person').first().dispatchEvent('click');
   await wait(1800);
-  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-story').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
+  await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
   const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], textOpen: !!t && c.querySelector('.text').offsetHeight > 120, below: r.top >= s.bottom - 1, fits: r.left >= 0 && r.right <= innerWidth }; });
   check(story.open && story.active === 0 && story.role === 'Operations' && story.textOpen && story.below && story.fits, 'the first colleague opens with the whole story in the panel beneath the line', JSON.stringify(story));
   await p.locator('.person').last().dispatchEvent('click');
   await wait(1800);
-  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-story').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
+  await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
   const lastOne = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'); const ps = [...document.querySelectorAll('.person')].map((b) => b.getBoundingClientRect()); return { active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], below: c.getBoundingClientRect().top >= s.bottom - 1, peopleInside: ps.every((b) => b.left >= s.left - 1 && b.right <= s.right + 1) }; });
   check(lastOne.active === 5 && lastOne.role === 'WeGive' && lastOne.below && lastOne.peopleInside, 'choosing the last colleague changes the panel and keeps everyone on the stage', JSON.stringify(lastOne));
 

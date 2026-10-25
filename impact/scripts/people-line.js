@@ -14,7 +14,7 @@ export const CAST = [
   { img: 'p08-volunteer', role: 'WeGive volunteer', where: 'Impact Month, every metro', head: 'Time given where we live', fig: '54,400+', figl: 'volunteer hours in 2025, up 45% on the year', story: '28 WeAreEquinix teams chose and backed 31 local nonprofits with $280,000 in funding, and Impact Month reached more than 40 locations, from an emergency food drive in Secaucus to classroom sessions in Mumbai. When colleagues themselves are hit by disaster, the Employee Relief Fund made 19 grants in 2025.', src: '2025 Sustainability Report' },
 ];
 
-const WIDTH = 21; // percent of the row for one portrait; six of them, overlapping, fit inside the row
+const WIDTH = 22; // percent of the row for one portrait; six of them, overlapping, fit inside the row
 const PAD = 6; // px kept clear between the outermost portraits and the stage edge
 
 /**
@@ -32,7 +32,7 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   const people = CAST.map((c, i) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'person'; b.setAttribute('aria-label', `${c.role}. ${c.head}.`);
     b.style.width = `${WIDTH}%`;
-    const im = document.createElement('img'); im.src = `${media}people/${c.img}.webp`; im.alt = ''; im.decoding = 'async'; im.loading = 'lazy'; im.width = 605; im.height = 900;
+    const im = document.createElement('img'); im.src = `${media}people/${c.img}.webp`; im.alt = ''; im.decoding = 'async'; im.loading = 'lazy'; im.width = 933; im.height = 1400;
     b.appendChild(im); row.appendChild(b);
     b.addEventListener('mouseenter', () => { idle = false; if (pinned === null) setActive(i); });
     b.addEventListener('focus', () => { idle = false; setActive(i); });
@@ -91,7 +91,7 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   let last = performance.now(), drift = 0;
   function frame(now) {
     if (!running) return;
-    const dt = Math.min(0.05, (now - last) / 1000); last = now; const k = reduce() ? 1 : 1 - Math.exp(-dt * 7);
+    const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now; const k = reduce() ? 1 : 1 - Math.exp(-dt * 7);
     if (idle && visible && !narrow()) { idleTimer += dt; if (idleTimer > 5) { idleTimer = 0; const next = active === null ? 0 : (active + 1) % people.length; setActive(next); } }
     let tDrift = 0;
     if (active !== null && !narrow()) {
