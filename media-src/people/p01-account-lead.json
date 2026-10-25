@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T20:07:44.710529Z",
+    "display_name": "GPT Image 2.5",
+    "id": "509e60ad-658d-4442-8bac-7efa934a89fd",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200744_509e60ad-658d-4442-8bac-7efa934a89fd_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a Black woman in her thirties with natural curly hair, customer account lead, emerald green satin blouse, arms lightly crossed.\n\nWaist-up studio portrait of one person facing the camera with a warm, genuine smile and direct eye contact, shoulders relaxed, plain seamless pure white background, soft even daylight from the front left, crisp focus on the face, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200744_509e60ad-658d-4442-8bac-7efa934a89fd.png",
+    "status": "completed"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T20:09:52.120619Z",
+    "display_name": "GPT Image 2.5",
+    "id": "3f5a1853-9778-4b36-ae1a-10f2b6f35fec",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200952_3f5a1853-9778-4b36-ae1a-10f2b6f35fec_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a white man in his sixties with grey hair and a visible hearing aid, cooling plant engineer, grey overalls with sleeves rolled.\n\nWaist-up studio portrait of one person facing the camera with a warm, genuine smile and direct eye contact, shoulders relaxed, plain seamless pure white background, soft even daylight from the front left, crisp focus on the face, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200952_3f5a1853-9778-4b36-ae1a-10f2b6f35fec.png",
+    "status": "completed"
+  }
+]

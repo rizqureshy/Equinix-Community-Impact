@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-25T20:11:11.615337Z",
+    "display_name": "GPT Image 2.5",
+    "id": "79cd902c-dddb-4577-bcac-fd3fb49f23df",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201111_79cd902c-dddb-4577-bcac-fd3fb49f23df_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [],
+      "model": "flare",
+      "prompt": "Subject: a Pacific Islander man in his thirties with a broad build, security officer, plain dark uniform shirt with a radio clipped at the shoulder.\n\nWaist-up studio portrait of one person facing the camera with a warm, genuine smile and direct eye contact, shoulders relaxed, plain seamless pure white background, soft even daylight from the front left, crisp focus on the face, photoreal, editorial, no text, no logos, no badges with words.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201111_79cd902c-dddb-4577-bcac-fd3fb49f23df.png",
+    "status": "completed"
+  }
+]

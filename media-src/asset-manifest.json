@@ -2808,5 +2808,211 @@
       }
     ],
     "estimatedCredits": 27.0
+  },
+  "people": {
+    "description": "People prototype: ten waist-up portraits of an inclusive cast on studio white, each a stand-in for a real colleague. Raw PNGs stay out of git.",
+    "items": [
+      {
+        "key": "people-p01-account-lead",
+        "generationId": "509e60ad-658d-4442-8bac-7efa934a89fd",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:07:44.710529Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p01-account-lead.txt",
+        "original": "media-src/people/p01-account-lead.png",
+        "web": "impact/public/media/people/p01-account-lead.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200744_509e60ad-658d-4442-8bac-7efa934a89fd.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p02-night-electrician",
+        "generationId": "9ec48ffd-653a-4635-9ce5-ea9a261c76b4",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:08:11.433182Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p02-night-electrician.txt",
+        "original": "media-src/people/p02-night-electrician.png",
+        "web": "impact/public/media/people/p02-night-electrician.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200811_9ec48ffd-653a-4635-9ce5-ea9a261c76b4.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p03-technician",
+        "generationId": "cc83e241-7d6e-4598-ad2f-29d61c04b8ce",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:08:30.555963Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p03-technician.txt",
+        "original": "media-src/people/p03-technician.png",
+        "web": "impact/public/media/people/p03-technician.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200830_cc83e241-7d6e-4598-ad2f-29d61c04b8ce.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p04-tour-guide",
+        "generationId": "8debfb4d-fca2-4b8f-a3c9-f5658fc96677",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:08:57.334309Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p04-tour-guide.txt",
+        "original": "media-src/people/p04-tour-guide.png",
+        "web": "impact/public/media/people/p04-tour-guide.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200857_8debfb4d-fca2-4b8f-a3c9-f5658fc96677.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p05-heat-engineer",
+        "generationId": "bf1cded6-4a33-4c82-b4d4-0b0d12648ae8",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:09:25.761971Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p05-heat-engineer.txt",
+        "original": "media-src/people/p05-heat-engineer.png",
+        "web": "impact/public/media/people/p05-heat-engineer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200925_bf1cded6-4a33-4c82-b4d4-0b0d12648ae8.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p06-cooling-engineer",
+        "generationId": "3f5a1853-9778-4b36-ae1a-10f2b6f35fec",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:09:52.120619Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p06-cooling-engineer.txt",
+        "original": "media-src/people/p06-cooling-engineer.png",
+        "web": "impact/public/media/people/p06-cooling-engineer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_200952_3f5a1853-9778-4b36-ae1a-10f2b6f35fec.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p07-network-engineer",
+        "generationId": "67895cc6-d2c3-4575-b3e7-f93fa521a2a8",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:10:18.652658Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p07-network-engineer.txt",
+        "original": "media-src/people/p07-network-engineer.png",
+        "web": "impact/public/media/people/p07-network-engineer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201018_67895cc6-d2c3-4575-b3e7-f93fa521a2a8.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p08-volunteer",
+        "generationId": "eef37671-a0c2-46f9-a77f-1922e8cd3d79",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:10:45.377009Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p08-volunteer.txt",
+        "original": "media-src/people/p08-volunteer.png",
+        "web": "impact/public/media/people/p08-volunteer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201045_eef37671-a0c2-46f9-a77f-1922e8cd3d79.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p09-security-officer",
+        "generationId": "79cd902c-dddb-4577-bcac-fd3fb49f23df",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:11:11.615337Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p09-security-officer.txt",
+        "original": "media-src/people/p09-security-officer.png",
+        "web": "impact/public/media/people/p09-security-officer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201111_79cd902c-dddb-4577-bcac-fd3fb49f23df.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p10-energy-manager",
+        "generationId": "48b71a83-f41c-496c-ac90-4161c0dfb48d",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-25T20:11:37.955339Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k"
+        },
+        "promptFile": "media-src/people/p10-energy-manager.txt",
+        "original": "media-src/people/p10-energy-manager.png",
+        "web": "impact/public/media/people/p10-energy-manager.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_201137_48b71a83-f41c-496c-ac90-4161c0dfb48d.png",
+        "estimatedCredits": 1.5,
+        "status": "selected",
+        "usage": "Waist-up portrait on the People prototype (prototypes/people.html), a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      }
+    ],
+    "estimatedCredits": 15.0
   }
 }
