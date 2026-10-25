@@ -10,6 +10,7 @@ import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
 import { createSunlight } from './weather.js';
 import { createRoom } from './room.js';
+import { createPeopleLine } from './people-line.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -731,8 +732,12 @@ applyRoute(parseHash(location.hash), { initial: true });
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
 // Exposed for automated checks only.
+// The people line: six colleagues, the one you look at steps forward with their story
+const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motion: () => store.get().motion });
+
 window.__impact = {
   store,
+  people: peopleLine,
   get lenis() {
     return lenis;
   },

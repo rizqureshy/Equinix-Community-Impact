@@ -19,10 +19,12 @@
         document.documentElement.dataset.fabric = fabric || 'on';
       })();
     </script>
-    <script type="module" crossorigin src="./assets/main-CeoiDsrg.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/three.module-C1wdK7se.js">
+    <script type="module" crossorigin src="./assets/main-CmGAgqz9.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/fraunces-DWlEEPyC.js">
     <link rel="modulepreload" crossorigin href="./assets/stories-PkbF1guy.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-BpLehpxn.css">
+    <link rel="modulepreload" crossorigin href="./assets/people-line-6xg0SjXL.js">
+    <link rel="stylesheet" crossorigin href="./assets/fraunces-DSnAaPJU.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-MKIaqkih.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -344,28 +346,18 @@
         <div class="wrap center" data-reveal>
           <p class="eyebrow">The people behind the connections</p>
           <h2 class="title" id="people-title">Our people are part of the story.</h2>
+          <p class="lede">Six colleagues, one line. Move across them and the one you look at comes to the front with the story of what their work does for the community. Click to keep them there.</p>
         </div>
-        <div class="wrap people-grid">
-          <figure class="frame people-frame" data-reveal>
-            <video class="film" muted playsinline loop preload="none" poster="media/clip-people-poster.jpg" aria-label="An operations engineer walks along a daylit corridor beside a planted courtyard.">
-              <source src="media/clip-people.webm" type="video/webm" />
-              <source src="media/clip-people.mp4" type="video/mp4" />
-            </video>
-          </figure>
-          <div class="people-copy" data-reveal>
-            <blockquote class="pull-quote">
-              <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
-              <footer class="note">Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
-            </blockquote>
-            <ul class="roles-list">
-              <li><h3>Operations teams</h3><p class="muted">Experts in electrical systems, cooling and network engineering who keep facilities running every hour of every day.</p></li>
-              <li><h3>Customer and CRO teams</h3><p class="muted">The colleagues who work alongside customers such as 3verest and Children&rsquo;s Cancer Institute, and who carry these stories into every conversation.</p></li>
-              <li><h3>Heat export engineers</h3><p class="muted">The people who turn waste heat into warm water for neighbours in Paris, Helsinki and Markham.</p></li>
-              <li><h3>Volunteers and ambassadors</h3><p class="muted">More than 4,600 colleagues volunteered in 2025, from Pathways to Tech tours to WeGive teams choosing local causes.</p></li>
-            </ul>
-            <p class="people-story"><strong>Kayla&rsquo;s path.</strong> A Pathways to Tech tour sparked her interest. An IBX internship followed within months. Today she is a full-time Equinix Data Center Technician in Chicago. <a class="btn btn--link btn--small" href="#/story/pathways-to-tech" data-story-trigger="pathways-to-tech">Read the Pathways story</a></p>
-          </div>
+        <div class="people-stage" id="people-stage" aria-label="Six colleagues in a line. Move across them, or use Tab, to bring one to the front and read their story.">
+          <div class="people-row"></div>
+          <aside class="people-card" aria-live="polite"></aside>
         </div>
+        <p class="people-hint">Move your pointer across the group, or wait and they will take turns.</p>
+        <div class="people-roles" aria-label="Choose a colleague by role"></div>
+        <blockquote class="people-quote">
+          <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
+          <footer class="note">Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
+        </blockquote>
       </section>
 
       <!-- Training and resources -->

@@ -930,53 +930,27 @@ body.spine-open .weather-light {
 /* ---- People ------------------------------------------------------------------------ */
 .people {
   padding: var(--s-9) 0;
+  overflow-x: clip;
 }
-.people-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: var(--s-8);
-  align-items: start;
-  margin-top: var(--s-8);
+.people .lede {
+  max-width: 44rem;
 }
-.people-frame {
-  position: sticky;
-  top: calc(var(--header-h) + 32px);
-}
-.people-frame .film {
-  aspect-ratio: 4 / 5;
-}
-.pull-quote {
-  margin: 0;
-}
-.pull-quote p {
-  font-size: var(--t-xl);
-  line-height: 1.12;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-}
-.pull-quote footer {
-  margin-top: var(--s-4);
-}
-.roles-list {
-  display: grid;
-  gap: var(--s-5);
-  margin: var(--s-7) 0 0;
-  padding: 0;
-  list-style: none;
-}
-.roles-list li {
-  padding-top: var(--s-4);
+.people-quote {
+  width: min(1320px, calc(100% - 2 * var(--gutter)));
+  margin: var(--s-7) auto 0;
+  padding-top: var(--s-5);
   border-top: 1px solid var(--line);
 }
-.roles-list h3 {
-  font-size: var(--t-md);
-  margin-bottom: 4px;
+.people-quote p {
+  margin: 0;
+  font-size: var(--t-lg);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 560;
+  max-width: 40rem;
 }
-.people-story {
-  margin-top: var(--s-7);
-  padding: var(--s-5);
-  border-radius: var(--radius-lg);
-  background: var(--bg-soft);
+.people-quote footer {
+  margin-top: var(--s-3);
 }
 
 /* ---- Training and resources -------------------------------------------- */
@@ -1419,12 +1393,8 @@ body.spine-open .weather-light {
     grid-template-columns: 1fr 1fr;
   }
   .chapter-grid,
-  .people-grid,
   .progress-grid {
     grid-template-columns: 1fr;
-  }
-  .people-frame {
-    position: static;
   }
 }
 @media (max-width: 760px) {
