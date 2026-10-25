@@ -23,3 +23,5 @@ media-src/spine/*.png
 media-src/spine/film/*.png
 media-src/spine/film/*.mp4
 media-src/people/*.png
+# Empty stderr captures from the Higgsfield CLI
+media-src/**/*.err
