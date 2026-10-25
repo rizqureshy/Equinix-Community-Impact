@@ -18,12 +18,13 @@ const WIDTH = 21; // percent of the row for one portrait; six of them, overlappi
 const PAD = 6; // px kept clear between the outermost portraits and the stage edge
 
 /**
- * Build the line inside `stage` (which holds `.people-row`, `.people-card`, `.people-roles`, `.people-hint`).
+ * Build the line inside `stage` (which holds `.people-row`); the story panel `.people-story`, the roles
+ * `.people-roles` and the hint `.people-hint` are its siblings.
  * `media` is the path to the media folder from the page; `motion()` says whether to animate.
  */
 export function createPeopleLine(stage, { media = 'media/', motion = () => true } = {}) {
-  const row = stage.querySelector('.people-row'), card = stage.querySelector('.people-card');
-  const roles = stage.parentElement.querySelector('.people-roles'), hint = stage.parentElement.querySelector('.people-hint');
+  const row = stage.querySelector('.people-row'), host = stage.parentElement;
+  const card = host.querySelector('.people-story'), roles = host.querySelector('.people-roles'), hint = host.querySelector('.people-hint');
   const narrow = () => matchMedia('(max-width: 760px)').matches;
   const reduce = () => !motion();
   let active = null, pinned = null, open = false, idle = true, idleTimer = 0, cardTimer = null, speaking = null, visible = false, running = false, voiceChecked = false;
@@ -53,50 +54,37 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   }
   function renderCard(i) {
     const c = CAST[i];
-    card.innerHTML = `<div class="where">${c.role} · ${c.where}</div><div class="head">${c.head}</div><div class="fig">${c.fig}<small>${c.figl}</small></div><div class="more"><p class="story-text">${c.story}</p><p class="src">${c.src}</p></div><div class="actions"><button type="button" class="read" data-read>${open ? 'Close' : 'Read their story'}</button><button type="button" class="play" data-play aria-label="Listen"><i></i>Listen</button></div>`;
+    card.innerHTML = `<div class="who"><div class="where">${c.role} \u00b7 ${c.where}</div><h3 class="head">${c.head}</h3></div><div class="fig">${c.fig}<small>${c.figl}</small></div><div class="tale"><div class="text"><p class="story-text">${c.story}</p><p class="src">${c.src}</p></div><div class="actions"><button type="button" class="read" data-read>${open ? 'Close' : 'Read their story'}</button><button type="button" class="play" data-play aria-label="Listen"><i></i>Listen</button></div></div>`;
     card.querySelector('[data-read]').addEventListener('click', (e) => { e.stopPropagation(); pinned = i; setOpen(!open); });
     card.querySelector('[data-play]').addEventListener('click', (e) => { e.stopPropagation(); pinned = i; setOpen(true); speaking ? stopVoice() : speak(i); });
+    sizeText();
   }
-  // The card sits beside the face, on the emptier side, and always inside the stage
-  function placeCard(i) {
-    if (narrow()) { card.style.left = ''; card.style.right = ''; card.style.top = ''; return; }
-    const r = stage.getBoundingClientRect(), b = people[i].el.getBoundingClientRect();
-    const cx = (b.left + b.width / 2 - r.left) / r.width; const onLeft = cx > 0.5;
-    const edge = onLeft ? (b.left - r.left) / r.width : (b.right - r.left) / r.width;
-    card.classList.toggle('on-left', onLeft);
-    if (onLeft) { card.style.left = `max(2%, ${(edge * 100 - 2).toFixed(1)}% - var(--cardw))`; card.style.right = 'auto'; }
-    else { card.style.left = `min(${(edge * 100 + 1).toFixed(1)}%, calc(98% - var(--cardw)))`; card.style.right = 'auto'; }
-    // The whole story's height is measured with the block unclamped, then the clamp animates to it
-    const more = card.querySelector('.more'); let grow = 0;
-    if (more) { const was = more.style.maxHeight; more.style.maxHeight = 'none'; const fullMore = more.offsetHeight; more.style.maxHeight = was || '0px'; void more.offsetHeight; const to = open ? fullMore : 0; grow = Math.max(0, to - more.offsetHeight); more.style.maxHeight = `${to}px`; }
-    const full = card.offsetHeight + grow;
-    const want = Math.max(3, (b.top - r.top) / r.height * 100 + 6); const maxTop = Math.max(2, (r.height - full - 14) / r.height * 100);
-    card.style.top = `${Math.min(want, maxTop).toFixed(1)}%`;
+  // The story shows three lines; opening it lets the text grow to its full height
+  function sizeText() {
+    const t = card.querySelector('.text'); if (!t) return;
+    if (open) { t.style.maxHeight = 'none'; const h = t.scrollHeight; t.style.maxHeight = ''; void t.offsetHeight; t.style.maxHeight = `${h}px`; }
+    else t.style.maxHeight = '';
   }
   function setActive(i, force) {
     if (i === active && !force) return;
     if (i !== active) { stopVoice(); if (!force) { open = false; } }
     active = i;
     people.forEach((p, j) => { p.el.classList.toggle('on', j === i); p.role.setAttribute('aria-pressed', String(j === i)); });
-    if (i === null) { card.classList.remove('show', 'open'); return; }
+    if (i === null) return; // the panel keeps the last story until the next person is chosen
     card.classList.add('swap'); clearTimeout(cardTimer);
-    cardTimer = setTimeout(() => { renderCard(i); placeCard(i); card.classList.remove('swap'); card.classList.toggle('open', open); card.classList.toggle('no-voice', !people[i].voice); }, reduce() ? 0 : 180);
+    cardTimer = setTimeout(() => { card.classList.toggle('open', open); renderCard(i); card.classList.remove('swap'); card.classList.toggle('no-voice', !people[i].voice); }, reduce() ? 0 : 180);
     card.classList.add('show');
     hint.textContent = 'Click a person for the whole story, or listen to it.';
     start();
   }
-  function setOpen(v) { open = v; card.classList.toggle('open', open); const b = card.querySelector('[data-read]'); if (b) b.textContent = open ? 'Close' : 'Read their story'; if (!open) stopVoice(); if (active !== null) { placeCard(active); setTimeout(() => { if (active !== null) placeCard(active); }, 520); } }
+  function setOpen(v) { open = v; card.classList.toggle('open', open); const b = card.querySelector('[data-read]'); if (b) b.textContent = open ? 'Close' : 'Read their story'; if (!open) stopVoice(); sizeText(); }
   row.addEventListener('mouseleave', () => { if (pinned === null && !row.contains(document.activeElement)) { setActive(null); idleTimer = 0; idle = true; } });
   stage.addEventListener('click', (e) => { if (e.target === stage || e.target === row) { pinned = null; setOpen(false); setActive(null); idle = true; } });
 
   // Phones: the person nearest the centre of the row is in front
   function nearestCentre() { const r = row.getBoundingClientRect(); const cx = r.left + r.width / 2; let best = 0, bd = 1e9; people.forEach((p, i) => { const b = p.el.getBoundingClientRect(); const d = Math.abs(b.left + b.width / 2 - cx); if (d < bd) { bd = d; best = i; } }); return best; }
   row.addEventListener('scroll', () => { if (narrow()) { idle = false; setActive(nearestCentre()); } }, { passive: true });
-  addEventListener('resize', () => { if (active !== null) placeCard(active); });
-  // Whenever the card changes size (a story opening, a new person), it is placed again so it stays inside the stage
-  let placing = false;
-  new ResizeObserver(() => { if (active === null || placing) return; placing = true; placeCard(active); requestAnimationFrame(() => { placing = false; }); }).observe(card);
-  card.addEventListener('transitionend', (e) => { if (e.target.classList.contains('more') && active !== null) placeCard(active); });
+  addEventListener('resize', () => { if (open) sizeText(); });
 
   // Motion: the chosen person steps forward, the neighbours make room, the row drifts toward the
   // centre, and never so far that anyone at the ends leaves the stage.
@@ -111,7 +99,7 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
       tDrift = ((r.left + r.width / 2) - (b.left + b.width / 2)) / r.width * 100 * 0.25;
     }
     people.forEach((p, i) => {
-      const on = i === active; const tS = on ? 1.26 : 1; let tX = 0;
+      const on = i === active; const tS = on ? 1.22 : 1; let tX = 0;
       if (active !== null && !on && !narrow()) tX = (i < active ? -1 : 1) * Math.max(0, (open ? 7 : 4) - Math.abs(i - active) * 1.2);
       p.s += (tS - p.s) * k; p.x += (tX - p.x) * k;
     });
@@ -124,7 +112,7 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
     drift += (tDrift - drift) * k; row.style.transform = narrow() ? '' : `translateX(${drift.toFixed(2)}%)`;
     people.forEach((p, i) => {
       const on = i === active;
-      p.el.style.transform = `translate(${p.x.toFixed(2)}%, ${on ? -3 : 0}%) scale(${p.s.toFixed(3)})`;
+      p.el.style.transform = `translate(${p.x.toFixed(2)}%, ${on ? -2 : 0}%) scale(${p.s.toFixed(3)})`;
       p.el.style.zIndex = on ? '40' : '10';
     });
     requestAnimationFrame(frame);

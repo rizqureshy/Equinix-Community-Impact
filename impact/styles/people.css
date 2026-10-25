@@ -1,22 +1,11 @@
 /* The people line: six colleagues in a row on a transparent stage; the one you look at steps
    forward and a translucent story card sits beside the face. Shared by the site and the prototype. */
 .people-stage {
-  --cardw: 340px;
   position: relative;
   width: min(1320px, calc(100% - 2 * var(--gutter)));
-  margin: var(--s-6) auto 0;
-  padding: 32px 0 0;
-  overflow: hidden;
-  isolation: isolate;
-}
-.people-stage::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 18%;
-  background: linear-gradient(to bottom, rgb(255 255 255 / 0), var(--bg) 90%);
-  z-index: 3;
-  pointer-events: none;
+  margin: 72px auto 0;
+  padding: 0;
+  overflow: visible;
 }
 .people-row {
   position: relative;
@@ -25,7 +14,7 @@
   align-items: flex-end;
   justify-content: center;
   padding: 0 2%;
-  min-height: min(44vw, 600px);
+  min-height: 0;
   will-change: transform;
 }
 .person {
@@ -59,49 +48,36 @@
   outline-offset: -3px;
   border-radius: 16px;
 }
-/* The card is translucent so the face behind it still shows through */
-.people-card {
-  position: absolute;
-  z-index: 5;
-  width: var(--cardw);
-  max-width: 44%;
-  max-height: calc(100% - 20px);
-  overflow: auto;
-  background: rgb(255 255 255 / 0.6);
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  border: 1px solid rgb(255 255 255 / 0.7);
-  border-radius: 18px;
-  padding: 16px 18px 14px;
+/* The story runs beneath the line as one horizontal panel that changes with the chosen person */
+.people-story {
+  width: min(1320px, calc(100% - 2 * var(--gutter)));
+  margin: var(--s-5) auto 0;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
   display: grid;
-  gap: 6px;
-  box-shadow: 0 20px 50px rgb(0 0 0 / 0.1);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), left 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
-  pointer-events: none;
+  grid-template-columns: minmax(0, 1.05fr) auto minmax(0, 1.7fr);
+  gap: var(--s-6);
+  align-items: start;
   text-align: left;
   color: var(--ink);
-  font-size: 15px;
-  line-height: 1.5;
+  min-height: 150px;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.people-card.show { opacity: 1; transform: none; }
-.people-card.swap { opacity: 0; }
-.people-card .actions button { pointer-events: auto; }
-.people-card.open .more { pointer-events: auto; }
-.people-card .where { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
-.people-card .head { font-family: 'Fraunces Variable', Georgia, serif; font-weight: 500; font-size: 23px; line-height: 1.1; letter-spacing: -0.01em; }
-.people-card .fig { font-family: 'Fraunces Variable', Georgia, serif; font-weight: 300; font-size: 40px; line-height: 1; letter-spacing: -0.02em; margin-top: 2px; }
-.people-card .fig small { display: block; font-family: var(--font); font-size: 12.5px; color: var(--ink-2); margin-top: 3px; letter-spacing: 0; line-height: 1.35; }
-.people-card .more { display: block; max-height: 0; overflow: hidden; transition: max-height 0.5s ease; pointer-events: none; }
-.people-card .story-text { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
-.people-card .src { margin: 6px 0 0; font-size: 11px; color: var(--ink-2); }
-.people-card .actions { display: flex; gap: 8px; margin: 6px 0 0; }
-.people-card .actions button { font: 600 12px var(--font); color: var(--ink); background: rgb(255 255 255 / 0.85); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 7px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 0; }
-.people-card .actions button:hover { border-color: var(--ink); }
-.people-card .play i { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent var(--red); }
-.people-card.speaking .play i { width: 8px; height: 8px; border: 0; background: var(--red); border-radius: 2px; }
-.people-card.no-voice .play { display: none; }
+.people-story:empty { visibility: hidden; }
+.people-story.swap { opacity: 0; transform: translateY(6px); }
+.people-story .where { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.people-story .head { font-family: 'Fraunces Variable', Georgia, serif; font-weight: 500; font-size: clamp(22px, 2vw, 28px); line-height: 1.12; letter-spacing: -0.01em; margin: 6px 0 0; }
+.people-story .fig { font-family: 'Fraunces Variable', Georgia, serif; font-weight: 300; font-size: clamp(40px, 4vw, 56px); line-height: 1; letter-spacing: -0.02em; min-width: 180px; max-width: 240px; }
+.people-story .fig small { display: block; font-family: var(--font); font-size: 12.5px; color: var(--ink-2); margin-top: 6px; letter-spacing: 0; line-height: 1.35; }
+.people-story .text { max-height: calc(3 * 1.55em); overflow: hidden; transition: max-height 0.5s ease; font-size: 15px; line-height: 1.55; }
+.people-story .story-text { margin: 0; color: var(--ink); }
+.people-story .src { margin: 10px 0 0; font-size: 11.5px; color: var(--ink-2); }
+.people-story .actions { display: flex; gap: 8px; margin: 12px 0 0; }
+.people-story .actions button { font: 600 12px var(--font); color: var(--ink); background: rgb(255 255 255 / 0.85); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 7px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 0; }
+.people-story .actions button:hover { border-color: var(--ink); }
+.people-story .play i { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent var(--red); }
+.people-story.speaking .play i { width: 8px; height: 8px; border: 0; background: var(--red); border-radius: 2px; }
+.people-story.no-voice .play { display: none; }
 .people-hint {
   width: min(1320px, calc(100% - 2 * var(--gutter)));
   margin: var(--s-3) auto 0;
@@ -133,16 +109,14 @@
 .people-roles button[aria-pressed='true'] b { color: var(--red); }
 
 @media (max-width: 760px) {
-  .people-stage { --cardw: auto; padding-top: 14px; width: 100%; }
-  .people-stage::after { display: none; }
+  .people-stage { margin-top: var(--s-6); width: 100%; }
   .people-row { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 20vw; min-height: 0; }
   .people-row::-webkit-scrollbar { display: none; }
   .person { flex: 0 0 58vw !important; width: auto !important; margin: 0 -7vw; scroll-snap-align: center; }
-  .people-card { position: relative; width: auto; max-width: none; max-height: none; margin: 8px 12px 14px; transform: none; }
-  .people-card .head { font-size: 20px; }
-  .people-card .fig { font-size: 32px; }
+  .people-story { grid-template-columns: 1fr; gap: var(--s-4); min-height: 0; }
+  .people-story .fig { min-width: 0; max-width: none; }
   .people-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .person, .person img, .people-card { transition: none; }
+  .person, .person img, .people-story, .people-story .text { transition: none; }
 }

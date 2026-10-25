@@ -28,11 +28,10 @@
   .switch button { font: 600 12px var(--font); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
   .switch button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
   .people-stage { margin-top: 0; }
-  :root[data-backdrop='corridor'] .people-stage { background: #fff; border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,.08); padding-top: 48px; }
+  :root[data-backdrop='corridor'] .people-stage { background: #fff; border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,.08); padding-top: 48px; overflow: hidden; }
   :root[data-backdrop='corridor'] .people-stage::before { content: ""; position: absolute; inset: 0; background: url(../media/clip-people-poster.jpg) center 40% / cover no-repeat; filter: blur(14px) saturate(.55) brightness(1.08); opacity: .42; transform: scale(1.08); z-index: 0; }
-  :root[data-backdrop='corridor'] .people-stage::after { inset: 0; height: auto; background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,.1) 45%, #fff 92%); z-index: 1; }
+  :root[data-backdrop='corridor'] .people-stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,.1) 45%, #fff 92%); z-index: 1; pointer-events: none; }
   :root[data-backdrop='plain'] .people-stage { background: #fff; border-radius: 24px; padding-top: 48px; }
-  :root[data-backdrop='plain'] .people-stage::after { background: linear-gradient(to bottom, rgba(255,255,255,0), #fff 90%); }
 </style>
   </head>
   <body>
@@ -50,8 +49,8 @@
 
       <div class="people-stage" id="stage" aria-label="Six colleagues in a line. Move across them, or use Tab, to bring one to the front and read their story.">
         <div class="people-row"></div>
-        <aside class="people-card" aria-live="polite"></aside>
       </div>
+      <div class="people-story" aria-live="polite"></div>
       <p class="people-hint">Move your pointer across the group, or wait and they will take turns.</p>
       <div class="people-roles" aria-label="Choose a colleague by role"></div>
     </div>

@@ -258,14 +258,14 @@ try {
   check(line.count === 6 && line.inside, 'the people line holds six colleagues and nobody is cut off at the edges', JSON.stringify(line));
   await p.locator('.person').first().dispatchEvent('click');
   await wait(1800);
-  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-card').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
-  const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-card'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, shown: c.classList.contains('show'), textVisible: !!t && t.getBoundingClientRect().height > 40 && c.querySelector('.more').offsetHeight > 100, inside: r.top >= s.top - 1 && r.bottom <= s.bottom + 1, alpha: Number(getComputedStyle(c).backgroundColor.match(/[\d.]+(?=\)$)/)?.[0] ?? 1) }; });
-  check(story.open && story.active === 0 && story.shown && story.textVisible && story.inside && story.alpha < 0.8, 'the first colleague opens with the whole story inside the stage on a translucent card', JSON.stringify(story));
+  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-story').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
+  const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], textOpen: !!t && c.querySelector('.text').offsetHeight > 120, below: r.top >= s.bottom - 1, fits: r.left >= 0 && r.right <= innerWidth }; });
+  check(story.open && story.active === 0 && story.role === 'Operations' && story.textOpen && story.below && story.fits, 'the first colleague opens with the whole story in the panel beneath the line', JSON.stringify(story));
   await p.locator('.person').last().dispatchEvent('click');
   await wait(1800);
-  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-card').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
-  const lastOne = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), r = document.querySelector('.people-card').getBoundingClientRect(); const ps = [...document.querySelectorAll('.person')].map((b) => b.getBoundingClientRect()); return { active: window.__impact.people.active, cardInside: r.top >= s.top - 1 && r.bottom <= s.bottom + 1, peopleInside: ps.every((b) => b.left >= s.left - 1 && b.right <= s.right + 1) }; });
-  check(lastOne.active === 5 && lastOne.cardInside && lastOne.peopleInside, 'choosing the last colleague moves the story and keeps everyone on the stage', JSON.stringify(lastOne));
+  await p.evaluate(() => Promise.race([Promise.all(document.querySelector('.people-story').getAnimations().map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
+  const lastOne = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'); const ps = [...document.querySelectorAll('.person')].map((b) => b.getBoundingClientRect()); return { active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], below: c.getBoundingClientRect().top >= s.bottom - 1, peopleInside: ps.every((b) => b.left >= s.left - 1 && b.right <= s.right + 1) }; });
+  check(lastOne.active === 5 && lastOne.role === 'WeGive' && lastOne.below && lastOne.peopleInside, 'choosing the last colleague changes the panel and keeps everyone on the stage', JSON.stringify(lastOne));
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
@@ -411,7 +411,7 @@ try {
   check(await p.evaluate(() => { const f = document.querySelector('#spine-frame').getBoundingClientRect(); const tiles = [...document.querySelectorAll('.promise-tile')]; return f.width <= innerWidth && f.height >= 400 && tiles.length === 5 && tiles.every((t) => t.getBoundingClientRect().width > innerWidth * 0.8); }), 'on phones the Spine canvas fits the screen and the promises stack');
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'start' }));
   await wait(1500);
-  check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-card').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
+  check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-story').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   await browser.close();
 
