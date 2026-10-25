@@ -36,7 +36,8 @@ The browser checks block every request that leaves the local host, then exercise
 impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
   engage.html             the Engage page: the Viva Engage community embedded
-  styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css
+  prototypes/learn.html   learner experiences, sketch round 1: pitch mode, scope check, teach-back, choose the reply
+  styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css, learn.css
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
@@ -50,6 +51,7 @@ impact/                   Vite root: the experience
     content/render.js     HTML for the model's opening card and controls, chapters, story detail, gallery, promises, numbers, sources
     room.js               stepping inside: approach, dive film, panorama viewer, captions, leave
     scene/city.js         the community model: loads the building GLBs, plinth, threads, free orbit (drag, wheel, pinch, keys), door views, labels
+    prototypes/learn.js   the sketch page wiring; learn-core.js holds the beats, drill, teach-back scoring and conversations (pure, unit tested)
   public/media/           web-ready images, films, posters, the building models (media/city/*.glb), the tour theme (media/audio) and the narrator's lines (media/voice)
 media-src/                Higgsfield originals, prompts and asset-manifest.json
   city/                   building concept prompts and generation records (renders and raw GLBs are re-downloadable, not committed)

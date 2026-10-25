@@ -412,6 +412,42 @@ try {
   check(p.failed.length === 0, 'no missing local assets without WebGL', p.failed.slice(0, 3).join(', '));
   check(p.errors.length === 0, 'no JavaScript errors without WebGL', p.errors.join(' | '));
   await noGL.close();
+
+  // ---- Learner experiences (sketch round 1) ----------------------------------
+  const lb = await chromium.launch();
+  p = await open(lb, `${BASE}prototypes/learn.html`);
+  await wait(400);
+  check(await p.evaluate(() => document.querySelectorAll('.sketch').length === 4 && document.querySelectorAll('.pitch-pick .chip').length === 6), 'the sketch page shows four live sketches');
+  await p.locator('.pitch-pick .chip[data-topic="resources"]').click();
+  await p.locator('#pitch-start').click();
+  await wait(300);
+  await p.locator('#pitch-next').click(); await p.locator('#pitch-next').click();
+  await wait(200);
+  check(await p.evaluate(() => /3 of 5/.test(document.querySelector('#pitch-kind').textContent) && /Period:/.test(document.querySelector('#pitch-caveat').textContent)), 'pitch mode says the figure with its caveat');
+  for (let k = 0; k < 3; k++) await p.locator('#pitch-next').click();
+  await wait(400);
+  check(await p.evaluate(() => !document.querySelector('#pitch-leave').hidden && document.querySelectorAll('#leave-refs li').length > 0 && document.querySelectorAll('#leave-beats li').length === 5), 'pitch mode ends with a sourced leave-behind');
+  await p.locator('#drill-start').click();
+  await wait(200);
+  const drillCard = await p.evaluate(() => ({ metric: document.querySelector('#drill-metric').textContent, options: document.querySelectorAll('#drill-options .opt').length }));
+  check(drillCard.metric.length > 0 && drillCard.options === 3, 'scope check deals a figure with three options', JSON.stringify(drillCard));
+  await p.locator('#drill-options .opt').first().click();
+  await wait(250);
+  check(await p.evaluate(() => !!document.querySelector('.opt[data-mark="right"]') && document.querySelector('#drill-verdict').textContent.length > 0), 'scope check marks the answer that belongs to the figure');
+  await p.selectOption('#teach-story', 'pa10-heat');
+  await p.locator('#teach-start').click();
+  await p.fill('#teach-text', 'We heat the Olympic pool and a thousand homes in Paris. Equinix is powering hospitals.');
+  await p.locator('#teach-stop').click();
+  await wait(200);
+  const teach = await p.evaluate(() => ({ flags: document.querySelectorAll('#teach-flags li').length, score: document.querySelector('#teach-score').textContent }));
+  check(teach.flags >= 2, 'teach-back flags a figure without its caveat and a forbidden phrase', JSON.stringify(teach));
+  await p.locator('#reply-people .chip[data-id="journalist"]').click();
+  await wait(200);
+  for (let t = 0; t < 3; t++) { await p.locator('#reply-choices .opt').first().click(); await wait(1500); }
+  check(await p.evaluate(() => !document.querySelector('#reply-debrief').hidden && document.querySelectorAll('#debrief-rows li').length === 3), 'choose the reply ends in a debrief after three turns');
+  check(await p.evaluate(() => !document.body.innerText.includes('—')), 'the sketch page has no em dashes');
+  check(p.external.length === 0 && p.failed.length === 0 && p.errors.length === 0, 'the sketch page reaches nothing outside the host and raises no errors', [...p.external, ...p.failed, ...p.errors].join(' | '));
+  await lb.close();
 } catch (error) {
   console.error(error);
   failures++;

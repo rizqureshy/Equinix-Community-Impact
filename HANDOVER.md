@@ -42,7 +42,24 @@ State on 25 October 2026, branch `claude/voice-and-coach`, latest build in `docs
 
 Open items: a clean handover branch; a `Dockerfile` and `nginx.conf` for GTM WebApps (static, cache and range headers, HTTPS, add the host to the coach's allowed origins); coach to Haiku 5.5 with a daily cap of 40; Q3 2026 results (28 October) to refresh the scale figures.
 
+On 25 October 2026 the owner set the direction: a library of next-generation learner experiences and enablement, with this content as the test bed. Sketch round 1 (pitch mode, scope check, teach-back, choose the reply) is live on `claude/learner-experiences` at `prototypes/learn.html`; see the section below. Next: the owner picks one to build properly.
+
 Next-generation ideas to sketch (owner's interest): the living spine (new milestone each month, "since you last visited"); your own thread (re-light the spine for a customer, metro or topic); the window (ambient kiosk mode from preview mode); reactions on cards; pitch mode (a timed, narrated walk with a one-page leave-behind); ask the coach from anywhere; role-play that scores you; narration in other languages; walkable rooms with hotspots. First sketch round proposed: living spine, pitch mode, ask-anywhere coach, walkable rooms.
+
+## Learner experiences, sketch round 1 (branch `claude/learner-experiences`)
+
+Built 25 October 2026 on top of `claude/voice-and-coach`, after you said the aim is a library of next-generation learner experiences and enablement, with the community impact content as the test bed. Four cheap live sketches on one page, no credits spent, nothing leaves the host. Open `prototypes/learn.html` on the Pages build (or `npm run preview` and go to `/prototypes/learn.html`).
+
+Each sketch runs on the same stories module as the main page, so every figure arrives with its scope, period and source, and the house rules are enforced in code rather than copy.
+
+1. **Pitch mode** (delivering). Choose a chapter or all five; five beats of eighteen seconds, ninety in all, with a ring timer, Pause and Next beat. The figure beat shows the caveat to say with it. "Hear it" reads each beat with the browser's own voice (free, only from a click; the narrator could replace it). At the end a leave-behind with the beats and the sources, to copy as text or print (print styles show only the card).
+2. **Scope check** (recalling). A drill of five cards from the nine figures; for each, pick the scope, the period and the source that belong to it. The wrong answers are the true scopes, periods and sources of other figures. Missed cards come back; best run is kept in the browser.
+3. **Teach-back** (explaining aloud). Pick a story, sixty seconds, the browser transcribes where it can (Chrome and Edge; others type). The score checks the five things the coach checks: who, the figure, scope or period, a source, Equinix as infrastructure with the partner doing the work. Forbidden phrases are flagged ("powering hospitals", a jobs total, "renewable" without "coverage", the PA10 homes without "expected"). Feedback in the coach's three lines: landed, tighten, caveat check. Word lists, not a model; honest about that in the notes.
+4. **Choose the reply** (judging). Four conversations (customer, neighbour, student, journalist), three turns each, three replies per turn graded best, ok or weak against the house rules, with the other person's reaction and a note on why. Debrief with points and a link to practise live with the coach. Content authored from the stories; figures carry their scope.
+
+Files: `impact/prototypes/learn.html`, `impact/styles/learn.css`, `impact/scripts/prototypes/learn.js` (wiring) and `learn-core.js` (content, drill, scoring, scenarios; pure functions). Registered in `vite.config.js`. Tests: `tests/unit/learn.test.js` (15 checks on beats, the drill, the scoring and the scenarios) and nine checks appended to `tests/e2e/run.mjs`.
+
+What each would need if chosen is written under its sketch on the page. Not built: a shared progress store (everything is per browser), the narrator's voice in pitch mode, model-based scoring for teach-back.
 
 ## The promises are the Spine of Impact (branch `claude/voice-and-coach`)
 

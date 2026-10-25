@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Learner experiences | sketch round 1</title>
+    <meta name="description" content="Four live sketches of next-generation learner experiences, built on the Equinix community impact stories. Pick one to prototype for real." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="../brand/equinix-fortress.svg" />
+    <script type="module" crossorigin src="../assets/learn-BWI3oww5.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/stories-XwucyJq8.js">
+    <link rel="modulepreload" crossorigin href="../assets/clipboard-B5iCRvQI.js">
+    <link rel="stylesheet" crossorigin href="../assets/learn-q1uS3Hq8.css">
+  </head>
+  <body>
+    <a class="skip" href="#sketches">Skip to the sketches</a>
+    <header class="top">
+      <a class="brand" href="../index.html" aria-label="Back to Infrastructure for human possibility">
+        <img src="../brand/equinix-logo-horizontal.svg" alt="Equinix" width="112" height="16" />
+        <span>Learner experiences</span>
+      </a>
+      <nav class="tabs" aria-label="Sketches">
+        <a href="#pitch">1 Pitch</a>
+        <a href="#scope">2 Scope check</a>
+        <a href="#teach">3 Teach-back</a>
+        <a href="#reply">4 Choose the reply</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="intro">
+        <p class="kicker">Sketch round 1 · 25 October 2026</p>
+        <h1>Four ways to learn a story well enough to tell it.</h1>
+        <p class="lede">Live sketches, not mock-ups. Each one runs on the same eleven stories and nine sourced figures as the main page, costs nothing to run, and tests a different kind of practice: delivering, recalling, explaining aloud, and judging. Try all four, then pick one to build properly.</p>
+        <ol class="menu" id="sketches">
+          <li><a href="#pitch"><b>Pitch mode</b><span>Ninety seconds on one chapter, beat by beat, with a one-page leave-behind at the end.</span></a></li>
+          <li><a href="#scope"><b>Scope check</b><span>A recall drill: every figure must travel with its scope, period and source. Pick the right ones.</span></a></li>
+          <li><a href="#teach"><b>Teach-back</b><span>Explain a story aloud in sixty seconds. The page listens and scores it the way the coach does.</span></a></li>
+          <li><a href="#reply"><b>Choose the reply</b><span>A customer, a neighbour, a student and a journalist. Three turns each. Every reply has a consequence.</span></a></li>
+        </ol>
+      </section>
+
+      <!-- 1 Pitch mode -->
+      <section class="sketch" id="pitch" aria-labelledby="pitch-title">
+        <header class="sketch-head">
+          <span class="num">1</span>
+          <div>
+            <h2 id="pitch-title">Pitch mode</h2>
+            <p class="muted">Delivering. Choose a chapter, press Pitch, and say each beat as it arrives. Eighteen seconds a beat, five beats, ninety seconds. Where a figure is spoken, the caveat to say with it sits underneath. At the end: a leave-behind you can copy or print.</p>
+          </div>
+        </header>
+        <div class="pitch" data-state="idle">
+          <div class="pitch-pick" role="radiogroup" aria-label="Chapter" id="pitch-topics"></div>
+          <div class="pitch-stage">
+            <div class="ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="54" /><circle class="ring-fg" cx="60" cy="60" r="54" id="pitch-ring" /></svg>
+              <div class="ring-time" id="pitch-time">1:30</div>
+            </div>
+            <div class="pitch-beat" id="pitch-beat" aria-live="polite">
+              <p class="kicker" id="pitch-kind">Ready</p>
+              <h3 id="pitch-say">Pick a chapter and press Pitch.</h3>
+              <p class="caveat" id="pitch-caveat"></p>
+            </div>
+          </div>
+          <ol class="beats" id="pitch-beats" aria-label="Beats"></ol>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="pitch-start">Pitch</button>
+            <button type="button" class="btn" id="pitch-pause" hidden>Pause</button>
+            <button type="button" class="btn" id="pitch-next" hidden>Next beat</button>
+            <button type="button" class="btn" id="pitch-hear" aria-pressed="false">Hear it</button>
+            <span class="note" id="pitch-note">"Hear it" reads each beat with the browser’s own voice. It costs nothing and starts only from a click.</span>
+          </div>
+          <article class="leave" id="pitch-leave" hidden aria-labelledby="leave-title">
+            <p class="kicker">Leave-behind</p>
+            <h3 id="leave-title"></h3>
+            <ol id="leave-beats"></ol>
+            <h4>Sources</h4>
+            <ul id="leave-refs"></ul>
+            <p class="note">Figures keep their scope and period. Equinix provides infrastructure; partners do the work.</p>
+            <div class="row">
+              <button type="button" class="btn" id="leave-copy">Copy as text</button>
+              <button type="button" class="btn" id="leave-print">Print</button>
+              <button type="button" class="btn btn--link" id="pitch-again">Pitch again</button>
+            </div>
+          </article>
+        </div>
+        <footer class="sketch-foot">
+          <p><b>If this one is chosen:</b> the narrator’s voice instead of the browser’s, the live model framing each beat behind the words, a shareable leave-behind PDF, and a pace meter from the microphone.</p>
+        </footer>
+      </section>
+
+      <!-- 2 Scope check -->
+      <section class="sketch" id="scope" aria-labelledby="scope-title">
+        <header class="sketch-head">
+          <span class="num">2</span>
+          <div>
+            <h2 id="scope-title">Scope check</h2>
+            <p class="muted">Recalling. The house rule is that a figure never travels alone. Each card shows one of the nine figures; choose the scope, the period and the source that belong to it. The wrong answers are real too, they just belong to other figures. Missed cards come back.</p>
+          </div>
+        </header>
+        <div class="drill" data-state="idle">
+          <div class="drill-top">
+            <div class="score"><b id="drill-score">0</b><span>correct</span></div>
+            <div class="score"><b id="drill-streak">0</b><span>streak</span></div>
+            <div class="score"><b id="drill-left">5</b><span>cards left</span></div>
+            <div class="score"><b id="drill-best">0</b><span>best run</span></div>
+          </div>
+          <div class="card" id="drill-card">
+            <p class="kicker" id="drill-story"></p>
+            <div class="fig"><b id="drill-metric"></b><span id="drill-label"></span></div>
+            <p class="ask" id="drill-ask"></p>
+            <div class="options" id="drill-options" role="group" aria-labelledby="drill-ask"></div>
+            <p class="verdict" id="drill-verdict" aria-live="polite"></p>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="drill-start">Deal five cards</button>
+            <button type="button" class="btn" id="drill-continue" hidden>Next</button>
+            <span class="note" id="drill-note">Progress is kept in this browser only.</span>
+          </div>
+        </div>
+        <footer class="sketch-foot">
+          <p><b>If this one is chosen:</b> spaced repetition across visits, a two-minute daily set, a team leaderboard that shows practice rather than scores, and new cards appearing automatically when a story changes.</p>
+        </footer>
+      </section>
+
+      <!-- 3 Teach-back -->
+      <section class="sketch" id="teach" aria-labelledby="teach-title">
+        <header class="sketch-head">
+          <span class="num">3</span>
+          <div>
+            <h2 id="teach-title">Teach-back</h2>
+            <p class="muted">Explaining aloud. Pick a story and tell it in sixty seconds as if to a colleague. Where the browser can listen, it transcribes as you speak; otherwise type. The score checks the same five things the coach does: who, the figure, its scope or period, a source, and Equinix as infrastructure with the partner doing the work. Nothing leaves this page.</p>
+          </div>
+        </header>
+        <div class="teach" data-state="idle">
+          <label class="field">
+            <span>Story</span>
+            <select id="teach-story"></select>
+          </label>
+          <div class="brief" id="teach-brief"></div>
+          <div class="teach-stage">
+            <div class="ring small" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="54" /><circle class="ring-fg" cx="60" cy="60" r="54" id="teach-ring" /></svg>
+              <div class="ring-time" id="teach-time">1:00</div>
+            </div>
+            <textarea id="teach-text" rows="5" placeholder="Your words appear here as you speak, or type them." aria-label="Your teach-back"></textarea>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" id="teach-start">Start</button>
+            <button type="button" class="btn" id="teach-stop" hidden>Done</button>
+            <button type="button" class="btn btn--link" id="teach-reset" hidden>Again</button>
+            <span class="note" id="teach-note"></span>
+          </div>
+          <div class="result" id="teach-result" hidden aria-live="polite">
+            <div class="result-head"><b id="teach-score"></b><span id="teach-pace"></span></div>
+            <ul class="checks" id="teach-checks"></ul>
+            <ul class="flags" id="teach-flags"></ul>
+            <dl class="feedback">
+              <dt>Landed</dt><dd id="fb-landed"></dd>
+              <dt>Tighten</dt><dd id="fb-tighten"></dd>
+              <dt>Caveat check</dt><dd id="fb-caveat"></dd>
+            </dl>
+          </div>
+        </div>
+        <footer class="sketch-foot">
+          <p><b>If this one is chosen:</b> the coach’s model does the scoring instead of word lists, a recording you can replay, a before-and-after over a week, and the option to send one good take to your manager.</p>
+        </footer>
+      </section>
+
+      <!-- 4 Choose the reply -->
+      <section class="sketch" id="reply" aria-labelledby="reply-title">
+        <header class="sketch-head">
+          <span class="num">4</span>
+          <div>
+            <h2 id="reply-title">Choose the reply</h2>
+            <p class="muted">Judging. Four people, three turns each. Read what they say, choose a reply, and watch how they react. Every reply is graded against the house rules, and the notes say why. Finish a conversation and the coach is one click away for the live version.</p>
+          </div>
+        </header>
+        <div class="reply" data-state="idle">
+          <div class="people" id="reply-people" role="radiogroup" aria-label="Who you are talking to"></div>
+          <div class="chat" id="reply-chat" aria-live="polite"></div>
+          <div class="choices" id="reply-choices"></div>
+          <div class="debrief" id="reply-debrief" hidden>
+            <p class="kicker">Debrief</p>
+            <h3 id="debrief-points"></h3>
+            <p id="debrief-verdict"></p>
+            <ol id="debrief-rows"></ol>
+            <div class="row">
+              <button type="button" class="btn" id="reply-again">Run it again</button>
+              <a class="btn btn--primary" href="../index.html#/training">Practise it live with the coach</a>
+            </div>
+          </div>
+        </div>
+        <footer class="sketch-foot">
+          <p><b>If this one is chosen:</b> branches that remember earlier replies, the other person voiced by the narrator, a free-text reply option scored by the coach, and new conversations authored from any story in minutes.</p>
+        </footer>
+      </section>
+    </main>
+
+    <footer class="bottom">
+      <p>Sketches for a library of learner experiences. Content and figures from the community impact stories, checked 21 October 2026. Illustrative; not for distribution.</p>
+      <a href="../index.html">Back to the site</a>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
