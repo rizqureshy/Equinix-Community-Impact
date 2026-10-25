@@ -16,7 +16,8 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
   .wrap { max-width: 1240px; margin: 0 auto; padding: 36px max(16px, env(safe-area-inset-left, 0px)) 72px; display: grid; gap: 22px; }
-  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  header { display: grid; grid-template-columns: 1.1fr 1fr; align-items: end; gap: 16px 40px; }
+  @media (max-width: 900px) { header { grid-template-columns: 1fr; } }
   .brand img { display: block; height: 14px; width: auto; }
   .eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 14px 0 6px; }
   h1 { font-weight: 700; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; max-width: 16ch; }
@@ -51,6 +52,18 @@
   .card .play i { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent var(--accent); }
   .card.speaking .play i { width: 8px; height: 8px; border: 0; background: var(--accent); border-radius: 2px; }
   .card.no-voice .play { display: none; }
+  .fabric-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1s ease; }
+  .fabric-layer canvas { display: block; width: 100%; height: 100%; }
+  :root[data-fabric='on'] .fabric-layer.is-ready { opacity: 0.9; }
+  .wrap { position: relative; z-index: 1; }
+  .switch { display: flex; gap: 6px; margin: 0 0 10px; }
+  .switch button { font: 600 12px var(--body); color: var(--fg); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  .switch button[aria-pressed="true"] { background: var(--fg); color: #fff; border-color: var(--fg); }
+  :root[data-backdrop='fabric'] .stage { background: transparent; box-shadow: none; }
+  :root[data-backdrop='fabric'] .stage::before, :root[data-backdrop='plain'] .stage::before { display: none; }
+  :root[data-backdrop='fabric'] .stage::after { background: linear-gradient(to bottom, rgba(246,245,242,0) 70%, var(--bg) 96%); }
+  :root[data-backdrop='plain'] .stage::after { background: linear-gradient(to bottom, rgba(255,255,255,0) 80%, #fff 96%); }
+  .card { max-height: calc(100% - 20px); overflow: auto; }
   .hint { color: var(--muted); font-size: 13px; }
   .roles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
   .roles button { text-align: left; border: 0; background: none; padding: 12px 0 0; border-top: 1px solid var(--line); cursor: pointer; font: inherit; color: var(--fg); display: grid; gap: 2px; min-width: 0; }
@@ -71,6 +84,7 @@
 </style>
   </head>
   <body>
+    <div class="fabric-layer" id="fabric-layer" aria-hidden="true"></div>
     <div class="wrap">
       <header>
         <div>
@@ -78,6 +92,7 @@
           <div class="eyebrow">The people behind the connections</div>
           <h1>Our people are part of the story.</h1>
         </div>
+        <div class="switch" role="group" aria-label="Backdrop"><button type="button" data-bg="fabric" aria-pressed="true">Red fabric</button><button type="button" data-bg="corridor" aria-pressed="false">Corridor</button><button type="button" data-bg="plain" aria-pressed="false">Plain</button></div>
         <p class="lede">Six colleagues, one line. Move across them and the one you look at comes to the front with the story of what their work does for the community. Click to keep them there.</p>
       </header>
 

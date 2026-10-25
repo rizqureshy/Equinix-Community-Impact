@@ -2,6 +2,7 @@
 // and the neighbours make room; their story appears beside the face; click for the whole story.
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/fraunces';
+import { createFabric } from '../fabric.js';
 
 // Each person carries one impact story: role, headline, figure, the story, source.
 // Figures keep their scope and period. Equinix provides the infrastructure; partners do the work.
@@ -13,6 +14,20 @@ const CAST = [
   { img: 'p10-energy-manager', role: 'Energy engineer', where: 'Clean power and a fair grid', head: 'Clean power for us, no extra cost for the neighbours', fig: '96%', figl: 'renewable coverage in 2025, the eighth year above 90%', story: '29 power purchase agreements across 12 countries add 1,472 MW of new wind and solar to the grids we share. More than 100 MW of fuel cells run at 19 U.S. sites. And in Hampton, Georgia, Equinix pays 100% of the grid costs its demand creates for 20 years, so residents’ bills do not rise.', src: 'Form 10-K for 2025; Equinix press releases, August 2025 and August 2026', size: 1, off: 0 },
   { img: 'p08-volunteer', role: 'WeGive volunteer', where: 'Impact Month, every metro', head: 'Time given where we live', fig: '54,400+', figl: 'volunteer hours in 2025, up 45% on the year', story: '28 WeAreEquinix teams chose and backed 31 local nonprofits with $280,000 in funding, and Impact Month reached more than 40 locations, from an emergency food drive in Secaucus to classroom sessions in Mumbai. When colleagues themselves are hit by disaster, the Employee Relief Fund made 19 grants in 2025.', src: '2025 Sustainability Report', size: 1, off: 0 },
 ];
+
+// Backdrop: the site's red fabric flying behind the line (default), the daylit corridor, or plain white.
+const params = new URLSearchParams(location.search);
+let backdrop = params.get('bg') || 'fabric';
+const root = document.documentElement;
+let fabric = null;
+function setBackdrop(mode) {
+  backdrop = mode; root.dataset.backdrop = mode; root.dataset.fabric = mode === 'fabric' ? 'on' : 'off';
+  document.querySelectorAll('[data-bg]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.bg === mode)));
+  if (mode === 'fabric' && !fabric) { const host = document.getElementById('fabric-layer'); fabric = createFabric(host, { motion: () => !matchMedia('(prefers-reduced-motion: reduce)').matches }); if (fabric) { host.classList.add('is-ready'); fabric.start(); } }
+  else if (fabric) { mode === 'fabric' ? fabric.start() : fabric.stop(); }
+}
+document.querySelectorAll('[data-bg]').forEach((b) => b.addEventListener('click', () => setBackdrop(b.dataset.bg)));
+setBackdrop(backdrop);
 
 const stage = document.getElementById('stage'), row = document.getElementById('row'), card = document.getElementById('card'), roles = document.getElementById('roles'), hint = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,7 +73,9 @@ function placeCard(i) {
   card.classList.toggle('on-left', onLeft);
   if (onLeft) { card.style.left = `max(2%, ${(edge * 100 - 2).toFixed(1)}% - var(--cardw))`; card.style.right = 'auto'; }
   else { card.style.left = `min(${(edge * 100 + 1).toFixed(1)}%, calc(98% - var(--cardw)))`; card.style.right = 'auto'; }
-  const want = Math.max(4, (b.top - r.top) / r.height * 100 + 6); const maxTop = Math.max(2, (r.height - card.offsetHeight - 16) / r.height * 100);
+  const more = card.querySelector('.more'); if (more) more.style.maxHeight = open ? `${more.scrollHeight}px` : '0px';
+  const full = card.offsetHeight + (open && more ? Math.max(0, more.scrollHeight - more.offsetHeight) : 0);
+  const want = Math.max(3, (b.top - r.top) / r.height * 100 + 6); const maxTop = Math.max(2, (r.height - full - 14) / r.height * 100);
   card.style.top = `${Math.min(want, maxTop).toFixed(1)}%`;
 }
 function setActive(i, force) {
