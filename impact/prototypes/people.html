@@ -25,7 +25,7 @@
   .stage { position: relative; aspect-ratio: 16 / 10; max-width: 100%; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.08); cursor: crosshair; }
   .stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: linear-gradient(to top, #fff, rgba(255,255,255,0)); pointer-events: none; z-index: 40; }
   .person { position: absolute; border: 0; padding: 0; background: none; cursor: pointer; transform-origin: 50% 30%; will-change: transform, filter; transition: filter .5s ease, opacity .5s ease; }
-  .person img { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 30px rgba(0,0,0,.10)); }
+  .person img { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 30px rgba(0,0,0,.10)); -webkit-mask-image: linear-gradient(to bottom, #000 62%, rgba(0,0,0,.6) 80%, transparent 97%); mask-image: linear-gradient(to bottom, #000 62%, rgba(0,0,0,.6) 80%, transparent 97%); }
   .person:focus-visible { outline: none; }
   .person:focus-visible img { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 16px; }
   .person .name { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(29,29,31,.75); padding: 4px 9px; border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .35s ease; }
