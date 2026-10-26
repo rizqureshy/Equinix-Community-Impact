@@ -6,7 +6,13 @@ from PIL import Image
 from rembg import remove, new_session
 root = pathlib.Path(__file__).resolve().parent.parent
 src = root / 'media-src/people/hi'; out = root / 'impact/public/media/people'; out.mkdir(parents=True, exist_ok=True)
-session = new_session('u2net_human_seg')
+sessions = {}
+# The human segmenter drops a white hard hat held against the white backdrop; the general model keeps it
+MODEL = {'p11-heat-engineer': 'isnet-general-use'}
+def session_for(k):
+    name = MODEL.get(k, 'u2net_human_seg')
+    if name not in sessions: sessions[name] = new_session(name)
+    return sessions[name]
 H = 1400; RATIO = 2 / 3; PAD = 0.03
 def load(p):
     raw = p.read_text(); end = max(raw.rfind(']'), raw.rfind('}')); d = json.loads(raw[:end + 1]); return d[0] if isinstance(d, list) else d
@@ -14,7 +20,7 @@ items = []
 for png in sorted(src.glob('p*.png')):
     k = png.stem
     im = Image.open(png).convert('RGBA')
-    cut = remove(im, session=session, alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10, alpha_matting_erode_size=8)
+    cut = remove(im, session=session_for(k), alpha_matting=True, alpha_matting_foreground_threshold=240, alpha_matting_background_threshold=10, alpha_matting_erode_size=8)
     a = cut.getchannel('A'); bbox = a.point(lambda v: 255 if v > 12 else 0).getbbox()
     l, t, r, b = bbox; w, h = cut.size
     # keep the bottom edge (the frame's waist line) and give the figure a little air on the other sides
@@ -31,7 +37,7 @@ for png in sorted(src.glob('p*.png')):
         items.append({'key': f'people-{k}', 'generationId': d.get('id'), 'model': d.get('display_name', 'GPT Image 2.5'), 'jobType': d.get('job_type', 'gpt_image_2_5'), 'createdAt': d.get('created_at'),
                       'settings': {'aspect_ratio': '2:3', 'quality': 'high', 'resolution': '2k'}, 'promptFile': f'media-src/people/hi/{k}.txt', 'original': f'media-src/people/hi/{k}.png',
                       'web': f'impact/public/media/people/{k}.webp', 'resultUrl': d.get('result_url'), 'estimatedCredits': 2.75, 'status': 'selected',
-                      'processing': 'rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP',
+                      'processing': f'rembg {MODEL.get(k, "u2net_human_seg")} with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP',
                       'usage': 'Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot',
                       'provenance': 'AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague.'})
 mp = root / 'media-src/asset-manifest.json'; m = json.loads(mp.read_text())

@@ -3095,7 +3095,7 @@
         "web": "impact/public/media/people/p05-heat-engineer.webp",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_d4a55ed8-116b-44e3-801d-7daf875ecf50.png",
         "estimatedCredits": 2.75,
-        "status": "generated, not in use: replaced by people-p11-heat-engineer so the cast includes a Black colleague",
+        "status": "selected",
         "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
@@ -3180,7 +3180,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261026_052450_c825b416-64cc-4885-ba57-524e87505f4d.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg isnet-general-use with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       }

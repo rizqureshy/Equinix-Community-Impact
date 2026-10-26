@@ -634,15 +634,22 @@ body.spine-open .weather-light {
 }
 
 /* ---- Stories: the theatre ------------------------------------------------ */
-/* One screen: a compact head above the index at the left, and a film at the right sized from the viewport height */
+/* One rectangle: the head and index at the left set the height; the film at the right matches it; the lead line sits beneath the film */
 .theatre {
   padding: calc(var(--header-h) + var(--s-5)) 0 var(--s-7);
 }
 .theatre-grid {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
-  gap: var(--s-7);
-  align-items: start;
+  grid-template-rows: auto auto;
+  gap: var(--s-5) var(--s-7);
+  align-items: stretch;
+}
+.theatre-side { grid-column: 1; grid-row: 1; }
+@media (min-width: 901px) {
+  .theatre-stage { display: contents; }
+  .theatre-screen { grid-column: 2; grid-row: 1; align-self: stretch; }
+  .theatre-lead { grid-column: 2; grid-row: 2; }
 }
 .theatre-side {
   display: grid;
@@ -696,7 +703,7 @@ body.spine-open .weather-light {
 .theatre[data-auto='off'] .theatre-how { visibility: hidden; }
 .theatre-screen {
   position: relative;
-  height: clamp(300px, calc(100svh - 330px), 760px);
+  min-height: 300px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #e8e8ed;
@@ -756,7 +763,7 @@ body.spine-open .weather-light {
   .theatre-side { display: contents; }
   .theatre-head { order: 0; }
   .theatre-title { font-size: var(--t-xl); }
-  .theatre-screen { height: auto; aspect-ratio: 16 / 9; }
+  .theatre-screen { min-height: 0; aspect-ratio: 16 / 9; }
   .theatre-index { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; scrollbar-width: none; border-top: 0; gap: 8px; order: 2; padding-bottom: 4px; }
   .theatre-stage { order: 1; }
   .theatre-index::-webkit-scrollbar { display: none; }
@@ -769,6 +776,12 @@ body.spine-open .weather-light {
   .theatre-cap { padding: 70px var(--s-4) var(--s-4); }
   .theatre-cap p { font-size: var(--t-sm); }
   .theatre-lead { grid-template-columns: 1fr; gap: var(--s-4); }
+}
+@media (min-width: 901px) and (max-height: 780px) {
+  .theatre-row { padding: 10px 0 12px; }
+  .theatre-row.on .t { font-size: 20px; }
+  .theatre-title { font-size: 24px; }
+  .theatre-side { gap: var(--s-4); }
 }
 @media (prefers-reduced-motion: reduce) {
   .theatre-film, .theatre-row .t { transition: none; }
@@ -807,9 +820,6 @@ body.spine-open .weather-light {
   color: var(--red);
   overflow: visible;
 }
-.number--heat .number-thread {
-  color: var(--amber);
-}
 .number-thread path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -847,15 +857,14 @@ body.spine-open .weather-light {
   letter-spacing: -0.02em;
   color: var(--red);
 }
-.number--heat .number-suffix {
-  color: var(--amber);
-}
 .number-label {
   color: var(--ink-2);
   max-width: 24ch;
 }
 .number .note a,
-.promises-note a,
+.promises-note a {
+  color: var(--red);
+}
 
 /* ---- Promises: a horizontal snap rail of cards ------------------------------------- */
 .promises-section {
