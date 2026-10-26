@@ -27,7 +27,7 @@ describe('router', () => {
   });
 
   it('round-trips hashes', () => {
-    for (const h of ['#/', '#/community', '#/promises', '#/chapter/community', '#/story/3verest', '#/sources']) {
+    for (const h of ['#/', '#/community', '#/promises', '#/chapter/community', '#/story/3verest', '#/share']) {
       expect(hashFor(parseHash(h))).toBe(h);
     }
   });

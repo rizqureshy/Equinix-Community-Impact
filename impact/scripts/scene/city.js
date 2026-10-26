@@ -73,12 +73,12 @@ function threadDefinitions() {
     { id: 'learning', kind: 'data', points: [dc, lift(dc, at('learning'), 2.0), at('learning')] },
     { id: 'homes', kind: 'data', points: [dc, lift(dc, at('homes'), 2.0), at('homes')] },
     { id: 'shops', kind: 'data', points: [at('homes', 0.5), lift(at('homes', 0.5), at('shops', 0.5), 1.0), at('shops', 0.5)] },
-    { id: 'heat', kind: 'heat', points: [at('datacenter', 0.3), lift(at('datacenter', 0.3), at('aquatic', 0.3), 0.6), at('aquatic', 0.3)] },
+    { id: 'heat', kind: 'heat', points: [at('datacenter', 0.6), lift(at('datacenter', 0.6), at('aquatic', 0.6), 1.2), at('aquatic', 0.6)] },
   ];
 }
 
 export const threadsForFocus = {
-  overview: ['hospital', 'research', 'learning', 'homes', 'shops'],
+  overview: ['hospital', 'research', 'learning', 'homes', 'shops', 'heat'],
   hospital: ['hospital'],
   research: ['research', 'research-out'],
   learning: ['learning'],

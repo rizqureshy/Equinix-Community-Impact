@@ -283,10 +283,3 @@ export function heroStatsHTML() {
     .join('')}</ul>`;
 }
 
-export function sourcesHTML() {
-  return `<details class="directory">
-      <summary>Source directory <span class="source-meta">${Object.keys(sources).length} sources, checked ${formatDate(LAST_CHECKED)}</span></summary>
-      <ul class="source-directory">${Object.keys(sources).map(sourceLink).join('')}</ul>
-      <p class="source-meta">Summaries on this page are original paraphrases. Figures keep the scope and period stated by each source.</p>
-    </details>`;
-}

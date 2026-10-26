@@ -2835,7 +2835,7 @@
     "estimatedCredits": 27.0
   },
   "people": {
-    "description": "People line: waist-up portraits of an inclusive cast on studio white, each a stand-in for a real colleague. The six in use were regenerated at 2k with full arms in frame. Raw PNGs stay out of git.",
+    "description": "People line: waist-up portraits of an inclusive cast on studio white, each a stand-in for a real colleague. The portraits in use are 2k with full arms in frame. Raw PNGs stay out of git.",
     "items": [
       {
         "key": "people-p01-account-lead",
@@ -3095,7 +3095,7 @@
         "web": "impact/public/media/people/p05-heat-engineer.webp",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_d4a55ed8-116b-44e3-801d-7daf875ecf50.png",
         "estimatedCredits": 2.75,
-        "status": "selected",
+        "status": "generated, not in use: replaced by people-p11-heat-engineer so the cast includes a Black colleague",
         "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
@@ -3162,8 +3162,29 @@
         "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
+      },
+      {
+        "key": "people-p11-heat-engineer",
+        "generationId": "c825b416-64cc-4885-ba57-524e87505f4d",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-26T05:24:50.823079Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "promptFile": "media-src/people/hi/p11-heat-engineer.txt",
+        "original": "media-src/people/hi/p11-heat-engineer.png",
+        "web": "impact/public/media/people/p11-heat-engineer.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261026_052450_c825b416-64cc-4885-ba57-524e87505f4d.png",
+        "estimatedCredits": 2.75,
+        "status": "selected",
+        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       }
     ],
-    "estimatedCredits": 31.5
+    "estimatedCredits": 34.25
   }
 }

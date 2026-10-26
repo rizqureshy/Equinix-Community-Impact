@@ -577,6 +577,8 @@ const theatre = createTheatre($('#stories'), {
 const spy = new IntersectionObserver(
   (entries) => {
     if (performance.now() < programmaticUntil || store.get().story) return;
+    // A story link may have just been followed and its hashchange not yet handled: never write over it
+    if (location.hash.startsWith('#/story/')) return;
     const hit = entries.filter((e) => e.isIntersecting).pop();
     if (!hit) return;
     const section = hit.target.dataset.chapter || hit.target.dataset.section;

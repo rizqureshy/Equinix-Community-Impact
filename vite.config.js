@@ -6,7 +6,6 @@ import {
   heroStatsHTML,
   numbersHTML,
   collectionHTML,
-  sourcesHTML,
   principlesHTML,
 } from './impact/scripts/content/render.js';
 
@@ -20,8 +19,7 @@ const prerender = () => ({
       .replace('<!--@numbers-->', numbersHTML())
       .replace('<!--@chapters-->', chaptersHTML())
       .replace('<!--@principles-->', principlesHTML())
-      .replace('<!--@collection-->', collectionHTML())
-      .replace('<!--@sources-->', sourcesHTML());
+      .replace('<!--@collection-->', collectionHTML());
   },
 });
 

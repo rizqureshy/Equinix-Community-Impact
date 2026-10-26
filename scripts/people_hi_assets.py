@@ -36,10 +36,13 @@ for png in sorted(src.glob('p*.png')):
                       'provenance': 'AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague.'})
 mp = root / 'media-src/asset-manifest.json'; m = json.loads(mp.read_text())
 old = m.get('people', {}).get('items', [])
-keys = {i['key'] for i in items}
+byid = {i['generationId'] for i in items}
+kept = []
 for o in old:
-    if o['key'] in keys: o['status'] = 'superseded by the 2k portrait of the same key'
-m['people'] = {'description': 'People line: waist-up portraits of an inclusive cast on studio white, each a stand-in for a real colleague. The six in use were regenerated at 2k with full arms in frame. Raw PNGs stay out of git.',
-               'items': old + items, 'estimatedCredits': round(sum(i['estimatedCredits'] for i in old + items), 2)}
+    if o.get('generationId') in byid: continue  # re-run: the same generation is re-recorded below
+    if o.get('settings', {}).get('resolution') == '1k' and any(i['key'] == o['key'] for i in items): o['status'] = 'superseded by the 2k portrait of the same key'
+    kept.append(o)
+m['people'] = {'description': 'People line: waist-up portraits of an inclusive cast on studio white, each a stand-in for a real colleague. The portraits in use are 2k with full arms in frame. Raw PNGs stay out of git.',
+               'items': kept + items, 'estimatedCredits': round(sum(i['estimatedCredits'] for i in kept + items), 2)}
 mp.write_text(json.dumps(m, indent=2) + '\n')
 print(len(items), 'new entries; people total', m['people']['estimatedCredits'], 'credits')

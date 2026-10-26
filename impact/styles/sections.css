@@ -575,19 +575,6 @@ body.spine-open .weather-light {
   display: block;
 }
 /* ---- The coach (Training) --------------------------------------------- */
-.coach {
-  margin-top: var(--s-5);
-  padding-top: var(--s-5);
-  border-top: 1px solid var(--line);
-}
-.coach-note {
-  max-width: 62ch;
-  margin-top: var(--s-3);
-}
-.coach-host[hidden] {
-  display: none;
-}
-
 /* ---- Statement ---------------------------------------------------------------- */
 .statement {
   padding: var(--s-10) 0;
@@ -835,9 +822,6 @@ body.spine-open .weather-light {
 }
 .number .note a,
 .promises-note a,
-.more-links a {
-  color: var(--red);
-}
 
 /* ---- Promises: a horizontal snap rail of cards ------------------------------------- */
 .promises-section {
@@ -1020,56 +1004,77 @@ body.spine-open .weather-light {
 
 /* ---- Training and resources -------------------------------------------- */
 .resources {
-  padding: var(--s-9) 0;
+  padding: var(--s-8) 0;
   background: var(--bg-soft);
 }
 .resources-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: var(--s-5);
-  margin-top: var(--s-8);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: var(--s-4);
+  align-items: start;
+  margin-top: var(--s-6);
 }
 .resource-group {
   display: grid;
   align-content: start;
   gap: var(--s-3);
-  padding: var(--s-6);
+  padding: var(--s-5);
   border-radius: var(--radius-lg);
   background: var(--bg);
   box-shadow: var(--shadow-card);
+  min-width: 0;
 }
-.resource-group--engage {
-  grid-column: 1 / -1;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: var(--s-4) var(--s-6);
+.resource-group .title--md {
+  font-size: var(--t-lg);
 }
-.resource-group--engage .title--md {
-  grid-column: 1;
-}
-.resource-group--engage .muted {
-  grid-column: 1;
-  max-width: 60ch;
+.resource-group > .muted {
+  font-size: var(--t-sm);
 }
 .resource-group--engage .btn {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+  justify-self: start;
+  margin-top: var(--s-2);
+}
+.resource-fold summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--line);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.resource-fold summary::-webkit-details-marker { display: none; }
+.resource-fold summary::after {
+  content: '+';
+  margin-left: auto;
+  color: var(--ink-3);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+}
+.resource-fold[open] summary::after { content: '\2212'; }
+.resource-count {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--ink-3);
 }
 .resource-list,
 .roleplay-list {
-  margin: var(--s-3) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .resource {
   display: grid;
-  grid-template-columns: 6.5rem 1fr auto;
+  grid-template-columns: 5.5rem 1fr auto;
   grid-template-areas:
     'type name state'
     'type meta state';
-  column-gap: var(--s-4);
+  column-gap: var(--s-3);
   align-items: center;
-  padding: var(--s-3) 0;
+  padding: var(--s-2) 0;
   border-top: 1px solid var(--line);
 }
 .resource-type {
@@ -1082,6 +1087,7 @@ body.spine-open .weather-light {
 }
 .resource-name {
   grid-area: name;
+  font-size: var(--t-sm);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -1097,7 +1103,7 @@ body.spine-open .weather-light {
 .resource-state {
   grid-area: state;
   justify-self: end;
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: var(--radius-pill);
   border: 1px dashed var(--line-strong);
   font-size: var(--t-xs);
@@ -1110,36 +1116,46 @@ body.spine-open .weather-light {
   color: var(--red);
 }
 .roleplay {
-  display: grid;
-  grid-template-columns: 2.4rem 1fr;
-  gap: var(--s-3);
-  padding: var(--s-4) 0;
   border-top: 1px solid var(--line);
 }
+.roleplay-btn {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr;
+  gap: var(--s-3);
+  align-items: start;
+  width: 100%;
+  padding: var(--s-3) 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.roleplay-btn:hover strong { color: var(--red); }
+.roleplay-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 .roleplay-num {
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   background: var(--ink);
   color: #fff;
   font-size: var(--t-xs);
-  font-weight: 650;
+  font-weight: 600;
 }
-.roleplay strong {
-  display: block;
-  margin-bottom: 4px;
-  letter-spacing: -0.015em;
+.roleplay-text { display: grid; gap: 2px; min-width: 0; }
+.roleplay-text strong { letter-spacing: -0.015em; font-size: var(--t-sm); transition: color var(--d1); }
+.roleplay-text .muted { font-size: var(--t-xs); }
+.coach {
+  margin-top: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
 }
-.roleplay p {
-  margin: 0 0 var(--s-2);
-  font-size: var(--t-sm);
-}
-.roleplay .resource-state {
-  display: inline-block;
-  justify-self: start;
-}
+.coach .btn { justify-self: start; }
+.coach-note { max-width: 62ch; margin-top: var(--s-3); }
+.coach-host[hidden] { display: none; }
 
 /* ---- Engage page ------------------------------------------------------- */
 .page-engage main {
@@ -1339,57 +1355,11 @@ body.spine-open .weather-light {
 }
 
 /* ---- Sources ---------------------------------------------------------------------- */
-.sources {
-  padding: var(--s-9) 0;
-}
-.source-directory {
-  margin: var(--s-4) 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--s-3);
-}
-.directory {
-  margin-top: var(--s-7);
-  border-top: 1px solid var(--line);
-}
-.directory summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 12px;
-  min-height: 56px;
-  padding: var(--s-4) 0;
-  font-size: var(--t-lg);
-  font-weight: 600;
-  cursor: pointer;
-}
-.source-directory li {
-  display: grid;
-  gap: 2px;
-}
-.source-directory a {
-  color: var(--red);
-}
-.more-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-5);
-  margin-top: var(--s-7);
-}
 
 /* ---- Small screens ------------------------------------------------------------------- */
 @media (max-width: 1000px) {
   .resources-grid {
     grid-template-columns: 1fr;
-  }
-  .resource-group--engage {
-    grid-template-columns: 1fr;
-  }
-  .resource-group--engage .btn {
-    grid-column: 1;
-    grid-row: auto;
-    justify-self: start;
   }
   .ledger {
     grid-template-columns: 1fr;
