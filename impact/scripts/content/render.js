@@ -117,15 +117,17 @@ export function chapterHTML(topic, i) {
 export function chaptersHTML() {
   const parts = topics.map(chapterHTML);
   return `<section class="theatre" id="stories" data-section="stories" data-auto="on" aria-labelledby="stories-title">
-  <div class="wrap center theatre-head" data-reveal>
-    <p class="eyebrow">Stories</p>
-    <h2 class="title" id="stories-title">Five chapters of what connection makes possible.</h2>
-  </div>
   <div class="wrap theatre-grid">
-    <nav class="theatre-index" aria-label="Chapters">
-      ${parts.map((x) => x.row).join('\n')}
-      <p class="theatre-how note">Each chapter plays for a few seconds. Choose one to stay with it.</p>
-    </nav>
+    <div class="theatre-side">
+      <div class="theatre-head" data-reveal>
+        <p class="eyebrow">Stories</p>
+        <h2 class="theatre-title" id="stories-title">Five chapters of what connection makes possible.</h2>
+      </div>
+      <nav class="theatre-index" aria-label="Chapters">
+        ${parts.map((x) => x.row).join('\n')}
+        <p class="theatre-how note">Each chapter plays for a few seconds. Choose one to stay with it.</p>
+      </nav>
+    </div>
     <div class="theatre-stage">
       <div class="theatre-screen">${parts.map((x) => x.film).join('\n')}</div>
       ${parts.map((x) => x.lead).join('\n')}

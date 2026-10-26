@@ -5,6 +5,15 @@ import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/fraunces';
 import { principles } from '../content/stories.js';
 
+// Without WebGL the page shows a still of the Spine instead of throwing from the renderer.
+function canGL() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } }
+function fallback() {
+  document.body.classList.add('no-gl');
+  const img = document.createElement('img'); img.className = 'nogl'; img.src = '../media/spine/film-poster.webp'; img.alt = 'The Spine of Impact: a red ribbon of milestones through white space.';
+  document.getElementById('stage').appendChild(img);
+}
+function main() {
+
 const root = document.documentElement;
 const params = new URLSearchParams(location.search);
 let preview = params.get('mode') === 'preview'; // embedded on the main page: a quiet canvas until the visitor clicks
@@ -301,3 +310,6 @@ function frame(now) {
 }
 camPos.copy(curve.getPointAt(0)).add(new T.Vector3(0, 2.2, 5)); camLook.copy(curve.getPointAt(0.01));
 requestAnimationFrame(frame);
+
+}
+if (canGL()) main(); else fallback();

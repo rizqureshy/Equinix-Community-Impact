@@ -274,6 +274,7 @@ try {
   await p.locator('.person').first().dispatchEvent('click');
   await wait(1800);
   await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
+  await p.waitForFunction(() => (document.querySelector('.people-story .text')?.offsetHeight || 0) > 120, null, { polling: 200, timeout: 8000 }).catch(() => {});
   const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], textOpen: !!t && c.querySelector('.text').offsetHeight > 120, below: r.top >= s.bottom - 1, fits: r.left >= 0 && r.right <= innerWidth }; });
   check(story.open && story.active === 0 && story.role === 'Operations' && story.textOpen && story.below && story.fits, 'the first colleague opens with the whole story in the panel beneath the line', JSON.stringify(story));
   await p.locator('.person').last().dispatchEvent('click');

@@ -701,6 +701,14 @@ function spineStop() {
   spineBegin.focus();
 }
 spineBegin?.addEventListener('click', spineStart);
+// Without WebGL the frame shows the daylight still instead of loading the Spine
+if (spineFrame && !supportsWebGL2()) {
+  spineEmbed?.remove();
+  spineFrame.style.backgroundImage = 'url(media/spine/film-poster.webp)';
+  spineFrame.style.backgroundSize = 'cover';
+  spineFrame.style.backgroundPosition = 'center';
+  if (spineBegin) spineBegin.hidden = true;
+}
 addEventListener('message', (e) => { if (e.data && e.data.type === 'spine:leave') spineStop(); });
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && spineFrame?.dataset.state !== 'idle') spineStop(); });
 

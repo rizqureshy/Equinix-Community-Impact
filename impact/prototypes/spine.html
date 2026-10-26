@@ -91,7 +91,8 @@
   .finale.text::after { opacity: 1; }
   body.finale-on .year, body.finale-on .plaque, body.finale-on .hint { opacity: 0; }
   @media (max-width: 760px) { .finale-text li { grid-template-columns: 30px 1fr; gap: 8px; } .finale-text li i { font-size: 24px; } .finale-text ol { gap: 10px; } }
-  body.preview .hud { display: none; }
+  body.preview .hud, body.no-gl .hud, body.no-gl .hint, body.no-gl .year { display: none; }
+  .nogl { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   body.preview #stage { cursor: default; }
   body.embedded .btn--leave { display: inline-block; }
   .btn--leave[hidden] { display: none; }
