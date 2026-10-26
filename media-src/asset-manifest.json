@@ -1908,7 +1908,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid’s newest site runs without consuming any water at all.",
+        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid\u2019s newest site runs without consuming any water at all.",
         "durationSeconds": 13.32,
         "original": "media-src/voice/people-p06-cooling-engineer.mp3",
         "web": "impact/public/media/voice/people-p06-cooling-engineer.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -1927,7 +1927,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician’s badge in Chicago.",
+        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician\u2019s badge in Chicago.",
         "durationSeconds": 11.08,
         "original": "media-src/voice/people-p04-tour-guide.mp3",
         "web": "impact/public/media/voice/people-p04-tour-guide.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -1946,7 +1946,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours’ bills do not rise.",
+        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours\u2019 bills do not rise.",
         "durationSeconds": 13.4,
         "original": "media-src/voice/people-p10-energy-manager.mp3",
         "web": "impact/public/media/voice/people-p10-energy-manager.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -3168,7 +3168,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_5c9805f8-6a29-4c05-aec2-ca565acce498.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg u2net_human_seg with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3189,7 +3189,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_3e3c537f-a479-4c1a-8216-6a2c1954a62e.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg u2net_human_seg with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3210,7 +3210,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_d4a55ed8-116b-44e3-801d-7daf875ecf50.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg u2net_human_seg with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3231,7 +3231,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224603_707c1bba-1277-493b-9e84-4ddb82e4c0b7.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg u2net_human_seg with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3252,7 +3252,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224604_de05dbe8-b294-486b-b0d9-7869df69ca88.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg u2net_human_seg with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3273,7 +3273,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261025_224604_2c4e60fb-e03c-48b8-8ded-f2bfa66b96e8.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg u2net_human_seg with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg isnet-general-use with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       },
@@ -3294,7 +3294,7 @@
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261026_052450_c825b416-64cc-4885-ba57-524e87505f4d.png",
         "estimatedCredits": 2.75,
         "status": "selected",
-        "processing": "rembg isnet-general-use with alpha matting, trimmed to the figure, 2:3 canvas, 1400px WebP",
+        "processing": "rembg isnet-general-use with alpha matting, edge un-mixed from the white backdrop and bled into the transparent area, trimmed to the figure, 2:3 canvas, 1400px WebP",
         "usage": "Portrait in the people line on the People section of the site and prototypes/people.html, a stand-in for a real colleague from a shoot",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 25 October 2026. Not a real colleague."
       }
