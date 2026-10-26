@@ -225,7 +225,8 @@ try {
   const theatre = await p.evaluate(() => ({ active: window.__impact.theatre.active, auto: window.__impact.theatre.auto, rows: document.querySelectorAll('.theatre-row').length, pressed: document.querySelector('.theatre-row[aria-pressed="true"]')?.dataset.topic, shown: document.querySelector('.theatre-film.on')?.dataset.topic, lead: document.querySelector('.theatre-lead:not([hidden])')?.dataset.topic, playing: (() => { const v = document.querySelector('.theatre-film.on video'); return !!v && v.preload !== 'none'; })() }));
   check(theatre.rows === 5 && theatre.active === 'community' && theatre.pressed === 'community' && theatre.shown === 'community' && theatre.lead === 'community' && theatre.auto === false && theatre.playing, 'the route chooses its chapter in the theatre, loads its film and stops the rotation', JSON.stringify(theatre));
   await p.evaluate(() => window.__impact.theatre.resume());
-  await wait(6500);
+  await wait(5200);
+  await p.waitForFunction(() => window.__impact.theatre.active !== 'community', null, { polling: 250, timeout: 12000 }).catch(() => {});
   const rotated = await p.evaluate(() => window.__impact.theatre.active);
   check(rotated === 'resources', 'left alone, the theatre moves to the next chapter after five seconds', rotated);
   await p.locator('.theatre-row[data-topic="care"]').dispatchEvent('click');
@@ -277,6 +278,8 @@ try {
   await p.waitForFunction(() => (document.querySelector('.people-story .text')?.offsetHeight || 0) > 120, null, { polling: 200, timeout: 8000 }).catch(() => {});
   const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], textOpen: !!t && c.querySelector('.text').offsetHeight > 120, below: r.top >= s.bottom - 1, fits: r.left >= 0 && r.right <= innerWidth }; });
   check(story.open && story.active === 0 && story.role === 'Operations' && story.textOpen && story.below && story.fits, 'the first colleague opens with the whole story in the panel beneath the line', JSON.stringify(story));
+  await p.waitForFunction(() => !document.querySelector('.people-story').classList.contains('no-voice'), null, { polling: 200, timeout: 8000 }).catch(() => {});
+  check(await p.evaluate(() => !document.querySelector('.people-story').classList.contains('no-voice') && !!document.querySelector('.people-story [data-play]')), 'the colleague has a spoken line and a Listen button');
   await p.locator('.person').last().dispatchEvent('click');
   await wait(1800);
   await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));

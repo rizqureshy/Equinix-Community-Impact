@@ -1,0 +1,14 @@
+{
+  "flowId": "4Md279iiCBqjxYkwcXAx",
+  "voice": "Andy - British, calm, warm, kind",
+  "voiceId": "vvVtX7DIkIyxoRO82cCc",
+  "model": "eleven_v4",
+  "takes": {
+    "p02-night-electrician": {"generationId": "VQQw9yXg3tv0HV8nuPg1", "sessionId": "c2ilzmBGY4freHegOLSv", "nodeId": "gitU3F8GUNInxC5ixWY6", "credits": 185.37, "durationSeconds": 12.08},
+    "p11-heat-engineer": {"generationId": "B9kYVPkf9luTwbvLFLmN", "sessionId": "81TzYZvwMPNbDs0WEpjF", "nodeId": "cn00GoXHQNLv5XcJm7Tq", "credits": 175.35, "durationSeconds": 12.72},
+    "p06-cooling-engineer": {"generationId": "5oRs5CEgx1NlXfPo8ohF", "sessionId": "rXhmGHBP00nLItvaY3ag", "nodeId": "5XtMxazFcupbsxWegk6b", "credits": 181.362, "durationSeconds": 13.28},
+    "p04-tour-guide": {"generationId": "YOByDrZB8ZeLZVYytOJa", "sessionId": "xDymqpqH3uBulGmxb72e", "nodeId": "by9CQrHHjn9oGR44c95r", "credits": 165.33, "durationSeconds": 11.04},
+    "p10-energy-manager": {"generationId": "E8ZAiLDv0S9jdVGUHPEM", "sessionId": "0R6ckizVq61fx1Pzq35j", "nodeId": "4RS7IWBHQpdxQ0eLCnke", "credits": 192.384, "durationSeconds": null},
+    "p08-volunteer": {"generationId": "BgQ03PHWIscoAW9OcR9K", "sessionId": "ZpHv3EMbXIlVNd9GP5wZ", "nodeId": "knDDRu0yX4YCpKGGp583", "credits": 164.328, "durationSeconds": 12.08}
+  }
+}
