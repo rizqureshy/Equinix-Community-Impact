@@ -83,43 +83,55 @@ function film(name, alt, { cls = '' } = {}) {
 }
 
 export function chapterHTML(topic, i) {
+  // One chapter of the theatre: an index row, a film with its headline, and the lead story line beneath
   const story = getStory(chapterLead[topic.id]);
   const c = CHAPTERS[topic.id];
   const others = stories.filter((s) => s.topic === topic.id && s.id !== story.id);
-  const heat = topic.id === 'resources';
-  return `<section class="chapter${i % 2 ? ' chapter--soft' : ''}" id="chapter-${topic.id}" data-chapter="${topic.id}" aria-labelledby="chapter-${topic.id}-title">
-  <div class="wrap center chapter-head" data-reveal>
-    <p class="eyebrow">${c.number} <span class="muted">${esc(topic.label)}</span></p>
-    <h2 class="title" id="chapter-${topic.id}-title">${esc(c.title)}</h2>
-    <p class="lede">${esc(c.moment)}</p>
-  </div>
-  <div class="wrap chapter-media" data-reveal>
-    <figure class="frame">${film(c.film, story.media[0]?.alt || '')}</figure>
-  </div>
-  <div class="wrap chapter-grid" data-reveal>
-    <div class="chapter-copy">
-      <p class="chapter-org muted">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
-      <h3 class="title--md">${esc(story.title)}</h3>
-      <p class="chapter-text">${esc(story.challenge)}</p>
-      <p class="chapter-connection"><span class="thread-swatch${heat ? ' thread-swatch--heat' : ''}" aria-hidden="true"></span>${esc(story.connection)}</p>
-      <div class="actions">
-        <a class="btn btn--primary" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the full story</a>
-        ${others.map((o) => `<a class="btn btn--link" href="#/story/${o.id}" data-story-trigger="${o.id}">${esc(o.title)}</a>`).join('')}
+  const on = i === 0;
+  return {
+    row: `<button type="button" class="theatre-row${on ? ' on' : ''}" id="chapter-${topic.id}" data-topic="${topic.id}" aria-pressed="${on}">
+      <span class="num">${c.number}</span>
+      <span class="t">${esc(c.title)}</span>
+      <span class="sub">${esc(story.organisation)}</span>
+      <span class="bar" aria-hidden="true"><i></i></span>
+    </button>`,
+    film: `<figure class="theatre-film${on ? ' on' : ''}" data-topic="${topic.id}">
+      <video class="theatre-video" muted playsinline loop preload="none" poster="media/${c.film}-poster.jpg" aria-label="${esc(story.media[0]?.alt || '')}">
+        <source src="media/${c.film}.webm" type="video/webm"><source src="media/${c.film}.mp4" type="video/mp4"></video>
+      <figcaption class="theatre-cap"><span class="theatre-tag">${c.number} ${esc(topic.label)}</span><h3>${esc(c.title)}</h3><p>${esc(c.moment)}</p></figcaption>
+    </figure>`,
+    lead: `<div class="theatre-lead${on ? ' on' : ''}" data-topic="${topic.id}"${on ? '' : ' hidden'}>
+      <div class="theatre-lead-copy">
+        <h3 class="theatre-lead-title">${esc(story.title)}</h3>
+        <p class="theatre-lead-org muted">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
+        <div class="actions">
+          <a class="btn btn--primary btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the story</a>
+          ${others.map((o) => `<a class="btn btn--link btn--small" href="#/story/${o.id}" data-story-trigger="${o.id}">${esc(o.title)}</a>`).join('')}
+        </div>
       </div>
-    </div>
-    <aside class="chapter-aside">
-      <dl class="roles">
-        <div><dt>Equinix contributes</dt><dd>${esc(story.equinixContribution)}</dd></div>
-        <div><dt>Partners deliver</dt><dd>${esc(story.partnerContribution)}</dd></div>
-      </dl>
       ${story.metric ? `<p class="metric"><span class="metric-value">${esc(story.metric)}</span><span class="metric-label">${esc(story.metricLabel)}</span><span class="metric-scope">${esc(story.metricScope)}</span></p>` : ''}
-    </aside>
-  </div>
-</section>`;
+    </div>`,
+  };
 }
 
 export function chaptersHTML() {
-  return topics.map(chapterHTML).join('\n');
+  const parts = topics.map(chapterHTML);
+  return `<section class="theatre" id="stories" data-section="stories" data-auto="on" aria-labelledby="stories-title">
+  <div class="wrap center theatre-head" data-reveal>
+    <p class="eyebrow">Stories</p>
+    <h2 class="title" id="stories-title">Five chapters of what connection makes possible.</h2>
+  </div>
+  <div class="wrap theatre-grid">
+    <nav class="theatre-index" aria-label="Chapters">
+      ${parts.map((x) => x.row).join('\n')}
+      <p class="theatre-how note">Each chapter plays for a few seconds. Choose one to stay with it.</p>
+    </nav>
+    <div class="theatre-stage">
+      <div class="theatre-screen">${parts.map((x) => x.film).join('\n')}</div>
+      ${parts.map((x) => x.lead).join('\n')}
+    </div>
+  </div>
+</section>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -272,21 +284,7 @@ export function heroStatsHTML() {
 }
 
 export function sourcesHTML() {
-  const groups = { historical: [], current: [], commitment: [] };
-  for (const s of stories) groups[s.timeframe].push(s);
-  const commitments = [
-    { text: 'SBTi-approved targets to reach net zero by 2040.', source: 'S5' },
-    { text: 'A power usage effectiveness (PUE) of 1.33 or better by 2030.', source: 'S7' },
-    { text: 'All future IBX colocation data centers designed with heat recovery and export capabilities, as stated by Equinix in July 2024.', source: 'S3b' },
-    { text: 'A new $50 million commitment to the Equinix Foundation, announced 27 August 2026.', source: 'S4b' },
-  ];
-  const list = (arr) => arr.map((s) => `<li><a href="#/story/${s.id}" data-story-trigger="${s.id}">${esc(s.title)}</a> <span class="source-meta">${esc(s.organisation)}</span></li>`).join('');
-  return `<div class="progress-grid">
-      <div data-reveal><h3>Achieved</h3><p class="note">Results reported for a past period.</p><ul>${list(groups.historical)}</ul></div>
-      <div data-reveal><h3>Happening now</h3><p class="note">Current programmes and customer stories.</p><ul>${list(groups.current)}</ul></div>
-      <div data-reveal><h3>Committed</h3><p class="note">Stated future commitments, not yet outcomes.</p><ul>${commitments.map((c) => `<li>${esc(c.text)} <a class="source-ref" href="${esc(sources[c.source].url)}" target="_blank" rel="noopener">Source<span class="visually-hidden">: ${esc(sources[c.source].title)} (opens in a new tab)</span></a></li>`).join('')}</ul></div>
-    </div>
-    <details class="directory">
+  return `<details class="directory">
       <summary>Source directory <span class="source-meta">${Object.keys(sources).length} sources, checked ${formatDate(LAST_CHECKED)}</span></summary>
       <ul class="source-directory">${Object.keys(sources).map(sourceLink).join('')}</ul>
       <p class="source-meta">Summaries on this page are original paraphrases. Figures keep the scope and period stated by each source.</p>

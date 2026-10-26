@@ -220,8 +220,17 @@ try {
   // ---- Chapters, routes, gallery ------------------------------------------
   p = await open(browser, `${BASE}#/chapter/community`);
   await wait(2500);
-  const top = await p.evaluate(() => document.querySelector('#chapter-community').getBoundingClientRect().top);
-  check(Math.abs(top) < 40, 'chapter route lands on its chapter', `${Math.round(top)}px`);
+  const top = await p.evaluate(() => document.querySelector('#stories').getBoundingClientRect().top);
+  check(Math.abs(top) < 40, 'chapter route lands on the Stories theatre', `${Math.round(top)}px`);
+  const theatre = await p.evaluate(() => ({ active: window.__impact.theatre.active, auto: window.__impact.theatre.auto, rows: document.querySelectorAll('.theatre-row').length, pressed: document.querySelector('.theatre-row[aria-pressed="true"]')?.dataset.topic, shown: document.querySelector('.theatre-film.on')?.dataset.topic, lead: document.querySelector('.theatre-lead:not([hidden])')?.dataset.topic, playing: (() => { const v = document.querySelector('.theatre-film.on video'); return !!v && v.preload !== 'none'; })() }));
+  check(theatre.rows === 5 && theatre.active === 'community' && theatre.pressed === 'community' && theatre.shown === 'community' && theatre.lead === 'community' && theatre.auto === false && theatre.playing, 'the route chooses its chapter in the theatre, loads its film and stops the rotation', JSON.stringify(theatre));
+  await p.evaluate(() => window.__impact.theatre.resume());
+  await wait(6500);
+  const rotated = await p.evaluate(() => window.__impact.theatre.active);
+  check(rotated === 'resources', 'left alone, the theatre moves to the next chapter after five seconds', rotated);
+  await p.locator('.theatre-row[data-topic="care"]').dispatchEvent('click');
+  await wait(300);
+  check(await p.evaluate(() => window.__impact.theatre.active === 'care' && window.__impact.theatre.auto === false && location.hash === '#/chapter/care'), 'choosing a chapter stops the rotation and updates the link');
   check(await p.evaluate(() => document.querySelector('.site-nav a[href="#/chapter/care"]').getAttribute('aria-current') === 'true'), 'navigation marks the current section');
   await p.goto(`${BASE}#/explore/discovery`);
   await wait(1200);

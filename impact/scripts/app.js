@@ -11,6 +11,7 @@ import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } f
 import { createSunlight } from './weather.js';
 import { createRoom } from './room.js';
 import { createPeopleLine } from './people-line.js';
+import { createTheatre } from './theatre.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -504,6 +505,7 @@ setupMotionToggle($('[data-motion-toggle]'), {
     syncVideos();
     sunlight.motionChanged();
     fabric?.motionChanged();
+    theatre?.motionChanged();
   },
 });
 
@@ -527,7 +529,9 @@ const dialog = createStoryDialog({
 
 function scrollToSection(section, { instant = false } = {}) {
   if (section === 'top') return scrollToY(0, { instant });
-  const el = document.getElementById(anchorFor(section));
+  // A chapter lives in the theatre: choose it there and go to the theatre's top
+  if (topicTarget[section]) theatre?.select(section, { user: true });
+  const el = topicTarget[section] ? $('#stories') : document.getElementById(anchorFor(section));
   if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
 }
 
@@ -557,6 +561,16 @@ document.addEventListener('click', (e) => {
     e.preventDefault();
     scrollToSection(parseHash(location.hash).section);
   }
+});
+
+// The Stories theatre: one screen, the chosen chapter's film playing, rotating until someone chooses
+const theatre = createTheatre($('#stories'), {
+  motion: () => store.get().motion,
+  onSelect: (topic, { user }) => {
+    if (!user) return;
+    store.set({ topic });
+    if (store.get().section === 'stories' || topicTarget[store.get().section]) history.replaceState(null, '', hashFor({ section: topic, topic }));
+  },
 });
 
 // The section in the middle of the viewport sets the state.
@@ -738,6 +752,7 @@ const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motio
 window.__impact = {
   store,
   people: peopleLine,
+  theatre,
   get lenis() {
     return lenis;
   },
