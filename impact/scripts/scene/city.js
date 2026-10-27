@@ -22,7 +22,7 @@ export const palette = {
  * the model so its front faces the camera's resting side.
  */
 export const PLACES = {
-  datacenter: { file: 'b9-datacenter', pos: [0.5, 0, -1.0], width: 6.4, height: 0.78, rot: 0.15 }, // height brought down to its neighbours'
+  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 6.4, height: 0.78, rot: 0.15 }, // b8 has the straighter fins; b9 (four views) is kept beside it, same placing
   hospital: { file: 'b1-hospital', pos: [-8.4, 0, -4.8], width: 7.6, rot: 0.55 },
   research: { file: 'b2-research', pos: [8.6, 0, -5.8], width: 7.2, rot: -0.35 },
   learning: { file: 'b3-learning', pos: [-8.8, 0, 4.4], width: 7.0, rot: 0.35 },

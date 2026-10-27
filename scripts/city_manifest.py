@@ -16,7 +16,7 @@ CREDITS = {'gpt_image_2_5': 2.75, 'tripo_h3_1_image_to_3d': 9, 'tripo_h3_1_multi
 PROVENANCE = 'AI generated with Higgsfield via the Higgsfield CLI on {date}. Illustrative only; not a real place.'
 # The data center was remade on 27 October 2026 as a faithful scale model of a real Equinix building, from four reference photographs
 REAL = {'b9-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}: Tripo H3.1 multi-view image-to-3D from four elevation views (media-src/city/views, each GPT Image 2.5 from the b8 concept) of a scale-model likeness of Equinix TR2, Toronto, made from reference photographs supplied by the project owner. A likeness, not a survey.', 'b8-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.'}
-SUPERSEDED = {'b7-datacenter': 'superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)', 'b8-datacenter': 'superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)'}
+SUPERSEDED = {'b7-datacenter': 'superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)', 'b9-datacenter': 'set aside on 27 October 2026: the four-view build has sharper facades but wavy louvre fins, so b8 with its straighter fins is the one in the scene; b9 stays as an alternate'}
 import datetime
 def nice_date(iso):
     try: return datetime.datetime.fromisoformat(iso.replace('Z', '+00:00')).strftime('%-d %B %Y')
@@ -77,7 +77,7 @@ def main():
         items.append(entry(m.group(1), job, '3d' if m.group(2) else 'image'))
     spent = sum(e['estimatedCredits'] or 0 for e in items if e['status'] != 'failed')
     manifest['city'] = {
-        'notes': 'Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.',
+        'notes': 'Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7; b9, the same building rebuilt from four views, is kept as an alternate. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.',
         'estimatedCredits': spent,
         'items': items,
     }

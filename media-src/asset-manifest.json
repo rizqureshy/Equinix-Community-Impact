@@ -540,7 +540,7 @@
   ],
   "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1.",
   "city": {
-    "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
+    "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7; b9, the same building rebuilt from four views, is kept as an alternate. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
     "estimatedCredits": 103.0,
     "items": [
       {
@@ -850,7 +850,7 @@
         "model": "Tripo H3.1 Image to 3D",
         "jobType": "tripo_h3_1_image_to_3d",
         "createdAt": "2026-10-27T21:24:42.744343Z",
-        "status": "superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)",
+        "status": "completed",
         "estimatedCredits": 9,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
         "settings": {
@@ -862,7 +862,7 @@
         },
         "input": "media-src/city/b8-datacenter.png",
         "original": "media-src/city/b8-datacenter.glb",
-        "web": "impact/public/media/city/b8-datacenter.glb (kept as an alternate; not referenced by the scene)",
+        "web": "impact/public/media/city/b8-datacenter.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_212442_04e49392-2a6e-4af0-8463-731c10b32794.glb",
         "usage": "Building in the live community model (Three.js)"
       },
@@ -872,7 +872,7 @@
         "model": "GPT Image 2.5",
         "jobType": "gpt_image_2_5",
         "createdAt": "2026-10-27T21:23:21.801011Z",
-        "status": "superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)",
+        "status": "completed",
         "estimatedCredits": 2.75,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
         "referenceImages": "media-src/city/ref/3.jpg, 4.jpg, 5.jpg, 6.jpg (photographs of Equinix TR2, Toronto; not committed)",
@@ -894,7 +894,7 @@
         "model": "Tripo H3.1 Multiview to 3D",
         "jobType": "tripo_h3_1_multiview_to_3d",
         "createdAt": "2026-10-27T22:02:27.565021Z",
-        "status": "completed",
+        "status": "set aside on 27 October 2026: the four-view build has sharper facades but wavy louvre fins, so b8 with its straighter fins is the one in the scene; b9 stays as an alternate",
         "estimatedCredits": 9,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026: Tripo H3.1 multi-view image-to-3D from four elevation views (media-src/city/views, each GPT Image 2.5 from the b8 concept) of a scale-model likeness of Equinix TR2, Toronto, made from reference photographs supplied by the project owner. A likeness, not a survey.",
         "settings": {
@@ -906,7 +906,7 @@
         },
         "input": "media-src/city/views/front.png, left.png, back.png, right.png (ordered views)",
         "original": "media-src/city/b9-datacenter.glb",
-        "web": "impact/public/media/city/b9-datacenter.glb",
+        "web": "impact/public/media/city/b9-datacenter.glb (kept as an alternate; not referenced by the scene)",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_220227_8c6682f5-d985-4114-95c7-1c316d977747.glb",
         "usage": "Building in the live community model (Three.js)"
       }
