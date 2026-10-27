@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-22T03:41:24.325514Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "fa39fedc-65a8-470a-bbd7-63bf57ad8deb",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "5adc0f3c-66f9-430f-853f-60345b3e61f4",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/5adc0f3c-66f9-430f-853f-60345b3e61f4.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "0103045c-89e8-4e47-84bc-7cadb28164d0",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/0103045c-89e8-4e47-84bc-7cadb28164d0.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move leaving the room: starting inside the real, full-size interior shown in the first frame, the people carry on naturally with what they are doing, the camera glides slowly backward away from them and out through the doorway, and as it leaves the scene resolves into the clean white architectural scale model of the building shown in the last frame, seen from outside. Steady, slow, cinematic, forward in time, no one walks backwards, no cuts, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034124_fa39fedc-65a8-470a-bbd7-63bf57ad8deb.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034124_fa39fedc-65a8-470a-bbd7-63bf57ad8deb_thumbnail.webp"
+  }
+]

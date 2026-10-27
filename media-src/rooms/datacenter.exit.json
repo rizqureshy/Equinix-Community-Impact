@@ -1,8 +1,8 @@
 [
   {
-    "created_at": "2026-10-22T03:44:10.99928Z",
+    "created_at": "2026-10-27T22:16:49.532884Z",
     "display_name": "Kling O3 (Frames)",
-    "id": "5bf59758-45ff-44be-b071-96467300e05c",
+    "id": "6f9344a7-eaaf-4f01-9103-6136300937ea",
     "job_type": "kling_o3_flf",
     "min_result_url": null,
     "params": {
@@ -12,17 +12,17 @@
       "medias": [
         {
           "data": {
-            "id": "ad814797-91ee-4ab3-b43e-1fe1586d665d",
+            "id": "8968acb2-6bea-4e08-9cb8-b4e6ee64077d",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/ad814797-91ee-4ab3-b43e-1fe1586d665d.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/8968acb2-6bea-4e08-9cb8-b4e6ee64077d.png"
           },
           "role": "start_image"
         },
         {
           "data": {
-            "id": "a0ba4ede-0c0d-4bcf-8f15-bc71c32d3674",
+            "id": "ab9f8512-faf6-4608-b380-fd52cf82ce00",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/a0ba4ede-0c0d-4bcf-8f15-bc71c32d3674.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/ab9f8512-faf6-4608-b380-fd52cf82ce00.png"
           },
           "role": "end_image"
         }
@@ -30,12 +30,12 @@
       "mode": "pro",
       "multi_prompt": [],
       "multi_shots": false,
-      "prompt": "A single continuous first-person camera move leaving the room: starting inside the real, full-size interior shown in the first frame, the people carry on naturally with what they are doing, the camera glides slowly backward away from them and out through the doorway, and as it leaves the scene resolves into the clean white architectural scale model of the building shown in the last frame, seen from outside. Steady, slow, cinematic, forward in time, no one walks backwards, no cuts, no camera shake, no text.",
+      "prompt": "A single continuous first-person camera move leaving the room: starting inside the real, full-size interior shown in the first frame, the people carry on naturally with what they are doing, the camera glides slowly backward away from them and out through the glass doorway, and as it leaves the scene resolves into the architectural scale model of the data center with terracotta louvre fins and a black glazed ground floor shown in the last frame, seen from outside. Steady, slow, cinematic, forward in time, no one walks backwards, no cuts, no camera shake, no text.",
       "sound": "off",
       "width": 1920
     },
-    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034410_5bf59758-45ff-44be-b071-96467300e05c.mp4",
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_6f9344a7-eaaf-4f01-9103-6136300937ea.mp4",
     "status": "completed",
-    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034410_5bf59758-45ff-44be-b071-96467300e05c_thumbnail.webp"
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_6f9344a7-eaaf-4f01-9103-6136300937ea_thumbnail.webp"
   }
 ]

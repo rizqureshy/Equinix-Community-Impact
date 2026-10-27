@@ -1,8 +1,8 @@
 [
   {
-    "created_at": "2026-10-22T03:41:24.325514Z",
+    "created_at": "2026-10-27T22:18:50.943923Z",
     "display_name": "Kling O3 (Frames)",
-    "id": "fa39fedc-65a8-470a-bbd7-63bf57ad8deb",
+    "id": "6750aef0-b8b1-4192-baaf-12bf18e77b1f",
     "job_type": "kling_o3_flf",
     "min_result_url": null,
     "params": {
@@ -12,17 +12,17 @@
       "medias": [
         {
           "data": {
-            "id": "5adc0f3c-66f9-430f-853f-60345b3e61f4",
+            "id": "3bfb5bfc-20d8-4b2e-9e13-52fb1aec5835",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/5adc0f3c-66f9-430f-853f-60345b3e61f4.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/3bfb5bfc-20d8-4b2e-9e13-52fb1aec5835.png"
           },
           "role": "start_image"
         },
         {
           "data": {
-            "id": "0103045c-89e8-4e47-84bc-7cadb28164d0",
+            "id": "91bbe6d7-8a6e-4be9-ae25-9cb751022da0",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/0103045c-89e8-4e47-84bc-7cadb28164d0.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/91bbe6d7-8a6e-4be9-ae25-9cb751022da0.png"
           },
           "role": "end_image"
         }
@@ -34,8 +34,8 @@
       "sound": "off",
       "width": 1920
     },
-    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034124_fa39fedc-65a8-470a-bbd7-63bf57ad8deb.mp4",
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221850_6750aef0-b8b1-4192-baaf-12bf18e77b1f.mp4",
     "status": "completed",
-    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_034124_fa39fedc-65a8-470a-bbd7-63bf57ad8deb_thumbnail.webp"
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221850_6750aef0-b8b1-4192-baaf-12bf18e77b1f_thumbnail.webp"
   }
 ]

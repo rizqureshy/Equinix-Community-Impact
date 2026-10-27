@@ -26,3 +26,5 @@ media-src/people/**/*.png
 # Empty stderr captures from the Higgsfield CLI
 media-src/**/*.err
 media-src/city/ref/
+!media-src/rooms/old/web/*.mp4
+!media-src/rooms/old/web/*.webm

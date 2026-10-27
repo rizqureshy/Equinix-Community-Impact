@@ -1,8 +1,8 @@
 [
   {
-    "created_at": "2026-10-22T02:31:52.794174Z",
+    "created_at": "2026-10-27T22:18:49.968766Z",
     "display_name": "Kling O3 (Frames)",
-    "id": "74c57ff4-f5df-4838-bfbe-d7847ca42eca",
+    "id": "e36e3cfd-f8df-460d-86e0-c39df536c0a2",
     "job_type": "kling_o3_flf",
     "min_result_url": null,
     "params": {
@@ -12,17 +12,17 @@
       "medias": [
         {
           "data": {
-            "id": "fe7d82be-e042-495f-a9e3-5d64865120a1",
+            "id": "74a0b006-5727-4a4e-9950-3fd4f4dd7e6d",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/fe7d82be-e042-495f-a9e3-5d64865120a1.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/74a0b006-5727-4a4e-9950-3fd4f4dd7e6d.png"
           },
           "role": "start_image"
         },
         {
           "data": {
-            "id": "63f90ee4-69ef-4bea-83c7-c895a9d708e4",
+            "id": "708941f1-0ba7-4574-b2bd-c6c77eedca89",
             "type": "media_input",
-            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/63f90ee4-69ef-4bea-83c7-c895a9d708e4.png"
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/708941f1-0ba7-4574-b2bd-c6c77eedca89.png"
           },
           "role": "end_image"
         }
@@ -34,8 +34,8 @@
       "sound": "off",
       "width": 1920
     },
-    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_023152_74c57ff4-f5df-4838-bfbe-d7847ca42eca.mp4",
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221849_e36e3cfd-f8df-460d-86e0-c39df536c0a2.mp4",
     "status": "completed",
-    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_023152_74c57ff4-f5df-4838-bfbe-d7847ca42eca_thumbnail.webp"
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221849_e36e3cfd-f8df-460d-86e0-c39df536c0a2_thumbnail.webp"
   }
 ]
