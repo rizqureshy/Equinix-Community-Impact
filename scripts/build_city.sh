@@ -15,7 +15,7 @@ for n in "${names[@]}"; do
   out="impact/public/media/city/$n.glb"
   # The data center is the model's hero and keeps more detail: a quarter of its triangles and 4k textures
   ratio=0.12; err=0.001; tex=2048
-  if [ "$n" = "b8-datacenter" ]; then ratio=0.3; err=0.0005; tex=4096; fi
+  case "$n" in b8-datacenter|b9-datacenter) ratio=0.3; err=0.0005; tex=4096;; esac
   npx gltf-transform optimize "$in" "$out" \
     --compress meshopt --meshopt-level high \
     --texture-compress webp --texture-size "$tex" \

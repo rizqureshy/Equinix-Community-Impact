@@ -541,7 +541,7 @@
   "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1.",
   "city": {
     "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
-    "estimatedCredits": 94.0,
+    "estimatedCredits": 103.0,
     "items": [
       {
         "key": "b1-hospital-3d",
@@ -850,7 +850,7 @@
         "model": "Tripo H3.1 Image to 3D",
         "jobType": "tripo_h3_1_image_to_3d",
         "createdAt": "2026-10-27T21:24:42.744343Z",
-        "status": "completed",
+        "status": "superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)",
         "estimatedCredits": 9,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
         "settings": {
@@ -862,7 +862,7 @@
         },
         "input": "media-src/city/b8-datacenter.png",
         "original": "media-src/city/b8-datacenter.glb",
-        "web": "impact/public/media/city/b8-datacenter.glb",
+        "web": "impact/public/media/city/b8-datacenter.glb (kept as an alternate; not referenced by the scene)",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_212442_04e49392-2a6e-4af0-8463-731c10b32794.glb",
         "usage": "Building in the live community model (Three.js)"
       },
@@ -872,7 +872,7 @@
         "model": "GPT Image 2.5",
         "jobType": "gpt_image_2_5",
         "createdAt": "2026-10-27T21:23:21.801011Z",
-        "status": "completed",
+        "status": "superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)",
         "estimatedCredits": 2.75,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
         "referenceImages": "media-src/city/ref/3.jpg, 4.jpg, 5.jpg, 6.jpg (photographs of Equinix TR2, Toronto; not committed)",
@@ -887,6 +887,28 @@
         "styleFile": "media-src/city/style.txt",
         "original": "media-src/city/b8-datacenter.png",
         "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b9-datacenter-3d",
+        "generationId": "8c6682f5-d985-4114-95c7-1c316d977747",
+        "model": "Tripo H3.1 Multiview to 3D",
+        "jobType": "tripo_h3_1_multiview_to_3d",
+        "createdAt": "2026-10-27T22:02:27.565021Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026: Tripo H3.1 multi-view image-to-3D from four elevation views (media-src/city/views, each GPT Image 2.5 from the b8 concept) of a scale-model likeness of Equinix TR2, Toronto, made from reference photographs supplied by the project owner. A likeness, not a survey.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/views/front.png, left.png, back.png, right.png (ordered views)",
+        "original": "media-src/city/b9-datacenter.glb",
+        "web": "impact/public/media/city/b9-datacenter.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_220227_8c6682f5-d985-4114-95c7-1c316d977747.glb",
+        "usage": "Building in the live community model (Three.js)"
       }
     ]
   },
@@ -1945,7 +1967,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid’s newest site runs without consuming any water at all.",
+        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid\u2019s newest site runs without consuming any water at all.",
         "durationSeconds": 13.32,
         "original": "media-src/voice/people-p06-cooling-engineer.mp3",
         "web": "impact/public/media/voice/people-p06-cooling-engineer.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -1964,7 +1986,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician’s badge in Chicago.",
+        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician\u2019s badge in Chicago.",
         "durationSeconds": 11.08,
         "original": "media-src/voice/people-p04-tour-guide.mp3",
         "web": "impact/public/media/voice/people-p04-tour-guide.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -1983,7 +2005,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours’ bills do not rise.",
+        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours\u2019 bills do not rise.",
         "durationSeconds": 13.4,
         "original": "media-src/voice/people-p10-energy-manager.mp3",
         "web": "impact/public/media/voice/people-p10-energy-manager.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",

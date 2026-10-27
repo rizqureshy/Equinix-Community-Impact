@@ -12,11 +12,11 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CITY = ROOT / 'media-src' / 'city'
 MANIFEST = ROOT / 'media-src' / 'asset-manifest.json'
-CREDITS = {'gpt_image_2_5': 2.75, 'tripo_h3_1_image_to_3d': 9}
+CREDITS = {'gpt_image_2_5': 2.75, 'tripo_h3_1_image_to_3d': 9, 'tripo_h3_1_multiview_to_3d': 9}
 PROVENANCE = 'AI generated with Higgsfield via the Higgsfield CLI on {date}. Illustrative only; not a real place.'
 # The data center was remade on 27 October 2026 as a faithful scale model of a real Equinix building, from four reference photographs
-REAL = {'b8-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.'}
-SUPERSEDED = {'b7-datacenter': 'superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)'}
+REAL = {'b9-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}: Tripo H3.1 multi-view image-to-3D from four elevation views (media-src/city/views, each GPT Image 2.5 from the b8 concept) of a scale-model likeness of Equinix TR2, Toronto, made from reference photographs supplied by the project owner. A likeness, not a survey.', 'b8-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.'}
+SUPERSEDED = {'b7-datacenter': 'superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)', 'b8-datacenter': 'superseded by b9-datacenter on 27 October 2026 (the same building from four views, sharper facades)'}
 import datetime
 def nice_date(iso):
     try: return datetime.datetime.fromisoformat(iso.replace('Z', '+00:00')).strftime('%-d %B %Y')
@@ -56,7 +56,7 @@ def entry(name, job, kind):
         e['usage'] = 'Concept image for the community model building; the input to image-to-3D'
     else:
         e['settings'] = {k: params.get(k) for k in ('texture', 'pbr', 'texture_quality', 'geometry_quality', 'orientation')}
-        e['input'] = f'media-src/city/{name}.png'
+        e['input'] = 'media-src/city/views/front.png, left.png, back.png, right.png (ordered views)' if name == 'b9-datacenter' else f'media-src/city/{name}.png'
         e['original'] = f'media-src/city/{name}.glb'
         e['web'] = f'impact/public/media/city/{name}.glb' + (' (kept as an alternate; not referenced by the scene)' if name in SUPERSEDED else '')
         e['resultUrl'] = job.get('result_url')
