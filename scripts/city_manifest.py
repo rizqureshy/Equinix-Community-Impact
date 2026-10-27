@@ -58,7 +58,7 @@ def entry(name, job, kind):
         e['settings'] = {k: params.get(k) for k in ('texture', 'pbr', 'texture_quality', 'geometry_quality', 'orientation')}
         e['input'] = f'media-src/city/{name}.png'
         e['original'] = f'media-src/city/{name}.glb'
-        e['web'] = f'impact/public/media/city/{name}.glb'
+        e['web'] = f'impact/public/media/city/{name}.glb' + (' (kept as an alternate; not referenced by the scene)' if name in SUPERSEDED else '')
         e['resultUrl'] = job.get('result_url')
         e['usage'] = 'Building in the live community model (Three.js)'
     return e

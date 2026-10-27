@@ -1,0 +1,32 @@
+[
+  {
+    "created_at": "2026-10-27T22:00:50.563994Z",
+    "display_name": "GPT Image 2.5",
+    "id": "a326813d-26a9-4aea-a29e-705c1424fe71",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_220050_a326813d-26a9-4aea-a29e-705c1424fe71_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "height": 2048,
+      "medias": [
+        {
+          "data": {
+            "id": "82d76d85-c6e7-46d1-8f01-9c2b4c7bcd00",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/82d76d85-c6e7-46d1-8f01-9c2b4c7bcd00.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Reproduce the exact same architectural scale model as the reference image, identical building, materials and colours: staggered horizontal terracotta and rust-red louvre fins over dark windows, a charcoal metal parapet band, a black metal-clad ground storey, the tall glazed corner atrium with a glass ground floor, the thin pale base with planting. Product shot on a seamless pure white background, soft even studio daylight, slightly elevated straight-on elevation view with no perspective distortion, the whole building fully in frame with generous margin. No text, no logos, no people, no cars. The RIGHT elevation: the short side that includes the glazed corner atrium and glass ground floor at its left-hand end.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_220050_a326813d-26a9-4aea-a29e-705c1424fe71.png",
+    "status": "completed"
+  }
+]
