@@ -17,11 +17,12 @@ export const palette = {
 
 /**
  * Layout of the model. Positions in plinth units (the plinth is 30 wide).
- * `width` is the footprint each generated model is scaled to. `rot` turns
+ * `width` is the footprint each generated model is scaled to; `height` (optional) scales the
+ * height relative to that. `rot` turns
  * the model so its front faces the camera's resting side.
  */
 export const PLACES = {
-  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 6.4, rot: 0.15 },
+  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 6.4, height: 0.78, rot: 0.15 }, // height brought down to its neighbours'
   hospital: { file: 'b1-hospital', pos: [-8.4, 0, -4.8], width: 7.6, rot: 0.55 },
   research: { file: 'b2-research', pos: [8.6, 0, -5.8], width: 7.2, rot: -0.35 },
   learning: { file: 'b3-learning', pos: [-8.8, 0, 4.4], width: 7.0, rot: 0.35 },
@@ -356,7 +357,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
     const scale = def.width / Math.max(size.x, size.z);
-    model.scale.setScalar(scale);
+    model.scale.set(scale, scale * (def.height || 1), scale); // `height` squashes a model that would tower over the others
     box.setFromObject(model);
     const centre = box.getCenter(new THREE.Vector3());
     model.position.set(-centre.x, -box.min.y, -centre.z);
