@@ -21,7 +21,7 @@ export const palette = {
  * the model so its front faces the camera's resting side.
  */
 export const PLACES = {
-  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 7.4, rot: 0.15 },
+  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 6.4, rot: 0.15 },
   hospital: { file: 'b1-hospital', pos: [-8.4, 0, -4.8], width: 7.6, rot: 0.55 },
   research: { file: 'b2-research', pos: [8.6, 0, -5.8], width: 7.2, rot: -0.35 },
   learning: { file: 'b3-learning', pos: [-8.8, 0, 4.4], width: 7.0, rot: 0.35 },

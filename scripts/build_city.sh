@@ -13,10 +13,13 @@ fi
 for n in "${names[@]}"; do
   in="media-src/city/$n.glb"
   out="impact/public/media/city/$n.glb"
+  # The data center is the model's hero and keeps more detail: a quarter of its triangles and 4k textures
+  ratio=0.12; err=0.001; tex=2048
+  if [ "$n" = "b8-datacenter" ]; then ratio=0.3; err=0.0005; tex=4096; fi
   npx gltf-transform optimize "$in" "$out" \
     --compress meshopt --meshopt-level high \
-    --texture-compress webp --texture-size 2048 \
-    --simplify true --simplify-ratio 0.12 --simplify-error 0.001 \
+    --texture-compress webp --texture-size "$tex" \
+    --simplify true --simplify-ratio "$ratio" --simplify-error "$err" \
     --palette false
   printf '%s: %s -> %s bytes\n' "$n" "$(stat -c %s "$in")" "$(stat -c %s "$out")"
 done
