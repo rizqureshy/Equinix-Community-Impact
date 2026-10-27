@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-22T02:41:53.699894Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "3fc6ee65-7ed2-4f1e-8e2e-6aeefd951492",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "056710ca-8cf3-4cb8-8c18-1c833697e01b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/056710ca-8cf3-4cb8-8c18-1c833697e01b.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "2de7204d-4ddb-4112-bb09-a80ac9cd79f0",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/2de7204d-4ddb-4112-bb09-a80ac9cd79f0.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move: starting outside as a clean white architectural scale model of the building, the camera glides smoothly forward toward the entrance, passes through the doorway, and the scene resolves into the real, full-size interior shown in the last frame, with the lighting warming and people settling into place as we arrive. Steady, slow, cinematic, no cuts, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_024153_3fc6ee65-7ed2-4f1e-8e2e-6aeefd951492.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261022_024153_3fc6ee65-7ed2-4f1e-8e2e-6aeefd951492_thumbnail.webp"
+  }
+]

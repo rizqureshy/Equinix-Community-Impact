@@ -16,8 +16,8 @@ media-src/city/*.glb
 media-src/promises/*.png
 media-src/audio/*.src
 # Rooms: panorama renders, door renders and raw dive films are re-downloadable or re-renderable
-media-src/rooms/*.png
-media-src/rooms/*.mp4
+media-src/rooms/**/*.png
+media-src/rooms/**/*.mp4
 media-src/voice/*.mp3
 media-src/spine/*.png
 media-src/spine/film/*.png
