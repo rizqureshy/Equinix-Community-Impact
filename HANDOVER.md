@@ -95,7 +95,7 @@ Files: `impact/scripts/weather.js` (`createSunlight`), `impact/styles/weather.cs
 - You chose the Apple-like mood, real generated 3D models, the "travels with you" scroll behaviour and a budget of up to 250 further credits.
 - The six-stop order follows the chapters (care, discovery, opportunity, community, resources) and ends on the data center, where every thread begins.
 - The headline is kept as briefed.
-- The data center model reads as a calm two-storey building with rooftop plant, in keeping with the scale-model style, rather than an industrial hall. A more recognisable data center would need a new concept image and conversion (about 12 credits).
+- The data center is a scale-model likeness of a real Equinix building, TR2 at 45 Parliament Street in Toronto (terracotta louvre fins, dark parapet, black base, glazed corner lobby), made on 27 October 2026 from four reference photographs supplied by the owner: GPT Image 2.5 concept with the photos as references (2.75 credits), Tripo H3.1 image-to-3D (9 credits), compressed to 2.8 MB. It is the only building with its real colours; the terracotta sits with the red thread as the model's warm accents. The earlier generic white data center (b7) is superseded and its web model removed. The photographs stay out of git in `media-src/city/ref`.
 - The red is the Equinix logo red `#E91C24` from the supplied brand files, used for the thread, the numbers' marks and small accents. The header carries the Equinix logo; the footer the vertical lockup.
 - **Motion:** scroll choreography only runs with motion on. The model pauses when it is off screen or the tab is hidden.
 
@@ -174,7 +174,7 @@ Content and sources are unchanged from version two; they were checked on 21 Octo
 
 - **Brand assets:** the supplied Equinix logos are in `impact/public/brand/` (vertical lockup in the footer, fortress mark as the favicon). The slim header uses a horizontal arrangement assembled from the supplied vertical file (mark left, wordmark right, shared baseline); replace it with the official horizontal lockup if one exists. The red is now the logo red `#E91C24`. The type remains a placeholder until brand type is supplied.
 - **Documentary media:** approved photography of real people and facilities would strengthen every chapter.
-- **Data center character:** see Creative direction; a new concept would give a more recognisable building.
+- **Data center films:** the data center's dive and exit films were made from the old building's door view, so their first and last frames no longer match the model exactly (about 20 credits to remake with the new door render in `media-src/rooms/datacenter.door.png`).
 - **Model fidelity:** buildings are simplified to about 230,000 triangles each with anisotropic texture filtering. `scripts/build_city.sh` can raise `--simplify-ratio` further at a larger download; the raw 65 MB models are re-downloadable from each `resultUrl` in the manifest.
 - **Mobile hero type:** at phone width the headline wraps to four lines; a shorter second line or a smaller size would tidy it.
 - **Higgsfield access:** the CLI sign-in lived in this session's container. Future sessions need to sign in again.

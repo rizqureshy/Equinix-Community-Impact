@@ -540,8 +540,8 @@
   ],
   "flightNotes": "Scene stills share media-src/flight/style.txt plus scene-N.txt, with scene-1 as the style reference. Dive and connector prompts are saved beside each clip. Connectors are frame-locked: start = last frame of dive i, end = first frame of dive i+1.",
   "city": {
-    "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model). Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
-    "estimatedCredits": 82.25,
+    "notes": "Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.",
+    "estimatedCredits": 94.0,
     "items": [
       {
         "key": "b1-hospital-3d",
@@ -563,8 +563,7 @@
         "original": "media-src/city/b1-hospital.glb",
         "web": "impact/public/media/city/b1-hospital.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185408_e0292c87-1388-4bee-b2cb-804b9303facd.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b1-hospital",
@@ -607,8 +606,7 @@
         "original": "media-src/city/b2-research.glb",
         "web": "impact/public/media/city/b2-research.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185340_6dbacae7-d1ae-45c3-9cae-38caf162f9a2.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b2-research",
@@ -651,8 +649,7 @@
         "original": "media-src/city/b3-learning.glb",
         "web": "impact/public/media/city/b3-learning.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185350_8d8706c4-8752-42f8-898e-142e5923571d.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b3-learning",
@@ -695,8 +692,7 @@
         "original": "media-src/city/b4-homes.glb",
         "web": "impact/public/media/city/b4-homes.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185354_bc3535f3-007d-4ef5-b823-f054bf465914.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b4-homes",
@@ -739,8 +735,7 @@
         "original": "media-src/city/b5-shops.glb",
         "web": "impact/public/media/city/b5-shops.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185359_70e97470-96df-4009-b261-ccd5bf499d92.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b5-shops",
@@ -783,8 +778,7 @@
         "original": "media-src/city/b6-aquatic.glb",
         "web": "impact/public/media/city/b6-aquatic.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_185404_5da6fae8-f7bb-44ed-9bc7-19ec3bc0e6d0.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b6-aquatic",
@@ -813,7 +807,7 @@
         "model": "Tripo H3.1 Image to 3D",
         "jobType": "tripo_h3_1_image_to_3d",
         "createdAt": "2026-10-21T18:37:18.899399Z",
-        "status": "completed",
+        "status": "superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)",
         "estimatedCredits": 9,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
         "settings": {
@@ -827,8 +821,7 @@
         "original": "media-src/city/b7-datacenter.glb",
         "web": "impact/public/media/city/b7-datacenter.glb",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261021_183718_50beb452-06e0-4a67-aec7-0b3886c19b2d.glb",
-        "usage": "Building in the live community model (Three.js)",
-        "webSettings": "meshopt geometry at 12% of the triangles, 2048 px WebP textures, about 2.4 MB (raised from 3% and 1024 px on 23 October 2026)"
+        "usage": "Building in the live community model (Three.js)"
       },
       {
         "key": "b7-datacenter",
@@ -836,7 +829,7 @@
         "model": "GPT Image 2.5",
         "jobType": "gpt_image_2_5",
         "createdAt": "2026-10-21T18:09:23.65213Z",
-        "status": "completed",
+        "status": "superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)",
         "estimatedCredits": 2.75,
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.",
         "settings": {
@@ -849,6 +842,50 @@
         "promptFile": "media-src/city/b7-datacenter.txt",
         "styleFile": "media-src/city/style.txt",
         "original": "media-src/city/b7-datacenter.png",
+        "usage": "Concept image for the community model building; the input to image-to-3D"
+      },
+      {
+        "key": "b8-datacenter-3d",
+        "generationId": "04e49392-2a6e-4af0-8463-731c10b32794",
+        "model": "Tripo H3.1 Image to 3D",
+        "jobType": "tripo_h3_1_image_to_3d",
+        "createdAt": "2026-10-27T21:24:42.744343Z",
+        "status": "completed",
+        "estimatedCredits": 9,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
+        "settings": {
+          "texture": true,
+          "pbr": true,
+          "texture_quality": "detailed",
+          "geometry_quality": "detailed",
+          "orientation": "default"
+        },
+        "input": "media-src/city/b8-datacenter.png",
+        "original": "media-src/city/b8-datacenter.glb",
+        "web": "impact/public/media/city/b8-datacenter.glb",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_212442_04e49392-2a6e-4af0-8463-731c10b32794.glb",
+        "usage": "Building in the live community model (Three.js)"
+      },
+      {
+        "key": "b8-datacenter",
+        "generationId": "96efaea0-8ef9-4926-9cfb-ba3f5cbe648a",
+        "model": "GPT Image 2.5",
+        "jobType": "gpt_image_2_5",
+        "createdAt": "2026-10-27T21:23:21.801011Z",
+        "status": "completed",
+        "estimatedCredits": 2.75,
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.",
+        "referenceImages": "media-src/city/ref/3.jpg, 4.jpg, 5.jpg, 6.jpg (photographs of Equinix TR2, Toronto; not committed)",
+        "settings": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k",
+          "width": 2048,
+          "height": 2048
+        },
+        "promptFile": "media-src/city/b8-datacenter.txt",
+        "styleFile": "media-src/city/style.txt",
+        "original": "media-src/city/b8-datacenter.png",
         "usage": "Concept image for the community model building; the input to image-to-3D"
       }
     ]

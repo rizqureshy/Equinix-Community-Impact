@@ -1,0 +1,56 @@
+[
+  {
+    "created_at": "2026-10-27T21:23:21.801011Z",
+    "display_name": "GPT Image 2.5",
+    "id": "96efaea0-8ef9-4926-9cfb-ba3f5cbe648a",
+    "job_type": "gpt_image_2_5",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_212321_96efaea0-8ef9-4926-9cfb-ba3f5cbe648a_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "height": 2048,
+      "medias": [
+        {
+          "data": {
+            "id": "f0103933-a87a-4338-876c-066c496dca27",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/f0103933-a87a-4338-876c-066c496dca27.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "4940047b-1ffc-4a3c-94e1-1506c1a859bb",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/4940047b-1ffc-4a3c-94e1-1506c1a859bb.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "270144dc-ed6e-43c0-bc0d-18554f4d6421",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/270144dc-ed6e-43c0-bc0d-18554f4d6421.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "293e7f26-488e-4253-814a-2fec172fedf4",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/293e7f26-488e-4253-814a-2fec172fedf4.jpg"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "flare",
+      "prompt": "Subject: a faithful architectural scale model of the building in the reference photos: a long four-storey data center with a facade of staggered horizontal terracotta and rust-red louvre fins in irregular bands over dark recessed windows, a charcoal metal parapet band and dark frame, a black metal-clad ground storey with a few service doors on the long side, and a tall glazed corner atrium with a glass ground floor on the street corner. A few small trees and neat planting at the pavement edge.\n\nClean architectural scale model of a single building, photographed as a product shot on a seamless pure white background, elevated three-quarter view from the front-left showing the glazed corner, soft even studio daylight, very soft shadow directly beneath. Keep the real materials and colours of the reference building: terracotta fins, dark glass, black metal. Minimal, precise, Apple-like calm and refined. The whole building fully in frame with generous margin, nothing cropped. No text, no letters, no numbers, no logos, no signage, no people, no cars, no street.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_212321_96efaea0-8ef9-4926-9cfb-ba3f5cbe648a.png",
+    "status": "completed"
+  }
+]

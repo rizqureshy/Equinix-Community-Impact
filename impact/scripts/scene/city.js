@@ -21,7 +21,7 @@ export const palette = {
  * the model so its front faces the camera's resting side.
  */
 export const PLACES = {
-  datacenter: { file: 'b7-datacenter', pos: [0.5, 0, -1.0], width: 8.4, rot: 0.15 },
+  datacenter: { file: 'b8-datacenter', pos: [0.5, 0, -1.0], width: 7.4, rot: 0.15 },
   hospital: { file: 'b1-hospital', pos: [-8.4, 0, -4.8], width: 7.6, rot: 0.55 },
   research: { file: 'b2-research', pos: [8.6, 0, -5.8], width: 7.2, rot: -0.35 },
   learning: { file: 'b3-learning', pos: [-8.8, 0, 4.4], width: 7.0, rot: 0.35 },
@@ -53,7 +53,7 @@ export const DOORS = {
   learning: { target: [-8.6, 1.4, 4.4], dist: 11.5, az: 1.95, el: 0.16 },
   homes: { target: [7.6, 1.4, 4.2], dist: 12, az: 1.5, el: 0.16 },
   aquatic: { target: [-3.4, 1.3, 8.6], dist: 10, az: -1.2, el: 0.18 },
-  datacenter: { target: [0.5, 1.8, -1.0], dist: 13, az: 0.2, el: 0.16 },
+  datacenter: { target: [0.5, 1.6, -1.0], dist: 10, az: 1.3, el: 0.2 }, // the glazed ground floor and corner lobby
 };
 
 /** Threads: conceptual connections, not network routes or physical pipes. */

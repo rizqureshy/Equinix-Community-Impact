@@ -13,7 +13,14 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 CITY = ROOT / 'media-src' / 'city'
 MANIFEST = ROOT / 'media-src' / 'asset-manifest.json'
 CREDITS = {'gpt_image_2_5': 2.75, 'tripo_h3_1_image_to_3d': 9}
-PROVENANCE = 'AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026. Illustrative only; not a real place.'
+PROVENANCE = 'AI generated with Higgsfield via the Higgsfield CLI on {date}. Illustrative only; not a real place.'
+# The data center was remade on 27 October 2026 as a faithful scale model of a real Equinix building, from four reference photographs
+REAL = {'b8-datacenter': 'AI generated with Higgsfield via the Higgsfield CLI on {date}, from four reference photographs of Equinix TR2 (45 Parliament Street, Toronto) supplied by the project owner; the photographs stay out of git (media-src/city/ref). A scale-model likeness, not a survey.'}
+SUPERSEDED = {'b7-datacenter': 'superseded by b8-datacenter on 27 October 2026 (a faithful model of a real Equinix building)'}
+import datetime
+def nice_date(iso):
+    try: return datetime.datetime.fromisoformat(iso.replace('Z', '+00:00')).strftime('%-d %B %Y')
+    except Exception: return 'an unrecorded date'
 
 
 def load(path):
@@ -34,10 +41,12 @@ def entry(name, job, kind):
         'model': job.get('display_name'),
         'jobType': model_id,
         'createdAt': job.get('created_at'),
-        'status': job.get('status'),
+        'status': SUPERSEDED.get(name, job.get('status')),
         'estimatedCredits': CREDITS.get(model_id),
-        'provenance': PROVENANCE,
+        'provenance': REAL.get(name, PROVENANCE).format(date=nice_date(job.get('created_at', ''))),
     }
+    if name in REAL and kind == 'image':
+        e['referenceImages'] = 'media-src/city/ref/3.jpg, 4.jpg, 5.jpg, 6.jpg (photographs of Equinix TR2, Toronto; not committed)'
     params = job.get('params', {})
     if kind == 'image':
         e['settings'] = {k: params.get(k) for k in ('aspect_ratio', 'quality', 'resolution', 'width', 'height')}
@@ -59,7 +68,7 @@ def main():
     manifest = json.loads(MANIFEST.read_text())
     items = []
     for path in sorted(CITY.glob('b*.json')):
-        m = re.match(r'(b\d-[a-z]+)(\.3d)?\.json$', path.name)
+        m = re.match(r'(b\d+-[a-z]+)(\.3d)?\.json$', path.name)
         if not m:
             continue
         job = load(path)
@@ -68,7 +77,7 @@ def main():
         items.append(entry(m.group(1), job, '3d' if m.group(2) else 'image'))
     spent = sum(e['estimatedCredits'] or 0 for e in items if e['status'] != 'failed')
     manifest['city'] = {
-        'notes': 'Seven buildings share media-src/city/style.txt (a clean white architectural scale model). Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.',
+        'notes': 'Seven buildings share media-src/city/style.txt (a clean white architectural scale model); the data center (b8) is a scale-model likeness of Equinix TR2 in Toronto made from reference photographs, replacing the earlier generic b7. Each concept image is converted with Tripo H3.1 image-to-3D, then compressed for the web by scripts/build_city.sh. Raw GLB downloads are not committed; each resultUrl re-downloads the original.',
         'estimatedCredits': spent,
         'items': items,
     }
