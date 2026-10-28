@@ -28,3 +28,5 @@ media-src/**/*.err
 media-src/city/ref/
 !media-src/rooms/old/web/*.mp4
 !media-src/rooms/old/web/*.webm
+!media-src/rooms/b9/web/*.mp4
+!media-src/rooms/b9/web/*.webm

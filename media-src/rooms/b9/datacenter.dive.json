@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-27T22:16:49.334411Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "58847c90-111d-4073-b9f4-2bec45e990cc",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "5252a07a-5ae5-4d2a-a50f-56a18c4662b1",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/5252a07a-5ae5-4d2a-a50f-56a18c4662b1.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "6bba3dfa-77cd-4973-bfcc-04ac04893e68",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/6bba3dfa-77cd-4973-bfcc-04ac04893e68.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move: starting outside as an architectural scale model of a data center with staggered terracotta louvre fins, a dark parapet and a black glazed ground floor, the camera glides smoothly forward toward the glass entrance, passes through the doorway, and the scene resolves into the real, full-size interior shown in the last frame, with the lighting warming and people settling into place as we arrive. Steady, slow, cinematic, no cuts, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_58847c90-111d-4073-b9f4-2bec45e990cc.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_58847c90-111d-4073-b9f4-2bec45e990cc_thumbnail.webp"
+  }
+]

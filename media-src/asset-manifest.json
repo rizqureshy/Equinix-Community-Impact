@@ -1162,8 +1162,8 @@
     ]
   },
   "rooms": {
-    "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film per stop (Kling O3 Frames, first frame a render of the live model at the door, last frame the panorama centre), plus a forward exit film for every room but the homes path. All eleven films were remade on 27 October 2026 with door renders of the model as it stands (data center as Equinix TR2); the first set is kept as alternates (keys ending -previous, raw films in media-src/rooms/old, web encodes in media-src/rooms/old/web, each re-downloadable from its resultUrl). Web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
-    "estimatedCredits": 248,
+    "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film per stop (Kling O3 Frames, first frame a render of the live model at the door, last frame the panorama centre), plus a forward exit film for every room but the homes path. All eleven films were remade on 27 October 2026 with door renders of the model as it stands (data center as Equinix TR2); the first set is kept as alternates (keys ending -previous, raw films in media-src/rooms/old, web encodes in media-src/rooms/old/web, each re-downloadable from its resultUrl). The data center films were remade once more on 28 October 2026 from the b8 door view under a sky (keys room-datacenter-dive and -exit); the b9 pair is kept the same way under media-src/rooms/b9 (keys ending -b9). Web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
+    "estimatedCredits": 268,
     "items": [
       {
         "key": "room-hospital-pano",
@@ -1543,6 +1543,56 @@
       },
       {
         "key": "room-datacenter-dive",
+        "generationId": "08e93f17-10e3-4b1a-90a6-8e40767fcd0b",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-28T04:44:21.357915Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive-datacenter-sky.txt",
+        "inputs": [
+          "media-src/rooms/datacenter.door-sky.png (render of the live model at the door, under the sky, land and tree line)",
+          "media-src/rooms/datacenter.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/datacenter.dive.mp4",
+        "web": "impact/public/media/rooms/datacenter-dive.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261028_044421_08e93f17-10e3-4b1a-90a6-8e40767fcd0b.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Dive film into the datacenter room",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 28 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-datacenter-exit",
+        "generationId": "2c780ce3-95cb-4199-862a-1ac75cf7288e",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-28T04:44:21.403905Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/exit-datacenter-sky.txt",
+        "inputs": [
+          "media-src/rooms/datacenter.room.png (perspective crop of the panorama)",
+          "media-src/rooms/datacenter.door-sky.png (render of the live model at the door, under the sky, land and tree line)"
+        ],
+        "original": "media-src/rooms/datacenter.exit.mp4",
+        "web": "impact/public/media/rooms/datacenter-dive-out.{mp4,webm}",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261028_044421_2c780ce3-95cb-4199-862a-1ac75cf7288e.mp4",
+        "estimatedCredits": 10,
+        "status": "selected",
+        "usage": "Forward exit film out of the datacenter room, so nobody walks backwards",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 28 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-datacenter-dive-b9",
         "generationId": "58847c90-111d-4073-b9f4-2bec45e990cc",
         "model": "Kling O3 (Frames)",
         "jobType": "kling_o3_flf",
@@ -1555,19 +1605,19 @@
         },
         "promptFile": "media-src/rooms/dive-datacenter.txt",
         "inputs": [
-          "media-src/rooms/datacenter.door.png (render of the live model at the door)",
+          "media-src/rooms/b9/datacenter.door.png (render of the live model at the door)",
           "media-src/rooms/datacenter.room.png (perspective crop of the panorama)"
         ],
-        "original": "media-src/rooms/datacenter.dive.mp4",
-        "web": "impact/public/media/rooms/datacenter-dive.{mp4,webm}",
+        "original": "media-src/rooms/b9/datacenter.dive.mp4",
+        "web": "media-src/rooms/b9/web/datacenter-dive.{mp4,webm} (kept as an alternate; not deployed)",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_58847c90-111d-4073-b9f4-2bec45e990cc.mp4",
         "estimatedCredits": 10,
-        "status": "selected",
+        "status": "superseded by room-datacenter-dive on 28 October 2026: made from the four-view data center (b9), whose louvre fins came out wavy; the scene went back to b8 and the films were remade from its door view under the sky. Door render: media-src/rooms/b9/datacenter.door.png",
         "usage": "Dive film into the datacenter room",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026. Illustrative only; not the places or people named."
       },
       {
-        "key": "room-datacenter-exit",
+        "key": "room-datacenter-exit-b9",
         "generationId": "6f9344a7-eaaf-4f01-9103-6136300937ea",
         "model": "Kling O3 (Frames)",
         "jobType": "kling_o3_flf",
@@ -1581,13 +1631,13 @@
         "promptFile": "media-src/rooms/exit-datacenter.txt",
         "inputs": [
           "media-src/rooms/datacenter.room.png (perspective crop of the panorama)",
-          "media-src/rooms/datacenter.door.png (render of the live model at the door)"
+          "media-src/rooms/b9/datacenter.door.png (render of the live model at the door)"
         ],
-        "original": "media-src/rooms/datacenter.exit.mp4",
-        "web": "impact/public/media/rooms/datacenter-dive-out.{mp4,webm}",
+        "original": "media-src/rooms/b9/datacenter.exit.mp4",
+        "web": "media-src/rooms/b9/web/datacenter-dive-out.{mp4,webm} (kept as an alternate; not deployed)",
         "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261027_221649_6f9344a7-eaaf-4f01-9103-6136300937ea.mp4",
         "estimatedCredits": 10,
-        "status": "selected",
+        "status": "superseded by room-datacenter-exit on 28 October 2026: made from the four-view data center (b9), whose louvre fins came out wavy; the scene went back to b8 and the films were remade from its door view under the sky. Door render: media-src/rooms/b9/datacenter.door.png",
         "usage": "Forward exit film out of the datacenter room, so nobody walks backwards",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026. Illustrative only; not the places or people named."
       },

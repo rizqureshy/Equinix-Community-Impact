@@ -344,17 +344,22 @@ document.addEventListener('click', (e) => {
 });
 
 // Stepping inside a building: the room overlay
+const SKY_PLACES = new Set(['datacenter']); // places whose door is reached under the sky
 const room = createRoom($('#room'), {
   motion: () => store.get().motion,
   webgl: supportsWebGL2(),
   approach: (place, { guided } = {}) => {
     if (!guided) stopTour();
+    // The data center, the heart of the community, is approached under a sky:
+    // it fades in with the glide and the dive film carries it on
+    if (SKY_PLACES.has(place)) scene?.setBackdrop(true, { fade: store.get().motion ? 2600 : 0 });
     if (scene && store.get().motion) return scene.approach(place);
     scene?.approach(place, { instant: true });
     return Promise.resolve();
   },
   onLeft: (place, { guided, byUser } = {}) => {
     if (guided && playing && byUser) stopTour();
+    if (SKY_PLACES.has(place)) scene?.setBackdrop(false, { fade: store.get().motion ? 2000 : 0 });
     scene?.back({ instant: !store.get().motion });
     if (guided && playing && !byUser) tourTimer = setTimeout(nextPlace, 700);
   },
@@ -759,7 +764,7 @@ document.fonts?.ready.then(() => ScrollTrigger.refresh());
 // The people line: six colleagues, the one you look at steps forward with their story
 const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motion: () => store.get().motion });
 
-window.__impact = {
+window.__impact = { skyPlaces: SKY_PLACES,
   store,
   people: peopleLine,
   theatre,

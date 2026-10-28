@@ -54,7 +54,7 @@ export const DOORS = {
   learning: { target: [-8.6, 1.4, 4.4], dist: 11.5, az: 1.95, el: 0.16 },
   homes: { target: [7.6, 1.4, 4.2], dist: 12, az: 1.5, el: 0.16 },
   aquatic: { target: [-3.4, 1.3, 8.6], dist: 10, az: -1.2, el: 0.18 },
-  datacenter: { target: [0.5, 1.6, -1.0], dist: 10, az: 1.3, el: 0.2 }, // the glazed ground floor and corner lobby
+  datacenter: { target: [0.5, 1.7, -1.0], dist: 10, az: 1.3, el: 0.11 }, // the glazed ground floor and corner lobby, low enough to see the sky above the parapet
 };
 
 /** Threads: conceptual connections, not network routes or physical pipes. */
@@ -231,7 +231,7 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.55;
 
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 220);
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 260);
 
   // Light: a low, warm autumn sun with long soft shadows, plus a cool fill
   const key = new THREE.DirectionalLight('#ffe4c0', 2.5);
@@ -275,54 +275,82 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       return tex;
     };
     const sky = new THREE.Mesh(
-      new THREE.SphereGeometry(420, 32, 24),
-      new THREE.MeshBasicMaterial({ map: gradient([[0, '#9fbfe4'], [0.42, '#d7e5f4'], [0.5, '#f2efe8'], [1, '#e8e6df']]), side: THREE.BackSide, toneMapped: false, fog: false }),
+      new THREE.SphereGeometry(200, 48, 32),
+      new THREE.MeshBasicMaterial({ map: gradient([[0, '#7aa5dc'], [0.34, '#a3c3ea'], [0.47, '#cddff2'], [0.5, '#e6e9e4'], [1, '#e4e4dc']]), side: THREE.BackSide, toneMapped: false, fog: false }),
     );
     group.add(sky);
-    const land = new THREE.Mesh(new THREE.CircleGeometry(400, 64), new THREE.MeshStandardMaterial({ color: '#d9d8cc', roughness: 1 }));
+    const land = new THREE.Mesh(new THREE.CircleGeometry(190, 96), new THREE.MeshStandardMaterial({ color: '#d9d8cc', roughness: 1 }));
     land.rotation.x = -Math.PI / 2;
     land.position.y = -1.25;
     land.receiveShadow = true;
     group.add(land);
-    // The tree line: a soft band of silhouettes on a ring, far enough to read as a horizon
+    // The tree line: a fine, hazy band of silhouettes on a distant ring, low on
+    // the horizon so it reads as countryside beyond the plinth, never a hedge
     const c = document.createElement('canvas');
-    c.width = 2048;
+    c.width = 4096;
     c.height = 256;
     const g = c.getContext('2d');
     g.clearRect(0, 0, c.width, c.height);
     let seed = 7;
     const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    for (let i = 0; i < 260; i++) {
+    for (let i = 0; i < 1400; i++) {
       const x = rnd() * c.width;
-      const rad = 18 + rnd() * 34;
-      const y = c.height - 40 - rnd() * 30;
-      const shade = 70 + Math.floor(rnd() * 40);
-      g.fillStyle = `rgba(${shade}, ${shade + 22}, ${shade - 6}, ${0.55 + rnd() * 0.35})`;
+      const rad = 7 + rnd() * 16;
+      const y = c.height - 30 - rnd() * 26;
+      const shade = 96 + Math.floor(rnd() * 36);
+      g.fillStyle = `rgba(${shade}, ${shade + 18}, ${shade + 4}, ${0.45 + rnd() * 0.3})`;
       g.beginPath();
-      g.ellipse(x, y, rad * 0.9, rad, 0, 0, Math.PI * 2);
+      g.ellipse(x, y, rad * 0.85, rad, 0, 0, Math.PI * 2);
       g.fill();
     }
-    g.fillStyle = 'rgba(78, 96, 70, 0.9)';
-    g.fillRect(0, c.height - 46, c.width, 46);
+    g.fillStyle = 'rgba(108, 124, 104, 0.85)';
+    g.fillRect(0, c.height - 34, c.width, 34);
     const treeTex = new THREE.CanvasTexture(c);
     treeTex.colorSpace = THREE.SRGBColorSpace;
     treeTex.wrapS = THREE.RepeatWrapping;
-    treeTex.repeat.x = 3;
+    treeTex.repeat.x = 4;
     const trees = new THREE.Mesh(
-      new THREE.CylinderGeometry(70, 70, 16, 96, 1, true),
+      new THREE.CylinderGeometry(120, 120, 7, 128, 1, true),
       new THREE.MeshBasicMaterial({ map: treeTex, transparent: true, side: THREE.BackSide, toneMapped: false, depthWrite: false }),
     );
-    trees.position.y = 6.5;
+    trees.position.y = 2.2;
     group.add(trees);
     return group;
   }
-  function setBackdrop(on) {
+  let backdropLevel = 0; // 0 white page, 1 full sky
+  let backdropFade = null; // { from, to, start, length }
+  const haze = new THREE.Fog('#e9ebe4', 70, 180);
+  function applyBackdrop() {
+    if (!backdrop) return;
+    backdrop.visible = backdropLevel > 0.002;
+    backdrop.traverse((o) => {
+      if (!o.material) return;
+      o.material.transparent = true;
+      o.material.opacity = backdropLevel * (o.userData.alpha ?? 1);
+    });
+    // The haze arrives with the sky: far away first, then settling on the tree line
+    haze.near = 70 + (1 - backdropLevel) * 900;
+    haze.far = 180 + (1 - backdropLevel) * 2400;
+    scene.fog = backdropLevel > 0.002 ? haze : null;
+  }
+  /** Show the sky, land and tree line (`fade` in ms eases it in or out over the approach). */
+  function setBackdrop(on, { fade = 0 } = {}) {
     if (on && !backdrop) {
       backdrop = buildBackdrop();
+      backdrop.traverse((o) => {
+        if (o.material?.transparent) o.userData.alpha = o.material.opacity;
+      });
       scene.add(backdrop);
     }
-    if (backdrop) backdrop.visible = on;
-    scene.fog = on ? new THREE.Fog('#e9ebe4', 70, 180) : null;
+    if (!backdrop) return;
+    const to = on ? 1 : 0;
+    if (fade > 0 && to !== backdropLevel) {
+      backdropFade = { from: backdropLevel, to, start: performance.now(), length: fade };
+    } else {
+      backdropFade = null;
+      backdropLevel = to;
+      applyBackdrop();
+    }
     dirty = true;
     tick();
   }
@@ -735,6 +763,15 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
       }
     }
 
+    if (backdropFade) {
+      const t = Math.min(1, (now - backdropFade.start) / backdropFade.length);
+      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      backdropLevel = backdropFade.from + (backdropFade.to - backdropFade.from) * e;
+      applyBackdrop();
+      if (t >= 1) backdropFade = null;
+      animating = true;
+    }
+
     renderer.render(scene, camera);
     placeLabels();
 
@@ -789,6 +826,10 @@ export function createCityScene(container, { assetBase = 'media/city/', labels =
     approach,
     back,
     setBackdrop,
+    /** How much of the sky is showing, 0 to 1 (it fades in on the way to the data center's door). */
+    get sky() {
+      return backdropLevel;
+    },
     nudge,
     zoom,
     setEngaged,
