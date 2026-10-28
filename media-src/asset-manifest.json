@@ -1162,8 +1162,8 @@
     ]
   },
   "rooms": {
-    "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film per stop (Kling O3 Frames, first frame a render of the live model at the door, last frame the panorama centre), plus a forward exit film for every room but the homes path. All eleven films were remade on 27 October 2026 with door renders of the model as it stands (data center as Equinix TR2); the first set is kept as alternates (keys ending -previous, raw films in media-src/rooms/old, web encodes in media-src/rooms/old/web, each re-downloadable from its resultUrl). The data center films were remade once more on 28 October 2026 from the b8 door view under a sky (keys room-datacenter-dive and -exit); the b9 pair is kept the same way under media-src/rooms/b9 (keys ending -b9). Web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
-    "estimatedCredits": 268,
+    "notes": "Stepping inside: one 360 panorama per stop (FLUX 3 Image, 2:1) and one dive film per stop (Kling O3 Frames, first frame a render of the live model at the door, last frame the panorama centre), plus a forward exit film for every room but the homes path. All eleven films were remade on 27 October 2026 with door renders of the model as it stands (data center as Equinix TR2); the first set is kept as alternates (keys ending -previous, raw films in media-src/rooms/old, web encodes in media-src/rooms/old/web, each re-downloadable from its resultUrl). The data center films were remade once more on 28 October 2026 from the b8 door view under a sky (keys room-datacenter-dive and -exit); the b9 pair is kept the same way under media-src/rooms/b9 (keys ending -b9), and a retake of the aquatic dive that was meant to go through the window but did not under media-src/rooms/window-take (key ending -window-take, not used). Web encodes by scripts/pano_tools.py and scripts/build_rooms.sh.",
+    "estimatedCredits": 278,
     "items": [
       {
         "key": "room-hospital-pano",
@@ -1528,7 +1528,7 @@
           "sound": "off",
           "aspect_ratio": "16:9"
         },
-        "promptFile": "media-src/rooms/exit.txt",
+        "promptFile": "media-src/rooms/dive.txt",
         "inputs": [
           "media-src/rooms/aquatic.room.png (perspective crop of the panorama)",
           "media-src/rooms/aquatic.door.png (render of the live model at the door)"
@@ -1640,6 +1640,31 @@
         "status": "superseded by room-datacenter-exit on 28 October 2026: made from the four-view data center (b9), whose louvre fins came out wavy; the scene went back to b8 and the films were remade from its door view under the sky. Door render: media-src/rooms/b9/datacenter.door.png",
         "usage": "Forward exit film out of the datacenter room, so nobody walks backwards",
         "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 27 October 2026. Illustrative only; not the places or people named."
+      },
+      {
+        "key": "room-aquatic-dive-window-take",
+        "generationId": "eb91f602-8c65-43bc-9cc1-9b0d7e6c2705",
+        "model": "Kling O3 (Frames)",
+        "jobType": "kling_o3_flf",
+        "createdAt": "2026-10-28T05:14:46.192151Z",
+        "settings": {
+          "duration": 8,
+          "mode": "pro",
+          "sound": "off",
+          "aspect_ratio": "16:9"
+        },
+        "promptFile": "media-src/rooms/dive-aquatic.txt",
+        "inputs": [
+          "media-src/rooms/window-take/aquatic.door.png (render of the live model at the door)",
+          "media-src/rooms/aquatic.room.png (perspective crop of the panorama)"
+        ],
+        "original": "media-src/rooms/window-take/aquatic.dive.mp4",
+        "web": "none (never encoded for the web)",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261028_051446_eb91f602-8c65-43bc-9cc1-9b0d7e6c2705.mp4",
+        "estimatedCredits": 10,
+        "status": "not used: a retake of 28 October 2026 whose prompt named the tall window in the end wall; Kling rose over the roof and dissolved into the pool instead, so the earlier take stays live until a take goes through the window",
+        "usage": "Dive film into the aquatic room",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 28 October 2026. Illustrative only; not the places or people named."
       },
       {
         "key": "room-hospital-dive-previous",

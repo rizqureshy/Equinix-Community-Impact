@@ -49,14 +49,14 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   function stopVoice() { if (speaking) { speaking.pause(); speaking.currentTime = 0; speaking = null; } card.classList.remove('speaking'); }
   function speak(i) {
     stopVoice(); const a = people[i].audio; speaking = a; card.classList.add('speaking');
-    a.onended = () => { if (speaking === a) { speaking = null; card.classList.remove('speaking'); } };
+    a.onended = () => { if (speaking === a) { speaking = null; card.classList.remove('speaking'); idleTimer = 0; } };
     a.play().catch(() => { speaking = null; card.classList.remove('speaking'); card.classList.add('no-voice'); });
   }
   function renderCard(i) {
     const c = CAST[i];
     card.innerHTML = `<div class="who"><div class="where">${c.role} \u00b7 ${c.where}</div><h3 class="head">${c.head}</h3></div><div class="fig">${c.fig}<small>${c.figl}</small></div><div class="tale"><div class="text"><p class="story-text">${c.story}</p><p class="src">${c.src}</p></div><div class="actions"><button type="button" class="read" data-read>${open ? 'Close' : 'Read their story'}</button><button type="button" class="play" data-play aria-label="Listen"><i></i>Listen</button></div></div>`;
     card.querySelector('[data-read]').addEventListener('click', (e) => { e.stopPropagation(); pinned = i; setOpen(!open); });
-    card.querySelector('[data-play]').addEventListener('click', (e) => { e.stopPropagation(); pinned = i; setOpen(true); speaking ? stopVoice() : speak(i); });
+    card.querySelector('[data-play]').addEventListener('click', (e) => { e.stopPropagation(); idle = false; pinned = i; if (active !== i) setActive(i, true); setOpen(true); speaking ? stopVoice() : speak(i); }); // the speaker steps forward even if the line had moved on
     sizeText();
   }
   // The story shows three lines; opening it lets the text grow to its full height
@@ -92,7 +92,8 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   function frame(now) {
     if (!running) return;
     const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now; const k = reduce() ? 1 : 1 - Math.exp(-dt * 7);
-    if (idle && visible && !narrow()) { idleTimer += dt; if (idleTimer > 5) { idleTimer = 0; const next = active === null ? 0 : (active + 1) % people.length; setActive(next); } }
+    // The line moves on by itself only while nobody is pinned and nobody is speaking: a voice someone asked for is never cut off
+    if (idle && visible && !narrow() && !speaking && pinned === null) { idleTimer += dt; if (idleTimer > 5) { idleTimer = 0; const next = active === null ? 0 : (active + 1) % people.length; setActive(next); } }
     let tDrift = 0;
     if (active !== null && !narrow()) {
       const r = row.getBoundingClientRect(), b = people[active].el.getBoundingClientRect();
@@ -127,5 +128,5 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
   io.observe(stage);
   if (narrow()) { requestAnimationFrame(() => { people[0].el.scrollIntoView({ inline: 'center', block: 'nearest' }); setActive(0); }); }
 
-  return { people, get active() { return active; }, get open() { return open; }, setActive, setOpen, start, stop };
+  return { people, get active() { return active; }, get open() { return open; }, get speaking() { return !!speaking; }, setActive, setOpen, start, stop };
 }

@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-10-28T05:14:46.192151Z",
+    "display_name": "Kling O3 (Frames)",
+    "id": "eb91f602-8c65-43bc-9cc1-9b0d7e6c2705",
+    "job_type": "kling_o3_flf",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "duration": 8,
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "86581c41-c16a-43e5-8f22-b5da9428dd76",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/86581c41-c16a-43e5-8f22-b5da9428dd76.png"
+          },
+          "role": "start_image"
+        },
+        {
+          "data": {
+            "id": "3ab7e829-b48c-4484-8506-fd87d6ea06d9",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/3ab7e829-b48c-4484-8506-fd87d6ea06d9.png"
+          },
+          "role": "end_image"
+        }
+      ],
+      "mode": "pro",
+      "multi_prompt": [],
+      "multi_shots": false,
+      "prompt": "A single continuous first-person camera move: starting outside as a clean white architectural scale model of a pool hall with a curved timber roof, the camera glides smoothly forward toward the tall glass window in the end wall, the small model grows to full size as it approaches, the camera passes straight through the glass of that window, and the scene resolves into the real, full-size pool hall shown in the last frame, warm light, soft steam over the lanes, the swimmers settling into place as we arrive. Steady, slow, cinematic, no cuts, no camera shake, no text.",
+      "sound": "off",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261028_051446_eb91f602-8c65-43bc-9cc1-9b0d7e6c2705.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261028_051446_eb91f602-8c65-43bc-9cc1-9b0d7e6c2705_thumbnail.webp"
+  }
+]

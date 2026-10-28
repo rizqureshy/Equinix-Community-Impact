@@ -289,6 +289,15 @@ try {
   await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
   const lastOne = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'); const ps = [...document.querySelectorAll('.person')].map((b) => b.getBoundingClientRect()); return { active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], below: c.getBoundingClientRect().top >= s.bottom - 1, peopleInside: ps.every((b) => b.left >= s.left - 1 && b.right <= s.right + 1) }; });
   check(lastOne.active === 5 && lastOne.role === 'Heat' && lastOne.below && lastOne.peopleInside, 'choosing the last colleague changes the panel and keeps everyone on the stage', JSON.stringify(lastOne));
+  // A voice someone asked for holds the line: with nobody pinned the line moves on every five seconds,
+  // and a Listen pressed while it is rotating used to be cut off by the next turn
+  await p.locator('#people-stage').click({ position: { x: 8, y: 8 } });
+  await p.locator('.people-story [data-play]').click();
+  await p.waitForFunction(() => window.__impact.people.speaking, null, { polling: 100, timeout: 4000 }).catch(() => {});
+  await wait(6500);
+  const held = await p.evaluate(() => ({ speaking: window.__impact.people.speaking, active: window.__impact.people.active, cls: document.querySelector('.people-story').classList.contains('speaking') }));
+  check(held.speaking && held.active === 5 && held.cls, 'while a colleague speaks the line waits instead of moving on', JSON.stringify(held));
+  await p.evaluate(() => window.__impact.people.setOpen(false));
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await p.goto(`${BASE}#/share`);
