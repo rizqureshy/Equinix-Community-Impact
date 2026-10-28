@@ -259,6 +259,15 @@ body.spine-open .weather-light {
   opacity: 0;
   pointer-events: none;
 }
+/* The canvas draws its plinth before the buildings have arrived; keep it out of sight
+   until the whole model is placed, then cross-fade it in over the still */
+.scene-host {
+  opacity: 0;
+  transition: opacity var(--d3) var(--ease);
+}
+.stage[data-scene-state='ready'] .scene-host {
+  opacity: 1;
+}
 .stage[data-scene-state='fallback'] .scene-host {
   display: none;
 }

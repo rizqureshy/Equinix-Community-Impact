@@ -75,6 +75,9 @@ try {
   await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
   await wait(600);
   check(await p.evaluate(() => document.querySelector('.stage-still').complete && document.querySelector('.stage-still').naturalWidth > 0), 'a still of the community is in place before the model is ready');
+  check(await p.evaluate(() => { const st = document.querySelector('#stage'); const host = document.querySelector('.scene-host'); const still = document.querySelector('.stage-still'); const was = st.dataset.sceneState; host.style.transition = still.style.transition = 'none'; st.dataset.sceneState = 'loading'; const hidden = getComputedStyle(host).opacity === '0' && getComputedStyle(still).opacity === '1'; st.dataset.sceneState = was; host.style.transition = still.style.transition = ''; return hidden; }), 'while the buildings load only the still shows, never an empty plinth');
+  await p.waitForFunction(() => getComputedStyle(document.querySelector('.scene-host')).opacity === '1' && getComputedStyle(document.querySelector('.stage-still')).opacity === '0', null, { timeout: 3000 }).catch(() => {});
+  check(await p.evaluate(() => getComputedStyle(document.querySelector('.scene-host')).opacity === '1' && getComputedStyle(document.querySelector('.stage-still')).opacity === '0'), 'once the model is ready the canvas cross-fades in over the still');
   // Free exploration: drag turns the model, the wheel zooms once it has been clicked
   const v0 = await view(p);
   const c = await stageCentre(p);
