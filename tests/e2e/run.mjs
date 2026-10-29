@@ -445,6 +445,25 @@ try {
   await wait(1500);
   check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-story').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
+  // ---- The kiosk (version 2): the model alone, on a loop ------------------
+  p = await open(browser, `${BASE}kiosk.html?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
+  await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { polling: 100, timeout: 60000 });
+  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 8000 }).catch(() => {});
+  const kioskStart = await p.evaluate(() => ({ mode: window.__kiosk.mode, state: document.querySelector('#stage').dataset.sceneState, dots: document.querySelectorAll('.kiosk-dot').length, chrome: !document.querySelector('.site-header') && !document.querySelector('.site-footer') && !document.querySelector('main') }));
+  check(kioskStart.mode === 'loop' && kioskStart.state === 'ready' && kioskStart.dots === 6 && kioskStart.chrome, 'the kiosk shows the model alone, full screen, and starts its loop by itself', JSON.stringify(kioskStart));
+  await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});
+  const kioskFirst = await p.evaluate(() => ({ phase: window.__kiosk.room.phase, place: window.__kiosk.room.place, index: window.__kiosk.index, on: [...document.querySelectorAll('.kiosk-dot')].findIndex((d) => d.classList.contains('is-on')), guided: window.__kiosk.room.guided }));
+  check(kioskFirst.phase === 'inside' && kioskFirst.place === 'hospital' && kioskFirst.index === 0 && kioskFirst.on === 0 && kioskFirst.guided, 'the loop steps into the first story on its own and the first dot lights', JSON.stringify(kioskFirst));
+  await p.locator('[data-room-leave]').first().click();
+  await p.waitForFunction(() => window.__kiosk.room.phase === 'closed', null, { polling: 200, timeout: 30000 }).catch(() => {});
+  check((await p.evaluate(() => window.__kiosk.mode)) === 'explore', 'a visitor who leaves the room holds the loop for themselves', await p.evaluate(() => window.__kiosk.mode));
+  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 300, timeout: 20000 }).catch(() => {});
+  await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});
+  const kioskAgain = await p.evaluate(() => ({ mode: window.__kiosk.mode, phase: window.__kiosk.room.phase, place: window.__kiosk.room.place }));
+  check(kioskAgain.mode === 'loop' && kioskAgain.phase === 'inside' && kioskAgain.place === 'hospital', 'once the visitor has gone the loop starts again from the first story', JSON.stringify(kioskAgain));
+  check(p.failed.filter((f) => !f.includes('/voice/')).length === 0 && p.errors.length === 0, 'the kiosk page loads with no missing assets and no JavaScript errors', JSON.stringify([...p.failed, ...p.errors].slice(0, 3)));
+  await p.context().close();
+
   await browser.close();
 
   // ---- No WebGL -------------------------------------------------------------

@@ -38,6 +38,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'impact/index.html'),
         engage: resolve(import.meta.dirname, 'impact/engage.html'),
+        kiosk: resolve(import.meta.dirname, 'impact/kiosk.html'),
         spine: resolve(import.meta.dirname, 'impact/prototypes/spine.html'),
         people: resolve(import.meta.dirname, 'impact/prototypes/people.html'),
       },

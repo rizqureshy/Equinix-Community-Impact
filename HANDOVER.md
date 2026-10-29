@@ -4,6 +4,18 @@
 
 Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign on the branch `claude/community-redesign`, replacing the dark cinematic page, the separate 3D explorer and the fly-through film. Updated the same day with your edits: the community became an independent explorer with a playing tour and music, the promises gained photographs, the numbers were reset, and the story dialog scrolls with the wheel.
 
+## Version 2: the kiosk (branch `v2/main`)
+
+The first version 2 iteration is `kiosk.html`: the community model alone, full screen, telling its six stories on a loop for an unattended screen. Nothing else from the site is on the page.
+
+- **The loop.** When the model is ready the kiosk rests on the opening view (threads shown) for `rest` seconds, then steps into each of the six places in turn exactly as the site's tour does (door glide, dive film, captions read by the narrator, end card, exit film), comes back to the opening view, rests, and goes round again. Six dots along the bottom show where the loop is; the current story is red, the told ones darker. The data center is approached under the sky, as on the site.
+- **A visitor.** A touch on the model, a label, or the arrow keys hands the kiosk to the visitor: the loop stops, the dots clear, and they can turn the model and step into any building (the room's Leave, Next, Pause and Skip work as on the site; the end card offers only Leave, there being no story pages). After `idle` seconds without a touch the kiosk leaves any open room and starts the loop again from the opening view. Pause from the room's bar also resumes after `idle` seconds. The pointer hides after three seconds still.
+- **Sound.** The theme loops under everything and ducks while the narrator speaks. Browsers refuse sound before a touch unless told otherwise, so the kiosk tries, and if refused shows a red "Tap for sound" chip; the first touch anywhere frees it. The mute control at bottom right silences both. For a true unattended kiosk launch Chrome with autoplay allowed, for example `chrome --kiosk --autoplay-policy=no-user-gesture-required --noerrdialogs --disable-session-crashed-bubble "https://<host>/kiosk.html"`, and sound starts on its own.
+- **Address options.** `?rest=10` (seconds on the opening view, default 10, minimum 2), `?idle=45` (seconds before the loop resumes, default 45, minimum 5), `?motion=off` (cuts instead of glides). The visitor's system reduced-motion setting is deliberately ignored on a kiosk.
+- **Without WebGL** the still of the community shows with a note; the loop needs the live model.
+- **Files:** `impact/kiosk.html`, `impact/scripts/kiosk.js` (the loop; reuses `room.js`, `scene/city.js` and the journey steps), `impact/styles/kiosk.css`; the page is a build entry in `vite.config.js`. Checks: five in the browser suite (loop starts alone, first story and first dot, a visitor holds it, it resumes, no missing assets). `window.__kiosk` is exposed for the checks.
+- **Not yet:** a sleeping screen between loops, a QR code to the full site, a visitor-facing hint on first touch, analytics, a watchdog reload after many hours.
+
 ## What was built
 
 A single page in `impact/`, built with Vite, Three.js, GSAP ScrollTrigger and Lenis. Light, calm and Apple-like: generous white space, Inter Tight, one saturated colour (Equinix red) for the thread and small accents, amber for recovered heat.

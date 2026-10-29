@@ -1,0 +1,135 @@
+/* The kiosk: the community model alone, full screen, on a loop. */
+.page-kiosk {
+  overflow: hidden;
+  background: #fff;
+}
+.page-kiosk.is-still {
+  cursor: none;
+}
+.kiosk {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+}
+.page-kiosk .explorer {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.page-kiosk .stage-still {
+  object-position: 50% 55%;
+}
+/* The words sit over the model and never catch a touch */
+.kiosk-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: clamp(18px, 2.6vw, 34px) clamp(20px, 3vw, 40px);
+  pointer-events: none;
+}
+.kiosk-logo {
+  height: clamp(14px, 1.5vw, 20px);
+  width: auto;
+}
+.kiosk-words {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.kiosk-words .eyebrow {
+  margin: 0;
+}
+.kiosk-title {
+  margin: 0;
+  font-family: var(--font-display, inherit);
+  font-size: clamp(18px, 1.9vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink, #111);
+}
+.kiosk-foot {
+  position: absolute;
+  left: clamp(20px, 3vw, 40px);
+  right: clamp(20px, 3vw, 40px);
+  bottom: clamp(18px, 2.6vw, 34px);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.kiosk-dots {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.kiosk-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(17, 17, 17, 0.16);
+  transition: background var(--d2, 400ms) var(--ease, ease), transform var(--d2, 400ms) var(--ease, ease);
+}
+.kiosk-dot.is-on {
+  background: var(--red, #e91c24);
+  transform: scale(1.3);
+}
+.kiosk-dot.is-done {
+  background: rgba(17, 17, 17, 0.42);
+}
+.kiosk-note {
+  margin: 0;
+  pointer-events: none;
+}
+.kiosk-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kiosk-chip {
+  font: inherit;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--red, #e91c24);
+  color: #fff;
+  cursor: pointer;
+  animation: kiosk-pulse 2.4s ease-in-out infinite;
+}
+@keyframes kiosk-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.kiosk-fallback {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  z-index: 5;
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+}
+/* The kiosk has no story pages: the end card offers Leave only */
+.page-kiosk [data-room-story] {
+  display: none;
+}
+@media (max-width: 760px) {
+  .kiosk-words .eyebrow { display: none; }
+  .kiosk-note { display: none; }
+}
