@@ -1,5 +1,7 @@
 # Handover: Infrastructure for human possibility
 
+> **Branches.** Version 1 is frozen on `claude/voice-and-coach` (tag `v1-freeze`, 29 October 2026): nothing further lands there. All work from here on happens on branches prefixed `v2/`, starting with `v2/main`, which was cut from that freeze point. If GitHub Pages serves `docs/` from the frozen branch, point it at the `v2/` branch when version 2 should go live.
+
 Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign on the branch `claude/community-redesign`, replacing the dark cinematic page, the separate 3D explorer and the fly-through film. Updated the same day with your edits: the community became an independent explorer with a playing tour and music, the promises gained photographs, the numbers were reset, and the story dialog scrolls with the wheel.
 
 ## What was built
