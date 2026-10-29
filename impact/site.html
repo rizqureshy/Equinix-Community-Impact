@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Infrastructure for human possibility | Equinix connected impact</title>
+    <meta name="description" content="A community connected by Equinix: the care, discovery and opportunity that digital infrastructure helps make possible." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="brand/equinix-fortress.svg" />
+        <script>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('impact-motion'); } catch (e) {}
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.documentElement.dataset.motion = stored || (reduce ? 'off' : 'on');
+        var fabric = null;
+        try { fabric = localStorage.getItem('impact-fabric'); } catch (e) {}
+        document.documentElement.dataset.fabric = fabric || 'on';
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="fabric-layer" id="fabric-layer" aria-hidden="true"></div>
+    <div class="weather-light" id="weather-light" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="wordmark" href="#/" aria-label="Equinix, our connected impact. Back to the start"><img class="wordmark-logo" src="brand/equinix-logo-horizontal.svg" alt="" width="124" height="13" decoding="async" /></a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#/community">Community</a></li>
+          <li><a href="#/chapter/care">Stories</a></li>
+          <li><a href="#/promises">Promises</a></li>
+          <li><a href="#/people">People</a></li>
+          <li><a href="#/share">Share</a></li>
+          <li><a href="#/training">Training</a></li>
+          <li><a href="engage.html">Engage</a></li>
+        </ul>
+      </nav>
+      <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
+        <span class="motion-icon" aria-hidden="true"></span><span class="motion-label">Pause motion</span>
+      </button>
+      <button type="button" class="fabric-toggle" aria-pressed="true" data-fabric-toggle aria-label="Red fabric background, on">
+        <span class="fabric-swatch" aria-hidden="true"></span><span>Fabric</span>
+      </button>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- Hero: calm headline, then the community as a product shot that comes alive -->
+      <section class="hero" id="top" data-section="top" aria-labelledby="hero-title">
+        <div class="wrap--narrow center hero-copy">
+          <p class="eyebrow" data-reveal>Our connected impact</p>
+          <h1 class="display" id="hero-title"><span class="line"><span class="line-inner">Infrastructure for</span></span><span class="line"><span class="line-inner">human possibility.</span></span></h1>
+          <p class="lede" data-reveal>Explore a community connected by Equinix, and the care, discovery and opportunity that digital infrastructure helps make possible.</p>
+          <div class="actions" data-reveal>
+            <a class="btn btn--primary btn--large" href="#/community">Explore the community</a>
+            <a class="btn btn--link btn--large" href="#/chapter/care">Read the stories</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- The community: a live 3D model to explore, with a tour that plays -->
+      <section class="journey" id="community" data-section="journey" aria-labelledby="community-title">
+        <div class="wrap center journey-head" data-reveal>
+          <p class="eyebrow">The community</p>
+          <h2 class="title" id="community-title">Follow the thread.</h2>
+          <p class="lede">Six places, one data center. Turn the model, click a building to step inside, or let the tour play.</p>
+        </div>
+        <div class="explorer" id="explorer" tabindex="0" aria-label="Community model. Use the arrow keys to turn it, plus and minus to zoom, Home to reset the view, and space to play or pause the tour. Choose a place to step inside.">
+          <div class="stage" id="stage" data-scene-state="loading">
+            <img class="stage-still" src="media/city/city-hero-1600.webp" srcset="media/city/city-hero-1000.webp 1000w, media/city/city-hero-1600.webp 1600w" sizes="(min-width: 1100px) 90vw, 100vw" alt="" width="1600" height="1000" loading="lazy" decoding="async" />
+            <div class="scene-host" id="scene-host"></div>
+            <div class="scene-labels" id="scene-labels" aria-label="Places in the community">
+              <button type="button" class="place-label" data-place="hospital"><i class="place-dot" aria-hidden="true"></i><span>Hospital</span></button>
+              <button type="button" class="place-label" data-place="research"><i class="place-dot" aria-hidden="true"></i><span>Research centre</span></button>
+              <button type="button" class="place-label" data-place="learning"><i class="place-dot" aria-hidden="true"></i><span>Learning centre</span></button>
+              <button type="button" class="place-label" data-place="homes"><i class="place-dot" aria-hidden="true"></i><span>Homes and high street</span></button>
+              <button type="button" class="place-label" data-place="aquatic"><i class="place-dot place-dot--heat" aria-hidden="true"></i><span>Aquatic centre</span></button>
+              <button type="button" class="place-label place-label--dc" data-place="datacenter"><i class="place-dot" aria-hidden="true"></i><span>Equinix data center</span></button>
+            </div>
+            <p class="stage-note note">Each story refers to its named location.</p>
+          </div>
+          <!--@hero-stats-->
+          <div class="journey-ui">
+            <!--@journey-->
+          </div>
+        </div>
+      </section>
+
+      <!-- Statement -->
+      <section class="statement wrap--narrow center" id="statement" aria-label="Our role">
+        <p class="statement-text" data-words>Equinix is not a visitor in these places. We are part of the communities we serve: the clinics and labs that rely on our connections, the schools we open our doors to, the neighbours who share our heat.</p>
+      </section>
+
+      <!-- Chapters -->
+      <div id="stories" data-section="stories" aria-label="Connected story chapters">
+        <!--@chapters-->
+      </div>
+
+      <!-- Numbers -->
+      <section class="impact" id="impact" aria-labelledby="impact-title">
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">In numbers</p>
+          <h2 class="title" id="impact-title">What connection adds up to.</h2>
+        </div>
+        <div class="wrap"><!--@numbers--></div>
+      </section>
+
+      <!-- Promises: the Spine of Impact, a ride through what a data center gives back, ending at the five promises -->
+      <section class="promises-section" id="promises" data-section="promises" aria-labelledby="promises-title">
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">Part of the community</p>
+          <h2 class="title" id="promises-title">Five promises to the places we call home.</h2>
+          <p class="lede">Sixteen years of what a data center gives back, from the first homes warmed by one to the five promises we report against. Step in and let the spine carry you.</p>
+        </div>
+        <div class="spine-frame" id="spine-frame" data-state="idle">
+          <iframe class="spine-embed" id="spine-embed" title="Spine of Impact" src="prototypes/spine.html?mode=preview" loading="lazy" allow="autoplay" tabindex="-1"></iframe>
+          <video class="spine-film" id="spine-film" playsinline muted preload="none" poster="media/spine/film-poster.webp" aria-hidden="true">
+            <source src="media/spine/dive.webm" type="video/webm" />
+            <source src="media/spine/dive.mp4" type="video/mp4" />
+          </video>
+          <button type="button" class="spine-begin" id="spine-begin" aria-label="Begin the journey along the spine"><span class="spine-begin-ring" aria-hidden="true"></span><span class="spine-begin-text">Begin the journey</span></button>
+          <p class="stage-note note spine-note">A ride through sourced milestones.</p>
+        </div>
+        <div class="wrap"><!--@principles--></div>
+      </section>
+
+      <!-- People -->
+      <section class="people" id="people" data-section="people" aria-labelledby="people-title">
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">The people behind the connections</p>
+          <h2 class="title" id="people-title">Our people are part of the story.</h2>
+        </div>
+        <div class="people-stage" id="people-stage" aria-label="Six colleagues in a line. Move across them, or use Tab, to bring one to the front and read their story.">
+          <div class="people-row"></div>
+        </div>
+        <div class="people-story" aria-live="polite"></div>
+        <p class="people-hint">Move your pointer across the group, or wait and they will take turns.</p>
+        <div class="people-roles" aria-label="Choose a colleague by role"></div>
+        <blockquote class="people-quote">
+          <p>&ldquo;Data centers are the heartbeat of our digital world, but it&rsquo;s people who keep that pulse healthy and strong.&rdquo;</p>
+          <footer class="note">Raouf Abdel, EVP Global Operations, and Brandi Galvin Morandi, Chief People Officer. Equinix blog, March 2026</footer>
+        </blockquote>
+      </section>
+
+      <!-- Training and resources -->
+      <section class="resources" id="training" data-section="training" aria-labelledby="training-title">
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">Training and resources</p>
+          <h2 class="title" id="training-title">Carry the story with confidence.</h2>
+        </div>
+        <div class="wrap resources-grid">
+          <div class="resource-group resource-group--practise" data-reveal>
+            <h3 class="title--md">Practise with the coach</h3>
+            <p class="muted">Four short scenarios, each tied to a story on this page. The coach plays the other person, then steps out and gives feedback against the five promises and the sourced figures.</p>
+            <ol class="roleplay-list">
+              <li class="roleplay"><button type="button" class="roleplay-btn" data-coach-open><span class="roleplay-num">1</span><span class="roleplay-text"><strong>A customer asks what we give back.</strong><span class="muted">3verest or Children&rsquo;s Cancer Institute, then one promise. Two minutes.</span></span></button></li>
+              <li class="roleplay"><button type="button" class="roleplay-btn" data-coach-open><span class="roleplay-num">2</span><span class="roleplay-text"><strong>A neighbour worries about power and water.</strong><span class="muted">The Community Principles: ComEd, dry cooling, the Minooka bike path.</span></span></button></li>
+              <li class="roleplay"><button type="button" class="roleplay-btn" data-coach-open><span class="roleplay-num">3</span><span class="roleplay-text"><strong>A student asks what a data center job looks like.</strong><span class="muted">Kayla&rsquo;s path and Pathways to Tech, in your own words. One minute.</span></span></button></li>
+              <li class="roleplay"><button type="button" class="roleplay-btn" data-coach-open><span class="roleplay-num">4</span><span class="roleplay-text"><strong>A journalist asks for a number.</strong><span class="muted">One figure with its scope and period, and the source. Say the caveat naturally.</span></span></button></li>
+            </ol>
+            <div class="coach" id="coach">
+              <button type="button" class="btn btn--primary btn--small" data-coach-open>Practise with the coach</button>
+              <p class="note coach-note">A conversational voice agent (ElevenLabs) that knows only this page's stories, promises and sourced figures. Choose who it plays, talk or type, then ask for feedback. Conversations are recorded by ElevenLabs for review.</p>
+              <div class="coach-host" id="coach-host" hidden></div>
+            </div>
+          </div>
+          <div class="resource-group resource-group--library" data-reveal>
+            <h3 class="title--md">Downloads</h3>
+            <p class="muted">The library is being assembled. One link is live; the rest are placeholders until each asset is approved.</p>
+            <details class="resource-fold">
+              <summary><span>Five items</span><span class="resource-count">1 live, 4 in preparation</span></summary>
+              <ul class="resource-list">
+                <li class="resource"><span class="resource-type">Report</span><span class="resource-name">Equinix Sustainability Report</span><span class="resource-meta"><a href="https://www.equinix.com/about/sustainability/annual-report" target="_blank" rel="noopener">equinix.com<span class="visually-hidden"> (opens in a new tab)</span></a></span><span class="resource-state resource-state--live">Live</span></li>
+                <li class="resource"><span class="resource-type">Deck</span><span class="resource-name">Community impact story deck</span><span class="resource-meta">PowerPoint, coming soon</span><span class="resource-state">Placeholder</span></li>
+                <li class="resource"><span class="resource-type">One-pager</span><span class="resource-name">Five promises, one page</span><span class="resource-meta">PDF, coming soon</span><span class="resource-state">Placeholder</span></li>
+                <li class="resource"><span class="resource-type">Stories</span><span class="resource-name">Impact stories, first and second batch</span><span class="resource-meta">PDF, coming soon</span><span class="resource-state">Placeholder</span></li>
+                <li class="resource"><span class="resource-type">Images</span><span class="resource-name">Approved photography and the community model</span><span class="resource-meta">ZIP, coming soon</span><span class="resource-state">Placeholder</span></li>
+              </ul>
+            </details>
+          </div>
+          <div class="resource-group resource-group--engage" data-reveal>
+            <h3 class="title--md">Engage</h3>
+            <p class="muted">The conversation lives in our Viva Engage community: add the stories you see in your region, and help partners carry the message.</p>
+            <a class="btn btn--primary btn--small" href="engage.html">Open the Engage page</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Story gallery -->
+      <section class="collection" id="share" data-section="share" aria-labelledby="share-title">
+        <div class="wrap center" data-reveal>
+          <p class="eyebrow">Explore and carry it forward</p>
+          <h2 class="title" id="share-title">Find a story worth sharing.</h2>
+          <p class="lede">Every summary is attributed and links to its source. Copy one into a note, a deck or a conversation.</p>
+        </div>
+        <div class="wrap"><!--@collection--></div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <img class="footer-logo" src="brand/equinix-logo-vertical.svg" alt="Equinix" width="124" height="60" loading="lazy" decoding="async" />
+    </footer>
+
+    <dialog class="story-drawer" id="story-drawer" aria-labelledby="story-title" data-lenis-prevent>
+      <div class="drawer-panel">
+        <div class="drawer-bar">
+          <span class="drawer-thread" aria-hidden="true"></span>
+          <button type="button" class="drawer-close" data-drawer-close aria-label="Close story">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="drawer-content" id="drawer-content"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <section class="room" id="room" hidden data-phase="closed" aria-label="Inside the building" role="dialog" aria-modal="true">
+      <div class="room-stage" tabindex="0" aria-label="The room. Drag or use the arrow keys to look around.">
+        <video class="room-film" muted playsinline preload="auto" aria-hidden="true"></video>
+        <div class="room-pano"></div>
+        <img class="room-poster" src="" alt="" decoding="async" />
+        <div class="room-veil" aria-hidden="true"></div>
+      </div>
+      <div class="room-top">
+        <h2 class="room-title">Inside</h2>
+        <button type="button" class="room-btn room-btn--voice" data-room-voice aria-pressed="true">Voice on</button>
+        <button type="button" class="room-btn room-btn--tour" data-room-pause aria-pressed="false">Pause</button>
+        <button type="button" class="room-btn room-btn--tour" data-room-skip>Skip</button>
+        <button type="button" class="room-btn" data-room-next>Next</button>
+        <button type="button" class="room-btn room-btn--leave" data-room-leave>Leave</button>
+      </div>
+      <div class="room-captions" aria-live="polite"></div>
+      <audio class="room-voice" preload="none" aria-hidden="true"></audio>
+      <p class="room-hint note" hidden>Drag to look around</p>
+    </section>
+
+    <script type="module" src="./scripts/app.js"></script>
+  </body>
+</html>

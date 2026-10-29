@@ -34,7 +34,8 @@ The browser checks block every request that leaves the local host, then exercise
 
 ```text
 impact/                   Vite root: the experience
-  index.html              the page; content is pre-rendered into it at build time
+  site.html               the full site; content is pre-rendered into it at build time
+  index.html              version 2's root: the kiosk (the community model alone, on a loop)
   engage.html             the Engage page: the Viva Engage community embedded
   styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css
   scripts/

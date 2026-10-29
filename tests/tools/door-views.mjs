@@ -1,14 +1,14 @@
 // Renders the door view of each building from the live scene: the exact
 // frame the camera reaches before the dive film, used as that film's first
 // frame. Usage: npm run build && tests/tools/preview-up.sh
-//        node tests/tools/door-views.mjs http://localhost:4181/ media-src/rooms
+//        node tests/tools/door-views.mjs http://localhost:4181/site.html media-src/rooms
 import { chromium } from 'playwright';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Options: SKY=1 renders the views inside a sky, land and tree line (files end in .door-sky.png);
 //          PLACES=hospital,homes limits the places.
-const [, , url = 'http://localhost:4181/', outDir = 'media-src/rooms'] = process.argv;
+const [, , url = 'http://localhost:4181/site.html', outDir = 'media-src/rooms'] = process.argv;
 mkdirSync(outDir, { recursive: true });
 const SKY = process.env.SKY === '1';
 const PLACES = (process.env.PLACES || 'hospital,research,learning,homes,aquatic,datacenter').split(',');

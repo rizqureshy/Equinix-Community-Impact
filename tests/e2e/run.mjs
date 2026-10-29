@@ -8,6 +8,7 @@ import { chromium } from 'playwright';
 
 const PORT = 4179;
 const BASE = `http://localhost:${PORT}/`;
+const SITE = `${BASE}site.html`; // the full site; the root is the kiosk
 const GL = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'];
 let failures = 0;
 const check = (ok, name, detail = '') => {
@@ -28,6 +29,7 @@ for (let i = 0; i < 50; i++) {
 async function open(browser, url, { viewport = { width: 1440, height: 900 }, ...ctxOpts } = {}) {
   const context = await browser.newContext({ viewport, ...ctxOpts });
   const page = await context.newPage();
+  page.setDefaultNavigationTimeout(60000); // a page with a large module graph can take a while on a busy machine
   page.external = [];
   page.failed = [];
   page.errors = [];
@@ -64,7 +66,7 @@ try {
   const browser = await chromium.launch({ args: GL });
 
   // ---- Arrival and the community journey ----------------------------------
-  let p = await open(browser, BASE);
+  let p = await open(browser, SITE);
   check(await p.locator('h1').isVisible(), 'headline and actions visible on arrival');
   await wait(2000);
   check(await p.evaluate(() => !!window.__impact.lenis), 'smooth scrolling active when motion is on');
@@ -222,7 +224,7 @@ try {
   await p.context().close();
 
   // ---- Chapters, routes, gallery ------------------------------------------
-  p = await open(browser, `${BASE}#/chapter/community`);
+  p = await open(browser, `${SITE}#/chapter/community`);
   await wait(2500);
   const top = await p.evaluate(() => document.querySelector('#stories').getBoundingClientRect().top);
   check(Math.abs(top) < 40, 'chapter route lands on the Stories theatre', `${Math.round(top)}px`);
@@ -237,10 +239,10 @@ try {
   await wait(300);
   check(await p.evaluate(() => window.__impact.theatre.active === 'care' && window.__impact.theatre.auto === false && location.hash === '#/chapter/care'), 'choosing a chapter stops the rotation and updates the link');
   check(await p.evaluate(() => document.querySelector('.site-nav a[href="#/chapter/care"]').getAttribute('aria-current') === 'true'), 'navigation marks the current section');
-  await p.goto(`${BASE}#/explore/discovery`);
+  await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
-  await p.goto(`${BASE}#/principles`);
+  await p.goto(`${SITE}#/principles`);
   let promisesTop = Infinity;
   for (let i = 0; i < 24 && Math.abs(promisesTop) >= 40; i++) {
     await wait(250);
@@ -300,7 +302,7 @@ try {
   await p.evaluate(() => window.__impact.people.setOpen(false));
 
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
-  await p.goto(`${BASE}#/share`);
+  await p.goto(`${SITE}#/share`);
   await wait(2500);
   await p.locator('.card [data-copy="summary"]').first().click();
   await wait(300);
@@ -334,7 +336,7 @@ try {
   check(await p.evaluate(() => document.documentElement.dataset.fabric === 'off' && localStorage.getItem('impact-fabric') === 'off' && document.querySelector('[data-fabric-toggle]').getAttribute('aria-pressed') === 'false'), 'the fabric can be switched off and the choice is remembered');
   await p.locator('[data-fabric-toggle]').click();
   // Training and resources: placeholders are labelled, the live link is marked, the route lands
-  await p.goto(`${BASE}#/training`);
+  await p.goto(`${SITE}#/training`);
   let resourcesTop = Infinity;
   for (let i = 0; i < 24 && Math.abs(resourcesTop) >= 40; i++) {
     await wait(250);
@@ -360,7 +362,7 @@ try {
   await p.context().close();
 
   // ---- Direct story link and clipboard failure ---------------------------
-  p = await open(browser, `${BASE}#/story/markham-heat`);
+  p = await open(browser, `${SITE}#/story/markham-heat`);
   await wait(1500);
   check(await isOpen(p), 'direct story link opens the story');
   check((await p.locator('#story-title').textContent()).includes('Markham'), 'direct link loads the right story');
@@ -380,7 +382,7 @@ try {
   await p.context().close();
 
   // ---- The coach (Training) ----------------------------------------------
-  p = await open(browser, `${BASE}#/training`);
+  p = await open(browser, `${SITE}#/training`);
   await p.route('**/convai-widget-embed*', (route) => route.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await wait(1200);
   check((await p.locator('[data-coach-open]').count()) >= 5 && (await p.evaluate(() => document.querySelector('#coach-host').hidden)), 'every role-play scenario offers the coach, loaded only on request');
@@ -392,7 +394,7 @@ try {
   await p.context().close();
 
   // ---- Reduced motion -----------------------------------------------------
-  p = await open(browser, `${BASE}#/community`, { reducedMotion: 'reduce' });
+  p = await open(browser, `${SITE}#/community`, { reducedMotion: 'reduce' });
   await wait(1500);
   check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'off', 'reduced motion respected from first render');
   check(await p.evaluate(() => !window.__impact.lenis), 'no smooth scrolling with reduced motion');
@@ -413,7 +415,7 @@ try {
 
   // ---- Mobile -------------------------------------------------------------
   const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 };
-  p = await open(browser, BASE, phone);
+  p = await open(browser, SITE, phone);
   await wait(3000);
   check((await p.evaluate(() => document.documentElement.scrollWidth)) <= 390, 'no horizontal scroll at phone width');
   check(await p.evaluate(() => getComputedStyle(document.querySelector('#fabric-layer')).display === 'none' && !document.querySelector('#fabric-layer canvas')), 'the fabric stays off on phones');
@@ -426,7 +428,7 @@ try {
     return { inside: c.top >= e.top && c.bottom <= b.top && c.width <= 390, c: [c.top, c.bottom], e: [e.top, e.bottom], bar: b.top };
   });
   check(card.inside, 'the opening card fits a phone screen above the controls', JSON.stringify(card));
-  await p.goto(`${BASE}#/story/3verest`);
+  await p.goto(`${SITE}#/story/3verest`);
   await wait(800);
   check((await p.evaluate(() => document.querySelector('#story-drawer').getBoundingClientRect().width)) === 390, 'story opens full width on mobile');
   await p.keyboard.press('Escape');
@@ -446,9 +448,9 @@ try {
   check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-story').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   // ---- The kiosk (version 2): the model alone, on a loop ------------------
-  p = await open(browser, `${BASE}kiosk.html?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
+  p = await open(browser, `${BASE}?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { polling: 100, timeout: 60000 });
-  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 8000 }).catch(() => {});
+  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 30000 }).catch(() => {}); // the first frames at 1080p are slow in software rendering
   const kioskStart = await p.evaluate(() => ({ mode: window.__kiosk.mode, state: document.querySelector('#stage').dataset.sceneState, dots: document.querySelectorAll('.kiosk-dot').length, chrome: !document.querySelector('.site-header') && !document.querySelector('.site-footer') && !document.querySelector('main') }));
   check(kioskStart.mode === 'loop' && kioskStart.state === 'ready' && kioskStart.dots === 6 && kioskStart.chrome, 'the kiosk shows the model alone, full screen, and starts its loop by itself', JSON.stringify(kioskStart));
   await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});
@@ -461,14 +463,14 @@ try {
   await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});
   const kioskAgain = await p.evaluate(() => ({ mode: window.__kiosk.mode, phase: window.__kiosk.room.phase, place: window.__kiosk.room.place }));
   check(kioskAgain.mode === 'loop' && kioskAgain.phase === 'inside' && kioskAgain.place === 'hospital', 'once the visitor has gone the loop starts again from the first story', JSON.stringify(kioskAgain));
-  check(p.failed.filter((f) => !f.includes('/voice/')).length === 0 && p.errors.length === 0, 'the kiosk page loads with no missing assets and no JavaScript errors', JSON.stringify([...p.failed, ...p.errors].slice(0, 3)));
+  check(p.failed.filter((f) => !f.includes('/voice/')).length === 0 && p.errors.length === 0, 'the kiosk, at the root, loads with no missing assets and no JavaScript errors', JSON.stringify([...p.failed, ...p.errors].slice(0, 3)));
   await p.context().close();
 
   await browser.close();
 
   // ---- No WebGL -------------------------------------------------------------
   const noGL = await chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] });
-  p = await open(noGL, `${BASE}#/community`);
+  p = await open(noGL, `${SITE}#/community`);
   await waitScene(p);
   check((await sceneState(p)) === 'fallback', 'without WebGL the still of the community is shown');
   check(await p.evaluate(() => [...document.querySelectorAll('.place-label')].every((l) => l.offsetHeight > 0)), 'the place names are listed without WebGL');
