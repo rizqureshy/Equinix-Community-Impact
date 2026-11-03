@@ -8,6 +8,7 @@ import {
   collectionHTML,
   principlesHTML,
 } from './impact/scripts/content/render.js';
+import { resourcesHTML, sitemapHTML } from './impact/scripts/content/resources.js';
 
 /** Pre-render content into the HTML so text is readable before scripts or the scene load. */
 const prerender = () => ({
@@ -19,7 +20,9 @@ const prerender = () => ({
       .replace('<!--@numbers-->', numbersHTML())
       .replace('<!--@chapters-->', chaptersHTML())
       .replace('<!--@principles-->', principlesHTML())
-      .replace('<!--@collection-->', collectionHTML());
+      .replace('<!--@collection-->', collectionHTML())
+      .replace('<!--@resources-->', resourcesHTML())
+      .replace('<!--@sitemap-->', sitemapHTML());
   },
 });
 

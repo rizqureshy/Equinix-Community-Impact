@@ -34,6 +34,7 @@
           <li><a href="#/chapter/care">Stories</a></li>
           <li><a href="#/promises">Promises</a></li>
           <li><a href="#/people">People</a></li>
+          <li class="nav-pill-item"><button type="button" class="nav-pill" data-curtain-open aria-expanded="false" aria-controls="curtain">Resources</button></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/training">Training</a></li>
           <li><a href="engage.html">Engage</a></li>
@@ -201,6 +202,7 @@
 
     </main>
 
+    <!--@sitemap-->
     <footer class="site-footer">
       <img class="footer-logo" src="brand/equinix-logo-vertical.svg" alt="Equinix" width="124" height="60" loading="lazy" decoding="async" />
     </footer>
@@ -218,6 +220,25 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Resources: the red pill drops a curtain of satin over the page with every destination on it -->
+    <section class="curtain" id="curtain" hidden data-state="closed" role="dialog" aria-modal="true" aria-labelledby="curtain-title">
+      <div class="curtain-cloth" aria-hidden="true"></div>
+      <div class="curtain-panel">
+        <div class="curtain-top">
+          <div>
+            <p class="curtain-eyebrow">Resources and quick links</p>
+            <h2 class="curtain-title" id="curtain-title">Everything in one place.</h2>
+          </div>
+          <button type="button" class="curtain-close" data-curtain-close>Close</button>
+        </div>
+        <ul class="curtain-list"><!--@resources--></ul>
+        <div class="curtain-foot">
+          <span><a href="#/training" data-curtain-go>Practise with the coach</a> · four scenarios, two minutes each</span>
+          <span><a href="#/training" data-curtain-go>Downloads</a> · the library on this page</span>
+        </div>
+      </div>
+    </section>
 
     <section class="room" id="room" hidden data-phase="closed" aria-label="Inside the building" role="dialog" aria-modal="true">
       <div class="room-stage" tabindex="0" aria-label="The room. Drag or use the arrow keys to look around.">

@@ -1,0 +1,292 @@
+/* The Resources pill in the header and the red curtain it drops over the page. */
+.nav-pill-item {
+  display: flex;
+  align-items: center;
+  margin: 0 6px;
+}
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--red);
+  color: #fff;
+  font: inherit;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px -6px rgb(233 28 36 / 0.55);
+  transition: background-color var(--d1), transform var(--d1), box-shadow var(--d1);
+}
+.nav-pill:hover {
+  background: #d4161e;
+  transform: translateY(-1px);
+}
+.nav-pill:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.nav-pill[aria-expanded='true'] {
+  background: var(--ink);
+  box-shadow: none;
+}
+/* On phones the nav folds away but the pill stays */
+@media (max-width: 900px) {
+  .site-nav {
+    display: block;
+  }
+  .site-nav li:not(.nav-pill-item) {
+    display: none;
+  }
+  .nav-pill-item {
+    margin: 0 2px;
+  }
+  .nav-pill {
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: var(--t-xs);
+  }
+}
+
+/* The curtain: a fixed layer above everything but the toast */
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  color: #fff;
+}
+.curtain[hidden] {
+  display: none;
+}
+.curtain-cloth {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.curtain-cloth canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Without the live cloth the curtain is a plain red drop that arrives at once */
+.curtain.is-plain {
+  background: linear-gradient(180deg, #ff3b42 0%, #e91c24 45%, #b8121a 100%);
+}
+.curtain-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--s-6);
+  padding: clamp(84px, 11vh, 120px) var(--gutter) clamp(28px, 5vh, 54px);
+  width: min(1240px, 100%);
+  margin-inline: auto;
+  opacity: 0;
+  transition: opacity var(--d2) var(--ease);
+  overflow-y: auto;
+}
+.curtain[data-state='open'] .curtain-panel,
+.curtain.is-plain .curtain-panel {
+  opacity: 1;
+}
+.curtain-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+.curtain-eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.9);
+}
+.curtain-title {
+  margin: 0;
+  font-size: clamp(34px, 4.2vw, 58px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.18);
+}
+.curtain-close {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  font: inherit;
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+.curtain-close:hover {
+  background: rgb(255 255 255 / 0.22);
+}
+.curtain-close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.curtain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-4) var(--s-5);
+  align-content: start;
+}
+.curtain-item {
+  border-top: 1px solid rgb(255 255 255 / 0.4);
+}
+.curtain-link {
+  display: grid;
+  gap: 6px;
+  padding: 14px 0 6px;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.18);
+  border-radius: 8px;
+}
+a.curtain-link:hover .curtain-name,
+a.curtain-link:focus-visible .curtain-name {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+a.curtain-link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+.curtain-name {
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.curtain-blurb {
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  opacity: 0.92;
+}
+.curtain-note {
+  font-size: var(--t-xs);
+  opacity: 0.8;
+}
+.curtain-item.is-pending .curtain-link {
+  opacity: 0.7;
+}
+.res-lock {
+  display: inline-block;
+  width: 12px;
+  height: 14px;
+  margin-left: 8px;
+  vertical-align: -1px;
+  border-radius: 3px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M3 6V4a3 3 0 0 1 6 0v2h1v8H2V6h1zm1.6 0h2.8V4a1.4 1.4 0 0 0-2.8 0v2z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.curtain-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding-top: var(--s-4);
+  border-top: 1px solid rgb(255 255 255 / 0.4);
+  font-size: var(--t-sm);
+}
+.curtain-foot a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.curtain-foot a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.curtain-foot span {
+  opacity: 0.9;
+}
+/* While the curtain is down the page holds still and its own fabric fades out */
+body.curtain-open {
+  overflow: hidden;
+}
+body.curtain-open .fabric-layer {
+  opacity: 0 !important;
+}
+@media (max-width: 900px) {
+  .curtain-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .curtain-panel {
+    padding-top: 76px;
+  }
+}
+@media (max-width: 520px) {
+  .curtain-list {
+    grid-template-columns: 1fr;
+    gap: var(--s-3);
+  }
+}
+
+/* The footer sitemap: the same destinations as a stationary bar at the very bottom */
+.sitemap {
+  width: min(1240px, 100% - 2 * var(--gutter));
+  margin: 0 auto var(--s-7);
+}
+.sitemap-eyebrow {
+  margin: 0 0 var(--s-4);
+}
+.sitemap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.sitemap-link {
+  display: grid;
+  gap: 4px;
+  padding: 16px 16px 14px;
+  border: 1px solid rgb(17 17 17 / 0.1);
+  border-radius: var(--radius-md, 14px);
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--d1), transform var(--d1);
+}
+a.sitemap-link:hover {
+  border-color: rgb(17 17 17 / 0.3);
+  transform: translateY(-1px);
+}
+.sitemap-name {
+  font-size: var(--t-md, 15px);
+  font-weight: 600;
+}
+.sitemap-blurb {
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.sitemap-note {
+  font-size: var(--t-xs);
+  color: var(--ink-3, #777);
+}
+.sitemap-item.is-pending .sitemap-link {
+  color: var(--ink-2);
+  background: transparent;
+}
+@media (max-width: 900px) {
+  .sitemap-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .sitemap-list {
+    grid-template-columns: 1fr;
+  }
+}

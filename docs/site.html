@@ -19,13 +19,13 @@
         document.documentElement.dataset.fabric = fabric || 'on';
       })();
     </script>
-    <script type="module" crossorigin src="./assets/main-MfWOFhIY.js"></script>
+    <script type="module" crossorigin src="./assets/main-B3hR8cAs.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/three.module-C1wdK7se.js">
     <link rel="modulepreload" crossorigin href="./assets/stories-PkbF1guy.js">
     <link rel="modulepreload" crossorigin href="./assets/preload-helper-CZSX7GXM.js">
     <link rel="modulepreload" crossorigin href="./assets/people-line-D6F_KkvC.js">
     <link rel="stylesheet" crossorigin href="./assets/fraunces-DSnAaPJU.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-D-iTUWUs.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-BD3TM1ug.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -40,6 +40,7 @@
           <li><a href="#/chapter/care">Stories</a></li>
           <li><a href="#/promises">Promises</a></li>
           <li><a href="#/people">People</a></li>
+          <li class="nav-pill-item"><button type="button" class="nav-pill" data-curtain-open aria-expanded="false" aria-controls="curtain">Resources</button></li>
           <li><a href="#/share">Share</a></li>
           <li><a href="#/training">Training</a></li>
           <li><a href="engage.html">Engage</a></li>
@@ -538,6 +539,17 @@
 
     </main>
 
+    <nav class="sitemap" aria-label="Resources and quick links">
+    <p class="sitemap-eyebrow eyebrow">Resources and quick links</p>
+    <ul class="sitemap-list"><li class="sitemap-item is-pending" data-resource="programs"><span class="sitemap-link"><b class="sitemap-name">Community programs<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="sitemap-blurb">Programmes, partners and how to join one</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item is-pending" data-resource="guides"><span class="sitemap-link"><b class="sitemap-name">Guides and toolkits<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="sitemap-blurb">What to say, how to run an event</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item is-pending" data-resource="policies"><span class="sitemap-link"><b class="sitemap-name">Policies<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="sitemap-blurb">Giving, volunteering, sponsorship</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item" data-resource="reports"><a class="sitemap-link" href="https://www.equinix.com/about/sustainability" target="_blank" rel="noopener"><b class="sitemap-name">Impact reports</b><span class="sitemap-blurb">The sustainability and impact reports</span><small class="sitemap-note">Opens in a new tab</small></a></li>
+<li class="sitemap-item is-pending" data-resource="map"><span class="sitemap-link"><b class="sitemap-name">Global impact map</b><span class="sitemap-blurb">Every site, every programme</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item is-pending" data-resource="partners"><span class="sitemap-link"><b class="sitemap-name">Partner organisations</b><span class="sitemap-blurb">Who we work with, and where</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item is-pending" data-resource="events"><span class="sitemap-link"><b class="sitemap-name">Events<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="sitemap-blurb">What is coming up near you</span><small class="sitemap-note">Link to follow</small></span></li>
+<li class="sitemap-item is-pending" data-resource="involved"><span class="sitemap-link"><b class="sitemap-name">Get involved</b><span class="sitemap-blurb">Volunteer, nominate, give</span><small class="sitemap-note">Link to follow</small></span></li></ul>
+  </nav>
     <footer class="site-footer">
       <img class="footer-logo" src="brand/equinix-logo-vertical.svg" alt="Equinix" width="124" height="60" loading="lazy" decoding="async" />
     </footer>
@@ -555,6 +567,32 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Resources: the red pill drops a curtain of satin over the page with every destination on it -->
+    <section class="curtain" id="curtain" hidden data-state="closed" role="dialog" aria-modal="true" aria-labelledby="curtain-title">
+      <div class="curtain-cloth" aria-hidden="true"></div>
+      <div class="curtain-panel">
+        <div class="curtain-top">
+          <div>
+            <p class="curtain-eyebrow">Resources and quick links</p>
+            <h2 class="curtain-title" id="curtain-title">Everything in one place.</h2>
+          </div>
+          <button type="button" class="curtain-close" data-curtain-close>Close</button>
+        </div>
+        <ul class="curtain-list"><li class="curtain-item is-pending" data-resource="programs"><span class="curtain-link"><b class="curtain-name">Community programs<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="curtain-blurb">Programmes, partners and how to join one</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item is-pending" data-resource="guides"><span class="curtain-link"><b class="curtain-name">Guides and toolkits<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="curtain-blurb">What to say, how to run an event</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item is-pending" data-resource="policies"><span class="curtain-link"><b class="curtain-name">Policies<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="curtain-blurb">Giving, volunteering, sponsorship</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item" data-resource="reports"><a class="curtain-link" href="https://www.equinix.com/about/sustainability" target="_blank" rel="noopener"><b class="curtain-name">Impact reports</b><span class="curtain-blurb">The sustainability and impact reports</span><small class="curtain-note">Opens in a new tab</small></a></li>
+<li class="curtain-item is-pending" data-resource="map"><span class="curtain-link"><b class="curtain-name">Global impact map</b><span class="curtain-blurb">Every site, every programme</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item is-pending" data-resource="partners"><span class="curtain-link"><b class="curtain-name">Partner organisations</b><span class="curtain-blurb">Who we work with, and where</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item is-pending" data-resource="events"><span class="curtain-link"><b class="curtain-name">Events<span class="res-lock" aria-label="needs Equinix sign-in"></span></b><span class="curtain-blurb">What is coming up near you</span><small class="curtain-note">Link to follow</small></span></li>
+<li class="curtain-item is-pending" data-resource="involved"><span class="curtain-link"><b class="curtain-name">Get involved</b><span class="curtain-blurb">Volunteer, nominate, give</span><small class="curtain-note">Link to follow</small></span></li></ul>
+        <div class="curtain-foot">
+          <span><a href="#/training" data-curtain-go>Practise with the coach</a> · four scenarios, two minutes each</span>
+          <span><a href="#/training" data-curtain-go>Downloads</a> · the library on this page</span>
+        </div>
+      </div>
+    </section>
 
     <section class="room" id="room" hidden data-phase="closed" aria-label="Inside the building" role="dialog" aria-modal="true">
       <div class="room-stage" tabindex="0" aria-label="The room. Drag or use the arrow keys to look around.">

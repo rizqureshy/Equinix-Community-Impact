@@ -316,6 +316,40 @@ fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== '
 setFabric(root.dataset.fabric === 'on');
 if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
 
+// The Resources curtain: the red pill in the header drops red satin over the
+// page with every destination on it. Loaded on the first press.
+const curtainEl = $('#curtain');
+const curtainPills = $$('[data-curtain-open]');
+let curtain = null;
+let curtainLoading = null;
+async function loadCurtain() {
+  if (curtain) return curtain;
+  curtainLoading ??= import('./curtain.js').then(({ createCurtain }) => {
+    curtain = createCurtain(curtainEl, {
+      motion: () => store.get().motion,
+      webgl: supportsWebGL2(),
+      triggers: curtainPills,
+      onOpen: () => {
+        // The page's own fabric fades out under the curtain and stops rendering
+        setTimeout(() => {
+          if (document.body.classList.contains('curtain-open')) fabric?.stop();
+        }, 1100);
+      },
+      onClose: () => {
+        if (root.dataset.fabric === 'on') fabric?.start();
+      },
+    });
+    return curtain;
+  });
+  return curtainLoading;
+}
+for (const pill of curtainPills) {
+  pill.addEventListener('click', async () => {
+    // The module wires its own click handling once loaded; the first press opens it by hand
+    if (!curtain) (await loadCurtain())?.open({ trigger: pill });
+  });
+}
+
 // The coach: an ElevenLabs conversational agent, loaded only when asked for
 const COACH_AGENT = 'agent_3001m5kqwwswfbgs0w7err64yw6v';
 const coachHost = $('#coach-host');
@@ -765,6 +799,9 @@ document.fonts?.ready.then(() => ScrollTrigger.refresh());
 const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motion: () => store.get().motion });
 
 window.__impact = { skyPlaces: SKY_PLACES,
+  get curtain() {
+    return curtain;
+  },
   store,
   people: peopleLine,
   theatre,
