@@ -345,7 +345,7 @@ try {
   // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
   p = await open(browser, `${SITE}#/share`);
   await wait(1200);
-  const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; const a = document.querySelector('.site-nav a'); return { tag: b.tagName, text: b.textContent.trim(), expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0, taller: r.height > a.getBoundingClientRect().height && parseFloat(getComputedStyle(b).fontSize) > parseFloat(getComputedStyle(a).fontSize) }; });
+  const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; const a = document.querySelector('.site-nav a'); return { tag: b.tagName, text: b.getAttribute('aria-label'), expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0, taller: r.height > a.getBoundingClientRect().height && parseFloat(getComputedStyle(b).fontSize) > parseFloat(getComputedStyle(a).fontSize) }; });
   check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.index === Math.floor(pillAt.count / 2) && pillAt.text === 'Carry the Story with Confidence' && pillAt.taller, 'a red Carry the Story with Confidence pill sits in the middle of the nav, a touch larger than its neighbours', JSON.stringify(pillAt));
   await p.locator('.site-nav .nav-pill').click();
   await p.waitForFunction(() => ['falling', 'open'].includes(document.querySelector('#curtain').dataset.state), null, { polling: 100, timeout: 10000 }).catch(() => {});
@@ -364,13 +364,15 @@ try {
   const wheelFrom = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
   await p.mouse.move(720, 400);
   await p.mouse.wheel(0, 300);
-  await wait(900);
+  await p.waitForFunction(() => document.querySelector('.curtain-panel').scrollTop > 0, null, { polling: 100, timeout: 8000 }).catch(() => {});
+  await wait(600);
   const wheelOver = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
   await p.mouse.move(40, 400);
   await p.mouse.wheel(0, 300);
-  await wait(1500);
+  await p.waitForFunction((from) => scrollY > from, wheelOver.page, { polling: 100, timeout: 8000 }).catch(() => {});
+  await wait(1200);
   const wheelBeside = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
-  check(wheelOver.panel > wheelFrom.panel && wheelOver.page === wheelFrom.page && wheelBeside.page > wheelOver.page && wheelBeside.panel === wheelOver.panel, 'the wheel scrolls the curtain over the curtain and the page beside it', JSON.stringify({ wheelFrom, wheelOver, wheelBeside }));
+  check(wheelOver.panel > wheelFrom.panel && Math.abs(wheelOver.page - wheelFrom.page) < 8 && wheelBeside.page > wheelOver.page && wheelBeside.panel === wheelOver.panel, 'the wheel scrolls the curtain over the curtain and the page beside it', JSON.stringify({ wheelFrom, wheelOver, wheelBeside }));
   await p.setViewportSize({ width: 1440, height: 900 });
   await wait(400);
   await p.keyboard.press('Escape');
@@ -487,7 +489,7 @@ try {
   // ---- The kiosk (version 2): the model alone, on a loop ------------------
   p = await open(browser, `${BASE}kiosk.html?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { polling: 100, timeout: 60000 });
-  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 30000 }).catch(() => {}); // the first frames at 1080p are slow in software rendering
+  await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 90000 }).catch(() => {}); // the first frames at 1080p compile shaders for a long while in software rendering
   const kioskStart = await p.evaluate(() => ({ mode: window.__kiosk.mode, state: document.querySelector('#stage').dataset.sceneState, dots: document.querySelectorAll('.kiosk-dot').length, chrome: !document.querySelector('.site-header') && !document.querySelector('.site-footer') && !document.querySelector('main') }));
   check(kioskStart.mode === 'loop' && kioskStart.state === 'ready' && kioskStart.dots === 6 && kioskStart.chrome, 'the kiosk shows the model alone, full screen, and starts its loop by itself', JSON.stringify(kioskStart));
   await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});

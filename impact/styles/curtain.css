@@ -34,8 +34,17 @@
   background: var(--ink);
   box-shadow: none;
 }
-/* On phones the nav folds away but the pill stays */
+.nav-pill-short {
+  display: none;
+}
+/* On phones the nav folds away but the pill stays, with its shorter name */
 @media (max-width: 900px) {
+  .nav-pill-long {
+    display: none;
+  }
+  .nav-pill-short {
+    display: inline;
+  }
   .site-nav {
     display: block;
   }

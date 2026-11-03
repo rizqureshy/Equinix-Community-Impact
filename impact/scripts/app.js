@@ -352,15 +352,18 @@ for (const pill of curtainPills) {
 // Reaching the foot of the page drops the curtain by itself, once per descent: only after the
 // reader has scrolled there themselves (a wheel, a touch, the keys), never on a route's own
 // scroll, and not again until they have gone back up a little
-let readerScrolled = false;
+let readerScrolledAt = -Infinity; // the reader's last wheel, touch or key
 let curtainFell = false;
-for (const ev of ['wheel', 'touchmove', 'keydown']) document.addEventListener(ev, () => (readerScrolled = true), { passive: true });
+for (const ev of ['wheel', 'touchmove', 'keydown']) document.addEventListener(ev, () => (readerScrolledAt = performance.now()), { passive: true });
 addEventListener(
   'scroll',
   () => {
-    const fromBottom = document.documentElement.scrollHeight - (scrollY + innerHeight);
+    const height = document.documentElement.scrollHeight;
+    if (height < innerHeight * 1.5) return; // the page is folded away (a room or a drawer is open), not scrolled to its foot
+    const fromBottom = height - (scrollY + innerHeight);
     if (fromBottom > 360) curtainFell = false;
-    if (fromBottom > 24 || curtainFell || !readerScrolled) return;
+    // Only a scroll the reader is driving right now counts, never a route's own glide to a section
+    if (fromBottom > 24 || curtainFell || performance.now() - readerScrolledAt > 1500) return;
     if (document.body.classList.contains('room-open') || document.querySelector('#story-drawer')?.open) return;
     curtainFell = true;
     loadCurtain().then((c) => c?.open({ trigger: curtainPills[0] || null }));
