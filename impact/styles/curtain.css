@@ -69,7 +69,7 @@
   content: '';
   position: absolute;
   inset: 0 18px;
-  background: rgb(255 255 255 / 0.78);
+  background: rgb(255 255 255 / 0.5);
   opacity: 0;
   transition: opacity var(--d2) var(--ease);
 }
@@ -102,6 +102,7 @@
   opacity: 0;
   transition: opacity var(--d2) var(--ease);
   overflow-y: auto;
+  overscroll-behavior: contain; /* the wheel over the curtain scrolls the curtain, never the page beneath */
 }
 .curtain[data-state='open'] .curtain-panel,
 .curtain.is-plain .curtain-panel {
@@ -261,10 +262,7 @@ a.curtain-link:focus-visible {
 .curtain-foot span {
   opacity: 0.9;
 }
-/* While the curtain is down the page holds still and its own fabric fades out */
-body.curtain-open {
-  overflow: hidden;
-}
+/* While the curtain is down the page's own fabric fades out; the page still scrolls beside the curtain */
 body.curtain-open .fabric-layer {
   opacity: 0 !important;
 }

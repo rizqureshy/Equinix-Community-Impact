@@ -370,6 +370,21 @@ try {
   await p.keyboard.press('Tab');
   await p.keyboard.press('Tab');
   check(await p.evaluate(() => document.querySelector('#curtain').contains(document.activeElement)), 'focus stays on the curtain while it is down');
+  // The wheel goes to what is under the pointer: the curtain's own list, or the page beside it
+  await p.setViewportSize({ width: 1440, height: 700 });
+  await wait(400);
+  const wheelFrom = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
+  await p.mouse.move(720, 400);
+  await p.mouse.wheel(0, 300);
+  await wait(900);
+  const wheelOver = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
+  await p.mouse.move(40, 400);
+  await p.mouse.wheel(0, 300);
+  await wait(1500);
+  const wheelBeside = await p.evaluate(() => ({ panel: document.querySelector('.curtain-panel').scrollTop, page: scrollY }));
+  check(wheelOver.panel > wheelFrom.panel && wheelOver.page === wheelFrom.page && wheelBeside.page > wheelOver.page && wheelBeside.panel === wheelOver.panel, 'the wheel scrolls the curtain over the curtain and the page beside it', JSON.stringify({ wheelFrom, wheelOver, wheelBeside }));
+  await p.setViewportSize({ width: 1440, height: 900 });
+  await wait(400);
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await wait(400);

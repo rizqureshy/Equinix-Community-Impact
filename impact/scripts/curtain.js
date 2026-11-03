@@ -59,7 +59,7 @@ function createCloth(host, { motion = () => true } = {}) {
     sheenRoughness: 0.7,
     side: THREE.DoubleSide,
     transparent: true,
-    opacity: 0.965,
+    opacity: 0.9,
     depthWrite: false,
   });
   const cloth = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
