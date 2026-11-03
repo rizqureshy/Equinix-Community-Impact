@@ -353,7 +353,9 @@ try {
   await p.context().close();
 
   // ---- The Resources curtain --------------------------------------------
-  p = await open(browser, `${SITE}#/`);
+  // Opened at the foot of the page so the community model is not loading at the same time: in software rendering
+  // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
+  p = await open(browser, `${SITE}#/share`);
   await wait(1200);
   const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; return { tag: b.tagName, expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0 }; });
   check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.index === Math.floor(pillAt.count / 2), 'a red Resources pill sits in the middle of the nav', JSON.stringify(pillAt));
@@ -369,7 +371,7 @@ try {
   await p.keyboard.press('Tab');
   check(await p.evaluate(() => document.querySelector('#curtain').contains(document.activeElement)), 'focus stays on the curtain while it is down');
   await p.keyboard.press('Escape');
-  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 10000 }).catch(() => {});
+  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await wait(400);
   const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-pill') }));
   check(lifted.hidden && !lifted.body && lifted.focus, 'Escape lifts the curtain and hands focus back to the pill', JSON.stringify(lifted));
