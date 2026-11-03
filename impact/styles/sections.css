@@ -583,7 +583,6 @@ body.spine-open .weather-light {
 .bar-btn[aria-pressed='true'] .icon-muted {
   display: block;
 }
-/* ---- The coach (Training) --------------------------------------------- */
 /* ---- Statement ---------------------------------------------------------------- */
 .statement {
   padding: var(--s-10) 0;
@@ -1171,6 +1170,8 @@ body.spine-open .weather-light {
   border-top: 1px solid var(--line);
 }
 .roleplay-btn {
+  text-decoration: none;
+  color: inherit;
   display: grid;
   grid-template-columns: 1.75rem 1fr;
   gap: var(--s-3);
@@ -1200,14 +1201,6 @@ body.spine-open .weather-light {
 .roleplay-text { display: grid; gap: 2px; min-width: 0; }
 .roleplay-text strong { letter-spacing: -0.015em; font-size: var(--t-sm); transition: color var(--d1); }
 .roleplay-text .muted { font-size: var(--t-xs); }
-.coach {
-  margin-top: var(--s-3);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--line);
-}
-.coach .btn { justify-self: start; }
-.coach-note { max-width: 62ch; margin-top: var(--s-3); }
-.coach-host[hidden] { display: none; }
 
 /* ---- Engage page ------------------------------------------------------- */
 .page-engage main {

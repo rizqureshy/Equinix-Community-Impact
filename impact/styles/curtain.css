@@ -7,15 +7,17 @@
 .nav-pill {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 18px;
+  min-height: 44px;
+  padding: 0 20px;
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--red);
   color: #fff;
   font: inherit;
-  font-size: var(--t-sm);
+  font-size: calc(var(--t-sm) * 1.08);
   font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 6px 18px -6px rgb(233 28 36 / 0.55);
   transition: background-color var(--d1), transform var(--d1), box-shadow var(--d1);
@@ -44,9 +46,9 @@
     margin: 0 2px;
   }
   .nav-pill {
-    min-height: 36px;
+    min-height: 38px;
     padding: 0 14px;
-    font-size: var(--t-xs);
+    font-size: var(--t-sm);
   }
 }
 
@@ -286,69 +288,6 @@ body.curtain-open .fabric-layer {
 }
 @media (max-width: 520px) {
   .curtain-group-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* The footer sitemap: the same destinations as a stationary bar at the very bottom */
-.sitemap {
-  width: min(1240px, 100% - 2 * var(--gutter));
-  margin: 0 auto var(--s-7);
-}
-.sitemap-eyebrow {
-  margin: 0 0 var(--s-4);
-}
-.sitemap-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-.sitemap-link {
-  display: grid;
-  gap: 4px;
-  padding: 16px 16px 14px;
-  border: 1px solid rgb(17 17 17 / 0.1);
-  border-radius: var(--radius-md, 14px);
-  background: #fff;
-  color: var(--ink);
-  text-decoration: none;
-  transition: border-color var(--d1), transform var(--d1);
-}
-a.sitemap-link:hover {
-  border-color: rgb(17 17 17 / 0.3);
-  transform: translateY(-1px);
-}
-.sitemap-name {
-  font-size: var(--t-md, 15px);
-  font-weight: 600;
-}
-.sitemap-blurb {
-  font-size: var(--t-sm);
-  color: var(--ink-2);
-}
-.sitemap-note {
-  font-size: var(--t-xs);
-  color: var(--ink-3, #777);
-}
-.sitemap-item.is-pending .sitemap-link {
-  color: var(--ink-2);
-  background: transparent;
-}
-@media (max-width: 1100px) {
-  .sitemap-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (max-width: 900px) {
-  .sitemap-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 520px) {
-  .sitemap-list {
     grid-template-columns: 1fr;
   }
 }

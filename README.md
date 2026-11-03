@@ -63,7 +63,6 @@ scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geom
 scripts/city_manifest.py  records the building pipeline in the asset manifest
 scripts/pano_tools.py     room panoramas: seam blend and web sizes, the perspective still, the fallback poster
 scripts/build_rooms.sh    encodes the dive films in, and the exit films (forward where people appear, else the dive reversed)
-scripts/coach-digest.mjs  builds the coach's knowledge base (media-src/voice/coach-knowledge.md) from the story module
 tests/                    unit and end-to-end tests, plus tools/glb-view.mjs
 ```
 

@@ -140,11 +140,12 @@ export function createStoryDialog({ drawer, content, motion, fallbackHash, onOpe
 
 /** Motion preference shared by both pages; persists the visitor's choice. */
 export function setupMotionToggle(button, { initial, onChange }) {
-  const label = $('.motion-label', button);
+  // Without a button the setting still follows the system preference
+  const label = button ? $('.motion-label', button) : null;
   const render = (on) => {
     document.documentElement.dataset.motion = on ? 'on' : 'off';
-    button.setAttribute('aria-pressed', String(!on));
-    label.textContent = on ? 'Pause motion' : 'Play motion';
+    button?.setAttribute('aria-pressed', String(!on));
+    if (label) label.textContent = on ? 'Pause motion' : 'Play motion';
   };
   let current = initial;
   render(current);
@@ -161,7 +162,7 @@ export function setupMotionToggle(button, { initial, onChange }) {
     }
     onChange(on);
   };
-  button.addEventListener('click', () => set(!current, true));
+  button?.addEventListener('click', () => set(!current, true));
   matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => set(!e.matches, false));
   return { get on() { return current; } };
 }

@@ -297,8 +297,8 @@ async function loadFabric() {
 }
 function setFabric(on) {
   root.dataset.fabric = on ? 'on' : 'off';
-  fabricToggle.setAttribute('aria-pressed', String(on));
-  fabricToggle.setAttribute('aria-label', `Red fabric background, ${on ? 'on' : 'off'}`);
+  fabricToggle?.setAttribute('aria-pressed', String(on));
+  fabricToggle?.setAttribute('aria-label', `Red fabric background, ${on ? 'on' : 'off'}`);
   try {
     localStorage.setItem('impact-fabric', on ? 'on' : 'off');
   } catch {}
@@ -312,7 +312,7 @@ function setFabric(on) {
     }, 1100);
   }
 }
-fabricToggle.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
+fabricToggle?.addEventListener('click', () => setFabric(root.dataset.fabric !== 'on'));
 setFabric(root.dataset.fabric === 'on');
 if (fabricWanted()) (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(loadFabric);
 
@@ -349,33 +349,25 @@ for (const pill of curtainPills) {
     if (!curtain) (await loadCurtain())?.open({ trigger: pill });
   });
 }
+// Reaching the foot of the page drops the curtain by itself, once per descent: only after the
+// reader has scrolled there themselves (a wheel, a touch, the keys), never on a route's own
+// scroll, and not again until they have gone back up a little
+let readerScrolled = false;
+let curtainFell = false;
+for (const ev of ['wheel', 'touchmove', 'keydown']) document.addEventListener(ev, () => (readerScrolled = true), { passive: true });
+addEventListener(
+  'scroll',
+  () => {
+    const fromBottom = document.documentElement.scrollHeight - (scrollY + innerHeight);
+    if (fromBottom > 360) curtainFell = false;
+    if (fromBottom > 24 || curtainFell || !readerScrolled) return;
+    if (document.body.classList.contains('room-open') || document.querySelector('#story-drawer')?.open) return;
+    curtainFell = true;
+    loadCurtain().then((c) => c?.open({ trigger: curtainPills[0] || null }));
+  },
+  { passive: true },
+);
 
-// The coach: an ElevenLabs conversational agent, loaded only when asked for
-const COACH_AGENT = 'agent_3001m5kqwwswfbgs0w7err64yw6v';
-const coachHost = $('#coach-host');
-let coachLoaded = false;
-function openCoach() {
-  if (!coachHost) return;
-  coachHost.hidden = false;
-  if (!coachLoaded) {
-    coachLoaded = true;
-    const widget = document.createElement('elevenlabs-convai');
-    widget.setAttribute('agent-id', COACH_AGENT);
-    coachHost.appendChild(widget);
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
-    script.async = true;
-    script.onerror = () => {
-      coachLoaded = false;
-      notify('The coach could not load. Check the connection and try again.', { error: true });
-    };
-    document.body.appendChild(script);
-  }
-  coachHost.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
-}
-document.addEventListener('click', (e) => {
-  if (e.target.closest('[data-coach-open]')) openCoach();
-});
 
 // Stepping inside a building: the room overlay
 const SKY_PLACES = new Set(['datacenter']); // places whose door is reached under the sky
@@ -536,6 +528,7 @@ const reveal = new IntersectionObserver(
 );
 $$('[data-reveal]').forEach((el) => reveal.observe(el));
 
+// Motion follows the system setting (and ?motion=off); there is no control in the header any more
 setupMotionToggle($('[data-motion-toggle]'), {
   initial: store.get().motion,
   onChange: (on) => {
@@ -827,8 +820,5 @@ window.__impact = { skyPlaces: SKY_PLACES,
     return paused;
   },
   skipPlace,
-  get coachLoaded() {
-    return coachLoaded;
-  },
   room,
 };

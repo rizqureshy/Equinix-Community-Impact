@@ -2393,7 +2393,8 @@
       "voiceId": "pFZP5JQG7iQjIQuC4Bku",
       "voice": "Lily (ElevenLabs premade, British)",
       "llm": "claude-sonnet-5-5",
-      "embed": "impact/scripts/app.js openCoach()"
+      "embed": "impact/scripts/app.js openCoach()",
+      "status": "removed from the site on 3 November 2026 at the team\u2019s request; the agent, its widget and its knowledge base are gone from the code"
     }
   },
   "spine": {

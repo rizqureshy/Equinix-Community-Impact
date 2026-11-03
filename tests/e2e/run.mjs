@@ -317,7 +317,7 @@ try {
   check((await p.locator('.card:not([hidden])').count()) === (await p.locator('.card').count()), 'reset shows all stories');
 
   const small = await p.evaluate(() =>
-    [...document.querySelectorAll('.btn, .chip, .motion-toggle, .rail-btn, .bar-btn')]
+    [...document.querySelectorAll('.btn, .chip, .rail-btn, .bar-btn')]
       .filter((el) => el.offsetParent)
       .map((el) => [el.className, el.getBoundingClientRect().height])
       .filter(([, h]) => h > 0 && h < 44),
@@ -331,20 +331,8 @@ try {
   // The red fabric: behind the page, with a toggle that is remembered
   await p.waitForFunction(() => document.querySelector('#fabric-layer').classList.contains('is-ready'), null, { polling: 100, timeout: 30000 }).catch(() => {});
   check(await p.evaluate(() => document.documentElement.dataset.fabric === 'on' && document.querySelector('#fabric-layer canvas') && Number(getComputedStyle(document.querySelector('#fabric-layer')).opacity) > 0.5 && getComputedStyle(document.querySelector('#fabric-layer')).pointerEvents === 'none'), 'the red fabric flies behind the page and takes no clicks');
-  await p.locator('[data-fabric-toggle]').click();
-  await wait(300);
-  check(await p.evaluate(() => document.documentElement.dataset.fabric === 'off' && localStorage.getItem('impact-fabric') === 'off' && document.querySelector('[data-fabric-toggle]').getAttribute('aria-pressed') === 'false'), 'the fabric can be switched off and the choice is remembered');
-  await p.locator('[data-fabric-toggle]').click();
-  // Training and resources: placeholders are labelled, the live link is marked, the route lands
-  await p.goto(`${SITE}#/training`);
-  let resourcesTop = Infinity;
-  for (let i = 0; i < 24 && Math.abs(resourcesTop) >= 40; i++) {
-    await wait(250);
-    resourcesTop = await p.evaluate(() => document.querySelector('#training').getBoundingClientRect().top);
-  }
-  check(Math.abs(resourcesTop) < 40, 'the training route lands on the section', `${Math.round(resourcesTop)}px`);
-  check(await p.evaluate(() => document.querySelectorAll('.resource .resource-state').length === 5 && document.querySelectorAll('.resource-state--live').length === 1 && document.querySelectorAll('.roleplay').length === 4), 'downloadable placeholders, one live link and four role plays are listed');
-  check(await p.evaluate(() => document.querySelector('.site-nav a[href="engage.html"]') && document.querySelector('.resource-group--engage a[href="engage.html"]')), 'the Engage page is linked from the nav and the resources');
+  check(await p.evaluate(() => !document.querySelector('[data-fabric-toggle], [data-motion-toggle]')), 'the header carries no motion or fabric controls');
+  check(await p.evaluate(() => !document.querySelector('#training') && !document.querySelector('[data-coach-open], #coach, elevenlabs-convai') && !/elevenlabs|the coach/i.test(document.body.innerText) && !!document.querySelector('.site-nav a[href="engage.html"]')), 'no training section and nothing of the former agent on the page; Engage stays in the nav');
   // Sunlight: a diffused light sits over the page, blended in, never in the way
   check(await p.evaluate(() => { const l = document.querySelector('#weather-light'); const cs = getComputedStyle(l); return cs.mixBlendMode === 'multiply' && cs.pointerEvents === 'none' && cs.position === 'fixed'; }), 'a diffused sunlight sits over the page and takes no clicks');
   check(p.external.length === 0, 'no requests leave the host (sections)', p.external.slice(0, 3).join(', '));
@@ -357,8 +345,8 @@ try {
   // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
   p = await open(browser, `${SITE}#/share`);
   await wait(1200);
-  const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; return { tag: b.tagName, expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0 }; });
-  check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.index === Math.floor(pillAt.count / 2), 'a red Resources pill sits in the middle of the nav', JSON.stringify(pillAt));
+  const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; const a = document.querySelector('.site-nav a'); return { tag: b.tagName, text: b.textContent.trim(), expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0, taller: r.height > a.getBoundingClientRect().height && parseFloat(getComputedStyle(b).fontSize) > parseFloat(getComputedStyle(a).fontSize) }; });
+  check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.index === Math.floor(pillAt.count / 2) && pillAt.text === 'Carry the Story with Confidence' && pillAt.taller, 'a red Carry the Story with Confidence pill sits in the middle of the nav, a touch larger than its neighbours', JSON.stringify(pillAt));
   await p.locator('.site-nav .nav-pill').click();
   await p.waitForFunction(() => ['falling', 'open'].includes(document.querySelector('#curtain').dataset.state), null, { polling: 100, timeout: 10000 }).catch(() => {});
   const falling = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, canvas: !!document.querySelector('.curtain-cloth canvas'), body: document.body.classList.contains('curtain-open') }));
@@ -390,13 +378,21 @@ try {
   await wait(400);
   const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-pill') }));
   check(lifted.hidden && !lifted.body && lifted.focus, 'Escape lifts the curtain and hands focus back to the pill', JSON.stringify(lifted));
-  await p.locator('.site-nav .nav-pill').click();
-  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 15000 }).catch(() => {});
-  // dispatched rather than pointer-clicked: the live cloth keeps the frame rate low in software rendering, so Playwright never sees the link as settled
-  await p.locator('[data-curtain-go]').first().dispatchEvent('click');
-  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed' && location.hash === '#/training', null, { polling: 100, timeout: 30000 }).catch(() => {}); // the rise is clock-timed, but software rendering can stretch it
-  check((await p.evaluate(() => location.hash)) === '#/training' && (await p.evaluate(() => document.querySelector('#curtain').hidden)), 'the coach link lifts the curtain first, then goes to the training section');
-  check(await p.evaluate(() => document.querySelectorAll('.site-footer').length === 1 && document.querySelector('.sitemap') && document.querySelectorAll('.sitemap-item').length === 10 && document.querySelector('.sitemap').compareDocumentPosition(document.querySelector('.site-footer')) & Node.DOCUMENT_POSITION_FOLLOWING), 'the same ten destinations sit at the very bottom of the page as a sitemap');
+  // Reaching the foot of the page by hand drops the curtain by itself, once
+  await p.mouse.move(40, 400);
+  for (let i = 0; i < 12 && !(await p.evaluate(() => document.documentElement.scrollHeight - (scrollY + innerHeight) <= 24)); i++) {
+    await p.mouse.wheel(0, 4000);
+    await wait(500);
+  }
+  await p.waitForFunction(() => ['falling', 'open'].includes(document.querySelector('#curtain').dataset.state), null, { polling: 100, timeout: 20000 }).catch(() => {});
+  const fell = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, fromBottom: Math.round(document.documentElement.scrollHeight - (scrollY + innerHeight)) }));
+  check(fell.state === 'falling' || fell.state === 'open', 'reaching the foot of the page drops the curtain by itself', JSON.stringify(fell));
+  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 30000 }).catch(() => {});
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
+  await wait(600);
+  check((await p.evaluate(() => document.querySelector('#curtain').dataset.state)) === 'closed', 'lifted again, it stays up while the reader is still at the foot of the page');
+  check(await p.evaluate(() => !document.querySelector('.sitemap') && document.querySelectorAll('.site-footer').length === 1), 'the page ends with the footer alone: the curtain at the foot of the page is the resources');
   await p.context().close();
 
   // ---- Engage page ----------------------------------------------------------
@@ -428,17 +424,6 @@ try {
   check(p.errors.length === 0, 'no JavaScript errors on direct link', p.errors.join(' | '));
   await p.context().close();
 
-  // ---- The coach (Training) ----------------------------------------------
-  p = await open(browser, `${SITE}#/training`);
-  await p.route('**/convai-widget-embed*', (route) => route.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
-  await wait(1200);
-  check((await p.locator('[data-coach-open]').count()) >= 5 && (await p.evaluate(() => document.querySelector('#coach-host').hidden)), 'every role-play scenario offers the coach, loaded only on request');
-  await p.locator('#coach [data-coach-open]').first().dispatchEvent('click');
-  await wait(800);
-  const coach = await p.evaluate(() => ({ loaded: window.__impact.coachLoaded, agent: document.querySelector('elevenlabs-convai')?.getAttribute('agent-id'), shown: !document.querySelector('#coach-host').hidden, script: !!document.querySelector('script[src*="convai-widget-embed"]') }));
-  check(coach.loaded && coach.agent === 'agent_3001m5kqwwswfbgs0w7err64yw6v' && coach.shown && coach.script, 'the coach widget mounts with its agent', JSON.stringify(coach));
-  check(p.errors.length === 0, 'no JavaScript errors (coach)', p.errors.join(' | '));
-  await p.context().close();
 
   // ---- Reduced motion -----------------------------------------------------
   p = await open(browser, `${SITE}#/community`, { reducedMotion: 'reduce' });
@@ -461,8 +446,6 @@ try {
   check(plain.state === 'open' && plain.plain && !plain.canvas, 'with reduced motion the curtain is a plain red panel that arrives at once', JSON.stringify(plain));
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 5000 }).catch(() => {});
-  await p.locator('[data-motion-toggle]').click();
-  check((await p.evaluate(() => document.documentElement.dataset.motion)) === 'on', 'motion control toggles motion');
   check(p.errors.length === 0, 'no JavaScript errors with reduced motion', p.errors.join(' | '));
   await p.context().close();
 

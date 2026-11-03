@@ -1,14 +1,12 @@
-// The resources and quick links: the destinations the Resources curtain and
-// the footer sitemap show, as the team listed them (titles, copy, groups and
+// The resources and quick links: the destinations the Resources curtain shows, as the team listed them (titles, copy, groups and
 // contributors from the team's table of 3 November 2026). Pure data and string
 // functions, used at build time (pre-rendered into the page) and nowhere else.
 //
-// `href` is null until the address arrives: such an item renders as
-// "Link to follow" rather than pointing anywhere invented. `file` names the
-// source file the team attached, to be hosted or linked once its home is
-// agreed (the repository is public, so internal files should not be committed
-// here). `signIn` marks a destination that needs an Equinix sign-in and opens
-// in a new tab.
+// Addresses as the team sent them on 3 November 2026: the hub on the Equinix
+// intranet, the Yoodli programme, and eight files in a colleague's OneDrive
+// (Microsoft Teams chat files), all behind an Equinix sign-in and opened in a
+// new tab. A `null` href would render as "link to follow" rather than point
+// anywhere invented. `file` names the attached source file.
 export const GROUPS = [
   { id: 'featured', name: 'Featured', blurb: 'Start here' },
   { id: 'resource', name: 'Resources', blurb: 'Guides, principles and figures' },
@@ -17,16 +15,16 @@ export const GROUPS = [
 ];
 
 export const RESOURCES = [
-  { id: 'hub', group: 'featured', name: 'Community Engagement Employee Hub', blurb: 'Explore Equinix community engagement resources.', by: 'Jodi Baumann', destination: 'Equinix Together: Engaging with Local Communities', href: null, file: null, signIn: true, action: 'Open resource' },
-  { id: 'steps', group: 'featured', name: 'STEPS: Sustainability and Customer Conversations', blurb: 'Build confidence discussing sustainability and using sustainability as a customer value driver.', by: 'Patricia Leyva', destination: 'STEPS Sales Webinar Final', href: null, file: 'STEPS Sales Webinar Final.pptx', signIn: true, action: 'Open file' },
-  { id: 'q3', group: 'featured', name: 'Sustainability at Equinix: 2026 Q3 Update', blurb: 'Use current sustainability commitments, reporting tools, customer proof points, and community engagement positioning.', by: 'Patricia Leyva', destination: 'CBR Sustainability Slides 2026 Q3 Short', href: null, file: 'CBR Sustainability Slides 2026_Q3_Short.pptx', signIn: true, action: 'Open file' },
-  { id: 'grants', group: 'resource', name: 'Grant Partner Guide', blurb: 'Find trusted local, regional, and global partners for community engagement and impact.', by: 'Jodi Baumann', destination: 'Foundation Grant Partner Guide v3', href: null, file: 'Foundation_Grant_Partner_Guide_v3.pdf', signIn: true, action: 'Open file' },
-  { id: 'dinner', group: 'resource', name: 'Talking About Data Centers: Dinner Table Guide', blurb: 'Use approachable key messages, straight answers, and community proof points in everyday conversations.', by: 'Jodi Baumann', destination: 'Equinix Community Ambassador Card', href: null, file: 'Equinix_Community_Ambassador_Card_8.5x5.5_with_bleed_v7.pdf', signIn: true, action: 'Open file' },
-  { id: 'principles', group: 'resource', name: 'Our Five Community Principles', blurb: 'Understand Equinix’s principles for public infrastructure, power, jobs and skills, natural resources, and digital inclusion.', by: 'Jodi Baumann', destination: 'EQ Five Community Principles brochure', href: null, file: 'EQ Five Community Principles_brochure_8.25x10.75_2026-10-08_PRESS.pdf', signIn: true, action: 'Open file' },
-  { id: 'scenarios', group: 'practice', name: 'Practice a Community Conversation', blurb: 'Work through realistic stakeholder scenarios and practice responding with available resources.', by: 'Jodi Baumann', destination: 'GLO MD Scenario Cards', href: null, file: 'GLO_MD_Scenario_Cards.pdf', signIn: true, action: 'Open file' },
-  { id: 'metrics', group: 'resource', name: 'FY25 Sustainability Metrics Cheat Sheet', blurb: 'Access current environmental, social, and governance metrics for informed conversations.', by: 'Jodi Baumann', destination: 'Equinix FY25 Sustainability Cheat Sheet', href: null, file: 'Equinix FY25 Sustainability Cheat Sheet_FINAL.docx', signIn: true, action: 'Open file' },
-  { id: 'talktrack', group: 'facilitator', name: 'Community Engagement Workshop Talk Track', blurb: 'Use the GLO workshop narrative and facilitation flow to support community engagement conversations.', by: 'Jodi Baumann', destination: 'GLO Kurt Talk Track', href: null, file: 'GLO_Kurt Talk Track 10_12.pptx', signIn: true, action: 'Open file' },
-  { id: 'yoodli', group: 'practice', name: 'Practice the Community Conversation in Yoodli', blurb: 'Build confidence through guided practice for real community conversations.', by: 'Myriam Whalen', destination: 'Organization Programs, Yoodli', href: null, file: null, signIn: true, action: 'Open Yoodli practice' },
+  { id: 'hub', group: 'featured', name: 'Community Engagement Employee Hub', blurb: 'Explore Equinix community engagement resources.', by: 'Jodi Baumann', destination: 'Equinix Together: Engaging with Local Communities', href: 'https://equinixinc.sharepoint.com/sites/Intranet/SitePages/Company/Equinix-Together---Engaging-with-Local-Communities.aspx?web=1', file: null, signIn: true, action: 'Open resource' },
+  { id: 'steps', group: 'featured', name: 'STEPS: Sustainability and Customer Conversations', blurb: 'Build confidence discussing sustainability and using sustainability as a customer value driver.', by: 'Patricia Leyva', destination: 'STEPS Sales Webinar Final', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/STEPS%20Sales%20Webinar%20Final.pptx', file: 'STEPS Sales Webinar Final.pptx', signIn: true, action: 'Open file' },
+  { id: 'q3', group: 'featured', name: 'Sustainability at Equinix: 2026 Q3 Update', blurb: 'Use current sustainability commitments, reporting tools, customer proof points, and community engagement positioning.', by: 'Patricia Leyva', destination: 'CBR Sustainability Slides 2026 Q3 Short', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/CBR%20Sustainability%20Slides%202026_Q3_Short.pptx', file: 'CBR Sustainability Slides 2026_Q3_Short.pptx', signIn: true, action: 'Open file' },
+  { id: 'grants', group: 'resource', name: 'Grant Partner Guide', blurb: 'Find trusted local, regional, and global partners for community engagement and impact.', by: 'Jodi Baumann', destination: 'Foundation Grant Partner Guide v3', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/Foundation_Grant_Partner_Guide_v3%20(1).pdf', file: 'Foundation_Grant_Partner_Guide_v3.pdf', signIn: true, action: 'Open file' },
+  { id: 'dinner', group: 'resource', name: 'Talking About Data Centers: Dinner Table Guide', blurb: 'Use approachable key messages, straight answers, and community proof points in everyday conversations.', by: 'Jodi Baumann', destination: 'Equinix Community Ambassador Card', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/Equinix_Community_Ambassador_Card_8.5x5.5_with_bleed_v7.pdf', file: 'Equinix_Community_Ambassador_Card_8.5x5.5_with_bleed_v7.pdf', signIn: true, action: 'Open file' },
+  { id: 'principles', group: 'resource', name: 'Our Five Community Principles', blurb: 'Understand Equinix’s principles for public infrastructure, power, jobs and skills, natural resources, and digital inclusion.', by: 'Jodi Baumann', destination: 'EQ Five Community Principles brochure', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/EQ%20Five%20Community%20Principles_brochure_8.25x10.75_2026-10-08_PRESS%20(1).pdf', file: 'EQ Five Community Principles_brochure_8.25x10.75_2026-10-08_PRESS.pdf', signIn: true, action: 'Open file' },
+  { id: 'scenarios', group: 'practice', name: 'Practice a Community Conversation', blurb: 'Work through realistic stakeholder scenarios and practice responding with available resources.', by: 'Jodi Baumann', destination: 'GLO MD Scenario Cards', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/GLO_MD_Scenario_Cards%20(2).pdf', file: 'GLO_MD_Scenario_Cards.pdf', signIn: true, action: 'Open file' },
+  { id: 'metrics', group: 'resource', name: 'FY25 Sustainability Metrics Cheat Sheet', blurb: 'Access current environmental, social, and governance metrics for informed conversations.', by: 'Jodi Baumann', destination: 'Equinix FY25 Sustainability Cheat Sheet', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/Equinix%20FY25%20Sustainability%20Cheat%20Sheet_FINAL%20(1).docx', file: 'Equinix FY25 Sustainability Cheat Sheet_FINAL.docx', signIn: true, action: 'Open file' },
+  { id: 'talktrack', group: 'facilitator', name: 'Community Engagement Workshop Talk Track', blurb: 'Use the GLO workshop narrative and facilitation flow to support community engagement conversations.', by: 'Jodi Baumann', destination: 'GLO Kurt Talk Track', href: 'https://equinixinc-my.sharepoint.com/personal/mwhalen_equinix_com/Documents/Microsoft%20Teams%20Chat%20Files/GLO_Kurt%20Talk%20Track%2010_12.pptx', file: 'GLO_Kurt Talk Track 10_12.pptx', signIn: true, action: 'Open file' },
+  { id: 'yoodli', group: 'practice', name: 'Practice the Community Conversation in Yoodli', blurb: 'Build confidence through guided practice for real community conversations.', by: 'Myriam Whalen', destination: 'Organization Programs, Yoodli', href: 'https://app.yoodli.ai/org/content/programs/7KtSBQbHujY3BuMiPUSLHK', file: null, signIn: true, action: 'Open Yoodli practice' },
 ];
 
 const esc = (s = '') =>
@@ -51,12 +49,4 @@ export function resourcesHTML() {
     if (!items.length) return '';
     return `<li class="curtain-group" data-group="${g.id}"><h3 class="curtain-group-name">${esc(g.name)}<span class="curtain-group-blurb">${esc(g.blurb)}</span></h3><ul class="curtain-group-list">${items.map((r) => itemHTML(r, 'curtain')).join('\n')}</ul></li>`;
   }).join('\n');
-}
-
-/** The same destinations as the footer sitemap, the stationary bar at the very bottom. */
-export function sitemapHTML() {
-  return `<nav class="sitemap" aria-label="Resources and quick links">
-    <p class="sitemap-eyebrow eyebrow">Resources and quick links</p>
-    <ul class="sitemap-list">${RESOURCES.map((r) => itemHTML(r, 'sitemap')).join('\n')}</ul>
-  </nav>`;
 }
