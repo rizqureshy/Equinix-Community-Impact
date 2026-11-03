@@ -251,7 +251,8 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(188px, 1fr));
+  /* Four fixed columns, so the items line up vertically from group to group */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0 var(--s-5);
 }
 .curtain-item {
@@ -305,7 +306,7 @@ a.curtain-link:focus-visible {
 }
 .curtain-foot {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--s-4);
   flex-wrap: wrap;
   padding-top: var(--s-4);
