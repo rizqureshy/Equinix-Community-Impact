@@ -377,7 +377,7 @@ try {
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 15000 }).catch(() => {});
   // dispatched rather than pointer-clicked: the live cloth keeps the frame rate low in software rendering, so Playwright never sees the link as settled
   await p.locator('[data-curtain-go]').first().dispatchEvent('click');
-  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed' && location.hash === '#/training', null, { polling: 100, timeout: 10000 }).catch(() => {});
+  await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed' && location.hash === '#/training', null, { polling: 100, timeout: 30000 }).catch(() => {}); // the rise is clock-timed, but software rendering can stretch it
   check((await p.evaluate(() => location.hash)) === '#/training' && (await p.evaluate(() => document.querySelector('#curtain').hidden)), 'the coach link lifts the curtain first, then goes to the training section');
   check(await p.evaluate(() => document.querySelectorAll('.site-footer').length === 1 && document.querySelector('.sitemap') && document.querySelectorAll('.sitemap-item').length === 8 && document.querySelector('.sitemap').compareDocumentPosition(document.querySelector('.site-footer')) & Node.DOCUMENT_POSITION_FOLLOWING), 'the same eight destinations sit at the very bottom of the page as a sitemap');
   await p.context().close();
