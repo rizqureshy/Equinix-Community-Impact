@@ -8,9 +8,9 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const RED = '#e91c24';
-const FALL_MS = 1050;
-const RISE_MS = 900;
-const SETTLE_MS = 700; // the folds calm down after the hem lands
+const FALL_MS = 1250;
+const RISE_MS = 1000;
+const SETTLE_MS = 1100; // the folds calm down after the hem lands
 
 /** The cloth: a curtain hung from above the viewport that falls and rises. */
 function createCloth(host, { motion = () => true } = {}) {
@@ -20,7 +20,7 @@ function createCloth(host, { motion = () => true } = {}) {
   } catch {
     return null;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.setClearColor(0x000000, 0);
@@ -43,8 +43,8 @@ function createCloth(host, { motion = () => true } = {}) {
   scene.add(rim);
   scene.add(new THREE.HemisphereLight('#ffffff', '#3a0d0d', 0.35));
 
-  const SEG_X = 120;
-  const SEG_Y = 70;
+  const SEG_X = 150;
+  const SEG_Y = 84;
   let W = 10;
   let H = 10;
   let visH = 10;
@@ -58,6 +58,9 @@ function createCloth(host, { motion = () => true } = {}) {
     sheenColor: new THREE.Color('#ff8c86'),
     sheenRoughness: 0.7,
     side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.965,
+    depthWrite: false,
   });
   const cloth = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
   scene.add(cloth);
@@ -101,17 +104,17 @@ function createCloth(host, { motion = () => true } = {}) {
       const yn = (y + H / 2) / H; // 0 at the hem, 1 at the rod
       const hang = 1 - yn; // folds, sway and lag grow toward the hem
       // Pleats: deep slow folds that drift sideways, with finer ones riding on them
-      const pleat = Math.sin(x * 0.7 + t * 0.3 + Math.sin(yn * 3) * 0.7) * 0.8 + Math.sin(x * 1.6 - t * 0.45 + yn * 2) * 0.35 + Math.sin(x * 0.33 + y * 0.4 + t * 0.18) * 0.6;
+      const pleat = Math.sin(x * 0.62 + t * 0.19 + Math.sin(yn * 3) * 0.7) * 0.7 + Math.sin(x * 1.5 - t * 0.29 + yn * 2) * 0.26 + Math.sin(x * 0.3 + y * 0.4 + t * 0.12) * 0.55;
       // On the way down the cloth billows: horizontal waves travel up it and the hem flutters
-      const billow = agit * (Math.sin(y * 0.7 + t * 3.5) * 0.9 + Math.sin(x * 0.6 - t * 2.2) * 0.4 + Math.sin(x * 2.4 + y * 1.5 + t * 7) * 0.3) * hang;
+      const billow = agit * (Math.sin(y * 0.7 + t * 2.6) * 0.6 + Math.sin(x * 0.6 - t * 1.7) * 0.3 + Math.sin(x * 2.4 + y * 1.5 + t * 5) * 0.16) * hang;
       // The rod leads and the hem trails, so the cloth stretches out as it falls and gathers as it rises
       const d = Math.min(1, drop * (1 + hang * LAG));
       // Once the hem lands it bounces, less each time
-      const bounce = since >= 0 ? Math.sin(since * 7.5) * Math.exp(-since * 2.8) * 0.55 * hang * hang : 0;
+      const bounce = since >= 0 ? Math.sin(since * 5.2) * Math.exp(-since * 2.2) * 0.32 * hang * hang : 0;
       // The side edges wave on their own, more toward the hem
       const edge = Math.pow(Math.abs(x) / (W / 2), 3);
-      pos.array[i * 3] = x + Math.sin(t * 0.5 + yn * 2) * 0.3 * hang + Math.sign(x) * Math.sin(y * 0.9 + t * 0.7 + Math.sign(x)) * 0.35 * edge * (0.4 + hang);
-      pos.array[i * 3 + 1] = y + d * travel + Math.sin(x * 1.2 + t * 0.8) * 0.4 * hang * hang + bounce;
+      pos.array[i * 3] = x + Math.sin(t * 0.32 + yn * 2) * 0.24 * hang + Math.sign(x) * Math.sin(y * 0.9 + t * 0.45 + Math.sign(x)) * 0.3 * edge * (0.4 + hang);
+      pos.array[i * 3 + 1] = y + d * travel + Math.sin(x * 1.1 + t * 0.5) * 0.32 * hang * hang + bounce;
       pos.array[i * 3 + 2] = pleat * (0.35 + 0.65 * hang) + billow;
     }
     pos.needsUpdate = true;
@@ -127,7 +130,8 @@ function createCloth(host, { motion = () => true } = {}) {
   let running = false;
   let last = 0;
   let tween = null; // { from, to, start, length, onDone }
-  const gravity = (t) => t * t; // the fall accelerates, like a dropped cloth
+  // The fall gathers speed like a dropped cloth, then the last stretch eases so the landing is soft
+  const gravity = (t) => (t < 0.72 ? (t * t) / 0.72 : 0.72 + (1 - 0.72) * (1 - Math.pow(1 - (t - 0.72) / 0.28, 2)));
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   function frame(now) {
     raf = 0;
@@ -140,7 +144,7 @@ function createCloth(host, { motion = () => true } = {}) {
       const falling = tween.to < tween.from;
       const e = falling ? gravity(t) : easeInOut(t);
       drop = tween.from + (tween.to - tween.from) * e;
-      agit = falling ? 0.5 + 0.5 * t : 0.6;
+      agit = falling ? 0.35 + 0.35 * t : 0.45;
       if (t >= 1) {
         const done = tween.onDone;
         tween = null;
@@ -150,7 +154,7 @@ function createCloth(host, { motion = () => true } = {}) {
     } else if (agit > 0.001) {
       agit = Math.max(0, agit - dt * (1000 / SETTLE_MS));
     }
-    if (landed >= 0 && now - landed > 2600) landed = -1;
+    if (landed >= 0 && now - landed > 3200) landed = -1;
     shape(time, now);
     place();
     renderer.render(scene, camera);
