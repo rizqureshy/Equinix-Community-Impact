@@ -345,15 +345,15 @@ try {
   // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
   p = await open(browser, `${SITE}#/share`);
   await wait(1200);
-  const pillAt = await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const items = [...document.querySelectorAll('.site-nav li')]; const a = document.querySelector('.site-nav a'); return { tag: b.tagName, text: b.getAttribute('aria-label'), expanded: b.getAttribute('aria-expanded'), index: items.findIndex((li) => li.contains(b)), count: items.length, visible: r.width > 0, taller: r.height > a.getBoundingClientRect().height && parseFloat(getComputedStyle(b).fontSize) > parseFloat(getComputedStyle(a).fontSize) }; });
-  check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.index === Math.floor(pillAt.count / 2) && pillAt.text === 'Carry the Story with Confidence' && pillAt.taller, 'a red Carry the Story with Confidence pill sits in the middle of the nav, a touch larger than its neighbours', JSON.stringify(pillAt));
-  await p.locator('.site-nav .nav-pill').click();
+  const pillAt = await p.evaluate(() => { const b = document.querySelector('.nav-keystone'); const r = b.getBoundingClientRect(); const h = document.querySelector('.site-header').getBoundingClientRect(); const left = document.querySelector('.nav-bar--left').getBoundingClientRect(); const right = document.querySelector('.nav-bar--right').getBoundingClientRect(); const a = document.querySelector('.site-nav a'); return { tag: b.tagName, text: b.getAttribute('aria-label'), expanded: b.getAttribute('aria-expanded'), centred: Math.abs(r.left + r.width / 2 - (h.left + h.width / 2)) < 40, meets: left.right > r.left && right.left < r.right, visible: r.width > 0, taller: r.height > left.height && r.height > a.getBoundingClientRect().height }; });
+  check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.centred && pillAt.meets && pillAt.text === 'Carry the Story with Confidence' && pillAt.taller, 'the red Carry the Story keystone sits in the middle of the header, taller than the two bars that meet it', JSON.stringify(pillAt));
+  await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => ['falling', 'open'].includes(document.querySelector('#curtain').dataset.state), null, { polling: 100, timeout: 10000 }).catch(() => {});
   const falling = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, canvas: !!document.querySelector('.curtain-cloth canvas'), body: document.body.classList.contains('curtain-open') }));
   check((falling.state === 'falling' || falling.state === 'open') && falling.canvas && falling.body, 'pressing the pill drops a live cloth over the page', JSON.stringify(falling));
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 15000 }).catch(() => {});
   await p.waitForFunction(() => getComputedStyle(document.querySelector('.fabric-layer')).opacity === '0', null, { polling: 100, timeout: 5000 }).catch(() => {});
-  const down = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, fabric: getComputedStyle(document.querySelector('.fabric-layer')).opacity, focus: document.activeElement.classList.contains('curtain-close'), items: document.querySelectorAll('.curtain-item').length, locks: document.querySelectorAll('.curtain-item .res-lock').length, groups: document.querySelectorAll('.curtain-group').length, newTab: [...document.querySelectorAll('a.curtain-link')].every((a) => a.target === '_blank' && a.rel.includes('noopener')), expanded: document.querySelector('.nav-pill').getAttribute('aria-expanded') }));
+  const down = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, fabric: getComputedStyle(document.querySelector('.fabric-layer')).opacity, focus: document.activeElement.classList.contains('curtain-close'), items: document.querySelectorAll('.curtain-item').length, locks: document.querySelectorAll('.curtain-item .res-lock').length, groups: document.querySelectorAll('.curtain-group').length, newTab: [...document.querySelectorAll('a.curtain-link')].every((a) => a.target === '_blank' && a.rel.includes('noopener')), expanded: document.querySelector('.nav-keystone').getAttribute('aria-expanded') }));
   check(down.state === 'open' && down.fabric === '0' && down.focus && down.items === 10 && down.locks === 10 && down.groups === 4 && down.newTab && down.expanded === 'true', 'with the curtain down the page fabric is gone, focus is on Close, and the ten destinations sit in four groups with their sign-in marks', JSON.stringify(down));
   await p.keyboard.press('Tab');
   await p.keyboard.press('Tab');
@@ -378,7 +378,7 @@ try {
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await wait(400);
-  const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-pill') }));
+  const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-keystone') }));
   check(lifted.hidden && !lifted.body && lifted.focus, 'Escape lifts the curtain and hands focus back to the pill', JSON.stringify(lifted));
   // Reaching the foot of the page by hand drops the curtain by itself, once
   await p.mouse.move(40, 400);
@@ -442,7 +442,7 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 15000 }).catch(() => {});
   await wait(300);
   check((await focus(p)) === 'overview' && !(await p.evaluate(() => window.__impact.playing)), 'Escape ends the tour and returns to the overview with reduced motion');
-  await p.locator('.site-nav .nav-pill').click();
+  await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 10000 }).catch(() => {});
   const plain = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, plain: document.querySelector('#curtain').classList.contains('is-plain'), canvas: !!document.querySelector('.curtain-cloth canvas') }));
   check(plain.state === 'open' && plain.plain && !plain.canvas, 'with reduced motion the curtain is a plain red panel that arrives at once', JSON.stringify(plain));
@@ -483,7 +483,7 @@ try {
   check(await p.evaluate(() => { const f = document.querySelector('#spine-frame').getBoundingClientRect(); const tiles = [...document.querySelectorAll('.promise-tile')]; return f.width <= innerWidth && f.height >= 400 && tiles.length === 5 && tiles.every((t) => t.getBoundingClientRect().width > innerWidth * 0.8); }), 'on phones the Spine canvas fits the screen and the promises stack');
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'start' }));
   await wait(1500);
-  check(await p.evaluate(() => { const b = document.querySelector('.site-nav .nav-pill'); const r = b.getBoundingClientRect(); const others = [...document.querySelectorAll('.site-nav li:not(.nav-pill-item)')]; return r.width > 0 && r.right <= innerWidth && others.every((li) => li.offsetParent === null); }), 'on phones the Resources pill stays in the header while the other nav items fold away');
+  check(await p.evaluate(() => { const b = document.querySelector('.nav-keystone'); const r = b.getBoundingClientRect(); return r.width > 0 && r.right <= innerWidth && [...document.querySelectorAll('.site-nav')].every((n) => n.offsetParent === null) && document.querySelector('.wordmark').offsetParent !== null; }), 'on phones the keystone and the mark stay in the header while the nav items fold away');
   check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-story').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   // ---- The kiosk (version 2): the model alone, on a loop ------------------
@@ -519,7 +519,7 @@ try {
   check(await p.evaluate(() => window.__impact.room.phase === 'inside' && !document.querySelector('#room').classList.contains('has-pano') && Number(getComputedStyle(document.querySelector('.room-poster')).opacity) > 0.9 && !!document.querySelector('.room-line')), 'without WebGL the room shows as a still with its captions');
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
-  await p.locator('.site-nav .nav-pill').click();
+  await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 10000 }).catch(() => {});
   check(await p.evaluate(() => document.querySelector('#curtain').dataset.state === 'open' && document.querySelector('#curtain').classList.contains('is-plain') && !document.querySelector('.curtain-cloth canvas')), 'without WebGL the curtain is a plain red panel');
   await p.keyboard.press('Escape');

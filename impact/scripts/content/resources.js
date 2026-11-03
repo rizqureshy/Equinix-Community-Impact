@@ -44,9 +44,9 @@ function itemHTML(r, cls) {
 
 /** The curtain: the destinations in their groups. */
 export function resourcesHTML() {
-  return GROUPS.map((g) => {
+  return GROUPS.map((g, i) => {
     const items = RESOURCES.filter((r) => r.group === g.id);
     if (!items.length) return '';
-    return `<li class="curtain-group" data-group="${g.id}"><h3 class="curtain-group-name">${esc(g.name)}<span class="curtain-group-blurb">${esc(g.blurb)}</span></h3><ul class="curtain-group-list">${items.map((r) => itemHTML(r, 'curtain')).join('\n')}</ul></li>`;
+    return `<li class="curtain-group" data-group="${g.id}" style="--i: ${i}"><h3 class="curtain-group-name">${esc(g.name)}<span class="curtain-group-blurb">${esc(g.blurb)}</span></h3><ul class="curtain-group-list">${items.map((r) => itemHTML(r, 'curtain')).join('\n')}</ul></li>`;
   }).join('\n');
 }

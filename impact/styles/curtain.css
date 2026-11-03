@@ -1,62 +1,85 @@
-/* The Resources pill in the header and the red curtain it drops over the page. */
-.nav-pill-item {
-  display: flex;
-  align-items: center;
-  margin: 0 6px;
-}
-.nav-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 20px;
+/* The keystone in the header and the red curtain it drops over the page. */
+.nav-keystone {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  min-height: 58px;
+  padding: 7px 28px 9px;
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--red);
   color: #fff;
   font: inherit;
-  font-size: calc(var(--t-sm) * 1.08);
-  font-weight: 600;
-  letter-spacing: -0.005em;
+  line-height: 1.1;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 6px 18px -6px rgb(233 28 36 / 0.55);
+  box-shadow: 0 10px 26px -8px rgb(233 28 36 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.35) inset;
   transition: background-color var(--d1), transform var(--d1), box-shadow var(--d1);
 }
-.nav-pill:hover {
+.nav-keystone:hover {
   background: #d4161e;
   transform: translateY(-1px);
 }
-.nav-pill:focus-visible {
+.nav-keystone:focus-visible {
   outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
-.nav-pill[aria-expanded='true'] {
+.nav-keystone[aria-expanded='true'] {
   background: var(--ink);
-  box-shadow: none;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.2) inset;
 }
-.nav-pill-short {
-  display: none;
+.keystone-top {
+  font-size: calc(var(--t-sm) * 1.12);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
-/* On phones the nav folds away but the pill stays, with its shorter name */
+.keystone-sub {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.92;
+}
+.keystone-chev {
+  margin-top: 2px;
+  opacity: 0.85;
+  transition: transform var(--d2) var(--ease);
+}
+.nav-keystone[aria-expanded='true'] .keystone-chev {
+  transform: rotate(180deg);
+}
+/* On arrival the keystone lands and the bars slide in to meet it, once */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion='on'] .nav-keystone {
+    animation: keystone-land 700ms var(--ease) both;
+  }
+  :root[data-motion='on'] .nav-bar--left {
+    animation: bar-in-left 700ms var(--ease) both;
+  }
+  :root[data-motion='on'] .nav-bar--right {
+    animation: bar-in-right 700ms var(--ease) both;
+  }
+}
+@keyframes keystone-land {
+  from { transform: translateY(-14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes bar-in-left {
+  from { transform: translateX(14px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes bar-in-right {
+  from { transform: translateX(-14px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+/* On phones the bars fold away but the keystone stays, a little smaller */
 @media (max-width: 900px) {
-  .nav-pill-long {
-    display: none;
+  .nav-keystone {
+    min-height: 50px;
+    padding: 6px 20px 8px;
   }
-  .nav-pill-short {
-    display: inline;
-  }
-  .site-nav {
-    display: block;
-  }
-  .site-nav li:not(.nav-pill-item) {
-    display: none;
-  }
-  .nav-pill-item {
-    margin: 0 2px;
-  }
-  .nav-pill {
-    min-height: 38px;
-    padding: 0 14px;
+  .keystone-top {
     font-size: var(--t-sm);
   }
 }
@@ -80,9 +103,24 @@
   content: '';
   position: absolute;
   inset: 0 18px;
-  background: rgb(255 255 255 / 0.5);
+  background: rgb(255 255 255 / 0.32);
+  backdrop-filter: blur(12px) saturate(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
   opacity: 0;
   transition: opacity var(--d2) var(--ease);
+}
+.curtain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgb(110 0 8 / 0.2) 16%, rgb(110 0 8 / 0.28) 50%, rgb(110 0 8 / 0.2) 84%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--d2) var(--ease);
+}
+.curtain[data-state='open']::after {
+  opacity: 1;
 }
 .curtain[data-state='open']::before,
 .curtain[data-state='falling']::before {
@@ -106,6 +144,7 @@
 .curtain-panel {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--s-6);
@@ -169,7 +208,18 @@
   gap: var(--s-4);
   align-content: start;
 }
-/* Each group: its name on the left, its items in a row beside it */
+/* Each group: its name on the left, its items in a row beside it; they arrive one after another */
+.curtain[data-state='open'] .curtain-group {
+  animation: curtain-arrive 520ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+}
+@keyframes curtain-arrive {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .curtain[data-state='open'] .curtain-group { animation: none; }
+}
 .curtain-group {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
@@ -273,9 +323,18 @@ a.curtain-link:focus-visible {
 .curtain-foot span {
   opacity: 0.9;
 }
-/* While the curtain is down the page's own fabric fades out; the page still scrolls beside the curtain */
+/* While the curtain is down the page's own fabric fades out and the page steps back, softened,
+   so what ghosts through the cloth is tone rather than words; it still scrolls beside the curtain */
 body.curtain-open .fabric-layer {
   opacity: 0 !important;
+}
+main {
+  transition: filter var(--d3) var(--ease), opacity var(--d3) var(--ease);
+}
+body.curtain-open:not(.spine-open) main,
+body.curtain-open .site-footer {
+  filter: blur(7px);
+  opacity: 0.72;
 }
 @media (max-width: 900px) {
   .curtain {

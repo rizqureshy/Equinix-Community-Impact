@@ -228,15 +228,29 @@ main:focus {
   margin-inline: auto;
   display: flex;
   align-items: center;
+  max-width: calc(100% - 2 * var(--gutter));
+}
+/* The two bars: glass, tucked into the keystone from either side */
+.nav-bar {
+  display: flex;
+  align-items: center;
   gap: 4px;
-  padding: 5px 5px 5px 16px;
+  padding: 5px;
   border-radius: var(--radius-pill);
   background: var(--glass);
   border: 1px solid var(--glass-line);
   box-shadow: 0 1px 1px rgb(0 0 0 / 0.03), 0 10px 30px -12px rgb(0 0 0 / 0.18);
   backdrop-filter: saturate(1.6) blur(18px);
   -webkit-backdrop-filter: saturate(1.6) blur(18px);
-  max-width: calc(100% - 2 * var(--gutter));
+}
+.nav-bar--left {
+  padding-left: 16px;
+  padding-right: 22px;
+  margin-right: -18px;
+}
+.nav-bar--right {
+  padding-left: 22px;
+  margin-left: -18px;
 }
 .wordmark {
   display: inline-flex;
@@ -568,8 +582,12 @@ main:focus {
   .site-nav {
     display: none;
   }
-  .site-header {
-    padding-left: 14px;
+  .nav-bar--left {
+    padding-left: 12px;
+    padding-right: 24px;
+  }
+  .nav-bar--right {
+    display: none;
   }
   .story-drawer {
     inset: 0;

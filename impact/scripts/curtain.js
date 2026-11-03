@@ -231,8 +231,8 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
     if (state !== 'closed') return;
     returnFocus = trigger || document.activeElement;
     // The curtain hangs from the menu bar: the header stays above it and the cloth starts at its lower edge
-    const header = document.querySelector('.site-header');
-    const top = header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom - 6)) : 0;
+    const rod = document.querySelector('.nav-keystone') || document.querySelector('.site-header');
+    const top = rod ? Math.max(0, Math.round(rod.getBoundingClientRect().bottom - 8)) : 0;
     overlay.style.setProperty('--curtain-top', `${top}px`);
     overlay.hidden = false;
     overlay.classList.toggle('is-plain', !live());
