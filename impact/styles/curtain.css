@@ -50,19 +50,25 @@
   }
 }
 
-/* The curtain: a fixed layer above everything but the toast */
+/* The curtain: a hanging panel of limited width under the menu bar, beneath the header
+   and above the page, with the page showing on both sides */
 .curtain {
   position: fixed;
-  inset: 0;
-  z-index: 80;
+  top: var(--curtain-top, 0);
+  bottom: 0;
+  left: 50%;
+  width: min(1180px, calc(100% - 2 * var(--gutter)));
+  transform: translateX(-50%);
+  z-index: 30;
   color: #fff;
 }
 .curtain[hidden] {
   display: none;
 }
+/* The cloth's canvas runs a little wider than the panel so its edges can wave */
 .curtain-cloth {
   position: absolute;
-  inset: 0;
+  inset: 0 -70px;
   pointer-events: none;
 }
 .curtain-cloth canvas {
@@ -80,9 +86,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--s-6);
-  padding: clamp(84px, 11vh, 120px) var(--gutter) clamp(28px, 5vh, 54px);
-  width: min(1240px, 100%);
-  margin-inline: auto;
+  padding: clamp(44px, 7vh, 80px) clamp(28px, 4vw, 64px) clamp(28px, 5vh, 54px);
   opacity: 0;
   transition: opacity var(--d2) var(--ease);
   overflow-y: auto;
@@ -219,11 +223,14 @@ body.curtain-open .fabric-layer {
   opacity: 0 !important;
 }
 @media (max-width: 900px) {
+  .curtain {
+    width: calc(100% - 2 * var(--gutter));
+  }
   .curtain-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .curtain-panel {
-    padding-top: 76px;
+    padding: 40px 22px 28px;
   }
 }
 @media (max-width: 520px) {

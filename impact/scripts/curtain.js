@@ -8,8 +8,8 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const RED = '#e91c24';
-const FALL_MS = 1150;
-const RISE_MS = 850;
+const FALL_MS = 1050;
+const RISE_MS = 900;
 const SETTLE_MS = 700; // the folds calm down after the hem lands
 
 /** The cloth: a curtain hung from above the viewport that falls and rises. */
@@ -78,7 +78,9 @@ function createCloth(host, { motion = () => true } = {}) {
     camera.updateProjectionMatrix();
     visH = 2 * DIST * Math.tan((camera.fov * Math.PI) / 360);
     const visW = visH * camera.aspect;
-    W = visW * 1.14;
+    // The canvas runs 70px past the panel on each side; the cloth fills the panel and waves just beyond it
+    const panelShare = Math.max(0.6, (w - 140) / w);
+    W = visW * (panelShare + 0.03);
     H = visH * 1.32;
     geometry?.dispose();
     geometry = new THREE.PlaneGeometry(W, H, SEG_X, SEG_Y);
@@ -86,37 +88,47 @@ function createCloth(host, { motion = () => true } = {}) {
     cloth.geometry = geometry;
   }
 
-  function shape(t) {
+  const LAG = 0.38; // how far the hem trails the rod on the way down (a share of the travel)
+  let landed = -1; // the moment the hem landed, for the bounce; -1 while airborne or settled
+
+  function shape(t, now) {
     const pos = geometry.attributes.position;
+    const travel = H + 1.5;
+    const since = landed < 0 ? -1 : (now - landed) / 1000;
     for (let i = 0; i < pos.count; i++) {
       const x = base[i * 3];
       const y = base[i * 3 + 1];
       const yn = (y + H / 2) / H; // 0 at the hem, 1 at the rod
-      const hang = 1 - yn; // folds and sway grow toward the hem
-      // Pleats: slow vertical folds that drift sideways, with finer ones riding on them
-      const pleat = Math.sin(x * 0.75 + t * 0.3 + Math.sin(yn * 3) * 0.6) * 0.55 + Math.sin(x * 1.7 - t * 0.45 + yn * 2) * 0.25 + Math.sin(x * 0.35 + y * 0.4 + t * 0.18) * 0.45;
-      // The fall stirs the cloth; the stir fades once the hem has landed
-      const stir = agit * Math.sin(x * 2.4 + y * 1.5 + t * 7) * 0.4 * hang;
-      pos.array[i * 3] = x + Math.sin(t * 0.5 + yn * 2) * 0.25 * hang;
-      pos.array[i * 3 + 1] = y + Math.sin(x * 1.2 + t * 0.8) * 0.35 * hang * hang;
-      pos.array[i * 3 + 2] = pleat * (0.35 + 0.65 * hang) + stir;
+      const hang = 1 - yn; // folds, sway and lag grow toward the hem
+      // Pleats: deep slow folds that drift sideways, with finer ones riding on them
+      const pleat = Math.sin(x * 0.7 + t * 0.3 + Math.sin(yn * 3) * 0.7) * 0.8 + Math.sin(x * 1.6 - t * 0.45 + yn * 2) * 0.35 + Math.sin(x * 0.33 + y * 0.4 + t * 0.18) * 0.6;
+      // On the way down the cloth billows: horizontal waves travel up it and the hem flutters
+      const billow = agit * (Math.sin(y * 0.7 + t * 3.5) * 0.9 + Math.sin(x * 0.6 - t * 2.2) * 0.4 + Math.sin(x * 2.4 + y * 1.5 + t * 7) * 0.3) * hang;
+      // The rod leads and the hem trails, so the cloth stretches out as it falls and gathers as it rises
+      const d = Math.min(1, drop * (1 + hang * LAG));
+      // Once the hem lands it bounces, less each time
+      const bounce = since >= 0 ? Math.sin(since * 7.5) * Math.exp(-since * 2.8) * 0.55 * hang * hang : 0;
+      // The side edges wave on their own, more toward the hem
+      const edge = Math.pow(Math.abs(x) / (W / 2), 3);
+      pos.array[i * 3] = x + Math.sin(t * 0.5 + yn * 2) * 0.3 * hang + Math.sign(x) * Math.sin(y * 0.9 + t * 0.7 + Math.sign(x)) * 0.35 * edge * (0.4 + hang);
+      pos.array[i * 3 + 1] = y + d * travel + Math.sin(x * 1.2 + t * 0.8) * 0.4 * hang * hang + bounce;
+      pos.array[i * 3 + 2] = pleat * (0.35 + 0.65 * hang) + billow;
     }
     pos.needsUpdate = true;
     geometry.computeVertexNormals();
   }
 
   function place() {
-    // At rest the rod sits just above the top edge; gathered, the whole cloth is above the view
-    const rest = visH / 2 + 0.8 - H / 2;
-    cloth.position.y = rest + drop * (H + 1.5);
+    // At rest the rod sits just above the top edge of the layer; the travel is applied per vertex in shape()
+    cloth.position.y = visH / 2 + 0.8 - H / 2;
   }
 
   let raf = 0;
   let running = false;
   let last = 0;
   let tween = null; // { from, to, start, length, onDone }
-  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-  const easeInCubic = (t) => t * t * t;
+  const gravity = (t) => t * t; // the fall accelerates, like a dropped cloth
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   function frame(now) {
     raf = 0;
     if (!running) return;
@@ -125,18 +137,21 @@ function createCloth(host, { motion = () => true } = {}) {
     if (motion()) time += dt;
     if (tween) {
       const t = Math.min(1, (now - tween.start) / tween.length);
-      const e = tween.to < tween.from ? easeOutCubic(t) : easeInCubic(t);
+      const falling = tween.to < tween.from;
+      const e = falling ? gravity(t) : easeInOut(t);
       drop = tween.from + (tween.to - tween.from) * e;
-      agit = tween.to < tween.from ? 0.35 + 0.65 * (1 - t) : 0.6;
+      agit = falling ? 0.5 + 0.5 * t : 0.6;
       if (t >= 1) {
         const done = tween.onDone;
         tween = null;
+        if (falling) landed = now;
         done?.();
       }
     } else if (agit > 0.001) {
       agit = Math.max(0, agit - dt * (1000 / SETTLE_MS));
     }
-    shape(time);
+    if (landed >= 0 && now - landed > 2600) landed = -1;
+    shape(time, now);
     place();
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
@@ -154,7 +169,7 @@ function createCloth(host, { motion = () => true } = {}) {
   }
   const ro = new ResizeObserver(() => {
     build();
-    shape(time);
+    shape(time, performance.now());
     place();
     if (!running) renderer.render(scene, camera);
   });
@@ -211,6 +226,10 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
   async function open({ trigger = null } = {}) {
     if (state !== 'closed') return;
     returnFocus = trigger || document.activeElement;
+    // The curtain hangs from the menu bar: the header stays above it and the cloth starts at its lower edge
+    const header = document.querySelector('.site-header');
+    const top = header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom - 6)) : 0;
+    overlay.style.setProperty('--curtain-top', `${top}px`);
     overlay.hidden = false;
     overlay.classList.toggle('is-plain', !live());
     document.body.classList.add('curtain-open');
@@ -245,6 +264,11 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
 
   for (const t of triggers) t.addEventListener('click', () => toggle({ trigger: t }));
   closeBtn.addEventListener('click', () => close());
+  document.addEventListener('pointerdown', (e) => {
+    // A press on the page beside the curtain lifts it; the header's own controls keep working
+    if (state !== 'open' || overlay.contains(e.target) || e.target.closest('.site-header')) return;
+    close();
+  });
   overlay.addEventListener('click', (e) => {
     // A link to somewhere on this page lifts the curtain first, then goes there
     const go = e.target.closest('[data-curtain-go]');
