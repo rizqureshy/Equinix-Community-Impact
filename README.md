@@ -34,10 +34,10 @@ The browser checks block every request that leaves the local host, then exercise
 
 ```text
 impact/                   Vite root: the experience
-  site.html               the full site; content is pre-rendered into it at build time
+  index.html              the full site; content is pre-rendered into it at build time
   scripts/curtain.js      the Resources curtain: red satin dropped over the page from the header pill
   scripts/content/resources.js  the resources and quick links (the curtain and the footer sitemap)
-  index.html              version 2's root: the kiosk (the community model alone, on a loop)
+  kiosk.html              the kiosk (the community model alone, on a loop; the root on the v2 branch)
   engage.html             the Engage page: the Viva Engage community embedded
   styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css
   scripts/

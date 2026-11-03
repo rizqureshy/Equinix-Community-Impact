@@ -1,14 +1,14 @@
 // Renders the community overview from the live scene as the still used
 // before the model loads and wherever WebGL is unavailable.
 // Usage: npm run build && npx vite preview --port 4181 &
-//        node tests/tools/city-still.mjs http://localhost:4181/site.html impact/public/media/city
+//        node tests/tools/city-still.mjs http://localhost:4181/ impact/public/media/city
 // Writes city-hero-1600.webp and city-hero-1000.webp via Pillow.
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const [, , url = 'http://localhost:4181/site.html', outDir = 'impact/public/media/city'] = process.argv;
+const [, , url = 'http://localhost:4181/', outDir = 'impact/public/media/city'] = process.argv;
 mkdirSync(outDir, { recursive: true });
 const png = join(outDir, 'city-hero.png');
 

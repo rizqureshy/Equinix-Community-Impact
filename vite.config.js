@@ -39,9 +39,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, 'impact/site.html'), // the full site
+        main: resolve(import.meta.dirname, 'impact/index.html'), // the full site is the root on version 3
         engage: resolve(import.meta.dirname, 'impact/engage.html'),
-        kiosk: resolve(import.meta.dirname, 'impact/index.html'), // version 2's root: the kiosk
+        kiosk: resolve(import.meta.dirname, 'impact/kiosk.html'), // the kiosk (the root on version 2)
         spine: resolve(import.meta.dirname, 'impact/prototypes/spine.html'),
         people: resolve(import.meta.dirname, 'impact/prototypes/people.html'),
       },

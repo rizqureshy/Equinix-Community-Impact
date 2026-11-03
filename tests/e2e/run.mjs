@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 
 const PORT = 4179;
 const BASE = `http://localhost:${PORT}/`;
-const SITE = `${BASE}site.html`; // the full site; the root is the kiosk
+const SITE = BASE; // the full site is the root on version 3; the kiosk is kiosk.html
 const GL = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'];
 let failures = 0;
 const check = (ok, name, detail = '') => {
@@ -485,7 +485,7 @@ try {
   check(await p.evaluate(() => { const row = document.querySelector('.people-row'), c = document.querySelector('.people-story').getBoundingClientRect(); return row.scrollWidth > row.clientWidth && c.width > innerWidth * 0.8 && c.width <= innerWidth && document.body.scrollWidth <= innerWidth + 1; }), 'on phones the people line scrolls sideways and the story sits beneath it');
   check(p.errors.length === 0, 'no JavaScript errors on mobile', p.errors.join(' | '));
   // ---- The kiosk (version 2): the model alone, on a loop ------------------
-  p = await open(browser, `${BASE}?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
+  p = await open(browser, `${BASE}kiosk.html?rest=2&idle=6`, { viewport: { width: 1920, height: 1080 } });
   await p.waitForFunction(() => document.querySelector('#stage').dataset.sceneState !== 'loading', null, { polling: 100, timeout: 60000 });
   await p.waitForFunction(() => window.__kiosk.mode === 'loop', null, { polling: 100, timeout: 30000 }).catch(() => {}); // the first frames at 1080p are slow in software rendering
   const kioskStart = await p.evaluate(() => ({ mode: window.__kiosk.mode, state: document.querySelector('#stage').dataset.sceneState, dots: document.querySelectorAll('.kiosk-dot').length, chrome: !document.querySelector('.site-header') && !document.querySelector('.site-footer') && !document.querySelector('main') }));
@@ -500,7 +500,7 @@ try {
   await p.waitForFunction(() => window.__kiosk.room.phase === 'inside', null, { polling: 200, timeout: 60000 }).catch(() => {});
   const kioskAgain = await p.evaluate(() => ({ mode: window.__kiosk.mode, phase: window.__kiosk.room.phase, place: window.__kiosk.room.place }));
   check(kioskAgain.mode === 'loop' && kioskAgain.phase === 'inside' && kioskAgain.place === 'hospital', 'once the visitor has gone the loop starts again from the first story', JSON.stringify(kioskAgain));
-  check(p.failed.filter((f) => !f.includes('/voice/')).length === 0 && p.errors.length === 0, 'the kiosk, at the root, loads with no missing assets and no JavaScript errors', JSON.stringify([...p.failed, ...p.errors].slice(0, 3)));
+  check(p.failed.filter((f) => !f.includes('/voice/')).length === 0 && p.errors.length === 0, 'the kiosk page loads with no missing assets and no JavaScript errors', JSON.stringify([...p.failed, ...p.errors].slice(0, 3)));
   await p.context().close();
 
   await browser.close();
