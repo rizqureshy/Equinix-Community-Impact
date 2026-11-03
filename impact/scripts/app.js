@@ -363,7 +363,8 @@ addEventListener(
     const fromBottom = height - (scrollY + innerHeight);
     if (fromBottom > 360) curtainFell = false;
     // Only a scroll the reader is driving right now counts, never a route's own glide to a section
-    if (fromBottom > 24 || curtainFell || performance.now() - readerScrolledAt > 1500) return;
+    // The smooth scroller glides on for a while after the last wheel, so the window is generous
+    if (fromBottom > 24 || curtainFell || performance.now() - readerScrolledAt > 4000) return;
     if (document.body.classList.contains('room-open') || document.body.classList.contains('spine-open') || document.querySelector('#story-drawer')?.open) return;
     curtainFell = true;
     loadCurtain().then((c) => c?.open({ trigger: curtainPills[0] || null }));

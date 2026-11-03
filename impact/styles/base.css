@@ -226,9 +226,18 @@ main:focus {
   z-index: 40;
   width: fit-content;
   margin-inline: auto;
-  display: flex;
+  /* Equal columns either side of the keystone, so the keystone sits on the page's centre line
+     whatever the bars weigh; each bar grows outward from it */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   max-width: calc(100% - 2 * var(--gutter));
+}
+.nav-bar--left {
+  justify-self: end;
+}
+.nav-bar--right {
+  justify-self: start;
 }
 /* The two bars: glass, tucked into the keystone from either side */
 .nav-bar {
