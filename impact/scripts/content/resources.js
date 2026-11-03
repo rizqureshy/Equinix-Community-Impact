@@ -35,9 +35,10 @@ function note(r) {
   return r.signIn ? `${r.action}, Equinix sign-in, new tab` : `${r.action}, new tab`;
 }
 
-/** One destination as a link, or a quiet placeholder while its address is awaited. */
+/** One destination as a link, or a quiet placeholder while its address is awaited: the title alone,
+ *  with the sign-in mark; the curtain's foot says once that everything opens in a new tab. */
 function itemHTML(r, cls) {
-  const inner = `<b class="${cls}-name">${esc(r.name)}${r.signIn ? '<span class="res-lock" aria-label="needs Equinix sign-in"></span>' : ''}</b><span class="${cls}-blurb">${esc(r.blurb)}</span><small class="${cls}-note">${esc(note(r))}</small>`;
+  const inner = `<b class="${cls}-name">${esc(r.name)}${r.signIn ? '<span class="res-lock" aria-label="needs Equinix sign-in"></span>' : ''}</b>${r.href ? '' : `<small class="${cls}-note">${esc(note(r))}</small>`}`;
   if (!r.href) return `<li class="${cls}-item is-pending" data-resource="${r.id}"><span class="${cls}-link">${inner}</span></li>`;
   return `<li class="${cls}-item" data-resource="${r.id}"><a class="${cls}-link" href="${esc(r.href)}" target="_blank" rel="noopener">${inner}</a></li>`;
 }

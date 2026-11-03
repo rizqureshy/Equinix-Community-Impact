@@ -260,7 +260,7 @@
 .curtain-link {
   display: grid;
   gap: 5px;
-  padding: 12px 0 4px;
+  padding: 14px 0 10px;
   color: #fff;
   text-decoration: none;
   text-shadow: 0 1px 14px rgb(0 0 0 / 0.22);
@@ -276,7 +276,8 @@ a.curtain-link:focus-visible {
   outline-offset: 4px;
 }
 .curtain-name {
-  font-size: clamp(16px, 1.3vw, 19px);
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
