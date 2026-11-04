@@ -106,6 +106,21 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, clot
       });
     }
   });
+  // A hand over the hanging cloth brushes it: a faint ripple runs the way the hand moved
+  let lastX = null;
+  let lastY = null;
+  overlay.addEventListener('pointermove', (e) => {
+    if (state !== 'open' || !live()) {
+      lastX = lastY = null;
+      return;
+    }
+    if (lastX !== null) cloth()?.brush(e.clientX, e.clientY, e.clientX - lastX, e.clientY - lastY);
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+  overlay.addEventListener('pointerleave', () => {
+    lastX = lastY = null;
+  });
   overlay.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       e.preventDefault();

@@ -153,9 +153,17 @@ export function createFabric(host, { motion = () => true } = {}) {
   let agit = 0; // how much the folds are stirred; the unfurl stirs them
   let landed = -1; // when the hem landed, for the bounce
   const hung = new Float32Array(base.length);
+  // The pointer's wake on the hanging cloth: each stroke is a faint ripple that travels the way the
+  // hand moved and fades within a second. A still pointer leaves nothing.
+  const WAKE = 8;
+  const wake = Array.from({ length: WAKE }, () => ({ x: 0, y: 0, dx: 1, dy: 0, at: -1e9, amp: 0 }));
+  let wakeNext = 0;
+  let lastBrush = 0;
   function shapeHanging(t, now) {
     const since = landed < 0 ? -1 : (now - landed) / 1000;
     const W = hang.width;
+    // Only the strokes still fading count this frame
+    const live = wake.filter((w) => now - w.at < 1100);
     for (let i = 0; i < pos.count; i++) {
       const u = (base[i * 3] + LENGTH / 2) / LENGTH; // 0 left .. 1 right
       const vn = (base[i * 3 + 1] + WIDTH / 2) / WIDTH; // 0 hem .. 1 rod
@@ -167,7 +175,22 @@ export function createFabric(host, { motion = () => true } = {}) {
       const edge = Math.pow(Math.abs(u - 0.5) * 2, 3);
       hung[i * 3] = hang.xC + x + Math.sin(t * 0.32 + vn * 2) * 0.24 * drop * spread + Math.sign(u - 0.5) * Math.sin(vn * 9 + t * 0.45) * 0.3 * edge * (0.4 + drop) * spread;
       hung[i * 3 + 1] = hang.yTop - drop * hang.height * height + Math.sin(x * 1.1 + t * 0.5) * 0.32 * drop * drop * spread + bounce;
-      hung[i * 3 + 2] = 0.2 + pleat + billow;
+      let ripple = 0;
+      if (live.length) {
+        const px = hang.xC + x;
+        const py = hang.yTop - drop * hang.height * height;
+        for (const w of live) {
+          const age = (now - w.at) / 1000;
+          const ox = px - w.x;
+          const oy = py - w.y;
+          const along = ox * w.dx + oy * w.dy; // distance ahead of the stroke, the way the hand moved
+          const across = Math.abs(-ox * w.dy + oy * w.dx);
+          const front = along - age * 4.5; // the ripple's crest runs on at a few units a second
+          const near = Math.exp(-(front * front) / 2.2 - (across * across) / 6);
+          ripple += w.amp * near * Math.sin(front * 2.2) * Math.exp(-age * 2.4);
+        }
+      }
+      hung[i * 3 + 2] = 0.2 + pleat + billow + ripple;
     }
   }
 
@@ -371,6 +394,24 @@ export function createFabric(host, { motion = () => true } = {}) {
       });
       drape = 0;
       state = 'flying';
+    },
+    /** The pointer moved over the hanging cloth: px, py in viewport pixels, dx, dy its movement since last time. */
+    brush(px, py, dx, dy) {
+      if (state !== 'hanging') return;
+      const now = performance.now();
+      const speed = Math.hypot(dx, dy);
+      if (speed < 2 || now - lastBrush < 40) return;
+      lastBrush = now;
+      const w = host.clientWidth || innerWidth;
+      const slot = wake[wakeNext];
+      wakeNext = (wakeNext + 1) % WAKE;
+      slot.x = (px - w / 2) * upp;
+      slot.y = visH / 2 - py * upp;
+      slot.dx = dx / speed;
+      slot.dy = -dy / speed;
+      slot.at = now;
+      slot.amp = 0.06 + Math.min(0.14, speed * 0.004); // faint; a fast stroke a little more, never much
+      start();
     },
     /** For study only: hold the choreography at a point and draw it. `beat` is drape | hang, `k` 0..1. */
     scrub(beat, k) {
