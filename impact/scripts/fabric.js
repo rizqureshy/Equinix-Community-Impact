@@ -12,11 +12,13 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const RED = '#e91c24';
-const GATHER_MS = 760; // the flying cloth draws into the keystone
-const UNFURL_MS = 1250; // the curtain comes down out of it
-const FURL_MS = 900; // the curtain gathers back up into it
-const RELEASE_MS = 820; // the cloth flies out again
-const SETTLE_MS = 1100; // the folds calm down after the hem lands
+// The pace of the choreography. ?pace=1.5 on the address slows every beat by half, for tuning by eye.
+const PACE = Math.min(4, Math.max(0.25, Number(new URLSearchParams(location.search).get('pace')) || 1));
+const GATHER_MS = 1700 * PACE; // the flying cloth draws into the keystone
+const UNFURL_MS = 2100 * PACE; // the curtain comes down out of it
+const FURL_MS = 1500 * PACE; // the curtain gathers back up into it
+const RELEASE_MS = 1500 * PACE; // the cloth flies out again
+const SETTLE_MS = 2200; // the folds calm down after the hem lands
 const FLY_OPACITY = 0.5;
 const HANG_OPACITY = 0.9;
 
@@ -108,7 +110,7 @@ export function createFabric(host, { motion = () => true } = {}) {
   function flyPoint(u, v, t, out) {
     const x = (u - 0.5) * LENGTH;
     centre(u, t, C);
-    centre(Math.min(1, u + 0.004), t, C2);
+    centre(u + 0.004, t, C2); // a step on along the line, even past the free end, so the tangent is never zero
     T.subVectors(C2, C).normalize();
     const roll = Math.sin(u * TAU * 1.1 + t * 0.35) * 1.4 + u * 2.2 + t * 0.08;
     B.crossVectors(T, UP).normalize();
@@ -193,7 +195,7 @@ export function createFabric(host, { motion = () => true } = {}) {
       const x = (u - 0.5) * W;
       const pleat = (Math.sin(x * 0.62 + t * 0.19 + Math.sin(vn * 3) * 0.7) * 0.7 + Math.sin(x * 1.5 - t * 0.29 + vn * 2) * 0.26 + Math.sin(x * 0.3 + vn * 4 + t * 0.12) * 0.55) * (0.35 + 0.65 * drop) * (0.3 + 0.7 * spread);
       const billow = agit * (Math.sin(vn * 7 + t * 2.6) * 0.6 + Math.sin(x * 0.6 - t * 1.7) * 0.3 + Math.sin(x * 2.4 + vn * 12 + t * 5) * 0.16) * drop;
-      const bounce = since >= 0 ? Math.sin(since * 5.2) * Math.exp(-since * 2.2) * 0.32 * drop * drop : 0;
+      const bounce = since >= 0 ? Math.sin(since * 4.2) * Math.exp(-since * 2.0) * 0.2 * drop * drop : 0;
       const edge = Math.pow(Math.abs(u - 0.5) * 2, 3);
       hung[i * 3] = hang.xC + x + Math.sin(t * 0.32 + vn * 2) * 0.24 * drop * spread + Math.sign(u - 0.5) * Math.sin(vn * 9 + t * 0.45) * 0.3 * edge * (0.4 + drop) * spread;
       hung[i * 3 + 1] = hang.yTop - drop * hang.height * height + Math.sin(x * 1.1 + t * 0.5) * 0.32 * drop * drop * spread + bounce;
@@ -274,9 +276,9 @@ export function createFabric(host, { motion = () => true } = {}) {
   function draw() {
     renderer.render(scene, camera);
   }
-  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  // The fall gathers speed like a dropped cloth, then the last stretch eases so the landing is soft
-  const gravity = (t) => (t < 0.72 ? (t * t) / 0.72 : 0.72 + (1 - 0.72) * (1 - Math.pow(1 - (t - 0.72) / 0.28, 2)));
+  const easeInOut = (t) => -(Math.cos(Math.PI * t) - 1) / 2; // a sine ease: no corners at either end
+  // The fall: a slow start, a gentle middle and a long soft landing
+  const gravity = (t) => 1 - Math.pow(1 - t, 2.6) * (1 - t * 0.35) - (1 - t) * t * t * 0.25;
   function frame(now) {
     raf = 0;
     if (!running) return;
@@ -362,8 +364,9 @@ export function createFabric(host, { motion = () => true } = {}) {
       landed = -1;
       await run(UNFURL_MS, (k) => {
         height = gravity(k);
-        spread = easeInOut(Math.min(1, k * 1.6));
-        agit = 0.35 + 0.35 * k;
+        // The cloth stays narrow until the hem is a third of the way down, then opens
+        spread = easeInOut(Math.min(1, Math.max(0, (height - 0.2) / 0.6)));
+        agit = 0.25 + 0.25 * k;
       });
       height = 1;
       spread = 1;
@@ -376,8 +379,8 @@ export function createFabric(host, { motion = () => true } = {}) {
       await run(FURL_MS, (k) => {
         const e = easeInOut(k);
         height = 1 - e;
-        spread = 1 - easeInOut(Math.max(0, (k - 0.35) / 0.65));
-        agit = 0.45;
+        spread = 1 - easeInOut(Math.max(0, (k - 0.3) / 0.7));
+        agit = 0.3;
       });
       height = 0;
       spread = 0;
@@ -391,6 +394,37 @@ export function createFabric(host, { motion = () => true } = {}) {
       });
       gather = 0;
       state = 'flying';
+    },
+    /** For study only: hold the choreography at a point and draw it. `beat` is gather | unfurl | furl, `k` 0..1. */
+    scrub(beat, k) {
+      stop();
+      tween = null;
+      if (beat === 'gather') {
+        state = 'gathering';
+        gather = k;
+      } else {
+        state = 'hanging';
+        if (beat === 'unfurl') {
+          height = gravity(k);
+          spread = easeInOut(Math.min(1, Math.max(0, (height - 0.2) / 0.6)));
+          agit = 0.25 + 0.25 * k;
+        } else {
+          const e = easeInOut(k);
+          height = 1 - e;
+          spread = 1 - easeInOut(Math.max(0, (k - 0.3) / 0.7));
+          agit = 0.3;
+        }
+        landed = -1;
+      }
+      compose(time, performance.now());
+      draw();
+      return renderer.domElement.toDataURL('image/png');
+    },
+    /** For study only: back to flight, running. */
+    unscrub() {
+      state = 'flying';
+      gather = 0;
+      start();
     },
     /** With motion off the cloth holds its pose; a redraw keeps it crisp after resizes. */
     motionChanged() {
