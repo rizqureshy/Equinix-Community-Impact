@@ -94,7 +94,7 @@ a.nav-keystone {
   top: var(--curtain-top, 0);
   bottom: 0;
   left: 50%;
-  width: min(1180px, calc(100% - 2 * var(--gutter)));
+  width: min(1040px, calc(100% - 2 * var(--gutter)));
   transform: translateX(-50%);
   z-index: 30;
   color: #fff;
