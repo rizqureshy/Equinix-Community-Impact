@@ -1,8 +1,7 @@
 // The Carry the Story curtain: press the keystone in the header and the red
-// satin flying behind the page gathers into it, steps in front of the page and
-// unfurls as a curtain with the resources on it. Close, Escape, the keystone
-// or a press on the page beside it gathers the cloth back up and lets it fly
-// again. The cloth itself lives in fabric.js, one length of satin in two
+// satin flying behind the page comes forward over it, straightens and drapes
+// into a curtain with the resources on it. Close, Escape, the keystone or a
+// press on the page beside it lets it take flight again. The cloth itself lives in fabric.js, one length of satin in two
 // states; this module runs the overlay, the choreography and the keyboard.
 // Without WebGL, or with motion off, the curtain is a plain red panel that
 // appears at once.
@@ -61,11 +60,9 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, clot
       const c = cloth();
       place();
       setState('falling');
-      // The flying cloth draws into the keystone, steps in front of the page, and comes down out of it
-      await c.gatherIn();
-      if (state !== 'falling') return;
+      // The page steps back, the flying cloth comes forward over it, straightens and drapes into the curtain
       layer?.classList.add('is-front');
-      await c.unfurl();
+      await c.settle();
       if (state !== 'falling') return;
     }
     setState('open');
@@ -75,12 +72,10 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, clot
     if (state !== 'open' && state !== 'falling') return;
     setState('rising');
     const c = cloth();
-    if (c && live() && c.state === 'hanging') {
-      await c.furl();
+    if (c && live() && (c.state === 'hanging' || c.state === 'draping')) {
+      await c.takeFlight();
       if (state !== 'rising') return;
       layer?.classList.remove('is-front');
-      await c.release();
-      if (state !== 'rising') return;
     } else {
       layer?.classList.remove('is-front');
     }

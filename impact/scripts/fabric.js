@@ -4,9 +4,9 @@
 // never tangles), lit as satin. Hanging: the same cloth, drawn up through the
 // keystone in the header and let down over the page as the Carry the Story
 // curtain, pleats drifting and the hem settling. The change of state is the
-// transition: the flying cloth gathers into the keystone, the layer steps in
-// front of the page, and the cloth unfurls from the keystone; the reverse to
-// lift it. It renders in its own transparent canvas, fixed to the viewport,
+// transition: the page steps back, the flying cloth comes forward over it, and
+// a wave runs along its length as it straightens and drapes into the curtain;
+// the reverse lets it fly again. It renders in its own transparent canvas, fixed to the viewport,
 // and only while the tab is visible.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -14,10 +14,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 const RED = '#e91c24';
 // The pace of the choreography. ?pace=1.5 on the address slows every beat by half, for tuning by eye.
 const PACE = Math.min(4, Math.max(0.25, Number(new URLSearchParams(location.search).get('pace')) || 1));
-const GATHER_MS = 1700 * PACE; // the flying cloth draws into the keystone
-const UNFURL_MS = 2100 * PACE; // the curtain comes down out of it
-const FURL_MS = 1500 * PACE; // the curtain gathers back up into it
-const RELEASE_MS = 1500 * PACE; // the cloth flies out again
+const DRAPE_MS = 2400 * PACE; // the flying cloth straightens and drapes into the curtain
+const FLY_MS = 2000 * PACE; // and takes flight again
 const SETTLE_MS = 2200; // the folds calm down after the hem lands
 const FLY_OPACITY = 0.5;
 const HANG_OPACITY = 0.9;
@@ -133,46 +131,13 @@ export function createFabric(host, { motion = () => true } = {}) {
     return out.set(C.x + wx * across + fx * outward, C.y + wy * across + fy * outward, C.z + wz * across + fz * outward);
   }
   const V = new THREE.Vector3();
-  const F = new THREE.Vector3();
-  const K = new THREE.Vector3();
-  const Pl = new THREE.Vector3();
-  const inv = new THREE.Matrix4();
-  const EXT = 0.5; // how far, in lengths of the cloth, the path runs on from the cloth to the keystone
-  const MID = 0.5; // the point of the cloth under the keystone: the pull starts there
-  /** The flying cloth, pulled `s` of the way into the keystone (0 flying, 1 inside): both tails slide
-   *  inward along the cloth's own path to its middle, and the middle rises on a short arc into the keystone. */
-  function shapeFlying(t, s) {
+  /** The flying cloth, every point. */
+  function shapeFlying(t) {
     gust = 0.8 + 0.2 * Math.sin(t * 0.29) * Math.sin(t * 0.16 + 1.1);
-    const pull = s * (0.5 + EXT);
-    if (s > 0) {
-      // The keystone, in the cloth's own space, so the thread's end holds still on screen while the cloth untilts
-      cloth.updateMatrixWorld();
-      inv.copy(cloth.matrixWorld).invert();
-      Pl.set(hang.xC, hang.keyY, 0.5).applyMatrix4(inv);
-      flyPoint(MID, 0, t, K); // the middle of the cloth, where the arc begins
-    }
     for (let i = 0; i < pos.count; i++) {
       const u = (base[i * 3] + LENGTH / 2) / LENGTH;
       const v = base[i * 3 + 1] / WIDTH;
-      const side = u < MID ? -1 : 1;
-      const d = Math.abs(u - MID) - pull; // how far this point still is from the middle, along the cloth
-      if (d >= 0) {
-        // Still on the cloth's own path, slid toward the middle
-        flyPoint(MID + side * d, v, t, V);
-      } else {
-        // Past the middle: on the arc from the middle up into the keystone, narrowing as it goes
-        const k = Math.min(1, -d / EXT);
-        flyPoint(MID, v, t, F);
-        const ctlx = (K.x + Pl.x) / 2 + side * 0.6;
-        const ctly = Math.max(K.y, Pl.y) + 1.6;
-        const ctlz = (K.z + Pl.z) / 2 + 1.2;
-        const q = 1 - k;
-        const bx = q * q * K.x + 2 * q * k * ctlx + k * k * Pl.x;
-        const by = q * q * K.y + 2 * q * k * ctly + k * k * Pl.y;
-        const bz = q * q * K.z + 2 * q * k * ctlz + k * k * Pl.z;
-        const thin = 1 - 0.85 * k; // the cloth narrows into the keystone
-        V.set(bx + (F.x - K.x) * thin + side * 0.12 * (1 - k), by + (F.y - K.y) * thin, bz + (F.z - K.z) * thin);
-      }
+      flyPoint(u, v, t, V);
       fly[i * 3] = V.x;
       fly[i * 3 + 1] = V.y;
       fly[i * 3 + 2] = V.z;
@@ -184,13 +149,13 @@ export function createFabric(host, { motion = () => true } = {}) {
   // keystone's lower edge), its width and its height, set from the page's pixels
   const hang = { xC: 0, yTop: 6, width: 16, height: 20, keyWidth: 3, keyY: 6.5 };
   let spread = 0; // 0 the keystone's width, 1 the curtain's
-  let height = 0; // 0 gathered at the keystone's edge, 1 hanging full length
+  let height = 0; // 0 drawn up to the rod, 1 hanging full length
   let agit = 0; // how much the folds are stirred; the unfurl stirs them
   let landed = -1; // when the hem landed, for the bounce
   const hung = new Float32Array(base.length);
   function shapeHanging(t, now) {
     const since = landed < 0 ? -1 : (now - landed) / 1000;
-    const W = hang.keyWidth + (hang.width - hang.keyWidth) * spread;
+    const W = hang.width;
     for (let i = 0; i < pos.count; i++) {
       const u = (base[i * 3] + LENGTH / 2) / LENGTH; // 0 left .. 1 right
       const vn = (base[i * 3 + 1] + WIDTH / 2) / WIDTH; // 0 hem .. 1 rod
@@ -207,32 +172,60 @@ export function createFabric(host, { motion = () => true } = {}) {
   }
 
   // ---- The blend ----------------------------------------------------------------
-  // state: flying | gathering | hanging | releasing. gather runs 0 (flying) to 1
-  // (drawn into the keystone); the hanging shape takes over from there.
+  // state: flying | draping | hanging | releasing. drape runs 0 (flying) to 1 (hung):
+  // each point moves from its flying place to its hanging place as a wave passes
+  // along the cloth from the held end to the free end, and the hanging shape's
+  // height grows with it so the cloth drapes down as it settles.
   let state = 'flying';
-  let gather = 0;
+  let drape = 0;
   const tmpQ = new THREE.Quaternion();
   const flyQ = new THREE.Quaternion().setFromEuler(FLY_ROT);
   const idQ = new THREE.Quaternion();
   let scrollDrift = 0;
   let rollZ = FLY_ROT.z;
+  const flyM = new THREE.Matrix4();
+  const flyPosV = new THREE.Vector3();
+  const flyScale = new THREE.Vector3(1, 1, 1);
+  const rollE = new THREE.Euler();
+  const rollQ = new THREE.Quaternion();
+  const W0 = new THREE.Vector3();
+  const sm = (k) => (k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k));
   function compose(t, now) {
-    const flying = state === 'flying' || state === 'gathering' || state === 'releasing';
-    if (flying) {
-      // The flying cloth's tilt and sway ease away as it is drawn in; set first, so the thread's end is right
-      tmpQ.copy(flyQ).slerp(idQ, gather);
-      cloth.quaternion.copy(tmpQ);
-      cloth.position.set(FLY_POS.x * (1 - gather), scrollDrift * (1 - gather), 0);
-      cloth.rotation.z = rollZ * (1 - gather);
-      shapeFlying(t, gather);
+    if (state === 'flying') {
+      shapeFlying(t);
       pos.array.set(fly);
-      material.opacity = FLY_OPACITY + (HANG_OPACITY - FLY_OPACITY) * gather;
-    } else {
+      cloth.quaternion.copy(flyQ);
+      cloth.position.set(FLY_POS.x, scrollDrift, 0);
+      cloth.rotation.z = rollZ;
+      material.opacity = FLY_OPACITY;
+    } else if (state === 'hanging') {
       shapeHanging(t, now);
       pos.array.set(hung);
       cloth.quaternion.copy(idQ);
       cloth.position.set(0, 0, 0);
       material.opacity = HANG_OPACITY;
+    } else {
+      // In between: the mesh sits untransformed; the flying shape is carried into world space by hand
+      shapeFlying(t);
+      shapeHanging(t, now);
+      cloth.quaternion.copy(idQ);
+      cloth.position.set(0, 0, 0);
+      rollE.set(FLY_ROT.x, FLY_ROT.y, rollZ);
+      rollQ.setFromEuler(rollE);
+      flyPosV.set(FLY_POS.x, scrollDrift, 0);
+      flyM.compose(flyPosV, rollQ, flyScale);
+      for (let i = 0; i < pos.count; i++) {
+        const u = (base[i * 3] + LENGTH / 2) / LENGTH;
+        // The wave: the held end settles first, the free end last
+        const m = sm(drape * 1.45 - u * 0.45);
+        W0.set(fly[i * 3], fly[i * 3 + 1], fly[i * 3 + 2]).applyMatrix4(flyM);
+        // A little lift on the way, so the cloth rises to the rod rather than sliding
+        const lift = Math.sin(m * Math.PI) * 1.2;
+        pos.array[i * 3] = W0.x + (hung[i * 3] - W0.x) * m;
+        pos.array[i * 3 + 1] = W0.y + (hung[i * 3 + 1] - W0.y) * m + lift;
+        pos.array[i * 3 + 2] = W0.z + (hung[i * 3 + 2] - W0.z) * m;
+      }
+      material.opacity = FLY_OPACITY + (HANG_OPACITY - FLY_OPACITY) * drape;
     }
     pos.needsUpdate = true;
     geometry.computeVertexNormals();
@@ -348,76 +341,51 @@ export function createFabric(host, { motion = () => true } = {}) {
     get state() {
       return state;
     },
-    /** Draw the flying cloth into the keystone; resolves when it is hidden inside. */
-    async gatherIn() {
-      if (state !== 'flying' && state !== 'releasing') return;
-      state = 'gathering';
-      const from = gather;
-      await run(GATHER_MS * (1 - from), (k) => {
-        gather = from + (1 - from) * easeInOut(k);
-      });
-      gather = 1;
-    },
-    /** Let the curtain down out of the keystone; resolves when the hem has landed. */
-    async unfurl() {
-      state = 'hanging';
-      spread = 0;
-      height = 0;
-      agit = 0.5;
-      landed = -1;
-      await run(UNFURL_MS, (k) => {
-        height = gravity(k);
-        // The cloth stays narrow until the hem is a third of the way down, then opens
-        spread = easeInOut(Math.min(1, Math.max(0, (height - 0.2) / 0.6)));
-        agit = 0.25 + 0.25 * k;
-      });
-      height = 1;
+    /** The flying cloth straightens and drapes into the curtain; resolves when the hem has settled. */
+    async settle() {
+      if (state === 'hanging') return;
+      state = 'draping';
       spread = 1;
+      landed = -1;
+      const from = drape;
+      await run(DRAPE_MS * (1 - from), (k) => {
+        drape = from + (1 - from) * easeInOut(k);
+        height = 0.25 + 0.75 * gravity(Math.max(0, (drape - 0.2) / 0.8));
+        agit = 0.2 + 0.2 * (1 - k);
+      });
+      drape = 1;
+      height = 1;
+      state = 'hanging';
       landed = performance.now();
     },
-    /** Gather the curtain back up into the keystone; resolves when it is inside. */
-    async furl() {
-      if (state !== 'hanging') return;
-      landed = -1;
-      await run(FURL_MS, (k) => {
-        const e = easeInOut(k);
-        height = 1 - e;
-        spread = 1 - easeInOut(Math.max(0, (k - 0.3) / 0.7));
-        agit = 0.3;
-      });
-      height = 0;
-      spread = 0;
-    },
-    /** Let the cloth fly out of the keystone and back behind the page. */
-    async release() {
+    /** The curtain lets go and the cloth takes flight again; resolves when it is flying. */
+    async takeFlight() {
+      if (state === 'flying') return;
       state = 'releasing';
-      gather = 1;
-      await run(RELEASE_MS, (k) => {
-        gather = 1 - easeInOut(k);
+      landed = -1;
+      const from = drape;
+      await run(FLY_MS * from, (k) => {
+        drape = from * (1 - easeInOut(k));
+        height = 0.25 + 0.75 * Math.max(0, (drape - 0.2) / 0.8);
+        agit = 0.2;
       });
-      gather = 0;
+      drape = 0;
       state = 'flying';
     },
-    /** For study only: hold the choreography at a point and draw it. `beat` is gather | unfurl | furl, `k` 0..1. */
+    /** For study only: hold the choreography at a point and draw it. `beat` is drape | hang, `k` 0..1. */
     scrub(beat, k) {
       stop();
       tween = null;
-      if (beat === 'gather') {
-        state = 'gathering';
-        gather = k;
+      spread = 1;
+      landed = -1;
+      if (beat === 'drape') {
+        state = 'draping';
+        drape = k;
+        height = 0.25 + 0.75 * gravity(Math.max(0, (k - 0.2) / 0.8));
       } else {
         state = 'hanging';
-        if (beat === 'unfurl') {
-          height = gravity(k);
-          spread = easeInOut(Math.min(1, Math.max(0, (height - 0.2) / 0.6)));
-          agit = 0.25 + 0.25 * k;
-        } else {
-          const e = easeInOut(k);
-          height = 1 - e;
-          spread = 1 - easeInOut(Math.max(0, (k - 0.3) / 0.7));
-          agit = 0.3;
-        }
-        landed = -1;
+        drape = 1;
+        height = 1;
       }
       compose(time, performance.now());
       draw();
@@ -426,7 +394,7 @@ export function createFabric(host, { motion = () => true } = {}) {
     /** For study only: back to flight, running. */
     unscrub() {
       state = 'flying';
-      gather = 0;
+      drape = 0;
       start();
     },
     /** With motion off the cloth holds its pose; a redraw keeps it crisp after resizes. */
