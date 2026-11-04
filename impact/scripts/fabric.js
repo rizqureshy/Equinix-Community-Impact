@@ -137,38 +137,41 @@ export function createFabric(host, { motion = () => true } = {}) {
   const K = new THREE.Vector3();
   const Pl = new THREE.Vector3();
   const inv = new THREE.Matrix4();
-  const EXT = 0.6; // how far, in lengths of the cloth, the path runs on from the free end to the keystone
-  /** The flying cloth, pulled `s` of the way along its own path into the keystone (0 flying, 1 inside). */
+  const EXT = 0.5; // how far, in lengths of the cloth, the path runs on from the cloth to the keystone
+  const MID = 0.5; // the point of the cloth under the keystone: the pull starts there
+  /** The flying cloth, pulled `s` of the way into the keystone (0 flying, 1 inside): both tails slide
+   *  inward along the cloth's own path to its middle, and the middle rises on a short arc into the keystone. */
   function shapeFlying(t, s) {
     gust = 0.8 + 0.2 * Math.sin(t * 0.29) * Math.sin(t * 0.16 + 1.1);
-    const pull = s * (1 + EXT);
+    const pull = s * (0.5 + EXT);
     if (s > 0) {
       // The keystone, in the cloth's own space, so the thread's end holds still on screen while the cloth untilts
       cloth.updateMatrixWorld();
       inv.copy(cloth.matrixWorld).invert();
       Pl.set(hang.xC, hang.keyY, 0.5).applyMatrix4(inv);
+      flyPoint(MID, 0, t, K); // the middle of the cloth, where the arc begins
     }
     for (let i = 0; i < pos.count; i++) {
       const u = (base[i * 3] + LENGTH / 2) / LENGTH;
       const v = base[i * 3 + 1] / WIDTH;
-      const ue = u + pull;
-      if (ue <= 1) {
-        // Still on the cloth's own path: it slides along its length toward the free end
-        flyPoint(ue, v, t, V);
+      const side = u < MID ? -1 : 1;
+      const d = Math.abs(u - MID) - pull; // how far this point still is from the middle, along the cloth
+      if (d >= 0) {
+        // Still on the cloth's own path, slid toward the middle
+        flyPoint(MID + side * d, v, t, V);
       } else {
-        // Past the free end: on the bridge from where the free end was to the keystone, narrowing as it goes
-        const k = Math.min(1, (ue - 1) / EXT);
-        flyPoint(1, v, t, F);
-        flyPoint(1, 0, t, K); // the free end's centre
-        const ctlx = (K.x + Pl.x) / 2;
-        const ctly = Math.max(K.y, Pl.y) + 2.4;
-        const ctlz = (K.z + Pl.z) / 2 + 1.5;
+        // Past the middle: on the arc from the middle up into the keystone, narrowing as it goes
+        const k = Math.min(1, -d / EXT);
+        flyPoint(MID, v, t, F);
+        const ctlx = (K.x + Pl.x) / 2 + side * 0.6;
+        const ctly = Math.max(K.y, Pl.y) + 1.6;
+        const ctlz = (K.z + Pl.z) / 2 + 1.2;
         const q = 1 - k;
         const bx = q * q * K.x + 2 * q * k * ctlx + k * k * Pl.x;
         const by = q * q * K.y + 2 * q * k * ctly + k * k * Pl.y;
         const bz = q * q * K.z + 2 * q * k * ctlz + k * k * Pl.z;
         const thin = 1 - 0.85 * k; // the cloth narrows into the keystone
-        V.set(bx + (F.x - K.x) * thin, by + (F.y - K.y) * thin, bz + (F.z - K.z) * thin);
+        V.set(bx + (F.x - K.x) * thin + side * 0.12 * (1 - k), by + (F.y - K.y) * thin, bz + (F.z - K.z) * thin);
       }
       fly[i * 3] = V.x;
       fly[i * 3 + 1] = V.y;
