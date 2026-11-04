@@ -102,16 +102,6 @@ a.nav-keystone {
 .curtain[hidden] {
   display: none;
 }
-.curtain::before {
-  content: '';
-  position: absolute;
-  inset: 0 18px;
-  background: rgb(255 255 255 / 0.32);
-  backdrop-filter: blur(12px) saturate(1.05);
-  -webkit-backdrop-filter: blur(12px) saturate(1.05);
-  opacity: 0;
-  transition: opacity var(--d2) var(--ease);
-}
 .curtain::after {
   content: '';
   position: absolute;
@@ -124,21 +114,6 @@ a.nav-keystone {
 }
 .curtain[data-state='open']::after {
   opacity: 1;
-}
-.curtain[data-state='open']::before,
-.curtain[data-state='falling']::before {
-  opacity: 1;
-}
-/* The cloth's canvas runs a little wider than the panel so its edges can wave */
-.curtain-cloth {
-  position: absolute;
-  inset: 0 -70px;
-  pointer-events: none;
-}
-.curtain-cloth canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 /* Without the live cloth the curtain is a plain red drop that arrives at once */
 .curtain.is-plain {
@@ -328,11 +303,8 @@ a.curtain-link:focus-visible {
 .curtain-foot span {
   opacity: 0.9;
 }
-/* While the curtain is down the page's own fabric fades out and the page steps back, softened,
-   so what ghosts through the cloth is tone rather than words; it still scrolls beside the curtain */
-body.curtain-open .fabric-layer {
-  opacity: 0 !important;
-}
+/* While the curtain is down the page steps back, softened, so what ghosts through the cloth is
+   tone rather than words; it still scrolls beside the curtain */
 main {
   transition: filter var(--d3) var(--ease), opacity var(--d3) var(--ease);
 }

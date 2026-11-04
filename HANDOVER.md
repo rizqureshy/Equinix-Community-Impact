@@ -4,6 +4,10 @@
 
 Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign on the branch `claude/community-redesign`, replacing the dark cinematic page, the separate 3D explorer and the fly-through film. Updated the same day with your edits: the community became an independent explorer with a playing tour and music, the promises gained photographs, the numbers were reset, and the story dialog scrolls with the wheel.
 
+## Version 3, branch `v3/carry-transition`: one cloth
+
+An experiment cut from `v3/main` on 4 November 2026. The red fabric flying behind the page and the Carry the Story curtain are now one length of satin in two states (`impact/scripts/fabric.js`): pressing the keystone draws the flying cloth into it (every vertex travels to the keystone, the free end first, with a slow turn, the tilt and sway easing away), the fabric's fixed layer steps in front of the page (`.fabric-layer.is-front`, beneath the header and the curtain's words), and the cloth unfurls out of the keystone, growing from the keystone's width to the panel's as the hem falls with the usual gravity, soft landing and bounce. Closing gathers it back up into the keystone, the layer steps behind the page, and the cloth flies out again. `curtain.js` runs the overlay and the choreography and no longer has a cloth of its own; the overlay's white veil went with it (the page's own blur and dim do that work). One canvas, one renderer, one grid (200 by 48) that is long and narrow when flying and wide and tall when hanging; the hanging shape is placed from the page's pixels (`setHang`). Stage two, if wanted: the pull cord (drag the keystone to draw the curtain by hand) and the page tilting back in depth.
+
 ## Version 3: the Resources curtain (branch `v3/main`)
 
 The team asked for the resources and quick links to be reachable from everywhere, with a stationary bar at the very bottom. Side rails were tried in a mock and set aside as too busy. What was built, on the full site (`index.html` on this branch) only:

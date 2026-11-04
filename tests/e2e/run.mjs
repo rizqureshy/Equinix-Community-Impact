@@ -349,12 +349,12 @@ try {
   check(pillAt.tag === 'BUTTON' && pillAt.expanded === 'false' && pillAt.visible && pillAt.centred && pillAt.meets && pillAt.text === 'Carry the Story with Confidence' && pillAt.taller, 'the red Carry the Story keystone sits in the middle of the header, taller than the two bars that meet it', JSON.stringify(pillAt));
   await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => ['falling', 'open'].includes(document.querySelector('#curtain').dataset.state), null, { polling: 100, timeout: 10000 }).catch(() => {});
-  const falling = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, canvas: !!document.querySelector('.curtain-cloth canvas'), body: document.body.classList.contains('curtain-open') }));
-  check((falling.state === 'falling' || falling.state === 'open') && falling.canvas && falling.body, 'pressing the pill drops a live cloth over the page', JSON.stringify(falling));
+  await p.waitForFunction(() => document.querySelector('.fabric-layer.is-front canvas') || document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 15000 }).catch(() => {});
+  const falling = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, canvas: !!document.querySelector('.fabric-layer.is-front canvas'), body: document.body.classList.contains('curtain-open') }));
+  check((falling.state === 'falling' || falling.state === 'open') && falling.canvas && falling.body, 'pressing the keystone draws the page\'s own cloth into it and lets it down in front of the page', JSON.stringify(falling));
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 15000 }).catch(() => {});
-  await p.waitForFunction(() => getComputedStyle(document.querySelector('.fabric-layer')).opacity === '0', null, { polling: 100, timeout: 5000 }).catch(() => {});
-  const down = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, fabric: getComputedStyle(document.querySelector('.fabric-layer')).opacity, focus: document.activeElement.classList.contains('curtain-close'), items: document.querySelectorAll('.curtain-item').length, locks: document.querySelectorAll('.curtain-item .res-lock').length, groups: document.querySelectorAll('.curtain-group').length, newTab: [...document.querySelectorAll('a.curtain-link')].every((a) => a.target === '_blank' && a.rel.includes('noopener')), expanded: document.querySelector('.nav-keystone').getAttribute('aria-expanded') }));
-  check(down.state === 'open' && down.fabric === '0' && down.focus && down.items === 10 && down.locks === 0 && down.groups === 4 && down.newTab && down.expanded === 'true', 'with the curtain down the page fabric is gone, focus is on Close, and the ten destinations sit in four groups, titles alone', JSON.stringify(down));
+  const down = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, fabric: document.querySelector('.fabric-layer').classList.contains('is-front') && Number(getComputedStyle(document.querySelector('.fabric-layer')).opacity) > 0.9 ? 'front' : 'behind', focus: document.activeElement.classList.contains('curtain-close'), items: document.querySelectorAll('.curtain-item').length, locks: document.querySelectorAll('.curtain-item .res-lock').length, groups: document.querySelectorAll('.curtain-group').length, newTab: [...document.querySelectorAll('a.curtain-link')].every((a) => a.target === '_blank' && a.rel.includes('noopener')), expanded: document.querySelector('.nav-keystone').getAttribute('aria-expanded') }));
+  check(down.state === 'open' && down.fabric === 'front' && down.focus && down.items === 10 && down.locks === 0 && down.groups === 4 && down.newTab && down.expanded === 'true', 'with the curtain down the cloth hangs in front of the page, focus is on Close, and the ten destinations sit in four groups, titles alone', JSON.stringify(down));
   await p.keyboard.press('Tab');
   await p.keyboard.press('Tab');
   check(await p.evaluate(() => document.querySelector('#curtain').contains(document.activeElement)), 'focus stays on the curtain while it is down');
@@ -378,8 +378,8 @@ try {
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await wait(400);
-  const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-keystone') }));
-  check(lifted.hidden && !lifted.body && lifted.focus, 'Escape lifts the curtain and hands focus back to the pill', JSON.stringify(lifted));
+  const lifted = await p.evaluate(() => ({ hidden: document.querySelector('#curtain').hidden, body: document.body.classList.contains('curtain-open'), focus: document.activeElement.classList.contains('nav-keystone'), behind: !document.querySelector('.fabric-layer').classList.contains('is-front') }));
+  check(lifted.hidden && !lifted.body && lifted.focus && lifted.behind, 'Escape gathers the cloth back behind the page and hands focus to the keystone', JSON.stringify(lifted));
   // Reaching the foot of the page by hand drops the curtain by itself, once
   await p.mouse.move(40, 400);
   for (let i = 0; i < 12 && !(await p.evaluate(() => document.documentElement.scrollHeight - (scrollY + innerHeight) <= 24)); i++) {
@@ -445,7 +445,7 @@ try {
   check((await focus(p)) === 'overview' && !(await p.evaluate(() => window.__impact.playing)), 'Escape ends the tour and returns to the overview with reduced motion');
   await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 10000 }).catch(() => {});
-  const plain = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, plain: document.querySelector('#curtain').classList.contains('is-plain'), canvas: !!document.querySelector('.curtain-cloth canvas') }));
+  const plain = await p.evaluate(() => ({ state: document.querySelector('#curtain').dataset.state, plain: document.querySelector('#curtain').classList.contains('is-plain'), canvas: !!document.querySelector('.fabric-layer.is-front') }));
   check(plain.state === 'open' && plain.plain && !plain.canvas, 'with reduced motion the curtain is a plain red panel that arrives at once', JSON.stringify(plain));
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 5000 }).catch(() => {});
@@ -522,7 +522,7 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.locator('.nav-keystone').click();
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'open', null, { polling: 100, timeout: 10000 }).catch(() => {});
-  check(await p.evaluate(() => document.querySelector('#curtain').dataset.state === 'open' && document.querySelector('#curtain').classList.contains('is-plain') && !document.querySelector('.curtain-cloth canvas')), 'without WebGL the curtain is a plain red panel');
+  check(await p.evaluate(() => document.querySelector('#curtain').dataset.state === 'open' && document.querySelector('#curtain').classList.contains('is-plain') && !document.querySelector('.fabric-layer.is-front')), 'without WebGL the curtain is a plain red panel');
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.querySelector('#curtain').dataset.state === 'closed', null, { polling: 100, timeout: 5000 }).catch(() => {});
   check(p.failed.length === 0, 'no missing local assets without WebGL', p.failed.slice(0, 3).join(', '));

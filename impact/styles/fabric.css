@@ -15,6 +15,11 @@
 :root[data-fabric='on'] .fabric-layer.is-ready {
   opacity: 0.85;
 }
+/* While the curtain is down the cloth hangs in front of the page, beneath the header and the curtain's words */
+.fabric-layer.is-front {
+  z-index: 29;
+  opacity: 1 !important;
+}
 /* Content sits above the fabric; sections with their own background still cover it */
 main,
 .site-footer {

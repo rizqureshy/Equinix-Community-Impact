@@ -324,20 +324,16 @@ let curtain = null;
 let curtainLoading = null;
 async function loadCurtain() {
   if (curtain) return curtain;
+  await loadFabric(); // the cloth first, so the curtain has something to hang
   curtainLoading ??= import('./curtain.js').then(({ createCurtain }) => {
     curtain = createCurtain(curtainEl, {
       motion: () => store.get().motion,
       webgl: supportsWebGL2(),
+      // The curtain is the page's own fabric in its hanging state; it keeps running throughout
+      cloth: () => fabric,
+      layer: fabricLayer,
       triggers: curtainPills,
-      onOpen: () => {
-        // The page's own fabric fades out under the curtain and stops rendering
-        setTimeout(() => {
-          if (document.body.classList.contains('curtain-open')) fabric?.stop();
-        }, 1100);
-      },
-      onClose: () => {
-        if (root.dataset.fabric === 'on') fabric?.start();
-      },
+      onOpen: () => fabric?.start(),
     });
     return curtain;
   });

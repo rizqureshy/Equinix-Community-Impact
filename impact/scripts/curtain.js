@@ -1,222 +1,26 @@
-// The Resources curtain: press the red pill in the header and a length of
-// red satin falls over the page, folds moving as if live, with the resources
-// on it. Close, Escape or the pill lifts it again. The cloth is a hanging
-// plane whose vertices ride layered waves, lit like the fabric behind the
-// page; without WebGL, or with motion off, the curtain is a plain red panel
-// that appears at once.
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const RED = '#e91c24';
-const FALL_MS = 1250;
-const RISE_MS = 1000;
-const SETTLE_MS = 1100; // the folds calm down after the hem lands
-
-/** The cloth: a curtain hung from above the viewport that falls and rises. */
-function createCloth(host, { motion = () => true } = {}) {
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
-  } catch {
-    return null;
-  }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.setClearColor(0x000000, 0);
-  renderer.domElement.setAttribute('aria-hidden', 'true');
-  host.appendChild(renderer.domElement);
-
-  const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.5;
-  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  const DIST = 20;
-  camera.position.set(0, 0, DIST);
-
-  const key = new THREE.DirectionalLight('#fff4ea', 1.5);
-  key.position.set(-5, 9, 10);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight('#ffc9c4', 0.9);
-  rim.position.set(7, -3, 6);
-  scene.add(rim);
-  scene.add(new THREE.HemisphereLight('#ffffff', '#3a0d0d', 0.35));
-
-  const SEG_X = 150;
-  const SEG_Y = 84;
-  let W = 10;
-  let H = 10;
-  let visH = 10;
-  let geometry = null;
-  let base = null;
-  const material = new THREE.MeshPhysicalMaterial({
-    color: RED,
-    roughness: 0.6,
-    metalness: 0,
-    sheen: 0.5,
-    sheenColor: new THREE.Color('#ff8c86'),
-    sheenRoughness: 0.7,
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.9,
-    depthWrite: false,
-  });
-  const cloth = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
-  scene.add(cloth);
-
-  const TAU = Math.PI * 2;
-  let drop = 1; // 1 gathered above the viewport, 0 hanging over it
-  let agit = 0; // how much the folds are stirred (the fall stirs them)
-  let time = 0;
-
-  /** The cloth's size follows the viewport: a little wider than the view and a third taller. */
-  function build() {
-    const w = host.clientWidth || 1;
-    const h = host.clientHeight || 1;
-    renderer.setSize(w, h, false);
-    renderer.domElement.style.width = `${w}px`;
-    renderer.domElement.style.height = `${h}px`;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    visH = 2 * DIST * Math.tan((camera.fov * Math.PI) / 360);
-    const visW = visH * camera.aspect;
-    // The canvas runs 70px past the panel on each side; the cloth fills the panel and waves just beyond it
-    const panelShare = Math.max(0.6, (w - 140) / w);
-    W = visW * (panelShare + 0.03);
-    H = visH * 1.32;
-    geometry?.dispose();
-    geometry = new THREE.PlaneGeometry(W, H, SEG_X, SEG_Y);
-    base = geometry.attributes.position.array.slice();
-    cloth.geometry = geometry;
-  }
-
-  const LAG = 0.38; // how far the hem trails the rod on the way down (a share of the travel)
-  let landed = -1; // the moment the hem landed, for the bounce; -1 while airborne or settled
-
-  function shape(t, now) {
-    const pos = geometry.attributes.position;
-    const travel = H + 1.5;
-    const since = landed < 0 ? -1 : (now - landed) / 1000;
-    for (let i = 0; i < pos.count; i++) {
-      const x = base[i * 3];
-      const y = base[i * 3 + 1];
-      const yn = (y + H / 2) / H; // 0 at the hem, 1 at the rod
-      const hang = 1 - yn; // folds, sway and lag grow toward the hem
-      // Pleats: deep slow folds that drift sideways, with finer ones riding on them
-      const pleat = Math.sin(x * 0.62 + t * 0.19 + Math.sin(yn * 3) * 0.7) * 0.7 + Math.sin(x * 1.5 - t * 0.29 + yn * 2) * 0.26 + Math.sin(x * 0.3 + y * 0.4 + t * 0.12) * 0.55;
-      // On the way down the cloth billows: horizontal waves travel up it and the hem flutters
-      const billow = agit * (Math.sin(y * 0.7 + t * 2.6) * 0.6 + Math.sin(x * 0.6 - t * 1.7) * 0.3 + Math.sin(x * 2.4 + y * 1.5 + t * 5) * 0.16) * hang;
-      // The rod leads and the hem trails, so the cloth stretches out as it falls and gathers as it rises
-      const d = Math.min(1, drop * (1 + hang * LAG));
-      // Once the hem lands it bounces, less each time
-      const bounce = since >= 0 ? Math.sin(since * 5.2) * Math.exp(-since * 2.2) * 0.32 * hang * hang : 0;
-      // The side edges wave on their own, more toward the hem
-      const edge = Math.pow(Math.abs(x) / (W / 2), 3);
-      pos.array[i * 3] = x + Math.sin(t * 0.32 + yn * 2) * 0.24 * hang + Math.sign(x) * Math.sin(y * 0.9 + t * 0.45 + Math.sign(x)) * 0.3 * edge * (0.4 + hang);
-      pos.array[i * 3 + 1] = y + d * travel + Math.sin(x * 1.1 + t * 0.5) * 0.32 * hang * hang + bounce;
-      pos.array[i * 3 + 2] = pleat * (0.35 + 0.65 * hang) + billow;
-    }
-    pos.needsUpdate = true;
-    geometry.computeVertexNormals();
-  }
-
-  function place() {
-    // At rest the rod sits just above the top edge of the layer; the travel is applied per vertex in shape()
-    cloth.position.y = visH / 2 + 0.8 - H / 2;
-  }
-
-  let raf = 0;
-  let running = false;
-  let last = 0;
-  let tween = null; // { from, to, start, length, onDone }
-  // The fall gathers speed like a dropped cloth, then the last stretch eases so the landing is soft
-  const gravity = (t) => (t < 0.72 ? (t * t) / 0.72 : 0.72 + (1 - 0.72) * (1 - Math.pow(1 - (t - 0.72) / 0.28, 2)));
-  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  function frame(now) {
-    raf = 0;
-    if (!running) return;
-    const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
-    last = now;
-    if (motion()) time += dt;
-    if (tween) {
-      const t = Math.min(1, (now - tween.start) / tween.length);
-      const falling = tween.to < tween.from;
-      const e = falling ? gravity(t) : easeInOut(t);
-      drop = tween.from + (tween.to - tween.from) * e;
-      agit = falling ? 0.35 + 0.35 * t : 0.45;
-      if (t >= 1) {
-        const done = tween.onDone;
-        tween = null;
-        if (falling) landed = now;
-        done?.();
-      }
-    } else if (agit > 0.001) {
-      agit = Math.max(0, agit - dt * (1000 / SETTLE_MS));
-    }
-    if (landed >= 0 && now - landed > 3200) landed = -1;
-    shape(time, now);
-    place();
-    renderer.render(scene, camera);
-    raf = requestAnimationFrame(frame);
-  }
-  function start() {
-    if (running) return;
-    running = true;
-    last = performance.now();
-    raf = requestAnimationFrame(frame);
-  }
-  function stop() {
-    running = false;
-    cancelAnimationFrame(raf);
-    raf = 0;
-  }
-  const ro = new ResizeObserver(() => {
-    build();
-    shape(time, performance.now());
-    place();
-    if (!running) renderer.render(scene, camera);
-  });
-  ro.observe(host);
-  build();
-
-  const run = (to, length) =>
-    new Promise((resolve) => {
-      tween = { from: drop, to, start: performance.now(), length, onDone: resolve };
-      start();
-    });
-  return {
-    /** Drop the cloth over the page; resolves when the hem has landed. */
-    fall: () => run(0, FALL_MS),
-    /** Gather it back above the view; resolves when it is out of sight. */
-    rise: () => run(1, RISE_MS),
-    stop,
-    dispose() {
-      stop();
-      ro.disconnect();
-      geometry?.dispose();
-      material.dispose();
-      renderer.dispose();
-      pmrem.dispose();
-      renderer.domElement.remove();
-    },
-  };
-}
+// The Carry the Story curtain: press the keystone in the header and the red
+// satin flying behind the page gathers into it, steps in front of the page and
+// unfurls as a curtain with the resources on it. Close, Escape, the keystone
+// or a press on the page beside it gathers the cloth back up and lets it fly
+// again. The cloth itself lives in fabric.js, one length of satin in two
+// states; this module runs the overlay, the choreography and the keyboard.
+// Without WebGL, or with motion off, the curtain is a plain red panel that
+// appears at once.
 
 /**
  * @param {HTMLElement} overlay   the .curtain element
  * @param {object} opts
  * @param {() => boolean} opts.motion
  * @param {boolean} opts.webgl
- * @param {HTMLElement[]} opts.triggers  the buttons that open and close it (the pill)
+ * @param {() => object | null} opts.cloth  the shared fabric, when it exists
+ * @param {HTMLElement} opts.layer  the fixed layer the fabric draws in (it steps in front of the page while the curtain is down)
+ * @param {HTMLElement[]} opts.triggers  the buttons that open and close it (the keystone)
  * @param {() => void} [opts.onOpen]
  * @param {() => void} [opts.onClose]
  */
-export function createCurtain(overlay, { motion = () => true, webgl = true, triggers = [], onOpen, onClose } = {}) {
-  const clothHost = overlay.querySelector('.curtain-cloth');
+export function createCurtain(overlay, { motion = () => true, webgl = true, cloth = () => null, layer = null, triggers = [], onOpen, onClose } = {}) {
   const panel = overlay.querySelector('.curtain-panel');
   const closeBtn = overlay.querySelector('[data-curtain-close]');
-  let cloth = null;
   let state = 'closed'; // closed | falling | open | rising
   let returnFocus = null;
 
@@ -225,12 +29,27 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
     overlay.dataset.state = s;
     for (const t of triggers) t.setAttribute('aria-expanded', String(s === 'open' || s === 'falling'));
   }
-  const live = () => webgl && motion();
+  const live = () => webgl && motion() && !!cloth();
+
+  /** Tell the cloth where the curtain hangs: under the keystone, the panel's width. */
+  function place() {
+    const c = cloth();
+    if (!c) return;
+    const rod = document.querySelector('.nav-keystone') || document.querySelector('.site-header');
+    const key = rod ? rod.getBoundingClientRect() : { left: innerWidth / 2 - 100, width: 200, bottom: 70 };
+    const top = Math.max(0, Math.round(key.bottom - 8));
+    overlay.style.setProperty('--curtain-top', `${top}px`);
+    const r = overlay.getBoundingClientRect();
+    c.setHang({ left: r.left, width: r.width, top, bottom: innerHeight, keyLeft: key.left, keyWidth: key.width, keyBottom: key.bottom });
+  }
+  const ro = new ResizeObserver(() => {
+    if (state !== 'closed') place();
+  });
+  ro.observe(overlay);
 
   async function open({ trigger = null } = {}) {
     if (state !== 'closed') return;
     returnFocus = trigger || document.activeElement;
-    // The curtain hangs from the menu bar: the header stays above it and the cloth starts at its lower edge
     const rod = document.querySelector('.nav-keystone') || document.querySelector('.site-header');
     const top = rod ? Math.max(0, Math.round(rod.getBoundingClientRect().bottom - 8)) : 0;
     overlay.style.setProperty('--curtain-top', `${top}px`);
@@ -239,12 +58,15 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
     document.body.classList.add('curtain-open');
     onOpen?.();
     if (live()) {
-      if (!cloth) cloth = createCloth(clothHost, { motion });
-      if (cloth) {
-        setState('falling');
-        await cloth.fall();
-        if (state !== 'falling') return;
-      } else overlay.classList.add('is-plain');
+      const c = cloth();
+      place();
+      setState('falling');
+      // The flying cloth draws into the keystone, steps in front of the page, and comes down out of it
+      await c.gatherIn();
+      if (state !== 'falling') return;
+      layer?.classList.add('is-front');
+      await c.unfurl();
+      if (state !== 'falling') return;
     }
     setState('open');
     closeBtn.focus();
@@ -252,11 +74,16 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
   async function close() {
     if (state !== 'open' && state !== 'falling') return;
     setState('rising');
-    if (cloth && live()) {
-      await cloth.rise();
+    const c = cloth();
+    if (c && live() && c.state === 'hanging') {
+      await c.furl();
       if (state !== 'rising') return;
+      layer?.classList.remove('is-front');
+      await c.release();
+      if (state !== 'rising') return;
+    } else {
+      layer?.classList.remove('is-front');
     }
-    cloth?.stop();
     overlay.hidden = true;
     document.body.classList.remove('curtain-open');
     setState('closed');
@@ -313,7 +140,7 @@ export function createCurtain(overlay, { motion = () => true, webgl = true, trig
       return state;
     },
     get live() {
-      return !!cloth && live();
+      return live();
     },
   };
 }
