@@ -237,7 +237,7 @@ export function createFabric(host, { motion = () => true } = {}) {
   function setHang({ left, width, top, bottom, keyLeft, keyWidth, keyBottom }) {
     const w = host.clientWidth || innerWidth;
     hang.xC = (left + width / 2 - w / 2) * upp;
-    hang.yTop = visH / 2 - top * upp + 0.3;
+    hang.yTop = visH / 2 - (top + 2) * upp; // the rod sits at the keystone's lower edge, never above the bars
     hang.width = width * upp * 1.06;
     hang.height = (bottom - top) * upp * 1.28;
     hang.keyWidth = Math.max(0.6, keyWidth * upp * 0.9);
