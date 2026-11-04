@@ -103,36 +103,74 @@ export function createFabric(host, { motion = () => true } = {}) {
     return out.set(x, y, z);
   }
   const fly = new Float32Array(base.length);
-  function shapeFlying(t) {
-    const gust = 0.8 + 0.2 * Math.sin(t * 0.29) * Math.sin(t * 0.16 + 1.1);
+  let gust = 1;
+  /** One point of the flying cloth: at u along its length (0 held, 1 free) and v across (-0.5..0.5). */
+  function flyPoint(u, v, t, out) {
+    const x = (u - 0.5) * LENGTH;
+    centre(u, t, C);
+    centre(Math.min(1, u + 0.004), t, C2);
+    T.subVectors(C2, C).normalize();
+    const roll = Math.sin(u * TAU * 1.1 + t * 0.35) * 1.4 + u * 2.2 + t * 0.08;
+    B.crossVectors(T, UP).normalize();
+    N.crossVectors(B, T).normalize();
+    const cr = Math.cos(roll);
+    const sr = Math.sin(roll);
+    const wx = N.x * cr + B.x * sr;
+    const wy = N.y * cr + B.y * sr;
+    const wz = N.z * cr + B.z * sr;
+    const cup = (v * v * 4) * 1.5 * Math.sin(u * TAU * 0.9 + t * 0.7) * (0.3 + u);
+    const ripple = (Math.sin(x * 1.1 + v * 3 + t * 1.5) * 0.22 + Math.sin(x * 2.3 - v * 5 + t * 2.4) * 0.08) * (0.3 + u) * gust;
+    const fx = B.x * cr - N.x * sr;
+    const fy = B.y * cr - N.y * sr;
+    const fz = B.z * cr - N.z * sr;
+    const swell = 0.7 + 0.3 * Math.sin(u * TAU * 1.3 + t * 0.33) + 0.12 * Math.sin(u * TAU * 3.1 - t * 0.5);
+    const edge = v > 0 ? Math.sin(u * TAU * 2.2 + t * 0.8) : Math.sin(u * TAU * 1.7 - t * 0.6 + 2);
+    const across = v * WIDTH * swell + Math.sign(v) * (v * v * 4) * edge * 0.9;
+    const flutter = (v * v * 4) * Math.sin(x * 2.6 + t * 3.2 + v * 9) * 0.35 * (0.3 + u);
+    const outward = cup + ripple + flutter;
+    return out.set(C.x + wx * across + fx * outward, C.y + wy * across + fy * outward, C.z + wz * across + fz * outward);
+  }
+  const V = new THREE.Vector3();
+  const F = new THREE.Vector3();
+  const K = new THREE.Vector3();
+  const Pl = new THREE.Vector3();
+  const inv = new THREE.Matrix4();
+  const EXT = 0.6; // how far, in lengths of the cloth, the path runs on from the free end to the keystone
+  /** The flying cloth, pulled `s` of the way along its own path into the keystone (0 flying, 1 inside). */
+  function shapeFlying(t, s) {
+    gust = 0.8 + 0.2 * Math.sin(t * 0.29) * Math.sin(t * 0.16 + 1.1);
+    const pull = s * (1 + EXT);
+    if (s > 0) {
+      // The keystone, in the cloth's own space, so the thread's end holds still on screen while the cloth untilts
+      cloth.updateMatrixWorld();
+      inv.copy(cloth.matrixWorld).invert();
+      Pl.set(hang.xC, hang.keyY, 0.5).applyMatrix4(inv);
+    }
     for (let i = 0; i < pos.count; i++) {
-      const x = base[i * 3];
-      const v = base[i * 3 + 1] / WIDTH; // -0.5 .. 0.5 across the cloth
-      const u = (x + LENGTH / 2) / LENGTH;
-      centre(u, t, C);
-      centre(Math.min(1, u + 0.004), t, C2);
-      T.subVectors(C2, C).normalize();
-      const roll = Math.sin(u * TAU * 1.1 + t * 0.35) * 1.4 + u * 2.2 + t * 0.08;
-      B.crossVectors(T, UP).normalize();
-      N.crossVectors(B, T).normalize();
-      const cr = Math.cos(roll);
-      const sr = Math.sin(roll);
-      const wx = N.x * cr + B.x * sr;
-      const wy = N.y * cr + B.y * sr;
-      const wz = N.z * cr + B.z * sr;
-      const cup = (v * v * 4) * 1.5 * Math.sin(u * TAU * 0.9 + t * 0.7) * (0.3 + u);
-      const ripple = (Math.sin(x * 1.1 + v * 3 + t * 1.5) * 0.22 + Math.sin(x * 2.3 - v * 5 + t * 2.4) * 0.08) * (0.3 + u) * gust;
-      const fx = B.x * cr - N.x * sr;
-      const fy = B.y * cr - N.y * sr;
-      const fz = B.z * cr - N.z * sr;
-      const swell = 0.7 + 0.3 * Math.sin(u * TAU * 1.3 + t * 0.33) + 0.12 * Math.sin(u * TAU * 3.1 - t * 0.5);
-      const edge = v > 0 ? Math.sin(u * TAU * 2.2 + t * 0.8) : Math.sin(u * TAU * 1.7 - t * 0.6 + 2);
-      const across = v * WIDTH * swell + Math.sign(v) * (v * v * 4) * edge * 0.9;
-      const flutter = (v * v * 4) * Math.sin(x * 2.6 + t * 3.2 + v * 9) * 0.35 * (0.3 + u);
-      const outward = cup + ripple + flutter;
-      fly[i * 3] = C.x + wx * across + fx * outward;
-      fly[i * 3 + 1] = C.y + wy * across + fy * outward;
-      fly[i * 3 + 2] = C.z + wz * across + fz * outward;
+      const u = (base[i * 3] + LENGTH / 2) / LENGTH;
+      const v = base[i * 3 + 1] / WIDTH;
+      const ue = u + pull;
+      if (ue <= 1) {
+        // Still on the cloth's own path: it slides along its length toward the free end
+        flyPoint(ue, v, t, V);
+      } else {
+        // Past the free end: on the bridge from where the free end was to the keystone, narrowing as it goes
+        const k = Math.min(1, (ue - 1) / EXT);
+        flyPoint(1, v, t, F);
+        flyPoint(1, 0, t, K); // the free end's centre
+        const ctlx = (K.x + Pl.x) / 2;
+        const ctly = Math.max(K.y, Pl.y) + 2.4;
+        const ctlz = (K.z + Pl.z) / 2 + 1.5;
+        const q = 1 - k;
+        const bx = q * q * K.x + 2 * q * k * ctlx + k * k * Pl.x;
+        const by = q * q * K.y + 2 * q * k * ctly + k * k * Pl.y;
+        const bz = q * q * K.z + 2 * q * k * ctlz + k * k * Pl.z;
+        const thin = 1 - 0.85 * k; // the cloth narrows into the keystone
+        V.set(bx + (F.x - K.x) * thin, by + (F.y - K.y) * thin, bz + (F.z - K.z) * thin);
+      }
+      fly[i * 3] = V.x;
+      fly[i * 3 + 1] = V.y;
+      fly[i * 3 + 2] = V.z;
     }
   }
 
@@ -168,7 +206,6 @@ export function createFabric(host, { motion = () => true } = {}) {
   // (drawn into the keystone); the hanging shape takes over from there.
   let state = 'flying';
   let gather = 0;
-  const P = new THREE.Vector3(); // the keystone, in world units
   const tmpQ = new THREE.Quaternion();
   const flyQ = new THREE.Quaternion().setFromEuler(FLY_ROT);
   const idQ = new THREE.Quaternion();
@@ -177,24 +214,13 @@ export function createFabric(host, { motion = () => true } = {}) {
   function compose(t, now) {
     const flying = state === 'flying' || state === 'gathering' || state === 'releasing';
     if (flying) {
-      shapeFlying(t);
-      // Drawn into the keystone: every vertex travels to it, the free end first, with a slow turn
-      const g = gather;
-      P.set(hang.xC, hang.keyY, 0.5);
-      const e = (k) => (k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k));
-      for (let i = 0; i < pos.count; i++) {
-        const u = (base[i * 3] + LENGTH / 2) / LENGTH;
-        const k = e((g * 1.35 - (1 - u) * 0.35) / 1);
-        const swirl = Math.sin(k * Math.PI) * 1.4;
-        pos.array[i * 3] = fly[i * 3] + (P.x + Math.cos(u * TAU * 2 + t) * swirl * 0.3 - fly[i * 3]) * k;
-        pos.array[i * 3 + 1] = fly[i * 3 + 1] + (P.y + Math.sin(u * TAU * 2 + t) * swirl * 0.12 - fly[i * 3 + 1]) * k;
-        pos.array[i * 3 + 2] = fly[i * 3 + 2] + (P.z - fly[i * 3 + 2]) * k;
-      }
-      // The flying cloth's tilt and sway ease away as it gathers
+      // The flying cloth's tilt and sway ease away as it is drawn in; set first, so the thread's end is right
       tmpQ.copy(flyQ).slerp(idQ, gather);
       cloth.quaternion.copy(tmpQ);
       cloth.position.set(FLY_POS.x * (1 - gather), scrollDrift * (1 - gather), 0);
       cloth.rotation.z = rollZ * (1 - gather);
+      shapeFlying(t, gather);
+      pos.array.set(fly);
       material.opacity = FLY_OPACITY + (HANG_OPACITY - FLY_OPACITY) * gather;
     } else {
       shapeHanging(t, now);
