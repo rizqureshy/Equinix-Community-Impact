@@ -788,7 +788,14 @@ document.addEventListener('click', (e) => {
 // Start
 // ---------------------------------------------------------------------------
 buildScroll();
-applyRoute(parseHash(location.hash), { initial: true });
+if (location.hash === '#/carry') {
+  // The keystone on the Engage page links here: arrive, and the curtain drops
+  history.replaceState(null, '', '#/');
+  applyRoute(parseHash('#/'), { initial: true });
+  setTimeout(() => loadCurtain().then((c) => c?.open({ trigger: curtainPills[0] || null })), 700);
+} else {
+  applyRoute(parseHash(location.hash), { initial: true });
+}
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
 // Exposed for automated checks only.

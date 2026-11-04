@@ -400,6 +400,7 @@ try {
   // ---- Engage page ----------------------------------------------------------
   p = await open(browser, `${BASE}engage.html`);
   await wait(1200);
+  check(await p.evaluate(() => { const k = document.querySelector('.nav-keystone'); return k && k.tagName === 'A' && k.getAttribute('href') === 'index.html#/carry' && !!document.querySelector('.nav-bar--left') && !!document.querySelector('.nav-bar--right'); }), 'the Engage page carries the keystone header, its keystone a link back that drops the curtain');
   check(await p.locator('#engage-title').isVisible(), 'the Engage page opens on its title');
   check(await p.evaluate(() => { const f = document.querySelector('.engage-frame iframe'); return f && f.getAttribute('src').startsWith('https://engage.cloud.microsoft/embed/') && f.title === 'Viva Engage'; }), 'the Viva Engage feed is embedded');
   check(p.external.every((u) => u.startsWith('https://engage.cloud.microsoft/')), 'the Engage page reaches only Viva Engage', p.external.filter((u) => !u.startsWith('https://engage.cloud.microsoft/')).slice(0, 3).join(', '));

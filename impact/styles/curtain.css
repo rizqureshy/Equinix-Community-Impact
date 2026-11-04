@@ -18,6 +18,9 @@
   box-shadow: 0 10px 26px -8px rgb(233 28 36 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.35) inset;
   transition: background-color var(--d1), transform var(--d1), box-shadow var(--d1);
 }
+a.nav-keystone {
+  text-decoration: none;
+}
 .nav-keystone:hover {
   background: #d4161e;
   transform: translateY(-1px);
