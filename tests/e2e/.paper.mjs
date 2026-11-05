@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const out = '/tmp/claude-0/-home-user-Equinix-Community-Impact/3631b63d-129b-5957-a674-2d2e2fb98f5b/scratchpad/';
+const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const q = process.argv[2] || '';
+const p = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+const errors = [];
+p.on('pageerror', (e) => errors.push(String(e)));
+await p.goto('http://localhost:4181/prototypes/paper.html' + q, { waitUntil: 'load' });
+await p.waitForFunction(() => window.__paper?.ready, null, { timeout: 60000 }).catch(() => {});
+await new Promise((r) => setTimeout(r, 1500));
+await p.screenshot({ path: out + 'paper' + (process.argv[3] || '') + '.png', timeout: 120000 });
+console.log('shot', errors);
+await browser.close();
