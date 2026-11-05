@@ -35,7 +35,6 @@ The browser checks block every request that leaves the local host, then exercise
 impact/                   Vite root: the experience
   index.html              the page; content is pre-rendered into it at build time
   engage.html             the Engage page: the Viva Engage community embedded
-  public/activation/      the Public Sector Sales AI Activation Program site (self-contained, no build step; see below)
   styles/                 tokens.css, base.css, sections.css, weather.css, fabric.css
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
@@ -58,17 +57,6 @@ scripts/build_city.sh     compresses raw building GLBs for the web (meshopt geom
 scripts/city_manifest.py  records the building pipeline in the asset manifest
 tests/                    unit and end-to-end tests, plus tools/glb-view.mjs
 ```
-
-## Public Sector Sales AI Activation Program
-
-A second, self-contained site lives in `impact/public/activation/` and is served at `/activation/` of any deployment (for example `https://<owner>.github.io/Equinix-Community-Impact/activation/`). It is plain HTML, CSS and JavaScript with no build step, so the folder can also be copied anywhere or lifted into its own repository.
-
-- `program.js` is the whole program: weeks, the twenty activities (brief, why, timed steps, starter prompt, four cohort lenses, Viva Engage share template, check), the Week 3 build paths, videos per week, materials, key dates. Edit this file to change the content; the page renders from it.
-- `app.js` renders the page: the date aware Today panel, the cohort and build path choices, week tabs and day cards, the activity guide with its timer and copy actions, progress, the calendar file, the Viva Engage area and routing (`#/activity/<id>`, `#/week/<n>`).
-- `activation.css` carries the same tokens as the main site (Equinix logo red, Inter Tight, the floating header).
-- To add a video, set `youtubeId` on the entry in `program.js`. To embed the cohort's Viva Engage feed, set `program.engage.embed` to the group embed URL.
-- Preview any day of the program with `?date=YYYY-MM-DD`, for example `/activation/index.html?date=2026-11-30`. In `npm run dev` use the full `index.html` path; the dev server's single page fallback catches the bare folder URL.
-- Checks: `npm test` validates the content model; `npm run build && npm run test:e2e:activation` runs the browser checks. If the installed Playwright browser does not match, point `PW_CHROMIUM` at a Chromium binary.
 
 To edit a story, change `impact/scripts/content/stories.js`. Rendering code does not need to change. `npm test` checks that every story cites registered sources, that every metric carries its scope and period, and that every media file exists.
 
