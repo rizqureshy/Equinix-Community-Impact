@@ -6,6 +6,10 @@ Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign 
 
 ## Version 3, branch `v3/front-door`: the enablement front door
 
+### No curtain in this build (5 November 2026)
+
+At the owner's request this branch is also the demo without the curtain: the keystone is gone from both headers, which are one glass bar each (the mark and Community, Stories, Promises, People, Engage), the curtain markup is gone from `index.html`, and the auto-fall at the foot of the page with it. The red fabric still flies behind the page. The curtain and fabric modules stay in the tree and the wiring in `app.js` tolerates the missing curtain; an older `#/carry` link lands on Carry the Story on the page. To bring the curtain back, restore the header and the curtain section from `v3/carry-transition`.
+
 ### Carry the Story on the page (5 November 2026)
 
 Besides the curtain (unchanged, the index from anywhere), the ten resources have a section of their own between the hero and the community: `#toolkit`, "Carry the Story with Confidence". Sketches of a route, a pinboard, a floating-card index, a ledger and an expandable index (`prototypes/carry-sketches.html`, A to E) led first to the expandable index and then, at the owner's direction, to the plainest thing: four columns, one per group (Start here, Resources, Practice, Facilitator), the ten titles as the links, nothing else; no blurbs, no contributor names, no counts, one line beneath saying links open in a new tab behind the Equinix sign-in. Markup from `carryHTML` in `content/resources.js`, the same list as the curtain; no behaviour. The hero's "Practise the conversation" lands on the section. The route is `#/toolkit` because `resources` is a story topic id and `#/carry` already opens the curtain on arrival from Engage.

@@ -239,6 +239,15 @@ main:focus {
 .nav-bar--right {
   justify-self: start;
 }
+/* One bar, without the keystone: the mark and the five links in a single pill */
+.site-header--one {
+  grid-template-columns: auto;
+}
+.site-header--one .nav-bar {
+  padding-left: 16px;
+  padding-right: 8px;
+  margin: 0;
+}
 /* The two bars: glass, tucked into the keystone from either side */
 .nav-bar {
   display: flex;

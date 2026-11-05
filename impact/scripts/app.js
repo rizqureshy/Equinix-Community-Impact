@@ -339,7 +339,7 @@ async function loadCurtain() {
   });
   return curtainLoading;
 }
-for (const pill of curtainPills) {
+for (const pill of curtainEl ? curtainPills : []) {
   pill.addEventListener('click', async () => {
     // The module wires its own click handling once loaded; the first press opens it by hand
     if (!curtain) (await loadCurtain())?.open({ trigger: pill });
@@ -354,6 +354,7 @@ for (const ev of ['wheel', 'touchmove', 'keydown']) document.addEventListener(ev
 addEventListener(
   'scroll',
   () => {
+    if (!curtainEl) return; // this build has no curtain
     const height = document.documentElement.scrollHeight;
     if (height < innerHeight * 1.5) return; // the page is folded away (a room or a drawer is open), not scrolled to its foot
     const fromBottom = height - (scrollY + innerHeight);
@@ -687,7 +688,11 @@ document.addEventListener('click', (e) => {
 // Start
 // ---------------------------------------------------------------------------
 buildScroll();
-if (location.hash === '#/carry') {
+if (location.hash === '#/carry' && !curtainEl) {
+  // Older links to the curtain land on Carry the Story on the page
+  history.replaceState(null, '', '#/toolkit');
+  applyRoute(parseHash('#/toolkit'), { initial: true });
+} else if (location.hash === '#/carry') {
   // The keystone on the Engage page links here: arrive, and the curtain drops
   history.replaceState(null, '', '#/');
   applyRoute(parseHash('#/'), { initial: true });
