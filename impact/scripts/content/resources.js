@@ -52,39 +52,16 @@ export function resourcesHTML() {
   }).join('\n');
 }
 
-// For the Carry the Story index on the page: the short line beside each title, and the kind of file, read off its name.
-export const CARRY = {
-  hub: { line: 'Everything community engagement, in one place.', kind: 'Intranet page' },
-  steps: { line: 'Sustainability as a customer value driver.', kind: 'Webinar deck' },
-  q3: { line: 'This quarter’s commitments and proof points.', kind: 'Deck' },
-  grants: { line: 'Trusted partners for community work.', kind: 'Guide, PDF' },
-  dinner: { line: 'Straight answers for everyday conversations.', kind: 'Card, PDF' },
-  principles: { line: 'The five promises, as printed.', kind: 'Brochure, PDF' },
-  scenarios: { line: 'Realistic stakeholder moments to work through.', kind: 'Scenario cards, PDF' },
-  metrics: { line: 'The numbers, when someone asks.', kind: 'Cheat sheet, Word' },
-  talktrack: { line: 'Running the workshop yourself.', kind: 'Talk track, deck' },
-  yoodli: { line: 'Say it out loud and get feedback.', kind: 'Practice programme' },
-};
 export const CARRY_GROUPS = { featured: 'Start here', resource: 'Resources', practice: 'Practice', facilitator: 'Facilitator' };
 
-/** The Carry the Story index on the page: four groups that open, ten rows that are the links. The first group starts open. */
+/** Carry the Story on the page: four columns, one per group, the titles as the links. */
 export function carryHTML() {
-  let n = 0;
-  return GROUPS.map((g, gi) => {
+  return GROUPS.map((g) => {
     const items = RESOURCES.filter((r) => r.group === g.id);
     if (!items.length) return '';
-    const open = gi === 0;
-    const rows = items.map((r) => {
-      n++;
-      const c = CARRY[r.id] || {};
-      const num = String(n).padStart(2, '0');
-      const inner = `<span class="carry-num">${num}</span><span class="carry-title">${esc(r.name)}</span><span class="carry-line">${esc(c.line || '')}</span><span class="carry-by">${esc(r.by)} · ${esc(c.kind || '')}</span><span class="carry-arrow" aria-hidden="true">↗</span>`;
-      if (!r.href) return `<li class="carry-row is-pending" data-resource="${r.id}"><span class="carry-link">${inner}</span></li>`;
-      return `<li class="carry-row" data-resource="${r.id}"><a class="carry-link" href="${esc(r.href)}" target="_blank" rel="noopener">${inner}<span class="visually-hidden"> (opens in a new tab, Equinix sign-in)</span></a></li>`;
-    }).join('\n');
-    return `<li class="carry-group${open ? ' is-open' : ''}" data-group="${g.id}">
-      <h3 class="carry-group-name"><button type="button" class="carry-group-head" aria-expanded="${open}" aria-controls="carry-group-${g.id}"><span class="carry-group-label">${esc(CARRY_GROUPS[g.id] || g.name)}</span><span class="carry-group-count">${items.length}</span><span class="carry-group-rule" aria-hidden="true"></span><span class="carry-cross" aria-hidden="true"></span></button></h3>
-      <div class="carry-group-body" id="carry-group-${g.id}"${open ? '' : ' hidden'}><ol class="carry-rows">${rows}</ol></div>
-    </li>`;
+    const rows = items.map((r) => (r.href
+      ? `<li><a class="carry-link" href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.name)}<span class="carry-arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></li>`
+      : `<li><span class="carry-link is-pending">${esc(r.name)}</span></li>`)).join('\n');
+    return `<li class="carry-col" data-group="${g.id}"><h3 class="carry-col-name">${esc(CARRY_GROUPS[g.id] || g.name)}</h3><ol class="carry-rows">${rows}</ol></li>`;
   }).join('\n');
 }

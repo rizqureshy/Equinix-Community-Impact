@@ -233,18 +233,13 @@ try {
   await wait(1500);
   const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practise the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
-  // Carry the Story on the page: four groups between the hero and the community, the first open and the rest closed;
-  // the rows are the links themselves; the hero's third door opens the Practice group
-  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; return { groups: sec.querySelectorAll('.carry-group').length, rows: sec.querySelectorAll('.carry-row').length, between: me.top > hero.top && me.bottom <= com.top + 2, open: window.__impact.carry.openIds, shown: [...sec.querySelectorAll('.carry-group-body')].filter((b) => !b.hidden).length, links: links.length, newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)) }; });
-  check(carry.groups === 4 && carry.rows === 10 && carry.between && carry.open.join() === 'featured' && carry.shown === 1 && carry.links === 10 && carry.newTab, 'Carry the Story sits between the hero and the community: four groups, the first open, ten rows that are the links', JSON.stringify(carry));
-  await p.locator('.hero .actions [data-carry-group]').dispatchEvent('click');
+  // Carry the Story on the page: four columns of links between the hero and the community, nothing else
+  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; const tops = [...sec.querySelectorAll('.carry-col')].map((c) => Math.round(c.getBoundingClientRect().top)); return { cols: tops.length, oneRow: new Set(tops).size === 1, links: links.length, between: me.top > hero.top && me.bottom <= com.top + 2, newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)), text: sec.textContent.replace(/\s+/g, ' ') }; });
+  check(carry.cols === 4 && carry.oneRow && carry.links === 10 && carry.between && carry.newTab && !/Baumann|Leyva|Whalen|made for you/.test(carry.text), 'Carry the Story sits between the hero and the community as four columns of ten links, with no names or blurbs', JSON.stringify({ ...carry, text: undefined }));
+  await p.locator('.hero .actions a[href="#/toolkit"]').dispatchEvent('click');
   await wait(2200);
-  await p.waitForFunction(() => document.querySelector('#carry-group-practice').style.height === 'auto', null, { polling: 200, timeout: 15000 }).catch(() => {});
-  const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top), open: window.__impact.carry.openIds, expanded: document.querySelector('[data-group="practice"] .carry-group-head').getAttribute('aria-expanded'), shown: !document.querySelector('#carry-group-practice').hidden }));
-  check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40 && landed2.open.includes('practice') && landed2.expanded === 'true' && landed2.shown, 'Practise the conversation lands on the index with the Practice group open', JSON.stringify(landed2));
-  await p.locator('[data-group="featured"] .carry-group-head').dispatchEvent('click');
-  await p.waitForFunction(() => document.querySelector('#carry-group-featured').hidden, null, { polling: 200, timeout: 15000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.carry.openIds.join() === 'practice' && document.querySelector('[data-group="featured"] .carry-group-head').getAttribute('aria-expanded') === 'false'), 'a group label closes its group again');
+  const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top) }));
+  check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40, 'Practise the conversation lands on Carry the Story', JSON.stringify(landed2));
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
