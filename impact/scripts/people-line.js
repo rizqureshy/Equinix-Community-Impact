@@ -38,11 +38,13 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
     b.addEventListener('focus', () => { idle = false; setActive(i); });
     b.addEventListener('click', () => { idle = false; if (pinned === i) { pinned = null; setOpen(false); } else { pinned = i; setActive(i, true); setOpen(true); } });
     const r = document.createElement('button'); r.type = 'button'; r.innerHTML = `<b>${c.role}</b><span>${c.where}</span>`; r.setAttribute('aria-pressed', 'false');
-    r.addEventListener('click', () => { idle = false; pinned = i; setActive(i, true); setOpen(true); if (narrow()) b.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth', inline: 'center', block: 'nearest' }); });
+    r.addEventListener('click', () => { idle = false; pinned = i; setActive(i, true); setOpen(true); if (narrow()) centreInRow(b, reduce() ? 'auto' : 'smooth'); });
     roles.appendChild(r);
     const a = new Audio(); a.preload = 'none'; a.src = `${media}voice/people-${c.img}.mp3`;
     return { c, el: b, role: r, audio: a, x: 0, s: 1, voice: false };
   });
+  /** Bring a portrait to the middle of the row by scrolling the row sideways only; the page itself stays where it is. */
+  function centreInRow(el, behavior) { row.scrollTo({ left: el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2, behavior }); }
   // Narration, where a spoken line exists for a person: checked once the line is on screen
   function checkVoices() { if (voiceChecked) return; voiceChecked = true; people.forEach((p) => fetch(p.audio.src, { method: 'HEAD' }).then((res) => { p.voice = res.ok; if (people[active] === p) card.classList.toggle('no-voice', !p.voice); }).catch(() => {})); }
 
@@ -126,7 +128,7 @@ export function createPeopleLine(stage, { media = 'media/', motion = () => true 
     if (visible) { checkVoices(); start(); } else if (active === null) stop();
   }, { rootMargin: '80px' });
   io.observe(stage);
-  if (narrow()) { requestAnimationFrame(() => { people[0].el.scrollIntoView({ inline: 'center', block: 'nearest' }); setActive(0); }); }
+  if (narrow()) { requestAnimationFrame(() => { centreInRow(people[0].el, 'auto'); setActive(0); }); }
 
   return { people, get active() { return active; }, get open() { return open; }, get speaking() { return !!speaking; }, setActive, setOpen, start, stop };
 }
