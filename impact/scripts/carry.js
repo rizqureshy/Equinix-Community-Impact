@@ -84,12 +84,16 @@ export function createCarry(section, { motion = () => true } = {}) {
       heads[j].focus();
     });
   });
-  section.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && openRow) {
-      const head = openRow.querySelector('.carry-head');
-      close();
-      head.focus();
-    }
+  // Escape closes the open row when the reader is in the index, or when nothing else on the page has the keys
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !openRow) return;
+    const active = document.activeElement;
+    const here = section.contains(active) || active === document.body || active === null;
+    const busy = document.body.classList.contains('room-open') || document.body.classList.contains('curtain-open') || document.querySelector('#story-drawer')?.open;
+    if (!here || busy) return;
+    const head = openRow.querySelector('.carry-head');
+    close();
+    if (section.contains(active)) head.focus();
   });
   // Links elsewhere on the page can ask for a row (the hero's "Practise the conversation")
   document.addEventListener('click', (e) => {
