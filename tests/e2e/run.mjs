@@ -243,9 +243,19 @@ try {
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
-  // The promises: five tiles in a row, each with the promise and one example of it kept, nothing embedded
-  const promisesList = await p.evaluate(() => { const tiles = [...document.querySelectorAll('.promise-tile')]; const tops = tiles.map((t) => Math.round(t.getBoundingClientRect().top)); return { tiles: tiles.length, proofs: tiles.filter((t) => (t.querySelector('.promise-proof')?.textContent.trim().length || 0) > 20).length, oneRow: new Set(tops).size === 1, embedded: document.querySelectorAll('iframe, #spine-frame, #spine-begin').length, source: !!document.querySelector('.promise-source a[href^="https://"]') }; });
-  check(promisesList.tiles === 5 && promisesList.proofs === 5 && promisesList.oneRow && promisesList.embedded === 0 && promisesList.source, 'the promises are five tiles in one row, each with the promise kept and a source, with nothing embedded', JSON.stringify(promisesList));
+  // The promises: five plans. Arriving on the section, the first plan draws itself, rests, and the photograph of
+  // the promise kept develops through it and stays; the Kept line and Listen arrive with it; nothing is embedded
+  await p.waitForFunction(() => window.__impact.promises?.state.phase === 'kept', null, { polling: 250, timeout: 20000 }).catch(() => {});
+  const promisesList = await p.evaluate(() => { const s = window.__impact.promises.state; const img = document.querySelector('.plan-photo img'); return { rows: document.querySelectorAll('.promise-item').length, listens: document.querySelectorAll('.promise-listen').length, play: !!document.querySelector('[data-promises-play]'), phase: s.phase, current: s.current, strokes: window.__impact.promises.strokes, photo: /kept-1-1200/.test(img.currentSrc || img.src), photoShown: getComputedStyle(img).opacity === '1', lines: getComputedStyle(document.querySelector('.plan-drawing')).opacity, kept: document.querySelector('.promise-item.on')?.classList.contains('is-kept'), embedded: document.querySelectorAll('iframe, #spine-frame').length, source: !!document.querySelector('.promise-source a[href^="https://"]') }; });
+  check(promisesList.rows === 5 && promisesList.listens === 5 && promisesList.play && promisesList.phase === 'kept' && promisesList.current === 0 && promisesList.strokes > 300 && promisesList.photo && promisesList.photoShown && Number(promisesList.lines) < 0.5 && promisesList.kept && promisesList.embedded === 0 && promisesList.source, 'the first promise draws itself as a plan and the photograph of it kept develops through, lines faint over it', JSON.stringify(promisesList));
+  // Listen: the narrator leads and the sheet keeps time; Escape stops him
+  await p.locator('[data-listen="1"]').dispatchEvent('click');
+  await wait(1500);
+  const listening = await p.evaluate(() => ({ playing: window.__impact.promises.state.playing, current: window.__impact.promises.state.current, phase: window.__impact.promises.state.phase, pressed: document.querySelector('[data-listen="1"]').getAttribute('aria-pressed'), label: document.querySelector('[data-listen="1"] span').textContent }));
+  check(listening.playing === 1 && listening.current === 1 && listening.phase === 'drawing' && listening.pressed === 'true' && listening.label === 'Stop', 'Listen moves to that promise, the narrator reads and the pen draws in his time', JSON.stringify(listening));
+  await p.keyboard.press('Escape');
+  await wait(300);
+  check(await p.evaluate(() => window.__impact.promises.state.playing === -1 && document.querySelector('[data-listen="1"]').getAttribute('aria-pressed') === 'false'), 'Escape stops the narrator');
   // The people: six colleagues in one line, all inside the stage, the chosen one forward with a translucent story card
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'center' }));
   await wait(1200);
@@ -465,7 +475,7 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.keyboard.press('Escape');
   await wait(500);
-  check(await p.evaluate(() => { const tiles = [...document.querySelectorAll('.promise-tile')]; return tiles.length === 5 && tiles.every((t) => { const r = t.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.width > innerWidth * 0.8; }); }), 'on phones the promises stack and fit the screen');
+  check(await p.evaluate(() => { const rows = [...document.querySelectorAll('.promise-item')]; const plan = document.querySelector('.plan').getBoundingClientRect(); const stage = document.querySelector('.promises-stage').getBoundingClientRect(), list = document.querySelector('.promises-list').getBoundingClientRect(); return rows.length === 5 && rows.every((r) => { const b = r.getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth; }) && plan.width <= innerWidth && stage.top <= list.top; }), 'on phones the sheet sits above the promises and everything fits the screen');
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'start' }));
   await wait(1500);
   check(await p.evaluate(() => { const b = document.querySelector('.nav-keystone'); const r = b.getBoundingClientRect(); return r.width > 0 && r.right <= innerWidth && [...document.querySelectorAll('.site-nav')].every((n) => n.offsetParent === null) && document.querySelector('.wordmark').offsetParent !== null; }), 'on phones the keystone and the mark stay in the header while the nav items fold away');

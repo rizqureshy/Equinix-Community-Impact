@@ -11,6 +11,7 @@ import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } f
 import { createSunlight } from './weather.js';
 import { createRoom } from './room.js';
 import { createPeopleLine } from './people-line.js';
+import { createPromises } from './promises.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -699,6 +700,8 @@ document.fonts?.ready.then(() => ScrollTrigger.refresh());
 // Exposed for automated checks only.
 // The people line: six colleagues, the one you look at steps forward with their story
 const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motion: () => store.get().motion });
+// The promises: plans that draw themselves; the narrator reads them on request and the music ducks under him
+const promises = createPromises($('#promises'), { media: 'media/', motion: () => store.get().motion, scrollToY: (y) => scrollToY(y), onVoice: (on) => duck(on) });
 
 window.__impact = { skyPlaces: SKY_PLACES,
   get curtain() {
@@ -706,6 +709,7 @@ window.__impact = { skyPlaces: SKY_PLACES,
   },
   store,
   people: peopleLine,
+  promises,
   get lenis() {
     return lenis;
   },

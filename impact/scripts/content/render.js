@@ -181,20 +181,36 @@ export function collectionHTML() {
 // ---------------------------------------------------------------------------
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
-/** The promises: five tiles in a row, each promise with one example of it kept. */
+/**
+ * The promises drawn as plans: a numbered list with a thread, and beside it the sheet where each plan
+ * draws itself and the photograph of the promise kept develops through it (scripts/promises.js).
+ */
 export function principlesHTML() {
   const rows = principles
     .map(
-      (p, i) => `<li class="promise-tile">
-        <span class="promise-num" aria-hidden="true">${i + 1}</span>
-        <strong class="promise-name">${esc(p.name)}</strong>
-        <span class="promise-text">${esc(p.promise)}</span>
-        <span class="promise-proof"><span class="promise-kept">Kept</span> ${esc(p.proof)}</span>
+      (p, i) => `<li class="promise-item" data-i="${i}">
+        <span class="promise-num">0${i + 1}</span>
+        <h3 class="promise-name">${esc(p.name)}</h3>
+        <p class="promise-text">${esc(p.promise)}</p>
+        <p class="promise-kept"><b>Kept</b>${esc(p.proof)} <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+        <button type="button" class="promise-listen" data-listen="${i}" aria-pressed="false" aria-label="Listen to promise ${i + 1}, ${esc(p.name)}"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><span>Listen</span></button>
       </li>`,
     )
     .join('');
-  return `<ol class="promise-row" aria-label="The five promises">${rows}</ol>
-    <p class="note center promise-source">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
+  return `<div class="promises-grid">
+    <ol class="promises-list" aria-label="The five promises"><div class="promises-thread" aria-hidden="true"><i></i></div>${rows}</ol>
+    <div class="promises-stage">
+      <div class="promises-sheet">
+        <div class="plan" data-phase="paper" aria-hidden="true">
+          <span class="plan-tick tl"></span><span class="plan-tick tr"></span><span class="plan-tick bl"></span><span class="plan-tick br"></span>
+          <div class="plan-layer plan-wash"></div>
+          <div class="plan-layer plan-photo"><img alt="" decoding="async" /></div>
+          <div class="plan-layer plan-drawing"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="note center promise-source">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
 
 export const NUMBERS = [

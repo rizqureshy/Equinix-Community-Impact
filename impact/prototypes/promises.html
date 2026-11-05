@@ -4,120 +4,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>The promises, drawn | prototype</title>
-    <meta name="description" content="Prototype for the promises section: each promise drawn as a plan in one red line, then the photograph of the promise kept develops through it. The narrator reads each promise on request, or all five in turn." />
+    <meta name="description" content="Prototype page for the promises section: each promise drawn as a plan in one red line, then the photograph of the promise kept develops through it. The narrator reads each promise on request, or all five in turn." />
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href="../brand/equinix-fortress.svg" />
-    <link rel="stylesheet" href="../styles/tokens.css" />
+    <link rel="stylesheet" href="../styles/main.css" />
     <style>
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      html, body { margin: 0; background: #fff; color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
-      .wrap { width: min(1280px, calc(100% - 2 * var(--gutter))); margin: 0 auto; }
-      header.top { padding: 40px 0 28px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px 40px; align-items: end; }
-      @media (max-width: 900px) { header.top { grid-template-columns: 1fr; } }
-      .brand img { display: block; height: 14px; width: auto; }
-      .eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); font-weight: 600; margin: 16px 0 8px; }
-      h1 { font-weight: 700; font-size: clamp(30px, 4.4vw, 54px); line-height: 1.02; letter-spacing: -0.03em; margin: 0; max-width: 16ch; }
-      .lede { color: var(--ink-2); max-width: 54ch; margin: 0 0 14px; font-size: 17px; }
-      .btn { display: inline-flex; align-items: center; gap: 8px; font: 600 13px var(--font); color: #fff; background: var(--ink); border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
-      .btn[aria-pressed='true'] { background: var(--red); }
-      .btn svg { flex: none; }
-      .btn .stop { display: none; }
-      .btn[aria-pressed='true'] .stop { display: block; }
-      .btn[aria-pressed='true'] .play { display: none; }
-
-      /* ---- The section: a numbered list with a growing thread, a sticky sheet beside it ---- */
-      .promises { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 0 64px; padding: 24px 0 20vh; }
-      .list { position: relative; padding-left: 44px; margin: 0; list-style: none; }
-      .thread { position: absolute; left: 10px; top: 0; bottom: 0; width: 1px; background: var(--line); }
-      .thread i { position: absolute; left: 0; top: 0; width: 1px; height: 0; background: var(--red); transition: height 0.12s linear; }
-      .row { position: relative; min-height: 58vh; padding: 10vh 0; display: grid; align-content: center; justify-items: start; gap: 10px; }
-      .row::before { content: ''; position: absolute; left: -38px; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: #fff; border: 1px solid var(--line-strong); transform: translateY(-50%); transition: background 0.3s, border-color 0.3s, transform 0.3s; }
-      .row.on::before { background: var(--red); border-color: var(--red); transform: translateY(-50%) scale(1.25); }
-      .num { font-size: 13px; letter-spacing: 0.06em; color: var(--ink-3); transition: color 0.3s; }
-      .row.on .num { color: var(--red); }
-      .name { font-weight: 700; font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -0.025em; line-height: 1.08; margin: 0; color: var(--ink-3); transition: color 0.4s; }
-      .row.on .name { color: var(--ink); }
-      .promise { margin: 0; color: var(--ink-2); font-size: 17px; max-width: 42ch; opacity: 0.55; transition: opacity 0.4s; }
-      .row.on .promise { opacity: 1; }
-      /* The "Kept" line arrives as the photograph develops on the sheet */
-      .kept { margin: 8px 0 0; padding-top: 10px; border-top: 1px dashed var(--line-strong); font-size: 14px; color: var(--ink); max-width: 42ch; opacity: 0; transform: translateY(6px); transition: opacity 0.6s, transform 0.6s; }
-      .row.is-kept .kept { opacity: 1; transform: none; }
-      .kept b { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 3px; }
-      .kept a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
-      .listen { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; font: 600 12px var(--font); color: var(--ink); background: #fff; border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 12px 6px 10px; cursor: pointer; opacity: 0; transition: opacity 0.4s, border-color 0.2s; }
-      .row.on .listen { opacity: 1; }
-      .listen:hover { border-color: var(--ink); }
-      .listen[aria-pressed='true'] { color: #fff; background: var(--red); border-color: var(--red); }
-
-      .stage-col { position: relative; }
-      .sheet { position: sticky; top: 7vh; height: 86vh; display: grid; place-items: center; }
-      .plan { position: relative; aspect-ratio: 2 / 3; height: min(86vh, 100%); max-width: 100%; background: #fff; box-shadow: 0 1px 0 var(--line), 0 24px 70px rgb(0 0 0 / 0.07); border-radius: 6px; overflow: hidden; }
-      /* Registration marks and a faint plan grid, as on a sheet of drawings */
-      .plan::before { content: ''; position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(to right, rgb(0 0 0 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.035) 1px, transparent 1px); background-size: 12.5% 8.333%; pointer-events: none; transition: opacity 1.6s ease; }
-      .plan[data-phase='developing']::before, .plan[data-phase='kept']::before { opacity: 0; }
-      .plan .tick { position: absolute; z-index: 5; width: 14px; height: 14px; pointer-events: none; }
-      .plan .tick::before, .plan .tick::after { content: ''; position: absolute; background: var(--ink-3); opacity: 0.6; }
-      .plan .tick::before { left: 7px; top: 0; width: 1px; height: 14px; }
-      .plan .tick::after { top: 7px; left: 0; height: 1px; width: 14px; }
-      .plan .tick.tl { left: 14px; top: 14px; } .plan .tick.tr { right: 14px; top: 14px; } .plan .tick.bl { left: 14px; bottom: 14px; } .plan .tick.br { right: 14px; bottom: 14px; }
-      .layer { position: absolute; inset: 0; }
-      /* Three layers: the wash, the photograph, the lines on top */
-      .wash { z-index: 1; display: grid; place-items: center; padding: 5%; opacity: 0; transition: opacity 0.2s linear; }
-      .wash img { width: 100%; height: 100%; object-fit: contain; display: block; }
-      .plan[data-phase='developing'] .wash, .plan[data-phase='kept'] .wash { opacity: 0 !important; transition: opacity 1.2s ease; }
-      .photo { z-index: 2; }
-      .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: blur(18px) saturate(0.3) brightness(1.08) sepia(0.4); transition: opacity 1.6s ease, filter 1.7s ease; }
-      /* The print comes up in the tray: warm and soft first, then sharp */
-      .plan[data-phase='developing'] .photo img, .plan[data-phase='kept'] .photo img { opacity: 1; filter: none; }
-      .drawing { z-index: 3; display: grid; place-items: center; padding: 5%; pointer-events: none; transition: opacity 1.6s ease 0.4s; }
-      .drawing svg { width: 100%; height: 100%; display: block; }
-      .drawing svg path, .drawing svg line, .drawing svg polyline, .drawing svg polygon, .drawing svg circle, .drawing svg ellipse { vector-effect: non-scaling-stroke; }
-      /* The lines stay, faintly, over the photograph: what you remember is the plan with the proof behind it */
-      .plan[data-phase='developing'] .drawing, .plan[data-phase='kept'] .drawing { opacity: 0.32; }
-      .pending { display: grid; place-items: center; color: var(--ink-3); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
-      .pending b { display: block; font: 600 clamp(80px, 12vw, 140px)/1 var(--font); letter-spacing: -0.04em; color: var(--red); opacity: 0.12; }
-      @media (max-width: 900px) {
-        .promises { grid-template-columns: 1fr; }
-        .stage-col { order: -1; }
-        .sheet { position: sticky; top: 0; height: 62vh; z-index: 2; background: linear-gradient(#fff 80%, rgb(255 255 255 / 0)); }
-        .plan { height: 58vh; }
-        .row { min-height: 0; padding: 36px 0; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        .photo img, .drawing, .wash, .plan::before { transition-duration: 0.3s; transition-delay: 0s; }
-      }
+      /* The section is styled by sections.css, shared with the site; this is only the page around it */
+      body { background: var(--bg-soft); }
+      .proto-top { padding: 40px 0 0; }
+      .proto-top .brand img { display: block; height: 14px; width: auto; }
+      .promises-section { padding-top: var(--s-6); }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header class="top">
-        <div>
-          <div class="brand"><img src="../brand/equinix-logo-horizontal.svg" alt="Equinix" width="124" height="13" decoding="async" /></div>
-          <div class="eyebrow">Part of the community</div>
-          <h1>Five promises to the places we call home.</h1>
+    <main id="main">
+      <div class="wrap proto-top"><div class="brand"><img src="../brand/equinix-logo-horizontal.svg" alt="Equinix" width="124" height="13" decoding="async" /></div></div>
+      <section class="promises-section" id="promises" aria-labelledby="promises-title">
+        <div class="wrap center">
+          <p class="eyebrow">Part of the community</p>
+          <h2 class="title" id="promises-title">Five promises to the places we call home.</h2>
+          <p class="lede">Each promise drawn as a plan, in one red line. Then the promise kept develops through it. Listen to one, or let the narrator read all five.</p>
+          <p class="actions"><button type="button" class="btn btn--primary promises-play" data-promises-play aria-pressed="false"><svg class="ico-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><svg class="ico-stop" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1" fill="currentColor"/></svg><span class="when-idle">Play the five promises</span><span class="when-playing">Stop</span></button></p>
         </div>
-        <div>
-          <p class="lede">Each promise is drawn as a plan, in one red line. Then the promise kept develops through it. Listen to one, or let the narrator read all five.</p>
-          <button type="button" class="btn" id="play-all" aria-pressed="false"><svg class="play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><svg class="stop" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1" fill="currentColor"/></svg><span>Play the five promises</span></button>
-        </div>
-      </header>
-
-      <section class="promises" aria-label="The five promises">
-        <ol class="list" id="list"><div class="thread" aria-hidden="true"><i id="thread-fill"></i></div></ol>
-        <div class="stage-col">
-          <div class="sheet">
-            <div class="plan" id="plan" data-phase="paper" aria-hidden="true">
-              <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
-              <div class="layer wash" id="wash"></div>
-              <div class="layer photo"><img id="photo-img" alt="" decoding="async" /></div>
-              <div class="layer drawing" id="drawing"></div>
-            </div>
-          </div>
-        </div>
+        <div class="wrap"><!--@principles--></div>
       </section>
-    </div>
+    </main>
     <script type="module" src="../scripts/prototypes/promises.js"></script>
   </body>
 </html>
