@@ -10,7 +10,7 @@
 import { topics, getStory } from './content/stories.js';
 
 const SECTIONS = new Set(['journey', 'toolkit', 'promises', 'people', 'share']);
-const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises' };
+const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises', carry: 'toolkit' }; // #/carry opened the curtain; it lands on Carry the Story on the page
 const TOPICS = new Set(topics.map((t) => t.id));
 
 export function parseHash(hash = '') {

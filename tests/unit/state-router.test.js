@@ -14,6 +14,7 @@ describe('router', () => {
     expect(parseHash('#/explore')).toEqual({ section: 'journey' });
     expect(parseHash('#/explore/discovery')).toEqual({ section: 'journey', topic: 'discovery' });
     expect(parseHash('#/principles')).toEqual({ section: 'promises' });
+    expect(parseHash('#/carry')).toEqual({ section: 'toolkit' }); // the curtain's old route lands on Carry the Story
     expect(parseHash('#/chapter/care')).toEqual({ section: 'share', topic: 'care' }); // the chapters became the collection
     expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'share', topic: 'resources' });
     expect(parseHash('#/people')).toEqual({ section: 'people' });
