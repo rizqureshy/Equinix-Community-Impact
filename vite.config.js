@@ -43,6 +43,7 @@ export default defineConfig({
         promises: resolve(import.meta.dirname, 'impact/prototypes/promises.html'), // the promises drawn as plans
         promisesSketches: resolve(import.meta.dirname, 'impact/prototypes/promises-sketches.html'), // four stages for the promises, as stills
         paper: resolve(import.meta.dirname, 'impact/prototypes/paper.html'), // lighting test: paper on a white table
+        table: resolve(import.meta.dirname, 'impact/prototypes/table.html'), // the promises on a white table
       },
     },
   },

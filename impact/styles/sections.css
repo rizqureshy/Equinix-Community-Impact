@@ -39,210 +39,51 @@
   margin-top: var(--s-6);
 }
 
-/* ---- The promises: plans that draw themselves, the promise kept developing through ---- */
+/* ---- The promises on a white table: shadows only on the canvas, the page shows through ---- */
 .promises-play { gap: 8px; }
 .promises-play svg { flex: none; }
 .promises-play .ico-stop, .promises-play .when-playing { display: none; }
 .promises-play[aria-pressed='true'] { background: var(--red); border-color: var(--red); }
 .promises-play[aria-pressed='true'] .ico-play, .promises-play[aria-pressed='true'] .when-idle { display: none; }
 .promises-play[aria-pressed='true'] .ico-stop, .promises-play[aria-pressed='true'] .when-playing { display: inline; }
-.promises-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0 56px;
-  width: min(1080px, 100%);
-  margin: var(--s-5) auto 0;
-}
-.promises-list {
-  position: relative;
-  padding-left: 44px;
-  margin: 0;
-  list-style: none;
-}
-.promises-thread {
-  position: absolute;
-  left: 10px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line-strong);
-}
-.promises-thread i {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-  height: 0;
-  background: var(--red);
-  transition: height 0.12s linear;
-}
-.promise-item {
-  position: relative;
-  min-height: 46vh;
-  padding: 7vh 0;
-  display: grid;
-  align-content: center;
-  justify-items: start;
-  gap: 10px;
-}
-.promise-item::before {
-  content: '';
-  position: absolute;
-  left: -38px;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--bg-soft);
-  border: 1px solid var(--line-strong);
-  transform: translateY(-50%);
-  transition: background 0.3s, border-color 0.3s, transform 0.3s;
-}
-.promise-item.on::before {
-  background: var(--red);
-  border-color: var(--red);
-  transform: translateY(-50%) scale(1.25);
-}
-.promise-num {
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: var(--ink-3);
-  transition: color 0.3s;
-}
-.promise-item.on .promise-num { color: var(--red); }
-.promise-name {
-  font-weight: 700;
-  font-size: clamp(22px, 2.1vw, 30px);
-  letter-spacing: -0.025em;
-  line-height: 1.08;
-  margin: 0;
-  color: var(--ink-3);
-  transition: color 0.4s;
-}
-.promise-item.on .promise-name { color: var(--ink); }
-.promise-text {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 16px;
-  max-width: 42ch;
-  opacity: 0.55;
-  transition: opacity 0.4s;
-}
-.promise-item.on .promise-text { opacity: 1; }
-/* The "Kept" line arrives as the photograph develops on the sheet */
-.promise-kept {
-  margin: 8px 0 0;
-  padding-top: 10px;
-  border-top: 1px dashed var(--line-strong);
-  font-size: 14px;
-  color: var(--ink);
-  max-width: 42ch;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.6s, transform 0.6s;
-}
-.promise-item.is-kept .promise-kept { opacity: 1; transform: none; }
-.promise-kept b {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--red);
-  margin-bottom: 3px;
-}
-.promise-kept a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
-.promise-listen {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 6px;
-  font: 600 12px var(--font);
-  color: var(--ink);
-  background: #fff;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 6px 12px 6px 10px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.4s, border-color 0.2s;
-}
-.promise-item.on .promise-listen { opacity: 1; }
+.promises-table { position: relative; width: min(1280px, 100%); margin: var(--s-4) auto 0; }
+.table-host { position: relative; height: min(72vh, 720px); overflow: hidden; }
+.table-host canvas { display: block; }
+.table-copy { position: absolute; right: clamp(16px, 4vw, 56px); top: 50%; transform: translateY(-50%); width: min(320px, 34%); display: grid; gap: 10px; align-content: start; }
+.table-copy[hidden] { display: none; }
+.table-copy .num { font-size: 12px; letter-spacing: 0.08em; color: var(--red); font-weight: 600; }
+.table-copy h3 { margin: 0; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.08; letter-spacing: -0.025em; }
+.table-copy p { margin: 0; color: var(--ink-2); font-size: 15px; }
+/* The "Kept" line arrives as the print comes up on the sheet */
+.table-copy .kept { margin: 4px 0 0; padding-top: 10px; border-top: 1px dashed var(--line-strong); font-size: 14px; color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity 0.6s, transform 0.6s; }
+.table-copy.is-kept .kept { opacity: 1; transform: none; }
+.table-copy .kept b { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 3px; }
+.table-copy .kept a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
+.table-hint { position: absolute; right: clamp(16px, 4vw, 56px); top: 50%; transform: translateY(-50%); width: min(300px, 32%); margin: 0; color: var(--ink-3); font-size: 15px; transition: opacity 0.4s; }
+.has-front .table-hint { opacity: 0; pointer-events: none; }
+.promise-listen { display: inline-flex; align-items: center; gap: 7px; justify-self: start; margin-top: 4px; font: 600 12px var(--font); color: var(--ink); background: #fff; border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 12px 6px 10px; cursor: pointer; }
 .promise-listen:hover { border-color: var(--ink); }
 .promise-listen[aria-pressed='true'] { color: #fff; background: var(--red); border-color: var(--red); }
-.promises-stage { position: relative; }
-.promises-sheet {
-  position: sticky;
-  top: calc(var(--header-h) + 36px);
-}
-/* The sheet shows the lower three quarters of each drawing and photograph (their top quarter is sky) */
-.plan {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  height: min(62vh, 600px);
-  max-width: 100%;
-  background: #fff;
-  box-shadow: 0 1px 0 var(--line), 0 24px 70px rgb(0 0 0 / 0.07);
-  border-radius: 6px;
-  overflow: hidden;
-}
-/* Registration marks and a faint plan grid, as on a sheet of drawings; the grid goes as the print comes up */
-.plan::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image: linear-gradient(to right, rgb(0 0 0 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.035) 1px, transparent 1px);
-  background-size: 12.5% 8.333%;
-  pointer-events: none;
-  transition: opacity 1.6s ease;
-}
-.plan[data-phase='developing']::before, .plan[data-phase='kept']::before { opacity: 0; }
-.plan-tick { position: absolute; z-index: 5; width: 14px; height: 14px; pointer-events: none; }
-.plan-tick::before, .plan-tick::after { content: ''; position: absolute; background: var(--ink-3); opacity: 0.6; }
-.plan-tick::before { left: 7px; top: 0; width: 1px; height: 14px; }
-.plan-tick::after { top: 7px; left: 0; height: 1px; width: 14px; }
-.plan-tick.tl { left: 14px; top: 14px; }
-.plan-tick.tr { right: 14px; top: 14px; }
-.plan-tick.bl { left: 14px; bottom: 14px; }
-.plan-tick.br { right: 14px; bottom: 14px; }
-.plan-layer { position: absolute; inset: 0; }
-/* Three layers: the wash, the photograph, the lines on top */
-.plan-wash { z-index: 1; opacity: 0; transition: opacity 0.2s linear; }
-.plan-wash img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
-.plan[data-phase='developing'] .plan-wash, .plan[data-phase='kept'] .plan-wash { opacity: 0 !important; transition: opacity 1.2s ease; }
-.plan-photo { z-index: 2; }
-.plan-photo img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
-  opacity: 0;
-  filter: blur(18px) saturate(0.3) brightness(1.08) sepia(0.4);
-  transition: opacity 1.6s ease, filter 1.7s ease;
-}
-/* The print comes up in the tray: warm and soft first, then sharp */
-.plan[data-phase='developing'] .plan-photo img, .plan[data-phase='kept'] .plan-photo img { opacity: 1; filter: none; }
-.plan-drawing { z-index: 3; pointer-events: none; transition: opacity 1.6s ease 0.4s; }
-.plan-drawing svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.plan-drawing svg path, .plan-drawing svg line, .plan-drawing svg polyline, .plan-drawing svg polygon, .plan-drawing svg circle, .plan-drawing svg ellipse { vector-effect: non-scaling-stroke; }
-/* The lines stay, faintly, over the photograph: what you remember is the plan with the proof behind it */
-.plan[data-phase='developing'] .plan-drawing, .plan[data-phase='kept'] .plan-drawing { opacity: 0.32; }
-.plan-pending { display: grid; place-items: center; height: 100%; }
-.plan-pending b { font: 600 clamp(80px, 12vw, 140px)/1 var(--font); letter-spacing: -0.04em; color: var(--red); opacity: 0.12; }
-.promise-source {
-  margin-top: var(--s-5);
-}
+.table-index { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: min(1280px, 100%); margin: 14px auto 0; padding: 0; list-style: none; }
+.table-index button { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 10px 12px; border: 0; border-top: 2px solid var(--line-strong); background: transparent; font: 500 12.5px/1.3 var(--font); color: var(--ink-3); cursor: pointer; transition: color 0.3s, border-color 0.3s; }
+.table-index button b { font-size: 12px; font-weight: 600; }
+.table-index button:hover { color: var(--ink); }
+.table-index button[aria-pressed='true'] { border-top-color: var(--red); color: var(--ink); }
+.table-index button[aria-pressed='true'] b { color: var(--red); }
+/* Without WebGL: the five drawings in a row, with the copy beneath each */
+.table-fallback { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; width: min(1280px, 100%); margin: var(--s-5) auto 0; padding: 0; list-style: none; }
+.table-fallback[hidden] { display: none; }
+.table-fallback-item { display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.table-fallback-item img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center bottom; background: #fff; border-radius: 5px; box-shadow: 0 1px 0 var(--line), 0 16px 40px rgb(0 0 0 / 0.07); }
+.table-fallback-item > b { font-size: 12px; color: var(--red); letter-spacing: 0.06em; margin-top: 6px; }
+.table-fallback-item strong { font-size: 15px; line-height: 1.2; color: var(--ink); }
+.table-fallback-item small { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line-strong); font-size: 12.5px; color: var(--ink); }
+.table-fallback-item small b { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 2px; }
+.promise-source { margin-top: var(--s-5); }
 @media (max-width: 900px) {
-  .promises-grid { grid-template-columns: 1fr; gap: 0; }
-  .promises-stage { order: -1; display: grid; justify-items: center; }
-  .promises-sheet { top: calc(var(--header-h) + 8px); padding-bottom: 12px; z-index: 2; background: linear-gradient(var(--bg-soft) 84%, rgb(246 245 242 / 0)); }
-  .plan { height: min(52vh, 480px); }
-  .promise-item { min-height: 0; padding: 32px 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .plan-photo img, .plan-drawing, .plan-wash, .plan::before { transition-duration: 0.3s; transition-delay: 0s; }
+  .table-host { height: 58vh; }
+  .table-copy, .table-hint { position: static; transform: none; width: auto; margin-top: 14px; }
+  .table-index, .table-fallback { grid-template-columns: 1fr 1fr; }
 }
 
 /* ---- The community explorer ------------------------------------------------ */

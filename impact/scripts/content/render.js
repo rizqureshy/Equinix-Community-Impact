@@ -182,34 +182,30 @@ export function collectionHTML() {
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
 /**
- * The promises drawn as plans: a numbered list with a thread, and beside it the sheet where each plan
- * draws itself and the photograph of the promise kept develops through it (scripts/promises.js).
+ * The promises on a white table: five sheets of paper, each a plan that draws itself; chosen, one comes
+ * forward and the photograph of the promise kept develops through it (scripts/paper-table.js). The
+ * markup is the canvas host, the hint, the copy panel and the index of five; the module fills the copy.
  */
 export function principlesHTML() {
-  const rows = principles
-    .map(
-      (p, i) => `<li class="promise-item" data-i="${i}">
-        <span class="promise-num">0${i + 1}</span>
-        <h3 class="promise-name">${esc(p.name)}</h3>
-        <p class="promise-text">${esc(p.promise)}</p>
-        <p class="promise-kept"><b>Kept</b>${esc(p.proof)} <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-        <button type="button" class="promise-listen" data-listen="${i}" aria-pressed="false" aria-label="Listen to promise ${i + 1}, ${esc(p.name)}"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><span>Listen</span></button>
-      </li>`,
-    )
+  const index = principles
+    .map((p, i) => `<li><button type="button" data-sheet="${i}" aria-pressed="false"><b>0${i + 1}</b>${esc(p.name)}</button></li>`)
     .join('');
-  return `<div class="promises-grid">
-    <ol class="promises-list" aria-label="The five promises"><div class="promises-thread" aria-hidden="true"><i></i></div>${rows}</ol>
-    <div class="promises-stage">
-      <div class="promises-sheet">
-        <div class="plan" data-phase="paper" aria-hidden="true">
-          <span class="plan-tick tl"></span><span class="plan-tick tr"></span><span class="plan-tick bl"></span><span class="plan-tick br"></span>
-          <div class="plan-layer plan-wash"></div>
-          <div class="plan-layer plan-photo"><img alt="" decoding="async" /></div>
-          <div class="plan-layer plan-drawing"></div>
-        </div>
-      </div>
+  const fallback = principles
+    .map((p, i) => `<li class="table-fallback-item"><img src="media/promises/drawn/k${i + 1}-tint-ref.webp" alt="" loading="lazy" decoding="async" /><b>0${i + 1}</b><strong>${esc(p.name)}</strong><span>${esc(p.promise)}</span><small><b>Kept</b>${esc(p.proof)}</small></li>`)
+    .join('');
+  return `<div class="promises-table">
+    <div class="table-host" role="img" aria-label="Five sheets of paper on a white table, one plan drawn on each"></div>
+    <p class="table-hint">Choose a sheet, or one of the five beneath, and the promise kept develops through the plan.</p>
+    <div class="table-copy" hidden>
+      <span class="num" data-copy-num></span>
+      <h3 data-copy-name></h3>
+      <p data-copy-text></p>
+      <p class="kept"><b>Kept</b><span data-copy-kept></span> <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+      <button type="button" class="promise-listen" data-listen="0" aria-pressed="false"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><span>Listen</span></button>
     </div>
   </div>
+  <ol class="table-index" aria-label="The five promises">${index}</ol>
+  <ol class="table-fallback" aria-label="The five promises" hidden>${fallback}</ol>
   <p class="note center promise-source">From the Equinix U.S. Community Principles. <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source<span class="visually-hidden"> (opens in a new tab)</span></a></p>`;
 }
 
