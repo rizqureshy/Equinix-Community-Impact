@@ -62,7 +62,8 @@ async function settled(p, expected, ms = 8000) {
 }
 
 try {
-  const browser = await chromium.launch({ args: GL });
+  const launchOpts = process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {};
+  const browser = await chromium.launch({ ...launchOpts, args: GL });
 
   // ---- Arrival and the community journey ----------------------------------
   let p = await open(browser, BASE);
@@ -301,7 +302,7 @@ try {
   await browser.close();
 
   // ---- No WebGL -------------------------------------------------------------
-  const noGL = await chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] });
+  const noGL = await chromium.launch({ ...launchOpts, args: ['--disable-webgl', '--disable-3d-apis'] });
   p = await open(noGL, `${BASE}#/community`);
   await waitScene(p);
   check((await sceneState(p)) === 'fallback', 'without WebGL the still of the community is shown');

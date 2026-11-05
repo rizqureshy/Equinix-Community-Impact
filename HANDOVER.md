@@ -34,6 +34,27 @@ An experiment you asked for, on its own branch so it can be compared and merged 
 
 Files: `impact/scripts/fabric.js`, `impact/styles/fabric.css`, the layer and toggle in `index.html`, wiring in `app.js`.
 
+## Public Sector Sales AI Activation Program (branch `claude/red-fabric`)
+
+A second site in the same repository, at `impact/public/activation/`, served at `/activation/` of every deployment. It is the landing place for the four week program (November 9 to December 11, 2026) for Federal Civilian, Defense and Intelligence, SLED and higher education, and Public Sector Partner Sales. Plain HTML, CSS and JavaScript, no build step, same tokens as the main site: the Equinix logo red, Inter Tight (one latin woff2 copied in), the floating header pill, the drawer and toast.
+
+**Source:** the four week activity plan PDF (GTM Enablement, November 2026). The brief, AI skill and share line of every activity are taken from it word for word. Everything else in each guide (why it matters, the timed steps, the starter prompt, the four cohort lenses, the share template and the check) is the daily exercise guide layer the plan said was still to come. It is a draft for facilitator review; edit it in `program.js`.
+
+**How it differs from the earlier activation sites** (Channel Sales, CS Train the Trainer): those pages gave each activity a flip card with a mission, a submission line and a tip, one dark page with week tabs and a Viva Engage tab. This one keeps the week tabs and the five day cards, and adds:
+
+- **A Today panel that knows the date.** On a program day it leads with that activity and a start button; before November 9 it counts down to Day 1; in Thanksgiving week it says so and names the resume date; afterwards it closes the program. `?date=YYYY-MM-DD` previews any day, which the browser checks use.
+- **A full guide per activity** in a drawer with its own route: why it matters, the brief, five timed steps with a timer that highlights the current step, a starter prompt with the parts to replace marked, the cohort lens, a share template to copy, the AI skill, a check before posting, previous and next.
+- **A cohort choice** (remembered in the browser) that tailors the examples in every guide, and a **build path choice** in Week 3 (agent, app or dashboard) that fills the prompts.
+- **Progress** per activity, with a ring, per week bars, done marks on the cards and tabs, and a one line summary to copy into Viva Engage. Browser only; nothing is sent anywhere.
+- **Learn:** a strip of short Copilot agent videos per week, two or three each, suggested titles with `youtubeId: null` until the links are supplied. A video shows a labelled placeholder until then, and a click to play facade (YouTube's no cookie domain) once it has an id.
+- **Calendar file:** twenty all day entries with the guide links, generated in the browser.
+- **Materials and key dates** from the plan, with placeholders until each item is ready, and the Veterans Day and Thanksgiving notes.
+- **Viva Engage:** the cohort community does not exist yet, so the Share section explains that and links to Viva Engage; set `program.engage.embed` to the group embed URL to show the feed.
+
+**Validation:** `tests/unit/activation.test.js` checks the content model (20 weekday activities in date order, none in the break, every guide complete, steps that add to 15 to 20 minutes, three paths in Week 3, no em dashes, videos with a link slot). `tests/e2e/activation.mjs` runs the page against the production build with every external request blocked: the Today panel at five dates, cohort and path choices, the guide and its timer, copy and the clipboard fallback, marking done, routes, the learn, share, materials and dates sections, the calendar file, 44 px controls, reduced motion, the motion toggle and phone width. All pass. Screenshots inspected at 1440 and 390 px: hero, Today in four states, program, weeks, the guide at four scroll positions, learn, share, materials, dates.
+
+**Open items:** the video links, the Viva Engage group, the materials themselves, the coaching day and time, and a facilitator read of the twenty guides. The `/activation/` folder URL works on static hosting; the Vite dev server's single page fallback serves the main site for the bare folder, so use `/activation/index.html` during `npm run dev`.
+
 ## Sunlight (branch `claude/season-weather`)
 
 Built on top of the redesign as its own branch. A full season-and-weather layer (leaves, rain, winter, spring, a footer switch) was built first and then cut back at your request to the one thing that worked: the light.
