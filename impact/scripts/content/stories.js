@@ -231,7 +231,7 @@ export const stories = [
     sources: ['S2b'],
     verificationStatus: 'sourced',
     lastChecked: LAST_CHECKED,
-    media: [],
+    media: [illustrative('media/harrison-ai-1200.webp', 'A clinician and an engineer sit together at a hospital desk, looking at a chest X-ray on one monitor and a laptop on the other.', '769b0b44-c062-4364-95cf-fd5525787dc9', 'Seedream 5.0 Pro', 'harrison-ai.prompt.txt')],
     sceneTarget: 'hospital',
     shareSummary:
       'Harrison.ai builds AI that helps clinicians read chest X-rays, using NVIDIA infrastructure hosted in an Equinix data center. Equinix reports 8x data processing capability and model training cut from months to days (Equinix blog, March 2025).',
@@ -343,7 +343,7 @@ export const stories = [
     sources: ['S8'],
     verificationStatus: 'sourced',
     lastChecked: LAST_CHECKED,
-    media: [],
+    media: [illustrative('media/technician-coalition-1200.webp', 'Five young trainees gather round an open server rack in a bright workshop while an instructor shows them the cabling.', 'e26f1338-969a-4e3e-9c24-4f44abfca9a3', 'Seedream 5.0 Pro', 'technician-coalition.prompt.txt')],
     sceneTarget: 'learning',
     shareSummary:
       'The Equinix Foundation and Generation launched the Global Data Center Technician Training Coalition, starting in Brazil with co-funding from ODATA, Cisco and Vertiv, to address an industry shortage estimated at 2.4 million workers (Equinix blog, March 2026).',
@@ -451,7 +451,7 @@ export const stories = [
     sources: ['S6', 'S7', 'S4'],
     verificationStatus: 'sourced',
     lastChecked: LAST_CHECKED,
-    media: [],
+    media: [illustrative('media/employee-volunteering-1200.webp', 'Colleagues and neighbours plant a young tree together in a sunny park, a child helping at the roots.', 'b3d2c949-1b1a-45d6-b977-df1bd8ca3d7c', 'Seedream 5.0 Pro', 'employee-volunteering.prompt.txt')],
     sceneTarget: 'homes',
     shareSummary:
       'Equinix employees volunteered more than 54,400 hours in 2025, up 45% year over year. Employee-led WeGive teams choose the local nonprofits they support (Equinix 2025 Sustainability Report).',
@@ -524,7 +524,7 @@ export const stories = [
     sources: ['S3', 'S6'],
     verificationStatus: 'sourced',
     lastChecked: LAST_CHECKED,
-    media: [],
+    media: [illustrative('media/markham-heat-1200.webp', 'A snowy evening street of apartment buildings with warm lit windows, a parent and child walking home, a long low building beyond.', '1d2f73a4-f47c-4993-bf66-12cfaeb0f53c', 'Seedream 5.0 Pro', 'markham-heat.prompt.txt')],
     sceneTarget: 'aquatic',
     shareSummary:
       'Equinix TR5 exports residual heat to Markham District Energy in Ontario, which serves over 14 million square feet of buildings, condo hot water and two community centre pools (Equinix blog, April 2025).',
@@ -558,7 +558,7 @@ export const stories = [
     sources: ['S5', 'S6', 'S7'],
     verificationStatus: 'sourced',
     lastChecked: LAST_CHECKED,
-    media: [],
+    media: [illustrative('media/efficient-operations-1200.webp', 'An engineer with a tablet checks a row of grey cooling units on a data center roof at golden hour, solar panels beyond.', '3e5d61df-9a50-4e3e-ab0c-9171985953ac', 'Seedream 5.0 Pro', 'efficient-operations.prompt.txt')],
     sceneTarget: 'datacenter',
     shareSummary:
       'Equinix reported an average annual PUE of 1.37 and 96% renewable energy coverage across its retail IBX data centers in 2025, with SBTi-approved targets for net zero by 2040 (Equinix 2025 Sustainability Report).',

@@ -23,6 +23,12 @@ STILLS = {
     'neighbourhood': ('neighbourhood.png', None),
     'community-model': ('A-sd5.png', None),
     'study-model-alt': ('A-nb2.png', None),
+    # Stills for the five stories that had none (5 November 2026, same model and settings)
+    'harrison-ai': ('harrison-ai.png', None),
+    'technician-coalition': ('technician-coalition.png', None),
+    'employee-volunteering': ('employee-volunteering.png', None),
+    'markham-heat': ('markham-heat.png', None),
+    'efficient-operations': ('efficient-operations.png', None),
 }
 WIDTHS = (1200, 640)
 

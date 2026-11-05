@@ -329,6 +329,101 @@
       "status": "selected",
       "usage": "Community poster film and hero reel",
       "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 21 October 2026, image to video from the matching still. Illustrative only; not documentary."
+    },
+    {
+      "key": "harrison-ai",
+      "generationId": "769b0b44-c062-4364-95cf-fd5525787dc9",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-11-05T18:42:03.669164Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 723917
+      },
+      "promptFile": "media-src/higgsfield/harrison-ai.prompt.txt",
+      "original": "media-src/higgsfield/harrison-ai.png",
+      "estimatedCredits": 2.5,
+      "usage": "story still, harrison-ai (stories without a picture, 5 November 2026)",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184203_769b0b44-c062-4364-95cf-fd5525787dc9.png"
+    },
+    {
+      "key": "technician-coalition",
+      "generationId": "e26f1338-969a-4e3e-9c24-4f44abfca9a3",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-11-05T18:42:54.392846Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 450023
+      },
+      "promptFile": "media-src/higgsfield/technician-coalition.prompt.txt",
+      "original": "media-src/higgsfield/technician-coalition.png",
+      "estimatedCredits": 2.5,
+      "usage": "story still, technician-coalition (stories without a picture, 5 November 2026)",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184254_e26f1338-969a-4e3e-9c24-4f44abfca9a3.png"
+    },
+    {
+      "key": "employee-volunteering",
+      "generationId": "b3d2c949-1b1a-45d6-b977-df1bd8ca3d7c",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-11-05T18:43:44.37774Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 743940
+      },
+      "promptFile": "media-src/higgsfield/employee-volunteering.prompt.txt",
+      "original": "media-src/higgsfield/employee-volunteering.png",
+      "estimatedCredits": 2.5,
+      "usage": "story still, employee-volunteering (stories without a picture, 5 November 2026)",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184344_b3d2c949-1b1a-45d6-b977-df1bd8ca3d7c.png"
+    },
+    {
+      "key": "markham-heat",
+      "generationId": "1d2f73a4-f47c-4993-bf66-12cfaeb0f53c",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-11-05T18:44:35.133343Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 143424
+      },
+      "promptFile": "media-src/higgsfield/markham-heat.prompt.txt",
+      "original": "media-src/higgsfield/markham-heat.png",
+      "estimatedCredits": 2.5,
+      "usage": "story still, markham-heat (stories without a picture, 5 November 2026)",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184435_1d2f73a4-f47c-4993-bf66-12cfaeb0f53c.png"
+    },
+    {
+      "key": "efficient-operations",
+      "generationId": "3e5d61df-9a50-4e3e-ab0c-9171985953ac",
+      "model": "Seedream 5.0 Pro",
+      "jobType": "seedream_v5_pro",
+      "createdAt": "2026-11-05T18:45:25.623079Z",
+      "settings": {
+        "aspect_ratio": "3:2",
+        "resolution": "2k",
+        "width": 2496,
+        "height": 1664,
+        "seed": 405126
+      },
+      "promptFile": "media-src/higgsfield/efficient-operations.prompt.txt",
+      "original": "media-src/higgsfield/efficient-operations.png",
+      "estimatedCredits": 2.5,
+      "usage": "story still, efficient-operations (stories without a picture, 5 November 2026)",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184525_3e5d61df-9a50-4e3e-ab0c-9171985953ac.png"
     }
   ],
   "failedJobs": [

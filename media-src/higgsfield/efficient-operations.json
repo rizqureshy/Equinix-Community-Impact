@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-11-05T18:45:25.623079Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "3e5d61df-9a50-4e3e-ab0c-9171985953ac",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184525_3e5d61df-9a50-4e3e-ab0c-9171985953ac_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "batch_size": 1,
+      "height": 1664,
+      "is_inpaint": false,
+      "medias": [],
+      "prompt": "A data center engineer in a light grey work jacket with a tablet stands on a rooftop beside a row of large grey cooling units at golden hour, checking a reading, a line of solar panels and a clear evening sky beyond, calm and orderly. Documentary-style editorial photograph, natural window daylight, warm neutral colour grade, soft shadows, 35mm lens, shallow depth of field, calm and dignified, authentic diverse people with agency, real working environment, generous negative space on one side for typography. Screens show only abstract soft imagery with no readable text. No text, no words, no logos, no brand marks.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 405126,
+      "width": 2496
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_184525_3e5d61df-9a50-4e3e-ab0c-9171985953ac.png",
+    "status": "completed"
+  }
+]

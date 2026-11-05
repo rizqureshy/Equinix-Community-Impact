@@ -1,1 +1,0 @@
-import"./modulepreload-polyfill-P2Xu9kJm.js";/* empty css             */import{t as e}from"./paper-table-_85PkV8b.js";/* empty css                    */window.__table=e(document.querySelector(`#promises`),{media:`../media/`});
