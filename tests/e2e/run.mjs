@@ -233,24 +233,18 @@ try {
   await wait(1500);
   const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practise the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
-  // Carry the Story on the page: ten rows in four groups between the hero and the community; a row opens in place,
-  // one at a time, with the Open link to the team's file; the hero's third door lands on the scenario cards
-  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); return { rows: sec.querySelectorAll('.carry-row').length, groups: sec.querySelectorAll('.carry-group').length, between: me.top > hero.top && me.bottom <= com.top + 2, closed: [...sec.querySelectorAll('.carry-head')].every((h) => h.getAttribute('aria-expanded') === 'false'), links: [...sec.querySelectorAll('.carry-open[href]')].length, newTab: [...sec.querySelectorAll('.carry-open[href]')].every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)) }; });
-  check(carry.rows === 10 && carry.groups === 4 && carry.between && carry.closed && carry.links === 10 && carry.newTab, 'Carry the Story sits between the hero and the community: ten rows in four groups, all closed, each with its link', JSON.stringify(carry));
-  await p.locator('.hero .actions [data-carry-row]').dispatchEvent('click');
+  // Carry the Story on the page: four groups between the hero and the community, the first open and the rest closed;
+  // the rows are the links themselves; the hero's third door opens the Practice group
+  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; return { groups: sec.querySelectorAll('.carry-group').length, rows: sec.querySelectorAll('.carry-row').length, between: me.top > hero.top && me.bottom <= com.top + 2, open: window.__impact.carry.openIds, shown: [...sec.querySelectorAll('.carry-group-body')].filter((b) => !b.hidden).length, links: links.length, newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)) }; });
+  check(carry.groups === 4 && carry.rows === 10 && carry.between && carry.open.join() === 'featured' && carry.shown === 1 && carry.links === 10 && carry.newTab, 'Carry the Story sits between the hero and the community: four groups, the first open, ten rows that are the links', JSON.stringify(carry));
+  await p.locator('.hero .actions [data-carry-group]').dispatchEvent('click');
   await wait(2200);
-  const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top), open: window.__impact.carry.openId, expanded: document.querySelector('[data-resource="scenarios"] .carry-head').getAttribute('aria-expanded'), shown: !document.querySelector('#carry-scenarios').hidden }));
-  check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40 && landed2.open === 'scenarios' && landed2.expanded === 'true' && landed2.shown, 'Practise the conversation lands on the index with the scenario cards open', JSON.stringify(landed2));
-  await p.locator('[data-resource="steps"] .carry-head').dispatchEvent('click');
-  await wait(700);
-  const swapped = await p.evaluate(() => ({ open: window.__impact.carry.openId, prev: document.querySelector('[data-resource="scenarios"] .carry-head').getAttribute('aria-expanded'), facts: document.querySelectorAll('#carry-steps dd').length, link: document.querySelector('#carry-steps .carry-open').href }));
-  check(swapped.open === 'steps' && swapped.prev === 'false' && swapped.facts === 4 && /sharepoint\.com/.test(swapped.link), 'opening another row closes the first; the row carries its four facts and the file link', JSON.stringify(swapped));
-  await p.keyboard.press('Escape');
-  await wait(600);
-  check(await p.evaluate(() => window.__impact.carry.openId === null), 'Escape closes the open row');
-  // the row's collapse is a height transition; in software rendering its frames can arrive seconds late, and a
-  // route measured before it has finished lands short, so wait for it before moving on
-  await p.waitForFunction(() => document.querySelector('#carry-steps').hidden, null, { polling: 200, timeout: 15000 }).catch(() => {});
+  await p.waitForFunction(() => document.querySelector('#carry-group-practice').style.height === 'auto', null, { polling: 200, timeout: 15000 }).catch(() => {});
+  const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top), open: window.__impact.carry.openIds, expanded: document.querySelector('[data-group="practice"] .carry-group-head').getAttribute('aria-expanded'), shown: !document.querySelector('#carry-group-practice').hidden }));
+  check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40 && landed2.open.includes('practice') && landed2.expanded === 'true' && landed2.shown, 'Practise the conversation lands on the index with the Practice group open', JSON.stringify(landed2));
+  await p.locator('[data-group="featured"] .carry-group-head').dispatchEvent('click');
+  await p.waitForFunction(() => document.querySelector('#carry-group-featured').hidden, null, { polling: 200, timeout: 15000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.carry.openIds.join() === 'practice' && document.querySelector('[data-group="featured"] .carry-group-head').getAttribute('aria-expanded') === 'false'), 'a group label closes its group again');
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
