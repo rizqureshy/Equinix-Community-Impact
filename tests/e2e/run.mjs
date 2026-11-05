@@ -253,7 +253,7 @@ try {
   await p.waitForFunction(() => window.__impact.promises.state.phase === 'kept', null, { polling: 300, timeout: 30000 }).catch(() => {});
   await wait(700);
   const picked = await p.evaluate(() => { const s = window.__impact.promises.state; const sh = window.__impact.promises.sheets[3]; return { front: s.front, phase: s.phase, develop: +sh.develop.toFixed(2), scale: +sh.mesh.scale.x.toFixed(2), y: +sh.mesh.position.y.toFixed(2), name: document.querySelector('.table-copy h3').textContent, kept: document.querySelector('.table-copy').classList.contains('is-kept'), pressed: document.querySelector('[data-sheet="3"]').getAttribute('aria-pressed') }; });
-  check(picked.front === 3 && picked.phase === 'kept' && picked.develop === 1 && picked.scale > 1.1 && picked.y > 0.3 && picked.name === 'Natural resource protection' && picked.kept && picked.pressed === 'true', 'a chosen sheet lifts and comes forward, and the photograph of the promise kept develops through its plan', JSON.stringify(picked));
+  check(picked.front === 3 && picked.phase === 'kept' && picked.develop === 1 && picked.y > 1.5 && picked.name === 'Natural resource protection' && picked.kept && picked.pressed === 'true', 'a chosen sheet lifts off the table and comes up to face the reader, and the photograph of the promise kept develops through its plan', JSON.stringify(picked));
   await p.locator('[data-listen]').dispatchEvent('click');
   await wait(1500);
   const voiced = await p.evaluate(() => ({ playing: window.__impact.promises.state.playing, label: document.querySelector('[data-listen] span').textContent }));

@@ -29,7 +29,11 @@ const SLOTS = [
   { x: -1.6, z: 1.6, r: 0.21, corner: [-1, -1], crease: [0.9, [0.3, 0.4]] },
   { x: 1.9, z: 1.9, r: -0.24, corner: [1, -1], crease: [-0.2, [0.7, 0.7]] },
 ];
-const FRONT = { x: -0.5, z: 0.2, r: 0, scale: 1.22 };
+const FRONT = { x: -0.6, z: 0.6 }; // where on the table the held sheet stands over; it comes up towards the camera from there
+const FRONT_CLOSER = 0.1; // how far along the line from the table towards the camera it is held (1 = at the camera)
+const _flat = new T.Quaternion();
+const _euler = new T.Euler();
+const _obj = new T.Object3D();
 // Where "Kept" falls in each spoken line, as a share of its length
 const KEPT_AT = principles.map((p) => {
   const before = `Promise. ${p.name}. ${p.promise} `.length;
@@ -152,11 +156,11 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
   key.castShadow = true;
   key.shadow.mapSize.set(narrow() ? 2048 : 4096, narrow() ? 2048 : 4096);
   key.shadow.camera.near = 1;
-  key.shadow.camera.far = 30;
-  key.shadow.camera.left = -8;
-  key.shadow.camera.right = 8;
-  key.shadow.camera.top = 8;
-  key.shadow.camera.bottom = -8;
+  key.shadow.camera.far = 40;
+  key.shadow.camera.left = -10;
+  key.shadow.camera.right = 10;
+  key.shadow.camera.top = 10;
+  key.shadow.camera.bottom = -10;
   key.shadow.radius = 14;
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
@@ -208,19 +212,53 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       i, mesh, canvas, ctx, done, map, slot,
       strokes: null, scale: 1, wash: null, photo: null,
       progress: 0, drawnTo: 0, develop: 0, // develop 0 plan, 1 print
-      // pose: where it is and where it is going
-      pose: { x: slot.x, z: slot.z, r: slot.r, y: 0.02 + i * 0.02, s: 1 },
-      from: null, to: null, t0: 0, dur: 0,
+      flex: 0, // how much the paper gives at the moment (it bends a little as it is lifted and held)
+      base: Float32Array.from(geo.attributes.position.array), // the sheet's resting shape
+      pose: null,
     };
+    sheet.pose = flatPose(sheet, 0.02 + i * 0.02);
     place(sheet, sheet.pose);
     paintBase(sheet);
     return sheet;
   });
 
+  /** Lying on the table at its slot (nudged by dx, dz), face up. */
+  function flatPose(sheet, y, dx = 0, dz = 0, s = 1) {
+    const q = new T.Quaternion().setFromEuler(_euler.set(-Math.PI / 2, 0, sheet.slot.r));
+    return { pos: new T.Vector3(sheet.slot.x + dx, y, sheet.slot.z + dz), quat: q, s };
+  }
+  /** Held up over the table, facing the reader, tilted back a touch like a page held to read. */
+  function heldPose() {
+    const over = new T.Vector3(FRONT.x, 2.5, FRONT.z); // held clear of the table, its shadow falling behind it
+    const pos = over.clone().lerp(camera.position, FRONT_CLOSER);
+    _obj.position.copy(pos);
+    _obj.lookAt(camera.position);
+    _obj.rotateX(-0.09);
+    return { pos, quat: _obj.quaternion.clone(), s: 1 };
+  }
   function place(sheet, p) {
-    sheet.mesh.position.set(p.x, p.y, p.z);
-    sheet.mesh.rotation.z = p.r;
+    sheet.mesh.position.copy(p.pos);
+    sheet.mesh.quaternion.copy(p.quat);
     sheet.mesh.scale.setScalar(p.s);
+  }
+  /** The paper gives: a gentle curl across its width and a soft ripple along it, by `sheet.flex`. */
+  function deform(sheet, now) {
+    const pos = sheet.mesh.geometry.attributes.position;
+    const base = sheet.base;
+    const f = sheet.flex;
+    const t = now / 1000;
+    for (let k = 0; k < pos.count; k++) {
+      const x = base[k * 3];
+      const y = base[k * 3 + 1];
+      const u = x / SHEET_W + 0.5;
+      const v = y / SHEET_H + 0.5;
+      // edges curl back towards the hand, the middle stays forward; a ripple runs along the length
+      const curl = ((u - 0.5) * (u - 0.5) * 4 - 0.33) * 0.26 * f;
+      const ripple = Math.sin(v * Math.PI * 2.2 - t * 5.5 + u * 1.5) * 0.045 * f;
+      pos.array[k * 3 + 2] = base[k * 3 + 2] + curl + ripple;
+    }
+    pos.needsUpdate = true;
+    sheet.mesh.geometry.computeVertexNormals();
   }
   function paintBase(sheet) {
     const { ctx } = sheet;
@@ -381,18 +419,25 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     raf = 0;
     for (const tw of [...tweens]) {
       const k = Math.min(1, (now - tw.t0) / tw.dur);
-      tw.step(k);
+      tw.step(k, now);
       if (k >= 1) {
         tweens.delete(tw);
         tw.done?.();
       }
       needsRender = true;
     }
+    const held = state.front >= 0 && sheets[state.front].restFlex > 0 && !still();
+    if (held && !tweens.size) {
+      const sh = sheets[state.front];
+      sh.flex = sh.restFlex * (0.85 + 0.15 * Math.sin(now / 900));
+      deform(sh, now);
+      needsRender = true;
+    }
     if (needsRender) {
       renderer.render(scene, camera);
       needsRender = false;
     }
-    if (tweens.size && visible) raf = requestAnimationFrame(frame);
+    if ((tweens.size || held) && visible) raf = requestAnimationFrame(frame);
     else running = false;
   }
   function wake() {
@@ -400,28 +445,34 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     running = true;
     raf = requestAnimationFrame(frame);
   }
-  function moveTo(sheet, to, dur, { arc = 0 } = {}) {
-    const from = { ...sheet.pose };
+  function moveTo(sheet, to, dur, { arc = 0, give = 0, settle = 0 } = {}) {
+    const from = { pos: sheet.pose.pos.clone(), quat: sheet.pose.quat.clone(), s: sheet.pose.s };
     return new Promise((res) => {
       if (still() || dur <= 0) {
-        sheet.pose = { ...to };
+        sheet.pose = { pos: to.pos.clone(), quat: to.quat.clone(), s: to.s };
+        sheet.flex = settle;
         place(sheet, sheet.pose);
+        deform(sheet, performance.now());
         needsRender = true;
         wake();
         return res();
       }
-      tween(dur, (k) => {
+      const pos = new T.Vector3();
+      const quat = new T.Quaternion();
+      tween(dur, (k, now) => {
         const e = easeInOut(k);
-        const p = {
-          x: from.x + (to.x - from.x) * e,
-          z: from.z + (to.z - from.z) * e,
-          r: from.r + (to.r - from.r) * e,
-          s: from.s + (to.s - from.s) * e,
-          y: from.y + (to.y - from.y) * e + arc * Math.sin(k * Math.PI),
-        };
-        sheet.pose = p;
-        place(sheet, p);
-      }, res);
+        pos.lerpVectors(from.pos, to.pos, e);
+        pos.y += arc * Math.sin(k * Math.PI);
+        quat.slerpQuaternions(from.quat, to.quat, e);
+        sheet.pose = { pos: pos.clone(), quat: quat.clone(), s: from.s + (to.s - from.s) * e };
+        place(sheet, sheet.pose);
+        // the paper gives most in the middle of the move, and keeps a little once held
+        sheet.flex = give * Math.sin(k * Math.PI) + settle * e + (1 - e) * (sheet.restFlex || 0);
+        deform(sheet, now);
+      }, () => {
+        sheet.restFlex = settle;
+        res();
+      });
     });
   }
 
@@ -479,9 +530,10 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     const sheet = sheets[i];
     const jobs = [];
     if (prev >= 0 && prev !== i) jobs.push(putBack(sheets[prev], { quiet: true }));
-    // the others ease back a touch so the front sheet has room
-    for (const s of sheets) if (s !== sheet && s.i !== prev) jobs.push(moveTo(s, { ...s.slot, y: s.pose.y, s: 1, x: s.slot.x - 0.25, z: s.slot.z + 0.15 }, 700));
-    jobs.push(moveTo(sheet, { x: FRONT.x, z: FRONT.z, r: FRONT.r, s: FRONT.scale, y: 0.42 }, LIFT_MS, { arc: 0.45 }));
+    // the others ease back a touch so the held sheet has room
+    for (const s of sheets) if (s !== sheet && s.i !== prev) jobs.push(moveTo(s, flatPose(s, s.pose.pos.y, -0.25, 0.15), 700));
+    // the chosen sheet lifts off the table and comes up to face the reader, giving a little as it moves
+    jobs.push(moveTo(sheet, heldPose(), LIFT_MS, { arc: 0.3, give: 0.55, settle: 0.16 }));
     await Promise.all(jobs);
     if (token !== seq) return;
     if (sheet.progress < 1 && drawMs !== 0) {
@@ -510,10 +562,10 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       tabs.forEach((t) => t.setAttribute('aria-pressed', 'false'));
       setPhase('pile');
     }
-    const back = moveTo(sheet, { ...sheet.slot, y: 0.02 + sheet.i * 0.02, s: 1 }, 900, { arc: 0.3 });
+    const back = moveTo(sheet, flatPose(sheet, 0.02 + sheet.i * 0.02), 900, { arc: 0.3, give: 0.4, settle: 0 });
     const fade = sheet.develop > 0 ? developTo(sheet, 0, 900) : Promise.resolve();
     await Promise.all([back, fade]);
-    if (!quiet) for (const s of sheets) if (s.i !== state.front) moveTo(s, { ...s.slot, y: s.pose.y, s: 1 }, 600);
+    if (!quiet) for (const s of sheets) if (s.i !== state.front) moveTo(s, flatPose(s, s.pose.pos.y), 600);
   }
 
   // ---- The narrator ----------------------------------------------------------------------------------------
@@ -632,13 +684,13 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     arrived = true;
     state.ready = true;
     for (const s of sheets) {
-      s.pose = { ...s.slot, y: 0.9 + s.i * 0.02, s: 1 };
+      s.pose = flatPose(s, 0.9 + s.i * 0.02);
       place(s, s.pose);
     }
     needsRender = true;
     wake();
     // put down one after another
-    sheets.forEach((s, i) => setTimeout(() => moveTo(s, { ...s.slot, y: 0.02 + i * 0.02, s: 1 }, 700), i * 140));
+    sheets.forEach((s, i) => setTimeout(() => moveTo(s, flatPose(s, 0.02 + i * 0.02), 700, { give: 0.25 }), i * 140));
     await wait(900);
     // draw in turn, overlapping a little
     const per = still() ? 0 : 1700;
