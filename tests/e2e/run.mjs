@@ -248,6 +248,9 @@ try {
   await p.keyboard.press('Escape');
   await wait(600);
   check(await p.evaluate(() => window.__impact.carry.openId === null), 'Escape closes the open row');
+  // the row's collapse is a height transition; in software rendering its frames can arrive seconds late, and a
+  // route measured before it has finished lands short, so wait for it before moving on
+  await p.waitForFunction(() => document.querySelector('#carry-steps').hidden, null, { polling: 200, timeout: 15000 }).catch(() => {});
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
@@ -287,7 +290,7 @@ try {
   await p.locator('.person').first().dispatchEvent('click');
   await wait(1800);
   await p.evaluate(() => Promise.race([Promise.all([...document.querySelectorAll('.people-story, .people-story .text')].flatMap((el) => el.getAnimations()).map((a) => a.finished)).catch(() => {}), new Promise((r) => setTimeout(r, 6000))]));
-  await p.waitForFunction(() => (document.querySelector('.people-story .text')?.offsetHeight || 0) > 120, null, { polling: 200, timeout: 8000 }).catch(() => {});
+  await p.waitForFunction(() => (document.querySelector('.people-story .text')?.offsetHeight || 0) > 120, null, { polling: 200, timeout: 16000 }).catch(() => {});
   const story = await p.evaluate(() => { const s = document.querySelector('#people-stage').getBoundingClientRect(), c = document.querySelector('.people-story'), r = c.getBoundingClientRect(), t = c.querySelector('.story-text'); return { open: window.__impact.people.open, active: window.__impact.people.active, role: c.querySelector('.where')?.textContent.split(' ')[0], textOpen: !!t && c.querySelector('.text').offsetHeight > 120, below: r.top >= s.bottom - 1, fits: r.left >= 0 && r.right <= innerWidth }; });
   check(story.open && story.active === 0 && story.role === 'Operations' && story.textOpen && story.below && story.fits, 'the first colleague opens with the whole story in the panel beneath the line', JSON.stringify(story));
   await p.waitForFunction(() => !document.querySelector('.people-story').classList.contains('no-voice'), null, { polling: 200, timeout: 8000 }).catch(() => {});
