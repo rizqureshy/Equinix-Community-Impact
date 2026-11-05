@@ -51,3 +51,47 @@ export function resourcesHTML() {
     return `<li class="curtain-group" data-group="${g.id}" style="--i: ${i}"><h3 class="curtain-group-name">${esc(g.name)}<span class="curtain-group-blurb">${esc(g.blurb)}</span></h3><ul class="curtain-group-list">${items.map((r) => itemHTML(r, 'curtain')).join('\n')}</ul></li>`;
   }).join('\n');
 }
+
+// For the Carry the Story index on the page: the short line beside each title, and what a row opens to.
+// `kind` and `where` are read off each file's name and address; `goodFor` is one line per resource for the team to approve.
+export const CARRY = {
+  hub: { line: 'Everything community engagement, in one place.', kind: 'Intranet page', where: 'Equinix intranet', goodFor: 'Your first stop, and the place to send a colleague who asks where to start.' },
+  steps: { line: 'Sustainability as a customer value driver.', kind: 'Webinar deck, PowerPoint', where: 'SharePoint, Sustainability PMO', goodFor: 'Before a customer conversation where sustainability will come up.' },
+  q3: { line: 'This quarter’s commitments and proof points.', kind: 'Deck, PowerPoint', where: 'SharePoint, Corporate Sustainability', goodFor: 'When you need the current figures and positioning on a slide.' },
+  grants: { line: 'Trusted partners for community work.', kind: 'Guide, PDF', where: 'OneDrive, Jodi Baumann', goodFor: 'When a customer or a site team asks who we work with locally.' },
+  dinner: { line: 'Straight answers for everyday conversations.', kind: 'Card, PDF', where: 'OneDrive, Jodi Baumann', goodFor: 'The questions you get at a dinner table, a school gate or a town hall.' },
+  principles: { line: 'The five promises, as printed.', kind: 'Brochure, PDF', where: 'OneDrive, Jodi Baumann', goodFor: 'When you want the promises in the company’s own words, to hand over or to quote.' },
+  scenarios: { line: 'Realistic stakeholder moments to work through.', kind: 'Scenario cards, PDF', where: 'OneDrive, Jodi Baumann', goodFor: 'Rehearsing with a colleague before a community meeting or a difficult call.' },
+  metrics: { line: 'The numbers, when someone asks.', kind: 'Cheat sheet, Word', where: 'OneDrive, Jodi Baumann', goodFor: 'When a figure is needed on the spot and it has to be the right one.' },
+  talktrack: { line: 'Running the workshop yourself.', kind: 'Talk track, PowerPoint', where: 'OneDrive, Jodi Baumann', goodFor: 'If you are facilitating the community engagement workshop for a team.' },
+  yoodli: { line: 'Say it out loud and get feedback.', kind: 'Practice programme, Yoodli', where: 'Yoodli, Equinix sign-in', goodFor: 'Rehearsing alone, out loud, before it is real.' },
+};
+export const CARRY_GROUPS = { featured: 'Start here', resource: 'Resources', practice: 'Practice', facilitator: 'Facilitator' };
+
+/** The Carry the Story index on the page: four groups, ten rows, each opening in place. */
+export function carryHTML() {
+  let n = 0;
+  return GROUPS.map((g) => {
+    const items = RESOURCES.filter((r) => r.group === g.id);
+    if (!items.length) return '';
+    const rows = items.map((r) => {
+      n++;
+      const c = CARRY[r.id] || {};
+      const num = String(n).padStart(2, '0');
+      const bodyId = `carry-${r.id}`;
+      const open = r.href ? `<a class="carry-open" href="${esc(r.href)}" target="_blank" rel="noopener">Open ${esc(r.destination.split(':')[0].length < 28 ? r.destination.split(':')[0] : r.name)} <small>new tab ↗</small></a>` : `<span class="carry-open is-pending">Link to follow</span>`;
+      return `<li class="carry-row" data-resource="${r.id}">
+        <button type="button" class="carry-head" aria-expanded="false" aria-controls="${bodyId}"><span class="carry-num">${num}</span><span class="carry-title">${esc(r.name)}</span><span class="carry-line">${esc(c.line || '')}</span><span class="carry-cross" aria-hidden="true"></span></button>
+        <div class="carry-body" id="${bodyId}" hidden><div class="carry-body-in"><span></span>
+          <div class="carry-detail">
+            <p class="carry-lead">${esc(r.blurb)}</p>
+            <dl class="carry-facts"><dt>From</dt><dd>${esc(r.by)}</dd><dt>Type</dt><dd>${esc(c.kind || '')}</dd><dt>Where</dt><dd>${esc(c.where || '')}</dd><dt>Good for</dt><dd>${esc(c.goodFor || '')}</dd></dl>
+            ${open}
+          </div>
+          <div class="carry-paper" aria-hidden="true"><span class="carry-paper-kind">${esc((c.kind || '').split(',')[0])}</span><strong>${esc(r.file || r.destination)}</strong><i></i></div>
+        </div></div>
+      </li>`;
+    }).join('\n');
+    return `<li class="carry-group" data-group="${g.id}"><h3 class="carry-group-name">${esc(CARRY_GROUPS[g.id] || g.name)}</h3><ol class="carry-rows">${rows}</ol></li>`;
+  }).join('\n');
+}

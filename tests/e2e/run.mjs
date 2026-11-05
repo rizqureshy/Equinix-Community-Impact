@@ -233,6 +233,21 @@ try {
   await wait(1500);
   const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practise the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
+  // Carry the Story on the page: ten rows in four groups between the hero and the community; a row opens in place,
+  // one at a time, with the Open link to the team's file; the hero's third door lands on the scenario cards
+  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); return { rows: sec.querySelectorAll('.carry-row').length, groups: sec.querySelectorAll('.carry-group').length, between: me.top > hero.top && me.bottom <= com.top + 2, closed: [...sec.querySelectorAll('.carry-head')].every((h) => h.getAttribute('aria-expanded') === 'false'), links: [...sec.querySelectorAll('.carry-open[href]')].length, newTab: [...sec.querySelectorAll('.carry-open[href]')].every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)) }; });
+  check(carry.rows === 10 && carry.groups === 4 && carry.between && carry.closed && carry.links === 10 && carry.newTab, 'Carry the Story sits between the hero and the community: ten rows in four groups, all closed, each with its link', JSON.stringify(carry));
+  await p.locator('.hero .actions [data-carry-row]').dispatchEvent('click');
+  await wait(2200);
+  const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top), open: window.__impact.carry.openId, expanded: document.querySelector('[data-resource="scenarios"] .carry-head').getAttribute('aria-expanded'), shown: !document.querySelector('#carry-scenarios').hidden }));
+  check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40 && landed2.open === 'scenarios' && landed2.expanded === 'true' && landed2.shown, 'Practise the conversation lands on the index with the scenario cards open', JSON.stringify(landed2));
+  await p.locator('[data-resource="steps"] .carry-head').dispatchEvent('click');
+  await wait(700);
+  const swapped = await p.evaluate(() => ({ open: window.__impact.carry.openId, prev: document.querySelector('[data-resource="scenarios"] .carry-head').getAttribute('aria-expanded'), facts: document.querySelectorAll('#carry-steps dd').length, link: document.querySelector('#carry-steps .carry-open').href }));
+  check(swapped.open === 'steps' && swapped.prev === 'false' && swapped.facts === 4 && /sharepoint\.com/.test(swapped.link), 'opening another row closes the first; the row carries its four facts and the file link', JSON.stringify(swapped));
+  await p.keyboard.press('Escape');
+  await wait(600);
+  check(await p.evaluate(() => window.__impact.carry.openId === null), 'Escape closes the open row');
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
@@ -332,17 +347,6 @@ try {
   await p.context().close();
 
   // ---- The Resources curtain --------------------------------------------
-  // The hero's third door, on a page of its own: while the curtain is down the page behind it steps back under a
-  // blur, and lifting that blur takes software rendering several seconds, which would stall anything checked after it
-  p = await open(browser, `${SITE}#/`);
-  await wait(2500);
-  await p.locator('.hero .actions [data-curtain-open]').dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.curtain && window.__impact.curtain.state === 'open', null, { polling: 200, timeout: 30000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.curtain?.state === 'open' && document.querySelector('.hero .actions [data-curtain-open]').getAttribute('aria-expanded') === 'true'), 'the third door drops the Carry the Story curtain');
-  await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.curtain.state === 'closed', null, { polling: 200, timeout: 20000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.curtain.state === 'closed' && document.activeElement === document.querySelector('.hero .actions [data-curtain-open]')), 'Escape lifts it and hands focus back to the hero');
-  await p.context().close();
   // Opened at the foot of the page so the community model is not loading at the same time: in software rendering
   // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
   p = await open(browser, `${SITE}#/share`);

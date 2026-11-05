@@ -6,6 +6,10 @@ Prepared 21 October 2026 for Rizwan Qureshy. Third version: a complete redesign 
 
 ## Version 3, branch `v3/front-door`: the enablement front door
 
+### Carry the Story on the page (5 November 2026)
+
+Besides the curtain (unchanged, the index from anywhere), the ten resources now have a section of their own between the hero and the community: `#toolkit`, "Ten things the team has made for you". After sketches of a route of four stations, a pinboard, a floating-card index and a ledger (`prototypes/carry-sketches.html`, A to E), the owner chose E, the expandable index: four groups (Start here, Resources, Practice, Facilitator), ten numbered rows with a one-line purpose, and a row that opens in place, one at a time, with the file's description, four facts (From, Type, Where, Good for), the Open button to the team's file in a new tab, and a slip of paper for the file name. Markup from `carryHTML` in `content/resources.js` (the same list as the curtain, with `CARRY` adding the line, kind, where and good-for per resource; the good-for lines are mine, for the team to approve); behaviour in `impact/scripts/carry.js` (disclosure semantics, arrow keys between rows, Escape closes); the hero's "Practise the conversation" lands here with the scenario cards open (`data-carry-row`). The route is `#/toolkit` because `resources` is a story topic id and `#/carry` already opens the curtain on arrival from Engage.
+
 ### The promises on a white table (5 November 2026)
 
 The list-beside-a-sheet layout built first was judged too big and not fitting; four stages were sketched as stills (`prototypes/promises-sketches.html`: a set of drawings, papers on a drafting table, a cinema band, a flip book) and the owner chose the table, white on white rather than the sketch's dark surface. What is on the page now (`impact/scripts/paper-table.js`, Three.js):

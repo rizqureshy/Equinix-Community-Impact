@@ -43,7 +43,7 @@ impact/                   Vite root: the experience
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
-    router.js             hash routes: #/community, #/story/<id>, #/promises, #/people, #/share (older #/chapter links land on the collection)
+    router.js             hash routes: #/community, #/toolkit, #/story/<id>, #/promises, #/people, #/share (older #/chapter links land on the collection)
     weather.js            sunlight: the diffused light over the page
     fabric.js             the red satin flying behind the page (Three.js), with its header toggle
     story-dialog.js       toast, copy actions, story dialog and motion toggle
