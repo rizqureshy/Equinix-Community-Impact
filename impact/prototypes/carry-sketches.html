@@ -85,6 +85,35 @@
       .ledger tr.on td.t { color: var(--red); }
       .ledger td.a { text-align: right; color: var(--ink-3); width: 90px; }
       .ledger tr.on td.a { color: var(--red); }
+
+      /* ---- E. The expandable index: a row opens in place; one at a time ---- */
+      .xindex { width: min(1180px, 100%); margin: 0 auto; }
+      .xgroup h3 { margin: 0 0 4px; font: 600 11px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); display: flex; gap: 12px; align-items: center; }
+      .xgroup h3::after { content: ''; flex: 1; height: 1px; background: var(--line-strong); }
+      .xgroup { margin-bottom: 22px; }
+      .xrow { border-bottom: 1px solid var(--line); }
+      .xrow-head { display: grid; grid-template-columns: 44px minmax(0, 1.5fr) minmax(0, 1fr) 24px; align-items: baseline; gap: 18px; padding: 15px 6px; cursor: pointer; }
+      .xrow-head .n { font: 600 12px var(--font); color: var(--ink-3); letter-spacing: 0.06em; }
+      .xrow-head .t { font-size: 19px; letter-spacing: -0.015em; font-weight: 600; }
+      .xrow-head .w { font-size: 14px; color: var(--ink-2); }
+      .xrow-head .c { justify-self: end; width: 10px; height: 10px; position: relative; top: -2px; }
+      .xrow-head .c::before, .xrow-head .c::after { content: ''; position: absolute; left: 0; top: 4px; width: 10px; height: 1.5px; background: var(--ink-3); transition: transform 0.3s; }
+      .xrow-head .c::after { transform: rotate(90deg); }
+      .xrow.open .xrow-head .n { color: var(--red); }
+      .xrow.open .xrow-head .c::after { transform: rotate(0); }
+      .xrow.open .xrow-head .c::before, .xrow.open .xrow-head .c::after { background: var(--red); }
+      .xbody { display: grid; grid-template-columns: 44px minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; padding: 0 6px 22px; align-items: start; }
+      .xbody .lead { font-size: 16px; color: var(--ink); max-width: 52ch; margin: 0; }
+      .xbody .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px; color: var(--ink-2); margin: 4px 0 0; }
+      .xbody .facts dt { color: var(--ink-3); font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 2px; }
+      .xbody .facts dd { margin: 0; }
+      .xbody .open-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font: 600 13px var(--font); color: #fff; background: var(--ink); border-radius: 999px; padding: 9px 16px; text-decoration: none; }
+      .xbody .open-btn small { font-weight: 500; opacity: 0.75; }
+      .xbody .paper { justify-self: end; width: 180px; transform: rotate(1.5deg); }
+      .xbody .paper .card { padding: 14px 14px 12px; }
+      .xbody .paper .card b { font: 600 10px/1 var(--font); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+      .xbody .paper .card strong { font-size: 13px; }
+      .xbody .paper .card i { display: block; width: 36px; height: 2px; background: var(--red); margin-top: 8px; }
     </style>
   </head>
   <body>
@@ -217,6 +246,41 @@
             <tr><td class="n">10</td><td class="t">Community Engagement Workshop Talk Track</td><td>Running the workshop yourself.</td><td class="g">Jodi Baumann</td><td class="g">Talk track</td><td class="a">↗</td></tr>
           </tbody>
         </table></div>
+      </section>
+
+      <!-- E -->
+      <section class="sk" id="e">
+        <p class="sk-tag"><b>E</b>The expandable index: a row opens in place with the detail and the Open button; one at a time</p>
+        <div class="head">
+          <div><p class="eyebrow">Carry the Story with Confidence</p><h2>Ten things the team has made for you.</h2></div>
+          <p class="lede">Start with the first three. Open a row to see what it is for, then take it with you.</p>
+        </div>
+        <div class="xindex">
+          <div class="xgroup"><h3>Start here</h3>
+            <div class="xrow"><div class="xrow-head"><span class="n">01</span><span class="t">Community Engagement Employee Hub</span><span class="w">Everything community engagement, in one place.</span><span class="c"></span></div></div>
+            <div class="xrow open"><div class="xrow-head"><span class="n">02</span><span class="t">STEPS: Sustainability &amp; Customer Conversations</span><span class="w">Sustainability as a customer value driver.</span><span class="c"></span></div>
+              <div class="xbody"><span></span>
+                <div><p class="lead">Build confidence discussing sustainability and using it as a customer value driver: the STEPS webinar for sellers, with the slides as presented.</p>
+                  <dl class="facts"><dt>From</dt><dd>Patricia Leyva, Sustainability PMO</dd><dt>Type</dt><dd>Webinar deck, PowerPoint, 42 slides</dd><dt>Where</dt><dd>SharePoint, Equinix sign-in</dd><dt>Good for</dt><dd>Before a customer conversation where sustainability will come up</dd></dl>
+                  <a class="open-btn" href="#">Open STEPS <small>new tab ↗</small></a></div>
+                <div class="paper"><div class="card"><b>Deck</b><strong>STEPS Sales Webinar Final</strong><i></i></div></div>
+              </div></div>
+            <div class="xrow"><div class="xrow-head"><span class="n">03</span><span class="t">Sustainability at Equinix: 2026 Q3 Update</span><span class="w">This quarter’s commitments and proof points.</span><span class="c"></span></div></div>
+          </div>
+          <div class="xgroup"><h3>Resources</h3>
+            <div class="xrow"><div class="xrow-head"><span class="n">04</span><span class="t">Grant Partner Guide</span><span class="w">Trusted partners for community work.</span><span class="c"></span></div></div>
+            <div class="xrow"><div class="xrow-head"><span class="n">05</span><span class="t">Talking About Data Centers: Dinner Table Guide</span><span class="w">Straight answers for everyday conversations.</span><span class="c"></span></div></div>
+            <div class="xrow"><div class="xrow-head"><span class="n">06</span><span class="t">Our Five Community Principles</span><span class="w">The five promises, as printed.</span><span class="c"></span></div></div>
+            <div class="xrow"><div class="xrow-head"><span class="n">07</span><span class="t">FY25 Sustainability Metrics Cheat Sheet</span><span class="w">The numbers, when someone asks.</span><span class="c"></span></div></div>
+          </div>
+          <div class="xgroup"><h3>Practice</h3>
+            <div class="xrow"><div class="xrow-head"><span class="n">08</span><span class="t">Practice a Community Conversation</span><span class="w">Realistic stakeholder moments to work through.</span><span class="c"></span></div></div>
+            <div class="xrow"><div class="xrow-head"><span class="n">09</span><span class="t">Practice the Community Conversation in Yoodli</span><span class="w">Say it out loud and get feedback.</span><span class="c"></span></div></div>
+          </div>
+          <div class="xgroup"><h3>Facilitator</h3>
+            <div class="xrow"><div class="xrow-head"><span class="n">10</span><span class="t">Community Engagement Workshop Talk Track</span><span class="w">Running the workshop yourself.</span><span class="c"></span></div></div>
+          </div>
+        </div>
       </section>
     </main>
     <script type="module">import '@fontsource-variable/inter-tight';</script>
