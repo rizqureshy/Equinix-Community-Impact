@@ -27,13 +27,11 @@ main,
   z-index: 1;
 }
 /* A soft white veil keeps the running text legible where the cloth passes behind it */
-.hero-copy,
-.statement {
+.hero-copy {
   position: relative;
 }
 @media (min-width: 761px) {
-  :root[data-fabric='on'] .hero-copy::before,
-  :root[data-fabric='on'] .statement::before {
+  :root[data-fabric='on'] .hero-copy::before {
     content: '';
     position: absolute;
     inset: -8% -12%;
@@ -42,8 +40,7 @@ main,
     background: radial-gradient(closest-side, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0));
   }
 }
-.hero,
-.statement {
+.hero {
   overflow-x: clip;
 }
 

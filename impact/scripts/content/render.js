@@ -23,6 +23,7 @@ const formatDate = (iso) => {
 
 
 /** Chapter framing around each lead story, and the place it lives in the city. */
+/** Chapter framing around each lead story, and the place it lives in the city. */
 export const CHAPTERS = {
   care: { number: '01', title: 'Care that connects.', moment: 'A radiologist opens a patient’s scan. Somewhere, a family is waiting for what it shows.', film: 'clip-care', place: 'hospital', placeName: 'Hospital' },
   discovery: { number: '02', title: 'Discovery that advances.', moment: 'In Sydney, researchers compare one child’s cancer with cases studied on the other side of the world.', film: 'clip-discovery', place: 'research', placeName: 'Research centre' },
@@ -81,78 +82,6 @@ function film(name, alt, { cls = '' } = {}) {
   return `<video class="film ${cls}" muted playsinline loop preload="none" poster="media/${name}-poster.jpg" aria-label="${esc(alt)}">
       <source src="media/${name}.webm" type="video/webm"><source src="media/${name}.mp4" type="video/mp4"></video>`;
 }
-
-export function chapterHTML(topic, i) {
-  // One chapter of the theatre: an index row, a film with its headline, and the lead story line beneath
-  const story = getStory(chapterLead[topic.id]);
-  const c = CHAPTERS[topic.id];
-  const others = stories.filter((s) => s.topic === topic.id && s.id !== story.id);
-  const on = i === 0;
-  return {
-    row: `<button type="button" class="theatre-row${on ? ' on' : ''}" id="chapter-${topic.id}" data-topic="${topic.id}" aria-pressed="${on}">
-      <span class="num">${c.number}</span>
-      <span class="t">${esc(c.title)}</span>
-      <span class="sub">${esc(story.organisation)}</span>
-      <span class="bar" aria-hidden="true"><i></i></span>
-    </button>`,
-    film: `<figure class="theatre-film${on ? ' on' : ''}" data-topic="${topic.id}">
-      <video class="theatre-video" muted playsinline loop preload="none" poster="media/${c.film}-poster.jpg" aria-label="${esc(story.media[0]?.alt || '')}">
-        <source src="media/${c.film}.webm" type="video/webm"><source src="media/${c.film}.mp4" type="video/mp4"></video>
-      <figcaption class="theatre-cap"><span class="theatre-tag">${c.number} ${esc(topic.label)}</span><h3>${esc(c.title)}</h3><p>${esc(c.moment)}</p></figcaption>
-    </figure>`,
-    lead: `<div class="theatre-lead${on ? ' on' : ''}" data-topic="${topic.id}"${on ? '' : ' hidden'}>
-      <div class="theatre-lead-copy">
-        <h3 class="theatre-lead-title">${esc(story.title)}</h3>
-        <p class="theatre-lead-org muted">${esc(story.organisation)} <span aria-hidden="true">·</span> ${esc(story.location)}</p>
-        <div class="actions">
-          <a class="btn btn--primary btn--small" href="#/story/${story.id}" data-story-trigger="${story.id}">Open the story</a>
-          ${others.map((o) => `<a class="btn btn--link btn--small" href="#/story/${o.id}" data-story-trigger="${o.id}">${esc(o.title)}</a>`).join('')}
-        </div>
-      </div>
-      ${story.metric ? `<p class="metric"><span class="metric-value">${esc(story.metric)}</span><span class="metric-label">${esc(story.metricLabel)}</span><span class="metric-scope">${esc(story.metricScope)}</span></p>` : ''}
-    </div>`,
-  };
-}
-
-export function chaptersHTML() {
-  const parts = topics.map(chapterHTML);
-  return `<section class="theatre" id="stories" data-section="stories" data-auto="on" aria-labelledby="stories-title">
-  <div class="wrap theatre-grid">
-    <div class="theatre-side">
-      <div class="theatre-head" data-reveal>
-        <p class="eyebrow">Stories</p>
-        <h2 class="theatre-title" id="stories-title">Five chapters of what connection makes possible.</h2>
-      </div>
-      <nav class="theatre-index" aria-label="Chapters">
-        ${parts.map((x) => x.row).join('\n')}
-        <p class="theatre-how note">Each chapter plays for a few seconds. Choose one to stay with it.</p>
-      </nav>
-    </div>
-    <div class="theatre-stage">
-      <div class="theatre-screen">${parts.map((x) => x.film).join('\n')}</div>
-      ${parts.map((x) => x.lead).join('\n')}
-    </div>
-  </div>
-</section>`;
-}
-
-// ---------------------------------------------------------------------------
-// Story detail dialog
-// ---------------------------------------------------------------------------
-function picture(media, { sizes = '(min-width: 900px) 640px, 92vw', cls = '' } = {}) {
-  if (!media) return '';
-  const base = media.path.replace(/-1200\.webp$/, '');
-  return `<figure class="media ${cls}">
-    <img src="${esc(media.path)}" srcset="${esc(base)}-640.webp 640w, ${esc(media.path)} 1200w" sizes="${sizes}"
-      alt="${esc(media.alt)}" width="1200" height="800" loading="lazy" decoding="async">
-  </figure>`;
-}
-
-const sourceLink = (id) => {
-  const s = sources[id];
-  return `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="visually-hidden"> (opens in a new tab)</span></a>
-    <span class="source-meta">${esc(s.publisher)}${s.published ? `, ${formatDate(s.published)}` : ', date not stated'}${s.kind === 'secondary' ? ', secondary reporting' : ''}</span></li>`;
-};
 
 export function storyDetailHTML(story) {
   const heat = story.id === 'pa10-heat' || story.id === 'markham-heat';
@@ -234,12 +163,7 @@ export function collectionHTML() {
 // ---------------------------------------------------------------------------
 // Promises, numbers, sources
 // ---------------------------------------------------------------------------
-/**
- * The promises: a numbered list beside a sticky panel that shows, for the
- * promise at the reading line, a photograph with the proof set large over
- * it. On narrow screens, or without motion, each promise carries its proof
- * and photograph inline.
- */
+/** The promises: five tiles in a row, each promise with one example of it kept. */
 export function principlesHTML() {
   const rows = principles
     .map(
@@ -247,6 +171,7 @@ export function principlesHTML() {
         <span class="promise-num" aria-hidden="true">${i + 1}</span>
         <strong class="promise-name">${esc(p.name)}</strong>
         <span class="promise-text">${esc(p.promise)}</span>
+        <span class="promise-proof"><span class="promise-kept">Kept</span> ${esc(p.proof)}</span>
       </li>`,
     )
     .join('');

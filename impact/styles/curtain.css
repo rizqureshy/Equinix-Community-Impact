@@ -308,7 +308,7 @@ a.curtain-link:focus-visible {
 main {
   transition: filter var(--d3) var(--ease), opacity var(--d3) var(--ease);
 }
-body.curtain-open:not(.spine-open) main,
+body.curtain-open main,
 body.curtain-open .site-footer {
   filter: blur(7px);
   opacity: 0.72;

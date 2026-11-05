@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 import {
-  chaptersHTML,
   journeyHTML,
   heroStatsHTML,
   numbersHTML,
@@ -18,7 +17,6 @@ const prerender = () => ({
       .replace('<!--@journey-->', journeyHTML())
       .replace('<!--@hero-stats-->', heroStatsHTML())
       .replace('<!--@numbers-->', numbersHTML())
-      .replace('<!--@chapters-->', chaptersHTML())
       .replace('<!--@principles-->', principlesHTML())
       .replace('<!--@collection-->', collectionHTML())
       .replace('<!--@resources-->', resourcesHTML());
@@ -41,7 +39,6 @@ export default defineConfig({
         main: resolve(import.meta.dirname, 'impact/index.html'), // the full site is the root on version 3
         engage: resolve(import.meta.dirname, 'impact/engage.html'),
         kiosk: resolve(import.meta.dirname, 'impact/kiosk.html'), // the kiosk (the root on version 2)
-        spine: resolve(import.meta.dirname, 'impact/prototypes/spine.html'),
         people: resolve(import.meta.dirname, 'impact/prototypes/people.html'),
       },
     },

@@ -43,14 +43,14 @@ impact/                   Vite root: the experience
   scripts/
     app.js                wiring: community explorer and tour (with music), scroll choreography (GSAP ScrollTrigger + Lenis), routing, story dialog, gallery, copy
     state.js              single state model (topic, section, scene focus, story)
-    router.js             hash routes: #/community, #/chapter/<topic>, #/story/<id>, #/promises and others
+    router.js             hash routes: #/community, #/story/<id>, #/promises, #/people, #/share (older #/chapter links land on the collection)
     weather.js            sunlight: the diffused light over the page
     fabric.js             the red satin flying behind the page (Three.js), with its header toggle
     story-dialog.js       toast, copy actions, story dialog and motion toggle
     clipboard.js          copy with graceful fallback
     content/stories.js    stories, sources, principles (edit content here)
     content/rooms.js      the six rooms you can step into: panorama, dive film, captions, narration
-    content/render.js     HTML for the model's opening card and controls, chapters, story detail, gallery, promises, numbers, sources
+    content/render.js     HTML for the model's opening card and controls, story detail, gallery, promises, numbers
     room.js               stepping inside: approach, dive film, panorama viewer, captions, leave
     scene/city.js         the community model: loads the building GLBs, plinth, threads, free orbit (drag, wheel, pinch, keys), door views, labels
   public/media/           web-ready images, films, posters, the building models (media/city/*.glb), the tour theme (media/audio) and the narrator's lines (media/voice)

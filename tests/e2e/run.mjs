@@ -223,22 +223,22 @@ try {
   check(p.errors.length === 0, 'no JavaScript errors (journey)', p.errors.slice(0, 3).join(' | '));
   await p.context().close();
 
-  // ---- Chapters, routes, gallery ------------------------------------------
+  // ---- Routes, the hero's doors, the promises, gallery ----------------------
   p = await open(browser, `${SITE}#/chapter/community`);
   await wait(2500);
-  const top = await p.evaluate(() => document.querySelector('#stories').getBoundingClientRect().top);
-  check(Math.abs(top) < 40, 'chapter route lands on the Stories theatre', `${Math.round(top)}px`);
-  const theatre = await p.evaluate(() => ({ active: window.__impact.theatre.active, auto: window.__impact.theatre.auto, rows: document.querySelectorAll('.theatre-row').length, pressed: document.querySelector('.theatre-row[aria-pressed="true"]')?.dataset.topic, shown: document.querySelector('.theatre-film.on')?.dataset.topic, lead: document.querySelector('.theatre-lead:not([hidden])')?.dataset.topic, playing: (() => { const v = document.querySelector('.theatre-film.on video'); return !!v && v.preload !== 'none'; })() }));
-  check(theatre.rows === 5 && theatre.active === 'community' && theatre.pressed === 'community' && theatre.shown === 'community' && theatre.lead === 'community' && theatre.auto === false && theatre.playing, 'the route chooses its chapter in the theatre, loads its film and stops the rotation', JSON.stringify(theatre));
-  await p.evaluate(() => window.__impact.theatre.resume());
-  await wait(5200);
-  await p.waitForFunction(() => window.__impact.theatre.active !== 'community', null, { polling: 250, timeout: 12000 }).catch(() => {});
-  const rotated = await p.evaluate(() => window.__impact.theatre.active);
-  check(rotated === 'resources', 'left alone, the theatre moves to the next chapter after five seconds', rotated);
-  await p.locator('.theatre-row[data-topic="care"]').dispatchEvent('click');
-  await wait(300);
-  check(await p.evaluate(() => window.__impact.theatre.active === 'care' && window.__impact.theatre.auto === false && location.hash === '#/chapter/care'), 'choosing a chapter stops the rotation and updates the link');
-  check(await p.evaluate(() => document.querySelector('.site-nav a[href="#/chapter/care"]').getAttribute('aria-current') === 'true'), 'navigation marks the current section');
+  const landed = await p.evaluate(() => ({ top: document.querySelector('#share').getBoundingClientRect().top, gone: !document.querySelector('#stories, .theatre, .statement, #spine-frame, iframe'), section: window.__impact.store.get().section, hash: location.hash }));
+  check(Math.abs(landed.top) < 40 && landed.gone && landed.section === 'share', 'an older chapter link lands on the story collection; the theatre, the statement and the Spine are gone', JSON.stringify(landed));
+  check(await p.evaluate(() => document.querySelector('.site-nav a[href="#/share"]').getAttribute('aria-current') === 'true' && document.querySelectorAll('.site-nav a[href="#/share"]').length === 1), 'navigation marks Stories as the current section, listed once');
+  await p.goto(`${SITE}#/`);
+  await wait(1500);
+  const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
+  check(hero.doors.join('|') === 'Explore the community|Find a story|Practise the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
+  await p.locator('.hero .actions [data-curtain-open]').dispatchEvent('click');
+  await p.waitForFunction(() => window.__impact.curtain && window.__impact.curtain.state === 'open', null, { polling: 200, timeout: 30000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.curtain?.state === 'open' && document.querySelector('.hero .actions [data-curtain-open]').getAttribute('aria-expanded') === 'true'), 'the third door drops the Carry the Story curtain');
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.curtain.state === 'closed', null, { polling: 200, timeout: 20000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.curtain.state === 'closed' && document.activeElement === document.querySelector('.hero .actions [data-curtain-open]')), 'Escape lifts it and hands focus back to the hero');
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
@@ -249,30 +249,9 @@ try {
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
-  // The promises: a quiet Spine canvas with a begin button and the five promises beneath
-  const spineIdle = await p.evaluate(() => ({
-    state: document.querySelector('#spine-frame')?.dataset.state,
-    embed: document.querySelector('#spine-embed')?.getAttribute('src'),
-    tiles: document.querySelectorAll('.promise-tile').length,
-    begin: !!document.querySelector('#spine-begin'),
-  }));
-  check(spineIdle.state === 'idle' && /prototypes\/spine\.html\?mode=preview/.test(spineIdle.embed) && spineIdle.tiles === 5 && spineIdle.begin, 'the promises section holds the Spine canvas and five promise tiles', JSON.stringify(spineIdle));
-  // The embedded Spine really draws: render a frame and count ribbon-red pixels on the white canvas; the camera sits on its preview orbit
-  let spineFrameDoc = null; // the iframe loads lazily: wait for it and for its scene
-  for (let i = 0; i < 80 && !spineFrameDoc; i++) { spineFrameDoc = p.frames().find((f) => f.url().includes('spine.html')) || null; if (spineFrameDoc && !(await spineFrameDoc.evaluate(() => !!window.__spine).catch(() => false))) spineFrameDoc = null; if (!spineFrameDoc) await wait(250); }
-  await wait(2000);
-  const drawn = spineFrameDoc ? await spineFrameDoc.evaluate(() => new Promise((res) => requestAnimationFrame(() => { const { renderer, scene, camera } = window.__spine; renderer.render(scene, camera); const g = renderer.getContext(); const w = g.drawingBufferWidth, h = g.drawingBufferHeight; const px = new Uint8Array(w * h * 4); g.readPixels(0, 0, w, h, g.RGBA, g.UNSIGNED_BYTE, px); let red = 0, white = 0; for (let i = 0; i < px.length; i += 4) { if (px[i] > 180 && px[i + 1] < 90 && px[i + 2] < 90) red++; else if (px[i] > 245 && px[i + 1] > 245 && px[i + 2] > 245) white++; } res({ red, whiteShare: +(white / (w * h)).toFixed(2), dist: Math.round(camera.position.length()) }); }))).catch((e) => ({ err: String(e) })) : { err: 'no frame' };
-  check(drawn.red > 200 && drawn.whiteShare > 0.5 && drawn.dist < 600, 'the embedded Spine draws its red ribbon on a white canvas', JSON.stringify(drawn));
-  await p.locator('#spine-begin').dispatchEvent('click');
-  await wait(800);
-  const spineOpen = await p.evaluate(() => ({ state: document.querySelector('#spine-frame').dataset.state, open: document.body.classList.contains('spine-open') }));
-  check(spineOpen.open && spineOpen.state !== 'idle', 'beginning the journey fills the screen with the Spine', JSON.stringify(spineOpen));
-  await wait(10500); // the dive film ends or times out, and the ride begins
-  const spineRunning = await p.evaluate(() => document.querySelector('#spine-frame').dataset.state);
-  check(spineRunning === 'open', 'after the film the Spine takes over', spineRunning);
-  await p.evaluate(() => window.postMessage({ type: 'spine:leave' }, '*')); // what the Spine's own Leave button sends
-  await wait(600);
-  check(await p.evaluate(() => document.querySelector('#spine-frame').dataset.state === 'idle' && !document.body.classList.contains('spine-open')), 'leaving the Spine returns to the page');
+  // The promises: five tiles in a row, each with the promise and one example of it kept, nothing embedded
+  const promisesList = await p.evaluate(() => { const tiles = [...document.querySelectorAll('.promise-tile')]; const tops = tiles.map((t) => Math.round(t.getBoundingClientRect().top)); return { tiles: tiles.length, proofs: tiles.filter((t) => (t.querySelector('.promise-proof')?.textContent.trim().length || 0) > 20).length, oneRow: new Set(tops).size === 1, embedded: document.querySelectorAll('iframe, #spine-frame, #spine-begin').length, source: !!document.querySelector('.promise-source a[href^="https://"]') }; });
+  check(promisesList.tiles === 5 && promisesList.proofs === 5 && promisesList.oneRow && promisesList.embedded === 0 && promisesList.source, 'the promises are five tiles in one row, each with the promise kept and a source, with nothing embedded', JSON.stringify(promisesList));
   // The people: six colleagues in one line, all inside the stage, the chosen one forward with a translucent story card
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'center' }));
   await wait(1200);
@@ -481,7 +460,7 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.keyboard.press('Escape');
   await wait(500);
-  check(await p.evaluate(() => { const f = document.querySelector('#spine-frame').getBoundingClientRect(); const tiles = [...document.querySelectorAll('.promise-tile')]; return f.width <= innerWidth && f.height >= 400 && tiles.length === 5 && tiles.every((t) => t.getBoundingClientRect().width > innerWidth * 0.8); }), 'on phones the Spine canvas fits the screen and the promises stack');
+  check(await p.evaluate(() => { const tiles = [...document.querySelectorAll('.promise-tile')]; return tiles.length === 5 && tiles.every((t) => { const r = t.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.width > innerWidth * 0.8; }); }), 'on phones the promises stack and fit the screen');
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'start' }));
   await wait(1500);
   check(await p.evaluate(() => { const b = document.querySelector('.nav-keystone'); const r = b.getBoundingClientRect(); return r.width > 0 && r.right <= innerWidth && [...document.querySelectorAll('.site-nav')].every((n) => n.offsetParent === null) && document.querySelector('.wordmark').offsetParent !== null; }), 'on phones the keystone and the mark stay in the header while the nav items fold away');

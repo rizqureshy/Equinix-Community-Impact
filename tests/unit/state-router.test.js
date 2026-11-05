@@ -14,8 +14,8 @@ describe('router', () => {
     expect(parseHash('#/explore')).toEqual({ section: 'journey' });
     expect(parseHash('#/explore/discovery')).toEqual({ section: 'journey', topic: 'discovery' });
     expect(parseHash('#/principles')).toEqual({ section: 'promises' });
-    expect(parseHash('#/chapter/care')).toEqual({ section: 'care', topic: 'care' });
-    expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'resources', topic: 'resources' });
+    expect(parseHash('#/chapter/care')).toEqual({ section: 'share', topic: 'care' }); // the chapters became the collection
+    expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'share', topic: 'resources' });
     expect(parseHash('#/people')).toEqual({ section: 'people' });
   });
 
@@ -26,9 +26,10 @@ describe('router', () => {
   });
 
   it('round-trips hashes', () => {
-    for (const h of ['#/', '#/community', '#/promises', '#/chapter/community', '#/story/3verest', '#/share']) {
+    for (const h of ['#/', '#/community', '#/promises', '#/story/3verest', '#/share']) {
       expect(hashFor(parseHash(h))).toBe(h);
     }
+    expect(hashFor(parseHash('#/chapter/community'))).toBe('#/share');
   });
 
   it('builds story links that keep the deployed base path', () => {
@@ -39,7 +40,7 @@ describe('router', () => {
   });
 
   it('maps sections to anchors', () => {
-    expect(anchorFor('care')).toBe('chapter-care');
+    expect(anchorFor('care')).toBe('share');
     expect(anchorFor('people')).toBe('people');
     expect(anchorFor('journey')).toBe('community');
   });

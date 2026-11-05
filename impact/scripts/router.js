@@ -3,13 +3,13 @@
 //   #/                     overview
 //   #/community            the pinned community journey (section id `journey`,
 //                          since `community` is also a chapter topic)
-//   #/chapter/<topic>      a story chapter
+//   #/chapter/<topic>      an older chapter link, now the story collection
 //   #/story/<id>           a story opened in the detail view
-//   #/stories | #/promises | #/people | #/share
+//   #/promises | #/people | #/share
 //   #/explore and #/principles are older links, kept as aliases
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['journey', 'stories', 'promises', 'people', 'share']);
+const SECTIONS = new Set(['journey', 'promises', 'people', 'share']);
 const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises' };
 const TOPICS = new Set(topics.map((t) => t.id));
 
@@ -18,15 +18,15 @@ export function parseHash(hash = '') {
   const [head, arg] = parts;
   if (!head) return { section: 'top' };
   if (ALIASES[head]) return TOPICS.has(arg) ? { section: ALIASES[head], topic: arg } : { section: ALIASES[head] };
-  if (head === 'chapter' && TOPICS.has(arg)) return { section: arg, topic: arg };
-  if (head === 'story' && getStory(arg)) return { story: arg, section: getStory(arg).topic, topic: getStory(arg).topic };
+  if (head === 'chapter' && TOPICS.has(arg)) return { section: 'share', topic: arg };
+  if (head === 'story' && getStory(arg)) return { story: arg, section: 'share', topic: getStory(arg).topic };
   if (SECTIONS.has(head)) return { section: head };
   return { section: 'top' };
 }
 
 export function hashFor({ section, topic, story } = {}) {
   if (story) return `#/story/${encodeURIComponent(story)}`;
-  if (TOPICS.has(section)) return `#/chapter/${section}`;
+  if (TOPICS.has(section)) return '#/share';
   if (section === 'journey') return '#/community';
   if (SECTIONS.has(section)) return `#/${section}`;
   return '#/';
@@ -39,6 +39,6 @@ export function storyURL(id, loc = window.location) {
 
 /** Element id to scroll to for a section. */
 export function anchorFor(section) {
-  if (TOPICS.has(section)) return `chapter-${section}`;
+  if (TOPICS.has(section)) return 'share';
   return section === 'journey' ? 'community' : section;
 }

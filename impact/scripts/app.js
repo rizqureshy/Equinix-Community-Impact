@@ -4,14 +4,13 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { createStore, topicTarget } from './state.js';
+import { createStore } from './state.js';
 import { parseHash, hashFor, storyURL, anchorFor } from './router.js';
 import { journeySteps } from './content/render.js';
 import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } from './story-dialog.js';
 import { createSunlight } from './weather.js';
 import { createRoom } from './room.js';
 import { createPeopleLine } from './people-line.js';
-import { createTheatre } from './theatre.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -361,7 +360,7 @@ addEventListener(
     // Only a scroll the reader is driving right now counts, never a route's own glide to a section
     // The smooth scroller glides on for a while after the last wheel, so the window is generous
     if (fromBottom > 24 || curtainFell || performance.now() - readerScrolledAt > 4000) return;
-    if (document.body.classList.contains('room-open') || document.body.classList.contains('spine-open') || document.querySelector('#story-drawer')?.open) return;
+    if (document.body.classList.contains('room-open') || document.querySelector('#story-drawer')?.open) return;
     curtainFell = true;
     loadCurtain().then((c) => c?.open({ trigger: curtainPills[0] || null }));
   },
@@ -435,7 +434,6 @@ let scrollTriggers = [];
 function buildScroll() {
   teardownScroll();
   if (!store.get().motion) {
-    $$('.statement-text .w').forEach((w) => w.style.setProperty('--o', '1'));
     scene?.setDrift(false);
     return;
   }
@@ -455,21 +453,6 @@ function buildScroll() {
       onUpdate: (self) => {
         heroCopy.style.transform = `translateY(${-self.progress * 12}vh)`;
         heroCopy.style.opacity = String(1 - self.progress * 1.6);
-      },
-    }),
-  );
-
-  // Statement: each word lights up in turn
-  const words = $$('.statement-text .w');
-  scrollTriggers.push(
-    ScrollTrigger.create({
-      trigger: '.statement',
-      start: 'top 75%',
-      end: 'bottom 55%',
-      scrub: true,
-      onUpdate: (self) => {
-        const lit = self.progress * words.length * 1.15;
-        words.forEach((w, i) => w.style.setProperty('--o', String(clamp(lit - i))));
       },
     }),
   );
@@ -505,16 +488,6 @@ const isInView = (el) => {
   return r.top < innerHeight && r.bottom > 0;
 };
 
-// Split the statement into words once.
-{
-  const el = $('[data-words]');
-  el.innerHTML = el.textContent
-    .trim()
-    .split(/\s+/)
-    .map((w) => `<span class="w">${w}</span>`)
-    .join(' ');
-}
-
 // Sections and cards fade up as they arrive
 const reveal = new IntersectionObserver(
   (entries) => {
@@ -537,7 +510,6 @@ setupMotionToggle($('[data-motion-toggle]'), {
     syncVideos();
     sunlight.motionChanged();
     fabric?.motionChanged();
-    theatre?.motionChanged();
   },
 });
 
@@ -561,9 +533,7 @@ const dialog = createStoryDialog({
 
 function scrollToSection(section, { instant = false } = {}) {
   if (section === 'top') return scrollToY(0, { instant });
-  // A chapter lives in the theatre: choose it there and go to the theatre's top
-  if (topicTarget[section]) theatre?.select(section, { user: true });
-  const el = topicTarget[section] ? $('#stories') : document.getElementById(anchorFor(section));
+  const el = document.getElementById(anchorFor(section));
   if (el) scrollToY(el.getBoundingClientRect().top + scrollY, { instant });
 }
 
@@ -595,16 +565,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// The Stories theatre: one screen, the chosen chapter's film playing, rotating until someone chooses
-const theatre = createTheatre($('#stories'), {
-  motion: () => store.get().motion,
-  onSelect: (topic, { user }) => {
-    if (!user) return;
-    store.set({ topic });
-    if (store.get().section === 'stories' || topicTarget[store.get().section]) history.replaceState(null, '', hashFor({ section: topic, topic }));
-  },
-});
-
 // The section in the middle of the viewport sets the state.
 const spy = new IntersectionObserver(
   (entries) => {
@@ -613,24 +573,21 @@ const spy = new IntersectionObserver(
     if (location.hash.startsWith('#/story/')) return;
     const hit = entries.filter((e) => e.isIntersecting).pop();
     if (!hit) return;
-    const section = hit.target.dataset.chapter || hit.target.dataset.section;
+    const section = hit.target.dataset.section;
     if (section === store.get().section) return;
-    const patch = { section };
-    if (topicTarget[section]) patch.topic = section;
-    store.set(patch);
+    store.set({ section });
     history.replaceState(null, '', hashFor({ section, topic: store.get().topic }));
   },
   { rootMargin: '-45% 0px -50% 0px' },
 );
-$$('[data-section], .chapter').forEach((s) => spy.observe(s));
+$$('[data-section]').forEach((s) => spy.observe(s));
 
 const navLinks = $$('.site-nav a');
 store.subscribe((s, prev) => {
   if (s.section === prev.section) return;
-  const group = topicTarget[s.section] || s.section === 'stories' ? 'chapter' : s.section;
+  const current = hashFor({ section: s.section });
   for (const a of navLinks) {
-    const h = a.getAttribute('href');
-    const on = (group === 'chapter' && h.startsWith('#/chapter')) || h === `#/${s.section}`;
+    const on = current !== '#/' && a.getAttribute('href') === current;
     if (on) a.setAttribute('aria-current', 'true');
     else a.removeAttribute('aria-current');
   }
@@ -688,61 +645,6 @@ const counter = new IntersectionObserver(
   { threshold: 0.6 },
 );
 $$('.number-digits').forEach((n) => counter.observe(n));
-
-// ---------------------------------------------------------------------------
-// The promises: the Spine of Impact. A quiet canvas until the visitor clicks;
-// then the frame fills the screen, the dive film plays, and the ride begins.
-// ---------------------------------------------------------------------------
-const spineFrame = $('#spine-frame');
-const spineEmbed = $('#spine-embed');
-const spineFilm = $('#spine-film');
-const spineBegin = $('#spine-begin');
-let spineTimer = null;
-const spineSend = (type) => spineEmbed?.contentWindow?.postMessage({ type }, '*');
-function spineStart() {
-  if (!spineFrame || spineFrame.dataset.state !== 'idle') return;
-  spineFrame.dataset.state = 'entering';
-  document.body.classList.add('spine-open');
-  lenis?.stop();
-  if (playing) fadeMusic(true);
-  const begin = () => {
-    if (spineFrame.dataset.state !== 'entering') return;
-    spineFrame.dataset.state = 'open';
-    spineSend('spine:start');
-    spineEmbed.focus();
-  };
-  const film = () => {
-    spineFilm.currentTime = 0;
-    const p = spineFilm.play();
-    if (p && p.catch) p.catch(() => begin());
-    spineFilm.onended = begin;
-    clearTimeout(spineTimer);
-    spineTimer = setTimeout(begin, 9500); // never leave the visitor waiting on a film that will not end
-  };
-  // Give the frame a moment to grow before the film starts
-  setTimeout(film, store.get().motion ? 650 : 0);
-}
-function spineStop() {
-  if (!spineFrame || spineFrame.dataset.state === 'idle') return;
-  clearTimeout(spineTimer);
-  spineFrame.dataset.state = 'idle';
-  document.body.classList.remove('spine-open');
-  spineFilm.pause();
-  spineSend('spine:preview');
-  lenis?.start();
-  spineBegin.focus();
-}
-spineBegin?.addEventListener('click', spineStart);
-// Without WebGL the frame shows the daylight still instead of loading the Spine
-if (spineFrame && !supportsWebGL2()) {
-  spineEmbed?.remove();
-  spineFrame.style.backgroundImage = 'url(media/spine/film-poster.webp)';
-  spineFrame.style.backgroundSize = 'cover';
-  spineFrame.style.backgroundPosition = 'center';
-  if (spineBegin) spineBegin.hidden = true;
-}
-addEventListener('message', (e) => { if (e.data && e.data.type === 'spine:leave') spineStop(); });
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && spineFrame?.dataset.state !== 'idle') spineStop(); });
 
 // ---------------------------------------------------------------------------
 // Story gallery: filters and rail buttons
@@ -804,7 +706,6 @@ window.__impact = { skyPlaces: SKY_PLACES,
   },
   store,
   people: peopleLine,
-  theatre,
   get lenis() {
     return lenis;
   },
