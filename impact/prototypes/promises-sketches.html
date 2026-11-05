@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The promises: four stages | sketches</title>
+    <meta name="description" content="Four still sketches of stages for the promises section, with the real drawings and photographs: a set of drawings, papers on a drafting table, a cinema band, a flip book." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="../brand/equinix-fortress.svg" />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <style>
+      body { background: var(--bg-soft); }
+      .sk { min-height: 100vh; display: grid; align-content: center; padding: 48px var(--gutter); position: relative; }
+      .sk-tag { position: absolute; top: 20px; left: var(--gutter); font: 600 11px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+      .sk-tag b { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: #fff; margin-right: 8px; font-size: 11px; }
+      .ticks::before, .ticks::after, .ticks i::before, .ticks i::after { content: ''; position: absolute; width: 12px; height: 12px; background: linear-gradient(var(--ink-3), var(--ink-3)) center/1px 12px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) center/12px 1px no-repeat; opacity: 0.55; }
+      .ticks::before { left: 12px; top: 12px; } .ticks::after { right: 12px; top: 12px; } .ticks i::before { left: 12px; bottom: 12px; } .ticks i::after { right: 12px; bottom: 12px; }
+      .grid-paper { background-color: #fff; background-image: linear-gradient(to right, rgb(0 0 0 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.035) 1px, transparent 1px); background-size: 48px 48px; }
+      .lines { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+      .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+      .faint { opacity: 0.32; mix-blend-mode: multiply; }
+      .kept { font-size: 14px; color: var(--ink); }
+      .kept b { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 3px; }
+      .listen { display: inline-flex; align-items: center; gap: 7px; font: 600 12px var(--font); color: var(--ink); background: #fff; border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 12px 6px 10px; }
+      .listen::before { content: ''; width: 0; height: 0; border-left: 8px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+      /* ---- A. A set of drawings: one landscape sheet, a title block, a sheet index ---- */
+      .set { width: min(1120px, 100%); margin: 0 auto; }
+      .set-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
+      .set-head h2 { margin: 0; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.03em; line-height: 1.02; }
+      .set-head .btn { align-self: center; }
+      .sheet { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 320px; height: min(62vh, 600px); background: #fff; border-radius: 6px; box-shadow: 0 1px 0 var(--line), 0 24px 70px rgb(0 0 0 / 0.08); overflow: hidden; }
+      .sheet-plan { position: relative; }
+      .sheet-plan .lines { object-position: center 70%; }
+      .block { border-left: 1px solid var(--line-strong); display: grid; grid-template-rows: auto 1fr auto auto; }
+      .block > * { padding: 16px 22px; border-bottom: 1px solid var(--line); }
+      .block > *:last-child { border-bottom: 0; }
+      .block .meta { display: flex; justify-content: space-between; font: 600 10.5px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+      .block .meta b { color: var(--red); }
+      .block h3 { margin: 10px 0 8px; font-size: 24px; line-height: 1.1; letter-spacing: -0.02em; }
+      .block p { margin: 0; color: var(--ink-2); font-size: 14.5px; }
+      .index { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
+      .index span { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; padding: 10px 12px; border-top: 2px solid var(--line-strong); font-size: 12.5px; color: var(--ink-3); }
+      .index span b { font-size: 12px; color: var(--ink-3); }
+      .index span.on { border-top-color: var(--red); color: var(--ink); }
+      .index span.on b { color: var(--red); }
+
+      /* ---- B. Papers on a drafting table ---- */
+      .table { position: relative; height: min(78vh, 760px); width: min(1180px, 100%); margin: 0 auto; background: #2d2c2f radial-gradient(ellipse at 50% 30%, rgb(255 255 255 / 0.08), transparent 60%); border-radius: 10px; overflow: hidden; }
+      .table::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px); background-size: 64px 64px; pointer-events: none; }
+      .paper { position: absolute; width: 230px; aspect-ratio: 3 / 4; background: #fff; border-radius: 3px; box-shadow: 0 14px 40px rgb(0 0 0 / 0.45); overflow: hidden; transform: rotate(var(--r)); }
+      .paper small { position: absolute; left: 10px; top: 8px; font: 600 10px var(--font); letter-spacing: 0.08em; color: var(--ink-3); z-index: 2; }
+      .paper.front { width: 330px; box-shadow: 0 28px 70px rgb(0 0 0 / 0.55); z-index: 3; }
+      .table-copy { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); width: 300px; color: #fff; }
+      .table-copy .eyebrow { color: #ff8a8e; }
+      .table-copy h3 { margin: 6px 0 10px; font-size: 28px; line-height: 1.08; letter-spacing: -0.02em; }
+      .table-copy p { margin: 0 0 12px; color: rgb(255 255 255 / 0.72); font-size: 15px; }
+      .table-copy .kept { color: #fff; border-top: 1px dashed rgb(255 255 255 / 0.3); padding-top: 10px; }
+      .table-copy .kept b { color: #ff8a8e; }
+      .table-copy .listen { margin-top: 14px; }
+      .table-title { position: absolute; left: 48px; top: 40px; color: #fff; }
+      .table-title h2 { margin: 4px 0 0; font-size: 30px; letter-spacing: -0.03em; }
+
+      /* ---- C. Cinema band ---- */
+      .band { position: relative; height: min(70vh, 640px); margin: 0 calc(-1 * var(--gutter)); overflow: hidden; background: #fff; }
+      .band .photo { opacity: 0.92; }
+      .band .lines { mix-blend-mode: multiply; opacity: 0.4; }
+      .band-copy { position: absolute; left: var(--gutter); top: 56px; max-width: 520px; }
+      .band-copy .eyebrow { margin: 0 0 8px; }
+      .band-copy h3 { margin: 0 0 10px; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.02; letter-spacing: -0.03em; }
+      .band-copy p { margin: 0 0 12px; font-size: 16px; color: var(--ink-2); max-width: 44ch; }
+      .rail { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 28px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+      .rail span { height: 2px; background: rgb(0 0 0 / 0.18); position: relative; }
+      .rail span.on { background: var(--red); }
+      .rail span::after { content: attr(data-n); position: absolute; top: 10px; left: 0; font: 600 11px/1 var(--font); color: var(--ink-3); letter-spacing: 0.06em; }
+      .rail span.on::after { color: var(--red); }
+
+      /* ---- D. The flip book: five small sheets in a row ---- */
+      .book { width: min(1180px, 100%); margin: 0 auto; }
+      .book h2 { margin: 0 0 22px; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.03em; text-align: center; }
+      .book-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; align-items: start; }
+      .leaf { position: relative; aspect-ratio: 3 / 4; background: #fff; border-radius: 5px; box-shadow: 0 1px 0 var(--line), 0 16px 40px rgb(0 0 0 / 0.07); overflow: hidden; }
+      .leaf-cap { margin-top: 12px; }
+      .leaf-cap b { display: block; font-size: 12px; color: var(--red); letter-spacing: 0.06em; margin-bottom: 4px; }
+      .leaf-cap strong { display: block; font-size: 15px; line-height: 1.2; letter-spacing: -0.01em; }
+      .leaf-cap p { margin: 6px 0 0; font-size: 13px; color: var(--ink-2); }
+      .leaf-cap .kept { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line-strong); font-size: 12.5px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- A -->
+      <section class="sk" id="a">
+        <p class="sk-tag"><b>A</b>A set of drawings: one sheet, a title block, the sheet index</p>
+        <div class="set">
+          <div class="set-head"><div><p class="eyebrow" style="margin:0 0 6px">Part of the community</p><h2>Five promises to the places we call home.</h2></div><button type="button" class="btn btn--primary">Play the five promises</button></div>
+          <div class="sheet">
+            <div class="sheet-plan grid-paper ticks"><i></i><img class="lines" src="../media/promises/drawn/k2-tint-ref.webp" alt="" /></div>
+            <div class="block">
+              <div class="meta"><span>Sheet <b>02</b> of 05</span><span>Promise</span></div>
+              <div><h3>Power responsibility</h3><p>Pay our full share of grid costs so our demand does not raise residents’ bills.</p></div>
+              <div class="kept"><b>Kept</b>A 10-year transmission agreement with ComEd that the utility described as a model. <span style="color:var(--ink-3)">Source</span></div>
+              <div><span class="listen">Listen</span></div>
+            </div>
+          </div>
+          <div class="index"><span><b>01</b>Public infrastructure investment</span><span class="on"><b>02</b>Power responsibility</span><span><b>03</b>Jobs and skills development</span><span><b>04</b>Natural resource protection</span><span><b>05</b>Bridge the digital divide</span></div>
+        </div>
+      </section>
+
+      <!-- B -->
+      <section class="sk" id="b">
+        <p class="sk-tag"><b>B</b>Papers on a drafting table: click one and it comes to the front and develops</p>
+        <div class="table">
+          <div class="table-title"><p class="eyebrow" style="margin:0;color:#ff8a8e">Part of the community</p><h2>Five promises.</h2></div>
+          <div class="paper" style="--r:-7deg; left: 6%; top: 42%;"><small>01</small><img class="lines" src="../media/promises/drawn/k1-tint-ref.webp" alt="" /></div>
+          <div class="paper" style="--r:4deg; left: 22%; top: 12%;"><small>02</small><img class="lines" src="../media/promises/drawn/k2-tint-ref.webp" alt="" /></div>
+          <div class="paper front" style="--r:0deg; left: 36%; top: 10%;"><small>03</small><img class="photo" src="../media/kept-3-1200.webp" alt="" /><img class="lines faint" src="../media/promises/drawn/k3-tint-ref.webp" alt="" /></div>
+          <div class="paper" style="--r:6deg; left: 14%; top: 50%;"><small>04</small><img class="lines" src="../media/promises/drawn/k4-tint-ref.webp" alt="" /></div>
+          <div class="paper" style="--r:-3deg; left: 30%; top: 56%;"><small>05</small><img class="lines" src="../media/promises/drawn/k5-tint-ref.webp" alt="" /></div>
+          <div class="table-copy"><p class="eyebrow" style="margin:0">Promise 03</p><h3>Jobs and skills development</h3><p>Create quality jobs and educational pathways for tomorrow’s workforce.</p><div class="kept"><b>Kept</b>School partnerships through Pathways to Tech, starting in Ashburn and Dallas.</div><span class="listen" style="background:transparent;color:#fff;border-color:rgb(255 255 255 / .4)">Listen</span></div>
+        </div>
+      </section>
+
+      <!-- C -->
+      <section class="sk" id="c">
+        <p class="sk-tag"><b>C</b>Cinema band: full width, the plan over the photograph, a rail of five</p>
+        <div class="band">
+          <img class="photo" src="../media/kept-4-1200.webp" alt="" style="object-position:center 60%" />
+          <img class="lines" src="../media/promises/drawn/k4-tint-ref.webp" alt="" style="object-position:center 60%" />
+          <div class="band-copy"><p class="eyebrow">Promise 04</p><h3>Natural resource protection</h3><p>Use water and land carefully and report transparently.</p><div class="kept"><b>Kept</b>Avoiding water-based cooling at new sites in water-stressed areas.</div></div>
+          <div class="rail"><span data-n="01"></span><span data-n="02"></span><span data-n="03"></span><span class="on" data-n="04"></span><span data-n="05"></span></div>
+        </div>
+      </section>
+
+      <!-- D -->
+      <section class="sk" id="d">
+        <p class="sk-tag"><b>D</b>The flip book: five sheets along a wall, the one you touch develops</p>
+        <div class="book">
+          <h2>Five promises to the places we call home.</h2>
+          <div class="book-row">
+            <div><div class="leaf grid-paper"><img class="lines" src="../media/promises/drawn/k1-tint-ref.webp" alt="" /></div><div class="leaf-cap"><b>01</b><strong>Public infrastructure investment</strong><p>Invest in roads, paths and public services around our sites.</p></div></div>
+            <div><div class="leaf grid-paper"><img class="lines" src="../media/promises/drawn/k2-tint-ref.webp" alt="" /></div><div class="leaf-cap"><b>02</b><strong>Power responsibility</strong><p>Pay our full share of grid costs.</p></div></div>
+            <div><div class="leaf"><img class="photo" src="../media/kept-3-1200.webp" alt="" /><img class="lines faint" src="../media/promises/drawn/k3-tint-ref.webp" alt="" /></div><div class="leaf-cap"><b>03</b><strong>Jobs and skills development</strong><p>Create quality jobs and educational pathways.</p><div class="kept"><b>Kept</b>Pathways to Tech, Ashburn and Dallas.</div></div></div>
+            <div><div class="leaf grid-paper"><img class="lines" src="../media/promises/drawn/k4-tint-ref.webp" alt="" /></div><div class="leaf-cap"><b>04</b><strong>Natural resource protection</strong><p>Use water and land carefully.</p></div></div>
+            <div><div class="leaf grid-paper"><img class="lines" src="../media/promises/drawn/k5-tint-ref.webp" alt="" /></div><div class="leaf-cap"><b>05</b><strong>Bridge the digital divide</strong><p>Expand access to connectivity, skills and careers.</p></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module">import '@fontsource-variable/inter-tight';</script>
+  </body>
+</html>

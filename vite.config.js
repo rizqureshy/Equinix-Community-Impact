@@ -41,6 +41,7 @@ export default defineConfig({
         kiosk: resolve(import.meta.dirname, 'impact/kiosk.html'), // the kiosk (the root on version 2)
         people: resolve(import.meta.dirname, 'impact/prototypes/people.html'),
         promises: resolve(import.meta.dirname, 'impact/prototypes/promises.html'), // the promises drawn as plans
+        promisesSketches: resolve(import.meta.dirname, 'impact/prototypes/promises-sketches.html'), // four stages for the promises, as stills
       },
     },
   },
