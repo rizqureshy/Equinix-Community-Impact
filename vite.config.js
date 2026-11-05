@@ -40,6 +40,7 @@ export default defineConfig({
         engage: resolve(import.meta.dirname, 'impact/engage.html'),
         kiosk: resolve(import.meta.dirname, 'impact/kiosk.html'), // the kiosk (the root on version 2)
         people: resolve(import.meta.dirname, 'impact/prototypes/people.html'),
+        promises: resolve(import.meta.dirname, 'impact/prototypes/promises.html'), // the promises drawn as plans
       },
     },
   },

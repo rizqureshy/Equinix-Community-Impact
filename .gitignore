@@ -30,3 +30,5 @@ media-src/city/ref/
 !media-src/rooms/old/web/*.webm
 !media-src/rooms/b9/web/*.mp4
 !media-src/rooms/b9/web/*.webm
+media-src/promises/drawn/*.png
+media-src/promises/drawn/*.err

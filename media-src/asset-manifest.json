@@ -2317,7 +2317,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid\u2019s newest site runs without consuming any water at all.",
+        "text": "In water-stressed places we cool with air, not water. Since 2023 the design rules forbid evaporative cooling there, and Madrid’s newest site runs without consuming any water at all.",
         "durationSeconds": 13.32,
         "original": "media-src/voice/people-p06-cooling-engineer.mp3",
         "web": "impact/public/media/voice/people-p06-cooling-engineer.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -2336,7 +2336,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician\u2019s badge in Chicago.",
+        "text": "More than eighteen hundred students came through our doors on tours in 2025. One tour sparked a path from an internship to a full-time technician’s badge in Chicago.",
         "durationSeconds": 11.08,
         "original": "media-src/voice/people-p04-tour-guide.mp3",
         "web": "impact/public/media/voice/people-p04-tour-guide.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -2355,7 +2355,7 @@
         "voice": "Andy - British, calm, warm, kind",
         "voiceId": "vvVtX7DIkIyxoRO82cCc",
         "flowId": "4Md279iiCBqjxYkwcXAx",
-        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours\u2019 bills do not rise.",
+        "text": "Ninety-six percent renewable coverage, the eighth year above ninety. And in Georgia, we pay every cent of the grid costs our demand creates, for twenty years, so neighbours’ bills do not rise.",
         "durationSeconds": 13.4,
         "original": "media-src/voice/people-p10-energy-manager.mp3",
         "web": "impact/public/media/voice/people-p10-energy-manager.mp3 (mono 96 kb/s, loudness normalised to -18 LUFS)",
@@ -2394,7 +2394,7 @@
       "voice": "Lily (ElevenLabs premade, British)",
       "llm": "claude-sonnet-5-5",
       "embed": "impact/scripts/app.js openCoach()",
-      "status": "removed from the site on 3 November 2026 at the team\u2019s request; the agent, its widget and its knowledge base are gone from the code"
+      "status": "removed from the site on 3 November 2026 at the team’s request; the agent, its widget and its knowledge base are gone from the code"
     }
   },
   "spine": {
@@ -3710,5 +3710,109 @@
       }
     ],
     "estimatedCredits": 34.25
+  },
+  "promisesDrawn": {
+    "description": "The promises drawn as plans (prototypes/promises.html, branch v3/front-door): one red hairline per promise in the manner of a site sketch, drawn on the page stroke by stroke, with the kept photograph developing through under the pointer. Style test of 5 November 2026 on the first promise: two routes (vector authored by the model; raster traced from the kept photograph and vectorised locally) in two inks (hairline; hairline and wash). Raw PNGs stay out of git; the SVGs and web copies are committed.",
+    "estimatedCredits": 7.5,
+    "failedJobs": [
+      {
+        "key": "drawn-k1-tint-svg",
+        "note": "first attempt ended failed on the service, 1.5 credits if charged; retried successfully"
+      }
+    ],
+    "items": [
+      {
+        "key": "drawn-k1-line-svg",
+        "generationId": "fee8b070-cdaa-468b-8f59-6a10056890b3",
+        "model": "GPT Image 2.6",
+        "jobType": "gpt_image_2_6",
+        "createdAt": "2026-11-05T03:39:52.393932Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "output_format": "svg"
+        },
+        "promptFile": "media-src/promises/drawn/k1-line-svg.prompt",
+        "styleFile": "media-src/promises/drawn/style-line.txt",
+        "reference": null,
+        "original": "media-src/promises/drawn/k1-line-svg.svg",
+        "web": "impact/public/media/promises/drawn/k1-line-svg.svg",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_033952_fee8b070-cdaa-468b-8f59-6a10056890b3.svg",
+        "estimatedCredits": 1.5,
+        "status": "reserve",
+        "usage": "Vector drawing authored by the model (SVG output, no reference): a napkin sketch of the Minooka path promise. Style test only; the traced route was chosen.",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 5 November 2026. A drawing, not a record of a place."
+      },
+      {
+        "key": "drawn-k1-tint-svg",
+        "generationId": "a3192d14-7ff2-4be7-be98-2026218e27ea",
+        "model": "GPT Image 2.6",
+        "jobType": "gpt_image_2_6",
+        "createdAt": "2026-11-05T03:44:00.470688Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "output_format": "svg"
+        },
+        "promptFile": "media-src/promises/drawn/k1-tint-svg.prompt",
+        "styleFile": "media-src/promises/drawn/style-tint.txt",
+        "reference": null,
+        "original": "media-src/promises/drawn/k1-tint-svg.svg",
+        "web": "impact/public/media/promises/drawn/k1-tint-svg.svg",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_034400_a3192d14-7ff2-4be7-be98-2026218e27ea.svg",
+        "estimatedCredits": 1.5,
+        "status": "reserve",
+        "usage": "Vector drawing authored by the model with a flat wash (SVG output, no reference). First attempt failed on the service and was retried. Style test only; the traced route was chosen.",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 5 November 2026. A drawing, not a record of a place."
+      },
+      {
+        "key": "drawn-k1-line-ref",
+        "generationId": "58f172f6-813f-444c-815d-f48316ecd086",
+        "model": "GPT Image 2.6",
+        "jobType": "gpt_image_2_6",
+        "createdAt": "2026-11-05T03:42:21.785633Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "output_format": "png"
+        },
+        "promptFile": "media-src/promises/drawn/k1-line-ref.prompt",
+        "styleFile": "media-src/promises/drawn/style-line.txt",
+        "reference": "media-src/promises/k1-infrastructure.png",
+        "original": "media-src/promises/drawn/k1-line-ref.png",
+        "web": "impact/public/media/promises/drawn/k1-line-ref.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_034221_58f172f6-813f-444c-815d-f48316ecd086.png",
+        "estimatedCredits": 1.5,
+        "status": "candidate",
+        "usage": "Hairline drawing traced from the kept-1 photograph (image reference), so plan and photograph register. Its strokes are vectorised by scripts/trace_drawing.py into k1-line-ref.svg so the page can draw them on.",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 5 November 2026. A drawing, not a record of a place."
+      },
+      {
+        "key": "drawn-k1-tint-ref",
+        "generationId": "6cd44a34-119a-4546-bef4-b0f0d656e2a1",
+        "model": "GPT Image 2.6",
+        "jobType": "gpt_image_2_6",
+        "createdAt": "2026-11-05T03:43:06.499263Z",
+        "settings": {
+          "aspect_ratio": "2:3",
+          "quality": "high",
+          "resolution": "1k",
+          "output_format": "png"
+        },
+        "promptFile": "media-src/promises/drawn/k1-tint-ref.prompt",
+        "styleFile": "media-src/promises/drawn/style-tint.txt",
+        "reference": "media-src/promises/k1-infrastructure.png",
+        "original": "media-src/promises/drawn/k1-tint-ref.png",
+        "web": "impact/public/media/promises/drawn/k1-tint-ref.webp",
+        "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_034306_6cd44a34-119a-4546-bef4-b0f0d656e2a1.png",
+        "estimatedCredits": 1.5,
+        "status": "candidate",
+        "usage": "Hairline drawing with one flat sand wash, traced from the kept-1 photograph. Strokes vectorised to k1-tint-ref.svg; the wash alone is lifted to k1-tint-ref.wash.webp for the layer beneath the strokes.",
+        "provenance": "AI generated with Higgsfield via the Higgsfield CLI on 5 November 2026. A drawing, not a record of a place."
+      }
+    ]
   }
 }
