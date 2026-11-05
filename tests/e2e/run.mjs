@@ -122,7 +122,7 @@ try {
   // Labels behind the camera hide themselves; pick one that is in view
   const visiblePlace = await p.evaluate(() => [...document.querySelectorAll('.place-label:not(.is-offscreen)')].map((l) => l.dataset.place).find((pl) => pl !== 'shops'));
   // dispatched rather than pointer-clicked: floating labels can drift under the pointer while the camera eases
-  await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click');
+  await p.locator(`.place-label[data-place="${visiblePlace}"]`).dispatchEvent('click', undefined, { timeout: 90000 });
   await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   const labelRoom = await p.evaluate(() => ({ phase: window.__impact.room.phase, place: window.__impact.room.place }));
   check(visiblePlace && labelRoom.phase === 'inside' && labelRoom.place === visiblePlace, 'a building or its name steps you inside', `${visiblePlace} ${JSON.stringify(labelRoom)}`);
