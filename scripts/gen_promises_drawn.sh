@@ -13,7 +13,7 @@ for k in "${stems[@]}"; do
   subj=${k%%-*}                      # k1
   route=${k##*-}                     # svg | ref
   ref="$d/../${subj/k1/k1-infrastructure}.png"
-  case "$subj" in k1) ref="$d/../k1-infrastructure.png";; k2) ref="$d/../k2-power.png";; k3) ref="$d/../k3-jobs.png";; k4) ref="$d/../k4-nature.png";; k5) ref="$d/../k5-inclusion.png";; esac
+  case "$subj" in k1) ref="$d/../k1-infrastructure.png";; k2) ref="$d/../k2-power.png";; k3) ref="$d/../k3-jobs.png";; k4) ref="$d/../k4-nature.png";; k5) ref="$d/../k5-digital.png";; esac
   if [ "$route" = svg ]; then out="$d/$k.svg"; extra=(--output-format svg); else out="$d/$k.png"; extra=(--image-references "$ref"); fi
   [ -s "$out" ] && { echo "skip $k"; continue; }
   echo "== $k $(date -u +%T)"

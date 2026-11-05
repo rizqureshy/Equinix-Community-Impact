@@ -1,0 +1,33 @@
+[
+  {
+    "created_at": "2026-11-05T03:57:54.439688Z",
+    "display_name": "GPT Image 2.6",
+    "id": "4598a3b3-2de7-41eb-843c-1db4031dd0a8",
+    "job_type": "gpt_image_2_6",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_035754_4598a3b3-2de7-41eb-843c-1db4031dd0a8_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "height": 1024,
+      "medias": [
+        {
+          "data": {
+            "id": "08f4f964-8ac2-477b-af25-4b3d3808802c",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/08f4f964-8ac2-477b-af25-4b3d3808802c.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "aurora-img-alpha",
+      "output_format": "png",
+      "prompt": "A hairline line drawing in one single red ink on pure white paper, in the manner of an architect's first site sketch made before anything is built: one confident continuous pen weight throughout, open linework, no shading, no hatching, no grey tones, no text, no lettering, no numbers, no logos. Beneath the lines, one flat pale wash of warm sand colour laid loosely under the path and the building only, like a single marker stroke that does not stay inside the lines; nothing else is coloured. A few short dimension ticks along one edge of the path and one small registration cross in a corner, as on a plan. Generous white space. Portrait format. Redraw the attached photograph as this kind of line drawing, keeping its exact composition, horizon line, camera height and the positions of the path, the cyclist, the building, the grasses and the survey stakes, so that the drawing would register over the photograph. Subject: a quiet suburban street seen from a slight rise at sunset, running from the lower left into the distance, a terrace of pitched-roof family homes with lit windows stepping down the right-hand side, young street trees and low hedges along the pavement, a parked car, a woman walking a dog on the pavement in the near right, a man walking away on the left, and beyond the rooftops a wide flat valley with a line of lattice transmission pylons receding into the haze, their cables drawn as single long lines; the sky left as empty paper. ",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "1k",
+      "width": 688
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KzGlnN8xHLuFB1cVz5edaqi4jD/hf_20261105_035754_4598a3b3-2de7-41eb-843c-1db4031dd0a8.png",
+    "status": "completed"
+  }
+]

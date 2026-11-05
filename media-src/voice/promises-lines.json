@@ -1,0 +1,55 @@
+{
+  "voice": "Andy - British, calm, warm, kind",
+  "voiceId": "vvVtX7DIkIyxoRO82cCc",
+  "model": "eleven_v4",
+  "lines": {
+    "promise-1": "Promise one. Public infrastructure investment. Invest in roads, paths and public services around our sites, and fund the power and water infrastructure our sites need. ... Kept: a public bike path, and land for a future fire station, in Minooka, Illinois.",
+    "promise-2": "Promise two. Power responsibility. Pay our full share of grid costs, so our demand does not raise residents’ bills. ... Kept: a ten-year transmission agreement with Com Ed, that the utility described as a model.",
+    "promise-3": "Promise three. Jobs and skills development. Create quality jobs and educational pathways for tomorrow’s workforce. ... Kept: school partnerships through Pathways to Tech, starting in Ashburn and Dallas.",
+    "promise-4": "Promise four. Natural resource protection. Use water and land carefully, and report transparently. ... Kept: avoiding water-based cooling at new sites in water-stressed areas.",
+    "promise-5": "Promise five. Bridge the digital divide. Expand access to connectivity, skills and careers. ... Kept: twenty-eight We Are Equinix teams supported thirty-one local digital inclusion nonprofits, in twenty twenty-five."
+  },
+  "flowId": "s9bP8N4Np4Zc9iZXECmq",
+  "generations": {
+    "promise-1": {
+      "generationId": "Scph4i11p82eUs37mMXB",
+      "sessionId": "jObJovXAcEmcEflgVQ1e",
+      "durationSeconds": 18.08,
+      "creditsElevenLabs": 255.51,
+      "original": "media-src/voice/promises/promise-1.mp3",
+      "web": "impact/public/media/voice/promises/promise-1.mp3"
+    },
+    "promise-2": {
+      "generationId": "GH7XQOd9uZ5SKuRzMVst",
+      "sessionId": "IAXDFWOgPshjPZg9iNTk",
+      "durationSeconds": 15.76,
+      "creditsElevenLabs": 211.422,
+      "original": "media-src/voice/promises/promise-2.mp3",
+      "web": "impact/public/media/voice/promises/promise-2.mp3"
+    },
+    "promise-3": {
+      "generationId": "Rd0qBuGPwO79CSk28CDA",
+      "sessionId": "zaVrB3kuhpXN7bgV0j9b",
+      "durationSeconds": 14.8,
+      "creditsElevenLabs": 202.404,
+      "original": "media-src/voice/promises/promise-3.mp3",
+      "web": "impact/public/media/voice/promises/promise-3.mp3"
+    },
+    "promise-4": {
+      "generationId": "RAHukVdd4RT8MOXCCLEc",
+      "sessionId": "MYQr0lyuCludLUkjEYEO",
+      "durationSeconds": 13.68,
+      "creditsElevenLabs": 175.35,
+      "original": "media-src/voice/promises/promise-4.mp3",
+      "web": "impact/public/media/voice/promises/promise-4.mp3"
+    },
+    "promise-5": {
+      "generationId": "daVp7LoAv2EnjDCdh8Cr",
+      "sessionId": "NEMfWT2RqTPAoDgzPVrM",
+      "durationSeconds": 16.16,
+      "creditsElevenLabs": 215.43,
+      "original": "media-src/voice/promises/promise-5.mp3",
+      "web": "impact/public/media/voice/promises/promise-5.mp3"
+    }
+  }
+}

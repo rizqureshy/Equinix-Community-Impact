@@ -32,3 +32,4 @@ media-src/city/ref/
 !media-src/rooms/b9/web/*.webm
 media-src/promises/drawn/*.png
 media-src/promises/drawn/*.err
+media-src/voice/promises/*.mp3

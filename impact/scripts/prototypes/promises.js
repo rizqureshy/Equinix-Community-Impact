@@ -1,8 +1,9 @@
 // Prototype: the promises drawn as plans. A numbered list with a thread that grows as you read; beside it a
-// sticky sheet where the current promise's drawing draws itself on (stroke by stroke for a vector drawing,
-// under a soft sweep for a traced raster). Under the pointer the photograph of the promise kept develops
-// through the drawing in an ink blot, and fades back to the plan when the hand leaves.
-// Drawings and photographs: media-src/asset-manifest.json (promises).
+// sticky sheet where the current promise's plan draws itself in one red line, rests a beat, and then the
+// photograph of the promise kept develops through it and stays, the lines faint over it. Nothing reacts to
+// the hand. A Listen button on each promise has the narrator read it, and the sheet keeps time with him:
+// the pen draws while he reads the promise, the photograph comes up as he says "Kept". "Play the five
+// promises" runs the whole section hands free. Drawings, photographs and voice: media-src/asset-manifest.json.
 import '@fontsource-variable/inter-tight';
 import { principles, sources } from '../content/stories.js';
 
@@ -10,11 +11,21 @@ const $ = (s, r = document) => r.querySelector(s);
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Which promises have a drawing so far, by index (0 = the first). Others show their number on the sheet.
-const DRAWN = { 0: 'k1' };
+const DRAWING = (i) => `../media/promises/drawn/k${i + 1}-tint-ref`;
 const PHOTO = (i) => `../media/kept-${i + 1}-1200.webp`;
-const state = { ink: 'line', route: 'ref', current: 0 };
+const VOICE = (i) => `../media/voice/promises/promise-${i + 1}.mp3`;
+// Where "Kept" falls in each spoken line, as a share of its length (the lines in media-src/voice/promises-lines.json)
+const KEPT_AT = principles.map((p) => {
+  const before = `Promise. ${p.name}. ${p.promise} `.length;
+  return before / (before + `Kept: ${p.proof}`.length);
+});
+const DRAW_MS = 3000;
+const HOLD_MS = 800;
+const DEVELOP_MS = 1600;
+
+const state = { current: -1, phase: 'paper', playing: -1, auto: false };
 
 // ---- The list ---------------------------------------------------------------------------------
 const list = $('#list');
@@ -23,7 +34,8 @@ const rows = principles.map((p, i) => {
   li.className = 'row';
   li.dataset.i = String(i);
   li.innerHTML = `<span class="num">0${i + 1}</span><h2 class="name">${esc(p.name)}</h2><p class="promise">${esc(p.promise)}</p>
-    <p class="kept"><b>Kept</b>${esc(p.proof)} <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source</a></p>`;
+    <p class="kept"><b>Kept</b>${esc(p.proof)} <a href="${esc(sources.S7.url)}" target="_blank" rel="noopener">Source</a></p>
+    <button type="button" class="listen" data-listen="${i}" aria-pressed="false"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 1.5v9l8-4.5z" fill="currentColor"/></svg><span>Listen</span></button>`;
   list.appendChild(li);
   return li;
 });
@@ -32,131 +44,237 @@ const threadFill = $('#thread-fill');
 // ---- The sheet ----------------------------------------------------------------------------------
 const plan = $('#plan');
 const drawingHost = $('#drawing');
-const hint = $('#hint');
-let strokes = []; // [{ el, from, to }] for the vector drawing: each stroke's share of the whole line
-let drawingKind = 'none'; // svg | img | none
+const washHost = $('#wash');
+const photoImg = $('#photo-img');
+let strokes = []; // [{ el, from, to }]: each stroke's share of the whole line, in pen order
 let progress = 0;
 let loadToken = 0;
 
+function setPhase(ph) {
+  state.phase = ph;
+  plan.dataset.phase = ph;
+  rows.forEach((r, i) => r.classList.toggle('is-kept', i === state.current && (ph === 'developing' || ph === 'kept')));
+}
+
 async function loadDrawing(i) {
-  drawingHost.innerHTML = '';
-  drawingHost.classList.remove('sweep');
-  strokes = [];
-  const key = DRAWN[i];
-  if (!key) {
-    drawingKind = 'none';
-    drawingHost.innerHTML = `<div class="pending"><b>0${i + 1}</b>Drawing to follow</div>`;
-    return;
-  }
-  const stem = `../media/promises/drawn/${key}-${state.ink}-${state.route}`;
   const token = ++loadToken;
-  if (state.ink === 'tint' && state.route === 'ref') {
-    // The wash beneath the lines: one flat marker stroke that develops as the drawing closes
+  drawingHost.innerHTML = '';
+  washHost.innerHTML = '';
+  strokes = [];
+  photoImg.src = PHOTO(i);
+  let res = await fetch(`${DRAWING(i)}.svg`).catch(() => null);
+  let stem = DRAWING(i);
+  if (!(res && res.ok)) {
+    stem = `../media/promises/drawn/k${i + 1}-line-ref`;
+    res = await fetch(`${stem}.svg`).catch(() => null);
+  }
+  if (token !== loadToken) return false;
+  if (!(res && res.ok)) {
+    drawingHost.innerHTML = `<div class="pending"><b>0${i + 1}</b>Drawing to follow</div>`;
+    return false;
+  }
+  if (stem.endsWith('tint-ref')) {
     const wash = new Image();
     wash.decoding = 'async';
     wash.alt = '';
-    wash.className = 'wash';
     wash.src = `${stem}.wash.webp`;
-    drawingHost.appendChild(wash);
+    washHost.appendChild(wash);
   }
-  const res = await fetch(`${stem}.svg`).catch(() => null);
-  if (token !== loadToken) return;
-  if (res && res.ok) {
-    const doc = new DOMParser().parseFromString(await res.text(), 'image/svg+xml');
-    if (token !== loadToken) return;
-    const svg = doc.documentElement;
-    svg.removeAttribute('width');
-    svg.removeAttribute('height');
-    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    drawingHost.appendChild(document.importNode(svg, true));
-    const live = drawingHost.querySelector('svg');
-    // Every stroked shape takes its share of the total length, in document order, so the pen travels the sheet once
-    const shapes = [...live.querySelectorAll('path, line, polyline, polygon, circle, ellipse, rect')].filter((el) => {
-      const cs = getComputedStyle(el);
-      return cs.stroke !== 'none' && cs.stroke !== 'rgba(0, 0, 0, 0)' && typeof el.getTotalLength === 'function';
-    });
-    let total = 0;
-    const lens = shapes.map((el) => {
-      let L = 0;
-      try { L = el.getTotalLength(); } catch { L = 0; }
-      total += L;
-      return L;
-    });
-    let acc = 0;
-    strokes = shapes.map((el, k) => {
-      const from = acc / (total || 1);
-      acc += lens[k];
-      const to = acc / (total || 1);
-      el.style.strokeDasharray = `${lens[k]} ${lens[k]}`;
-      el.style.strokeDashoffset = String(lens[k]);
-      el.dataset.len = String(lens[k]);
-      const cs = getComputedStyle(el);
-      el.dataset.filled = cs.fill !== 'none' && cs.fill !== 'rgba(0, 0, 0, 0)' ? '1' : '';
-      return { el, from, to };
-    });
-    drawingKind = 'svg';
-  } else {
-    // No strokes for this drawing yet: the raster reveals under a soft sweep instead
-    const img = new Image();
-    img.decoding = 'async';
-    img.alt = '';
-    img.src = `${stem}.webp`;
-    img.onerror = () => {
-      if (token !== loadToken) return;
-      drawingKind = 'none';
-      drawingHost.innerHTML = `<div class="pending"><b>0${i + 1}</b>Not generated yet</div>`;
-    };
-    drawingHost.classList.add('sweep');
-    drawingHost.appendChild(img);
-    drawingKind = 'img';
-  }
-  draw();
-}
-
-// The pen takes its time: the drawing draws itself over a few seconds once it is on the sheet
-const DRAW_MS = 3200;
-let drawRaf = 0;
-function draw() {
-  cancelAnimationFrame(drawRaf);
-  if (reduce()) {
-    applyProgress(1, true);
-    return;
-  }
-  const start = performance.now();
+  const doc = new DOMParser().parseFromString(await res.text(), 'image/svg+xml');
+  if (token !== loadToken) return false;
+  const svg = doc.documentElement;
+  svg.removeAttribute('width');
+  svg.removeAttribute('height');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  drawingHost.appendChild(document.importNode(svg, true));
+  const live = drawingHost.querySelector('svg');
+  const shapes = [...live.querySelectorAll('path, line, polyline, polygon, circle, ellipse')].filter((el) => typeof el.getTotalLength === 'function');
+  let total = 0;
+  const lens = shapes.map((el) => {
+    let L = 0;
+    try { L = el.getTotalLength(); } catch { L = 0; }
+    total += L;
+    return L;
+  });
+  let acc = 0;
+  strokes = shapes.map((el, k) => {
+    const from = acc / (total || 1);
+    acc += lens[k];
+    const to = acc / (total || 1);
+    el.style.strokeDasharray = `${lens[k]} ${lens[k]}`;
+    el.style.strokeDashoffset = String(lens[k]);
+    el.dataset.len = String(lens[k]);
+    return { el, from, to };
+  });
   applyProgress(0, true);
-  const step = (now) => {
-    const k = Math.min(1, (now - start) / DRAW_MS);
-    applyProgress(k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
-    if (k < 1) drawRaf = requestAnimationFrame(step);
-  };
-  drawRaf = requestAnimationFrame(step);
+  return true;
 }
 
-/** How much of the current drawing is on the sheet: 0 blank, 1 complete. */
+/** How much of the plan is on the sheet: 0 blank, 1 complete. The wash comes up as the lines close. */
 function applyProgress(p, force = false) {
   if (!force && Math.abs(p - progress) < 0.002) return;
   progress = p;
-  if (drawingKind === 'svg') {
-    for (const s of strokes) {
-      const k = clamp((p - s.from) / Math.max(1e-6, s.to - s.from));
-      const L = Number(s.el.dataset.len);
-      s.el.style.strokeDashoffset = String(L * (1 - k));
-      if (s.el.dataset.filled) s.el.style.fillOpacity = String(k);
-    }
-  } else if (drawingKind === 'img') {
-    drawingHost.style.setProperty('--p', String(p));
+  for (const s of strokes) {
+    const k = clamp((p - s.from) / Math.max(1e-6, s.to - s.from));
+    s.el.style.strokeDashoffset = String(Number(s.el.dataset.len) * (1 - k));
   }
-  const wash = drawingHost.querySelector('.wash');
-  if (wash) wash.style.opacity = String(clamp((p - 0.35) / 0.5));
+  washHost.style.opacity = String(clamp((p - 0.35) / 0.5));
 }
 
-// ---- Scroll: the current row, the thread, the drawing's progress ------------------------------------
+// ---- The sequence: draw, rest, develop, keep ------------------------------------------------------
+let seqToken = 0;
+let drawRaf = 0;
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+
+/** Present promise i on the sheet. `drawMs`/`holdMs` let a spoken line set the pace. */
+async function present(i, { drawMs = DRAW_MS, holdMs = HOLD_MS } = {}) {
+  const token = ++seqToken;
+  cancelAnimationFrame(drawRaf);
+  setPhase('paper');
+  const ok = await loadDrawing(i);
+  if (token !== seqToken) return;
+  if (!ok) return;
+  if (reduce()) {
+    applyProgress(1, true);
+    setPhase('developing');
+    await wait(60);
+    if (token === seqToken) setPhase('kept');
+    return;
+  }
+  setPhase('drawing');
+  await new Promise((done) => {
+    const start = performance.now();
+    const step = (now) => {
+      if (token !== seqToken) return done();
+      const k = Math.min(1, (now - start) / drawMs);
+      applyProgress(ease(k));
+      if (k < 1) drawRaf = requestAnimationFrame(step);
+      else done();
+    };
+    drawRaf = requestAnimationFrame(step);
+  });
+  if (token !== seqToken) return;
+  setPhase('held');
+  await wait(holdMs);
+  if (token !== seqToken) return;
+  setPhase('developing');
+  await wait(DEVELOP_MS);
+  if (token !== seqToken) return;
+  setPhase('kept');
+}
+
+// ---- The narrator ----------------------------------------------------------------------------------
+let audio = null;
+function stopVoice() {
+  if (audio) {
+    audio.pause();
+    audio.onended = null;
+    audio = null;
+  }
+  state.playing = -1;
+  for (const b of document.querySelectorAll('[data-listen]')) {
+    b.setAttribute('aria-pressed', 'false');
+    b.querySelector('span').textContent = 'Listen';
+  }
+}
+/** Read promise i and keep the sheet in time with the voice. Resolves when the line has ended. */
+function playLine(i) {
+  stopVoice();
+  return new Promise((resolve) => {
+    const a = new Audio(VOICE(i));
+    a.preload = 'auto';
+    audio = a;
+    state.playing = i;
+    const btn = document.querySelector(`[data-listen="${i}"]`);
+    btn?.setAttribute('aria-pressed', 'true');
+    btn && (btn.querySelector('span').textContent = 'Stop');
+    let started = false;
+    const begin = () => {
+      if (started || audio !== a) return;
+      started = true;
+      const d = a.duration && isFinite(a.duration) ? a.duration : 12;
+      const keptAt = d * KEPT_AT[i];
+      // The pen finishes a breath before "Kept"; the photograph comes up as he says it
+      present(i, { drawMs: Math.max(1600, (keptAt - 0.5) * 1000), holdMs: 500 });
+      a.play().catch(() => {
+        // No voice (blocked or missing): the sheet runs on its own
+        if (audio === a) stopVoice();
+        present(i);
+        resolve();
+      });
+    };
+    a.addEventListener('loadedmetadata', begin, { once: true });
+    a.addEventListener('error', () => {
+      if (audio === a) stopVoice();
+      present(i);
+      resolve();
+    }, { once: true });
+    a.onended = () => {
+      if (audio === a) stopVoice();
+      resolve();
+    };
+    // Metadata that never arrives (an unreachable file) should not hang the run
+    setTimeout(() => { if (!started && audio === a) begin(); }, 2500);
+  });
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-listen]');
+  if (!b) return;
+  const i = Number(b.dataset.listen);
+  if (state.playing === i) {
+    stopVoice();
+    return;
+  }
+  if (state.auto) stopAll();
+  goTo(i);
+  playLine(i);
+});
+
+// ---- Play the five promises ------------------------------------------------------------------------
+const playAll = $('#play-all');
+let autoRun = 0;
+function goTo(i) {
+  const r = rows[i].getBoundingClientRect();
+  scrollTo({ top: scrollY + r.top + r.height / 2 - innerHeight / 2, behavior: reduce() ? 'auto' : 'smooth' });
+  if (state.current !== i) {
+    state.current = i;
+    rows.forEach((row, k) => row.classList.toggle('on', k === i));
+  }
+}
+async function runAll() {
+  const token = ++autoRun;
+  state.auto = true;
+  playAll.setAttribute('aria-pressed', 'true');
+  playAll.querySelector('span').textContent = 'Stop';
+  for (let i = 0; i < rows.length; i++) {
+    if (token !== autoRun) return;
+    goTo(i);
+    await wait(700);
+    if (token !== autoRun) return;
+    await playLine(i);
+    if (token !== autoRun) return;
+    await wait(1100);
+  }
+  if (token === autoRun) stopAll();
+}
+function stopAll() {
+  autoRun++;
+  state.auto = false;
+  stopVoice();
+  playAll.setAttribute('aria-pressed', 'false');
+  playAll.querySelector('span').textContent = 'Play the five promises';
+}
+playAll.addEventListener('click', () => (state.auto ? stopAll() : runAll()));
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && (state.auto || state.playing >= 0)) stopAll();
+});
+
+// ---- Scroll: the thread, and the current row when the reader is driving --------------------------------
 function onScroll() {
   const vh = innerHeight;
-  // The thread follows the reading line down the list
   const lr = list.getBoundingClientRect();
   threadFill.style.height = `${clamp((vh * 0.5 - lr.top) / lr.height) * 100}%`;
-  // The row nearest the middle of the screen is current
+  if (state.auto || state.playing >= 0) return; // the voice is leading
   let best = 0;
   let bestD = Infinity;
   rows.forEach((r, i) => {
@@ -170,139 +288,12 @@ function onScroll() {
   if (best !== state.current) {
     state.current = best;
     rows.forEach((r, i) => r.classList.toggle('on', i === best));
-    loadDrawing(best);
-  } else rows[best].classList.add('on');
+    present(best);
+  }
 }
 addEventListener('scroll', onScroll, { passive: true });
 addEventListener('resize', onScroll);
 
-// ---- The hand: the photograph develops through the plan in an ink blot -------------------------------
-const canvas = $('#photo-canvas');
-const ctx = canvas.getContext('2d');
-const photo = new Image();
-photo.decoding = 'async';
-let photoReady = false;
-let photoFor = -1;
-function loadPhoto(i) {
-  if (photoFor === i) return;
-  photoFor = i;
-  photoReady = false;
-  photo.onload = () => (photoReady = true);
-  photo.src = PHOTO(i);
-}
-const blot = { x: 0, y: 0, r: 0, target: 0, t: 0, seed: Math.random() * 10 };
-let raf = 0;
-let lastFrame = 0;
-function size() {
-  const dpr = Math.min(devicePixelRatio || 1, 2);
-  const r = plan.getBoundingClientRect();
-  canvas.width = Math.round(r.width * dpr);
-  canvas.height = Math.round(r.height * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-new ResizeObserver(size).observe(plan);
-function blotPath(x, y, r, t) {
-  ctx.beginPath();
-  const n = 48;
-  for (let k = 0; k <= n; k++) {
-    const a = (k / n) * Math.PI * 2;
-    const wobble = 1 + 0.14 * Math.sin(a * 3 + t * 0.9 + blot.seed) + 0.09 * Math.sin(a * 5 - t * 0.7) + 0.05 * Math.sin(a * 8 + t * 1.3);
-    const rr = r * wobble;
-    const px = x + Math.cos(a) * rr;
-    const py = y + Math.sin(a) * rr;
-    if (k === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
-  }
-  ctx.closePath();
-}
-function frame(now) {
-  raf = 0;
-  const dt = Math.min(0.05, (now - lastFrame) / 1000 || 0.016);
-  lastFrame = now;
-  blot.t += dt;
-  // The blot blooms towards its target size and shrinks away when the hand has gone
-  blot.r += (blot.target - blot.r) * (blot.target > blot.r ? 0.08 : 0.06);
-  const w = canvas.width / Math.min(devicePixelRatio || 1, 2);
-  const h = canvas.height / Math.min(devicePixelRatio || 1, 2);
-  ctx.clearRect(0, 0, w, h);
-  if (photoReady && blot.r > 0.5) {
-    // The photograph, covering the sheet
-    const s = Math.max(w / photo.naturalWidth, h / photo.naturalHeight);
-    const pw = photo.naturalWidth * s;
-    const ph = photo.naturalHeight * s;
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.drawImage(photo, (w - pw) / 2, (h - ph) / 2, pw, ph);
-    // Kept only inside the blot, whose edge is soft like ink into paper
-    ctx.globalCompositeOperation = 'destination-in';
-    ctx.filter = `blur(${Math.max(6, blot.r * 0.12)}px)`;
-    ctx.fillStyle = '#000';
-    blotPath(blot.x, blot.y, blot.r, blot.t);
-    ctx.fill();
-    ctx.filter = 'none';
-    ctx.globalCompositeOperation = 'source-over';
-  }
-  if (blot.r > 0.5 || blot.target > 0) raf = requestAnimationFrame(frame);
-}
-function wake() {
-  if (!raf) {
-    lastFrame = performance.now();
-    raf = requestAnimationFrame(frame);
-  }
-}
-function point(e) {
-  const r = plan.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width };
-}
-plan.addEventListener('pointermove', (e) => {
-  if (e.pointerType === 'touch') return;
-  const p = point(e);
-  blot.x += (p.x - blot.x) * 0.5;
-  blot.y += (p.y - blot.y) * 0.5;
-  if (blot.target === 0) {
-    blot.x = p.x;
-    blot.y = p.y;
-  }
-  blot.target = p.w * 0.34;
-  plan.classList.add('touched');
-  wake();
-});
-plan.addEventListener('pointerleave', () => {
-  blot.target = 0;
-  wake();
-});
-let touchTimer = 0;
-plan.addEventListener('pointerdown', (e) => {
-  if (e.pointerType !== 'touch') return;
-  const p = point(e);
-  blot.x = p.x;
-  blot.y = p.y;
-  blot.target = p.w * 0.42;
-  plan.classList.add('touched');
-  wake();
-  clearTimeout(touchTimer);
-  touchTimer = setTimeout(() => {
-    blot.target = 0;
-    wake();
-  }, 2600);
-});
-
-// ---- Switches ------------------------------------------------------------------------------------
-for (const b of document.querySelectorAll('[data-ink], [data-route]')) {
-  b.addEventListener('click', () => {
-    const group = b.dataset.ink ? 'ink' : 'route';
-    state[group] = b.dataset.ink || b.dataset.route;
-    for (const o of document.querySelectorAll(`[data-${group}]`)) o.setAttribute('aria-pressed', String(o === b));
-    loadDrawing(state.current);
-  });
-}
-
 // ---- Start ----------------------------------------------------------------------------------------
-size();
-rows[0].classList.add('on');
-loadPhoto(0);
-loadDrawing(0);
 onScroll();
-// The photograph follows the current promise
-const photoWatch = new MutationObserver(() => loadPhoto(state.current));
-rows.forEach((r) => photoWatch.observe(r, { attributes: true, attributeFilter: ['class'] }));
-window.__promises = { state, get progress() { return progress; }, get strokes() { return strokes.length; }, blot };
+window.__promises = { state, get progress() { return progress; }, get strokes() { return strokes.length; }, present, playLine };
