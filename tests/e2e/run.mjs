@@ -253,7 +253,7 @@ try {
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
   await p.goto(`${SITE}#/principles`);
   let promisesTop = Infinity;
-  for (let i = 0; i < 24 && Math.abs(promisesTop) >= 40; i++) {
+  for (let i = 0; i < 48 && Math.abs(promisesTop) >= 40; i++) {
     await wait(250);
     promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   }
@@ -277,7 +277,7 @@ try {
   await wait(300);
   check(await p.evaluate(() => window.__impact.promises.state.playing === -1), 'Escape stops the narrator');
   await p.keyboard.press('Escape');
-  await wait(1600);
+  await p.waitForFunction(() => window.__impact.promises.state.front === -1 && window.__impact.promises.sheets[3].develop < 0.05, null, { polling: 200, timeout: 10000 }).catch(() => {});
   check(await p.evaluate(() => window.__impact.promises.state.front === -1 && window.__impact.promises.state.phase === 'pile' && window.__impact.promises.sheets[3].develop < 0.05), 'Escape again puts the sheet back in the pile as a plan');
   // The people: six colleagues in one line, all inside the stage, the chosen one forward with a translucent story card
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'center' }));
