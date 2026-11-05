@@ -557,7 +557,11 @@ function applyRoute(route, { initial = false } = {}) {
   if (!returning) scrollToSection(route.section, { instant: initial });
 }
 
-addEventListener('hashchange', () => applyRoute(parseHash(location.hash)));
+addEventListener('hashchange', () => {
+  // the curtain's old route reads as Carry the Story on the page
+  if (location.hash === '#/carry' && !curtainEl) history.replaceState(null, '', '#/toolkit');
+  applyRoute(parseHash(location.hash));
+});
 // Clicking a link to the current hash should still move there.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#/"]');

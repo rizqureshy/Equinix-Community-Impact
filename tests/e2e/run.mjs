@@ -348,7 +348,7 @@ try {
   await wait(1500);
   check(await p.evaluate(() => !document.querySelector('#curtain') && !document.body.classList.contains('curtain-open') && !document.querySelector('.sitemap') && document.querySelectorAll('.site-footer').length === 1), 'the foot of the page is the footer alone');
   await p.goto(`${SITE}#/carry`);
-  await wait(1500);
+  await p.waitForFunction(() => location.hash === '#/toolkit' && Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 12000 }).catch(() => {});
   check(await p.evaluate(() => location.hash === '#/toolkit' && Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40), 'an older link to the curtain lands on Carry the Story on the page');
   await p.context().close();
 
