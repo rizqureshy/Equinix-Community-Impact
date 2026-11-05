@@ -94,8 +94,8 @@
 }
 
 /* ---- Carry the Story: four columns of links ---------------------------------------------- */
-.carry-section { padding: var(--s-8) 0; background: #fff; }
-.carry-title { font-size: clamp(26px, 2.8vw, 38px); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 26px; }
+.carry-section { padding: calc(var(--header-h) + var(--s-6)) 0 var(--s-8); background: #fff; }
+.carry-section .wrap.center { margin-bottom: var(--s-5); }
 .carry-index, .carry-rows { list-style: none; margin: 0; padding: 0; }
 .carry-index { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 40px; border-top: 1px solid var(--ink); padding-top: 18px; }
 .carry-col-name { margin: 0 0 6px; font: 600 11px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
@@ -106,6 +106,9 @@ a.carry-link:hover { color: var(--red); }
 a.carry-link:hover .carry-arrow { color: var(--red); transform: translate(2px, -2px); }
 a.carry-link:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 3px; }
 .carry-link.is-pending { color: var(--ink-3); }
+/* The Yoodli practice carries a blue marble, so the one place to rehearse out loud stands out */
+.carry-marble { display: inline-block; width: 13px; height: 13px; margin-right: 10px; border-radius: 50%; vertical-align: -1px; background: radial-gradient(circle at 34% 30%, #ffffff 0, #bfe0ff 18%, #2f7ff1 48%, #0b3fa8 100%); box-shadow: 0 1px 2px rgb(11 63 168 / 0.35), inset 0 -2px 3px rgb(0 0 0 / 0.25); flex: none; }
+.is-marked .carry-link { font-weight: 600; }
 @media (max-width: 900px) {
   .carry-index { grid-template-columns: 1fr 1fr; gap: 24px 24px; }
 }
