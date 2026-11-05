@@ -12,6 +12,8 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const easeInOut = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
 const easeOut = (k) => 1 - Math.pow(1 - k, 3);
+// a soft overshoot at the end, the way a lifted sheet comes a little past where it will rest
+const easeOutBack = (k) => 1 + 1.35 * Math.pow(k - 1, 3) + 0.35 * Math.pow(k - 1, 2);
 
 const SHEET_W = 3;
 const SHEET_H = 4;
@@ -20,7 +22,7 @@ const TEX_H = 1365;
 const DRAW_MS = 3000;
 const HOLD_MS = 800;
 const DEVELOP_MS = 1600;
-const LIFT_MS = 1100;
+const LIFT_MS = 1500;
 // Where each sheet lies on the table: x, z, rotation; and a crease and corner of its own
 const SLOTS = [
   { x: -3.0, z: -0.2, r: -0.16, corner: [-1, 1], crease: [0.35, [0.62, 0.3]] },
@@ -30,7 +32,7 @@ const SLOTS = [
   { x: 1.9, z: 1.9, r: -0.24, corner: [1, -1], crease: [-0.2, [0.7, 0.7]] },
 ];
 const FRONT = { x: -0.6, z: 0.6 }; // where on the table the held sheet stands over; it comes up towards the camera from there
-const FRONT_CLOSER = 0.1; // how far along the line from the table towards the camera it is held (1 = at the camera)
+const FRONT_CLOSER = 0.21; // how far along the line from the table towards the camera it is held (1 = at the camera)
 const _flat = new T.Quaternion();
 const _euler = new T.Euler();
 const _obj = new T.Object3D();
@@ -229,7 +231,7 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
   }
   /** Held up over the table, facing the reader, tilted back a touch like a page held to read. */
   function heldPose() {
-    const over = new T.Vector3(FRONT.x, 2.5, FRONT.z); // held clear of the table, its shadow falling behind it
+    const over = new T.Vector3(FRONT.x, 2.3, FRONT.z); // held clear of the table, its shadow falling behind it
     const pos = over.clone().lerp(camera.position, FRONT_CLOSER);
     _obj.position.copy(pos);
     _obj.lookAt(camera.position);
@@ -427,7 +429,26 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       needsRender = true;
     }
     const held = state.front >= 0 && sheets[state.front].restFlex > 0 && !still();
-    if (held && !tweens.size) {
+    // a wobble dies away after a sheet arrives, on top of the breathing of a held one
+    let wobbling = false;
+    for (const sh of sheets) {
+      if (!sh.wobble) continue;
+      const age = (now - sh.wobble.t0) / 1000;
+      if (age > 1.6) {
+        sh.wobble = null;
+        sh.flex = sh.restFlex || 0;
+        deform(sh, now);
+        needsRender = true;
+        continue;
+      }
+      wobbling = true;
+      if (!tweens.size) {
+        sh.flex = (sh.restFlex || 0) + sh.wobble.amp * Math.exp(-age * 3.2) * Math.sin(age * 14);
+        deform(sh, now);
+        needsRender = true;
+      }
+    }
+    if (held && !tweens.size && !wobbling) {
       const sh = sheets[state.front];
       sh.flex = sh.restFlex * (0.85 + 0.15 * Math.sin(now / 900));
       deform(sh, now);
@@ -437,7 +458,7 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       renderer.render(scene, camera);
       needsRender = false;
     }
-    if ((tweens.size || held) && visible) raf = requestAnimationFrame(frame);
+    if ((tweens.size || held || wobbling) && visible) raf = requestAnimationFrame(frame);
     else running = false;
   }
   function wake() {
@@ -445,7 +466,7 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     running = true;
     raf = requestAnimationFrame(frame);
   }
-  function moveTo(sheet, to, dur, { arc = 0, give = 0, settle = 0 } = {}) {
+  function moveTo(sheet, to, dur, { arc = 0, give = 0, settle = 0, rotLag = 0, overshoot = false, wobble = 0, sway = 0 } = {}) {
     const from = { pos: sheet.pose.pos.clone(), quat: sheet.pose.quat.clone(), s: sheet.pose.s };
     return new Promise((res) => {
       if (still() || dur <= 0) {
@@ -459,18 +480,24 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       }
       const pos = new T.Vector3();
       const quat = new T.Quaternion();
+      const swayQ = new T.Quaternion();
+      const yAxis = new T.Vector3(0, 1, 0);
       tween(dur, (k, now) => {
-        const e = easeInOut(k);
+        // the rise leads and may overshoot; the turn follows a beat behind it
+        const e = overshoot ? easeOutBack(k) : easeInOut(k);
+        const r = easeInOut(clamp((k - rotLag) / (1 - rotLag)));
         pos.lerpVectors(from.pos, to.pos, e);
         pos.y += arc * Math.sin(k * Math.PI);
-        quat.slerpQuaternions(from.quat, to.quat, e);
+        quat.slerpQuaternions(from.quat, to.quat, r);
+        if (sway) quat.multiply(swayQ.setFromAxisAngle(yAxis, Math.sin(k * Math.PI) * sway));
         sheet.pose = { pos: pos.clone(), quat: quat.clone(), s: from.s + (to.s - from.s) * e };
         place(sheet, sheet.pose);
         // the paper gives most in the middle of the move, and keeps a little once held
-        sheet.flex = give * Math.sin(k * Math.PI) + settle * e + (1 - e) * (sheet.restFlex || 0);
+        sheet.flex = give * Math.sin(k * Math.PI) + settle * easeInOut(k) + (1 - easeInOut(k)) * (sheet.restFlex || 0);
         deform(sheet, now);
       }, () => {
         sheet.restFlex = settle;
+        if (wobble) sheet.wobble = { t0: performance.now(), amp: wobble };
         res();
       });
     });
@@ -533,7 +560,7 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
     // the others ease back a touch so the held sheet has room
     for (const s of sheets) if (s !== sheet && s.i !== prev) jobs.push(moveTo(s, flatPose(s, s.pose.pos.y, -0.25, 0.15), 700));
     // the chosen sheet lifts off the table and comes up to face the reader, giving a little as it moves
-    jobs.push(moveTo(sheet, heldPose(), LIFT_MS, { arc: 0.3, give: 0.55, settle: 0.16 }));
+    jobs.push(moveTo(sheet, heldPose(), LIFT_MS, { arc: 0.9, give: 0.8, settle: 0.16, rotLag: 0.22, overshoot: true, wobble: 0.35, sway: 0.09 }));
     await Promise.all(jobs);
     if (token !== seq) return;
     if (sheet.progress < 1 && drawMs !== 0) {
@@ -562,7 +589,7 @@ export function createPaperTable(section, { media = 'media/', motion = () => tru
       tabs.forEach((t) => t.setAttribute('aria-pressed', 'false'));
       setPhase('pile');
     }
-    const back = moveTo(sheet, flatPose(sheet, 0.02 + sheet.i * 0.02), 900, { arc: 0.3, give: 0.4, settle: 0 });
+    const back = moveTo(sheet, flatPose(sheet, 0.02 + sheet.i * 0.02), 1100, { arc: 0.5, give: 0.5, settle: 0, wobble: 0.25, sway: -0.06 });
     const fade = sheet.develop > 0 ? developTo(sheet, 0, 900) : Promise.resolve();
     await Promise.all([back, fade]);
     if (!quiet) for (const s of sheets) if (s.i !== state.front) moveTo(s, flatPose(s, s.pose.pos.y), 600);

@@ -237,7 +237,7 @@ try {
   const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; const tops = [...sec.querySelectorAll('.carry-col')].map((c) => Math.round(c.getBoundingClientRect().top)); return { cols: tops.length, oneRow: new Set(tops).size === 1, links: links.length, between: me.top > hero.top && me.bottom <= com.top + 2, newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)), text: sec.textContent.replace(/\s+/g, ' ') }; });
   check(carry.cols === 4 && carry.oneRow && carry.links === 10 && carry.between && carry.newTab && !/Baumann|Leyva|Whalen|made for you/.test(carry.text), 'Carry the Story sits between the hero and the community as four columns of ten links, with no names or blurbs', JSON.stringify({ ...carry, text: undefined }));
   await p.locator('.hero .actions a[href="#/toolkit"]').dispatchEvent('click');
-  await wait(2200);
+  await p.waitForFunction(() => Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 12000 }).catch(() => {});
   const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top) }));
   check(landed2.hash === '#/toolkit' && Math.abs(landed2.top) < 40, 'Practise the conversation lands on Carry the Story', JSON.stringify(landed2));
   await p.goto(`${SITE}#/explore/discovery`);
