@@ -1,0 +1,1 @@
+import"./modulepreload-polyfill-P2Xu9kJm.js";/* empty css             */import{t as e}from"./promises-BH0VhQeA.js";/* empty css                    */window.__promises=e(document.querySelector(`#promises`),{media:`../media/`});

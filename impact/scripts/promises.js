@@ -81,7 +81,7 @@ export function createPromises(section, { media = 'media/', motion = () => true,
     const svg = doc.documentElement;
     svg.removeAttribute('width');
     svg.removeAttribute('height');
-    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    svg.setAttribute('preserveAspectRatio', 'xMidYMax slice'); // the same crop as the photograph: bottom-aligned, sides kept
     drawingHost.appendChild(document.importNode(svg, true));
     const live = drawingHost.querySelector('svg');
     const shapes = [...live.querySelectorAll('path, line, polyline, polygon, circle, ellipse')].filter((el) => typeof el.getTotalLength === 'function');
@@ -223,7 +223,9 @@ export function createPromises(section, { media = 'media/', motion = () => true,
   let autoRun = 0;
   function goTo(i) {
     const r = rows[i].getBoundingClientRect();
-    const y = scrollY + r.top + r.height / 2 - innerHeight / 2;
+    const pr = plan.getBoundingClientRect();
+    const line = pr.height > 0 ? Math.min(innerHeight * 0.5, pr.top + pr.height / 2) : innerHeight * 0.5;
+    const y = scrollY + r.top + r.height / 2 - line;
     if (scrollToY) scrollToY(y);
     else scrollTo({ top: y, behavior: still() ? 'auto' : 'smooth' });
     if (state.current !== i) {
@@ -266,14 +268,17 @@ export function createPromises(section, { media = 'media/', motion = () => true,
     const vh = innerHeight;
     const sr = section.getBoundingClientRect();
     if (sr.bottom < 0 || sr.top > vh) return;
+    // The reading line is the middle of the sheet, so the current promise sits beside its plan
+    const pr = plan.getBoundingClientRect();
+    const line = pr.height > 0 && pr.top >= 0 && pr.bottom <= vh ? pr.top + pr.height / 2 : vh * 0.5;
     const lr = list.getBoundingClientRect();
-    threadFill.style.height = `${clamp((vh * 0.5 - lr.top) / lr.height) * 100}%`;
+    threadFill.style.height = `${clamp((line - lr.top) / lr.height) * 100}%`;
     if (state.auto || state.playing >= 0) return; // the voice is leading
     let best = 0;
     let bestD = Infinity;
     rows.forEach((r, i) => {
       const b = r.getBoundingClientRect();
-      const d = Math.abs(b.top + b.height / 2 - vh * 0.5);
+      const d = Math.abs(b.top + b.height / 2 - line);
       if (d < bestD) {
         bestD = d;
         best = i;

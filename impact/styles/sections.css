@@ -48,9 +48,10 @@
 .promises-play[aria-pressed='true'] .ico-stop, .promises-play[aria-pressed='true'] .when-playing { display: inline; }
 .promises-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 0 64px;
-  margin-top: var(--s-5);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 56px;
+  width: min(1080px, 100%);
+  margin: var(--s-5) auto 0;
 }
 .promises-list {
   position: relative;
@@ -77,8 +78,8 @@
 }
 .promise-item {
   position: relative;
-  min-height: 58vh;
-  padding: 10vh 0;
+  min-height: 46vh;
+  padding: 7vh 0;
   display: grid;
   align-content: center;
   justify-items: start;
@@ -111,7 +112,7 @@
 .promise-item.on .promise-num { color: var(--red); }
 .promise-name {
   font-weight: 700;
-  font-size: clamp(24px, 2.6vw, 34px);
+  font-size: clamp(22px, 2.1vw, 30px);
   letter-spacing: -0.025em;
   line-height: 1.08;
   margin: 0;
@@ -122,7 +123,7 @@
 .promise-text {
   margin: 0;
   color: var(--ink-2);
-  font-size: 17px;
+  font-size: 16px;
   max-width: 42ch;
   opacity: 0.55;
   transition: opacity 0.4s;
@@ -171,15 +172,13 @@
 .promises-stage { position: relative; }
 .promises-sheet {
   position: sticky;
-  top: 7vh;
-  height: 86vh;
-  display: grid;
-  place-items: center;
+  top: calc(var(--header-h) + 36px);
 }
+/* The sheet shows the lower three quarters of each drawing and photograph (their top quarter is sky) */
 .plan {
   position: relative;
-  aspect-ratio: 2 / 3;
-  height: min(86vh, 100%);
+  aspect-ratio: 3 / 4;
+  height: min(62vh, 600px);
   max-width: 100%;
   background: #fff;
   box-shadow: 0 1px 0 var(--line), 0 24px 70px rgb(0 0 0 / 0.07);
@@ -208,8 +207,8 @@
 .plan-tick.br { right: 14px; bottom: 14px; }
 .plan-layer { position: absolute; inset: 0; }
 /* Three layers: the wash, the photograph, the lines on top */
-.plan-wash { z-index: 1; display: grid; place-items: center; padding: 5%; opacity: 0; transition: opacity 0.2s linear; }
-.plan-wash img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.plan-wash { z-index: 1; opacity: 0; transition: opacity 0.2s linear; }
+.plan-wash img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
 .plan[data-phase='developing'] .plan-wash, .plan[data-phase='kept'] .plan-wash { opacity: 0 !important; transition: opacity 1.2s ease; }
 .plan-photo { z-index: 2; }
 .plan-photo img {
@@ -218,14 +217,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center bottom;
   opacity: 0;
   filter: blur(18px) saturate(0.3) brightness(1.08) sepia(0.4);
   transition: opacity 1.6s ease, filter 1.7s ease;
 }
 /* The print comes up in the tray: warm and soft first, then sharp */
 .plan[data-phase='developing'] .plan-photo img, .plan[data-phase='kept'] .plan-photo img { opacity: 1; filter: none; }
-.plan-drawing { z-index: 3; display: grid; place-items: center; padding: 5%; pointer-events: none; transition: opacity 1.6s ease 0.4s; }
-.plan-drawing svg { width: 100%; height: 100%; display: block; }
+.plan-drawing { z-index: 3; pointer-events: none; transition: opacity 1.6s ease 0.4s; }
+.plan-drawing svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .plan-drawing svg path, .plan-drawing svg line, .plan-drawing svg polyline, .plan-drawing svg polygon, .plan-drawing svg circle, .plan-drawing svg ellipse { vector-effect: non-scaling-stroke; }
 /* The lines stay, faintly, over the photograph: what you remember is the plan with the proof behind it */
 .plan[data-phase='developing'] .plan-drawing, .plan[data-phase='kept'] .plan-drawing { opacity: 0.32; }
@@ -236,9 +236,9 @@
 }
 @media (max-width: 900px) {
   .promises-grid { grid-template-columns: 1fr; gap: 0; }
-  .promises-stage { order: -1; }
-  .promises-sheet { top: calc(var(--header-h, 64px) + 8px); height: 60vh; z-index: 2; background: linear-gradient(var(--bg-soft) 84%, rgb(246 245 242 / 0)); }
-  .plan { height: 56vh; }
+  .promises-stage { order: -1; display: grid; justify-items: center; }
+  .promises-sheet { top: calc(var(--header-h) + 8px); padding-bottom: 12px; z-index: 2; background: linear-gradient(var(--bg-soft) 84%, rgb(246 245 242 / 0)); }
+  .plan { height: min(52vh, 480px); }
   .promise-item { min-height: 0; padding: 32px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
