@@ -234,7 +234,7 @@ try {
   const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practice the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
   // Carry the Story on the page: four columns of links between the hero and the community, nothing else
-  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; const tops = [...sec.querySelectorAll('.carry-col')].map((c) => Math.round(c.getBoundingClientRect().top)); const share = document.querySelector('#share').getBoundingClientRect(); return { cols: tops.length, oneRow: new Set(tops).size === 1, links: links.length, between: me.top > hero.top && me.bottom <= share.top + 2 && share.bottom <= com.top + 2, marble: !!sec.querySelector('[data-group="practice"] .is-marked .carry-marble'), heading: document.querySelector('#carry-title').classList.contains('title'), newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)), text: sec.textContent.replace(/\s+/g, ' ') }; });
+  const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; const tops = [...sec.querySelectorAll('.carry-col')].map((c) => Math.round(c.getBoundingClientRect().top)); const share = document.querySelector('#share').getBoundingClientRect(); return { cols: tops.length, oneRow: new Set(tops).size === 1, links: links.length, between: me.top > hero.top && me.bottom <= share.top + 2 && share.bottom <= com.top + 2, marble: !!sec.querySelector('[data-group="practice"] .is-marked .carry-link') && getComputedStyle(sec.querySelector('[data-group="practice"] .is-marked .carry-link')).color === 'rgb(255, 255, 255)', heading: document.querySelector('#carry-title').classList.contains('title'), newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)), text: sec.textContent.replace(/\s+/g, ' ') }; });
   check(carry.cols === 4 && carry.oneRow && carry.links === 10 && carry.between && carry.newTab && carry.marble && carry.heading && !/Baumann|Leyva|Whalen|made for you/.test(carry.text), 'Carry the Story sits under the hero with the stories beneath it and the community after: four columns of ten links, the Yoodli marble, the section heading', JSON.stringify({ ...carry, text: undefined }));
   await p.locator('.hero .actions a[href="#/toolkit"]').dispatchEvent('click');
   await p.waitForFunction(() => Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 12000 }).catch(() => {});
@@ -244,11 +244,9 @@ try {
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
   await p.goto(`${SITE}#/principles`);
-  let promisesTop = Infinity;
-  for (let i = 0; i < 48 && Math.abs(promisesTop) >= 40; i++) {
-    await wait(250);
-    promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
-  }
+  // the community model parses on arrival now, and on this machine that starves the frames the smooth scroll ticks on
+  await p.waitForFunction(() => Math.abs(document.querySelector('#promises').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 60000 }).catch(() => {});
+  const promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
   check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
   // The promises: five sheets on a white table. Arriving, the plans draw themselves in turn; choosing one brings it
   // forward and the photograph of the promise kept develops through it; Listen has the narrator lead; Escape puts it back

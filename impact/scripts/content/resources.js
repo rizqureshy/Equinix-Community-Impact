@@ -60,7 +60,7 @@ export function carryHTML() {
     const items = RESOURCES.filter((r) => r.group === g.id);
     if (!items.length) return '';
     const rows = items.map((r) => (r.href
-      ? `<li${r.id === 'yoodli' ? ' class="is-marked"' : ''}><a class="carry-link" href="${esc(r.href)}" target="_blank" rel="noopener">${r.id === 'yoodli' ? '<span class="carry-marble" aria-hidden="true"></span>' : ''}${esc(r.name)}<span class="carry-arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></li>`
+      ? `<li${r.id === 'yoodli' ? ' class="is-marked"' : ''}><a class="carry-link" href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.name)}<span class="carry-arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></li>`
       : `<li><span class="carry-link is-pending">${esc(r.name)}</span></li>`)).join('\n');
     return `<li class="carry-col" data-group="${g.id}"><h3 class="carry-col-name">${esc(CARRY_GROUPS[g.id] || g.name)}</h3><ol class="carry-rows">${rows}</ol></li>`;
   }).join('\n');
