@@ -44,6 +44,7 @@ export default defineConfig({
         promisesSketches: resolve(import.meta.dirname, 'impact/prototypes/promises-sketches.html'), // four stages for the promises, as stills
         paper: resolve(import.meta.dirname, 'impact/prototypes/paper.html'), // lighting test: paper on a white table
         table: resolve(import.meta.dirname, 'impact/prototypes/table.html'), // the promises on a white table
+        carrySketches: resolve(import.meta.dirname, 'impact/prototypes/carry-sketches.html'), // two stages for Carry the Story on the page, as stills
       },
     },
   },
