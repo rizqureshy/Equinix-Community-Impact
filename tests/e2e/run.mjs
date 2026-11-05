@@ -233,12 +233,6 @@ try {
   await wait(1500);
   const hero = await p.evaluate(() => ({ doors: [...document.querySelectorAll('.hero .actions > *')].map((a) => a.textContent.trim()), lede: document.querySelector('.hero .lede').textContent }));
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practise the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
-  await p.locator('.hero .actions [data-curtain-open]').dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.curtain && window.__impact.curtain.state === 'open', null, { polling: 200, timeout: 30000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.curtain?.state === 'open' && document.querySelector('.hero .actions [data-curtain-open]').getAttribute('aria-expanded') === 'true'), 'the third door drops the Carry the Story curtain');
-  await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.curtain.state === 'closed', null, { polling: 200, timeout: 20000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.curtain.state === 'closed' && document.activeElement === document.querySelector('.hero .actions [data-curtain-open]')), 'Escape lifts it and hands focus back to the hero');
   await p.goto(`${SITE}#/explore/discovery`);
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
@@ -320,6 +314,17 @@ try {
   await p.context().close();
 
   // ---- The Resources curtain --------------------------------------------
+  // The hero's third door, on a page of its own: while the curtain is down the page behind it steps back under a
+  // blur, and lifting that blur takes software rendering several seconds, which would stall anything checked after it
+  p = await open(browser, `${SITE}#/`);
+  await wait(2500);
+  await p.locator('.hero .actions [data-curtain-open]').dispatchEvent('click');
+  await p.waitForFunction(() => window.__impact.curtain && window.__impact.curtain.state === 'open', null, { polling: 200, timeout: 30000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.curtain?.state === 'open' && document.querySelector('.hero .actions [data-curtain-open]').getAttribute('aria-expanded') === 'true'), 'the third door drops the Carry the Story curtain');
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => window.__impact.curtain.state === 'closed', null, { polling: 200, timeout: 20000 }).catch(() => {});
+  check(await p.evaluate(() => window.__impact.curtain.state === 'closed' && document.activeElement === document.querySelector('.hero .actions [data-curtain-open]')), 'Escape lifts it and hands focus back to the hero');
+  await p.context().close();
   // Opened at the foot of the page so the community model is not loading at the same time: in software rendering
   // three WebGL scenes at once stretch the curtain's clock-timed fall and rise into minutes
   p = await open(browser, `${SITE}#/share`);
