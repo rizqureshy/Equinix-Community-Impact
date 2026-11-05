@@ -412,7 +412,7 @@ const near = new IntersectionObserver(
       loadScene();
     }
   },
-  { rootMargin: '120% 0px' },
+  { rootMargin: '320% 0px' }, // the community sits two sections down now; start loading it on arrival
 );
 near.observe(journey);
 const inView = new IntersectionObserver(
