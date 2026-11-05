@@ -106,7 +106,6 @@ a.carry-link:hover { color: var(--red); }
 a.carry-link:hover .carry-arrow { color: var(--red); transform: translate(2px, -2px); }
 a.carry-link:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 3px; }
 .carry-link.is-pending { color: var(--ink-3); }
-.carry-note { margin: 18px 0 0; color: var(--ink-3); }
 @media (max-width: 900px) {
   .carry-index { grid-template-columns: 1fr 1fr; gap: 24px 24px; }
 }
