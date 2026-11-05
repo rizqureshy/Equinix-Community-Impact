@@ -83,6 +83,24 @@ function film(name, alt, { cls = '' } = {}) {
       <source src="media/${name}.webm" type="video/webm"><source src="media/${name}.mp4" type="video/mp4"></video>`;
 }
 
+// ---------------------------------------------------------------------------
+// Story detail dialog
+// ---------------------------------------------------------------------------
+function picture(media, { sizes = '(min-width: 900px) 640px, 92vw', cls = '' } = {}) {
+  if (!media) return '';
+  const base = media.path.replace(/-1200\.webp$/, '');
+  return `<figure class="media ${cls}">
+    <img src="${esc(media.path)}" srcset="${esc(base)}-640.webp 640w, ${esc(media.path)} 1200w" sizes="${sizes}"
+      alt="${esc(media.alt)}" width="1200" height="800" loading="lazy" decoding="async">
+  </figure>`;
+}
+
+const sourceLink = (id) => {
+  const s = sources[id];
+  return `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="visually-hidden"> (opens in a new tab)</span></a>
+    <span class="source-meta">${esc(s.publisher)}${s.published ? `, ${formatDate(s.published)}` : ', date not stated'}${s.kind === 'secondary' ? ', secondary reporting' : ''}</span></li>`;
+};
+
 export function storyDetailHTML(story) {
   const heat = story.id === 'pa10-heat' || story.id === 'markham-heat';
   return `<header class="story-head">
