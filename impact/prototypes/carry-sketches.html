@@ -51,6 +51,40 @@
       .col h3 i { width: 18px; height: 1px; background: var(--red); }
       .pin { position: relative; transform: rotate(var(--r, 0deg)); }
       .pin::before { content: ''; position: absolute; top: 9px; right: 12px; width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 2px 4px rgb(0 0 0 / 0.25), inset 0 -2px 3px rgb(0 0 0 / 0.25); z-index: 2; }
+
+      /* ---- C. The index: numbered rows, a paper card floats beside the row you are on ---- */
+      .index { width: min(1180px, 100%); margin: 0 auto; position: relative; }
+      .index-group { margin: 0 0 26px; }
+      .index-group h3 { margin: 0 0 6px; font: 600 11px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); display: flex; gap: 12px; align-items: center; }
+      .index-group h3::after { content: ''; flex: 1; height: 1px; background: var(--line-strong); }
+      .index-row { display: grid; grid-template-columns: 44px minmax(0, 1.5fr) minmax(0, 1fr) 150px 24px; align-items: baseline; gap: 18px; padding: 14px 6px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); position: relative; }
+      .index-row .n { font: 600 12px var(--font); color: var(--ink-3); letter-spacing: 0.06em; }
+      .index-row .t { font-size: 19px; letter-spacing: -0.015em; font-weight: 600; }
+      .index-row .w { font-size: 14px; color: var(--ink-2); }
+      .index-row .b { font-size: 12.5px; color: var(--ink-3); }
+      .index-row .a { font-size: 14px; color: var(--ink-3); justify-self: end; }
+      .index-row.on { background: #fff; }
+      .index-row.on .n, .index-row.on .a { color: var(--red); }
+      .index-row.on::before { content: ''; position: absolute; left: -16px; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: var(--red); transform: translateY(-50%); }
+      .float { position: absolute; right: 8%; top: 36%; width: 250px; transform: rotate(-2.5deg); pointer-events: none; z-index: 2; }
+      .float .card { padding: 18px 18px 16px; }
+      .float .card .meta { display: flex; justify-content: space-between; font: 600 10px/1 var(--font); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 6px; }
+      .float .card strong { font-size: 15px; }
+      .float .card .go { color: var(--red); font-weight: 600; font-size: 12px; margin-top: 6px; }
+
+      /* ---- D. The ledger: a true table, columns and a soft highlight on the row you are over ---- */
+      .ledger { width: min(1180px, 100%); margin: 0 auto; border-top: 1px solid var(--ink); }
+      .ledger table { width: 100%; border-collapse: collapse; }
+      .ledger th { text-align: left; font: 600 10.5px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 14px 10px 12px; border-bottom: 1px solid var(--line-strong); }
+      .ledger td { padding: 14px 10px; border-bottom: 1px solid var(--line); font-size: 14.5px; color: var(--ink-2); vertical-align: top; }
+      .ledger td.n { font: 600 12px var(--font); color: var(--ink-3); letter-spacing: 0.06em; width: 48px; padding-top: 17px; }
+      .ledger td.t { color: var(--ink); font-weight: 600; font-size: 16px; letter-spacing: -0.01em; }
+      .ledger td.g { color: var(--ink-3); font-size: 12.5px; }
+      .ledger tr.group td { padding: 22px 10px 6px; font: 600 11px/1 var(--font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); border-bottom: 0; }
+      .ledger tr.on td { background: linear-gradient(90deg, rgb(233 28 36 / 0.06), rgb(233 28 36 / 0.0) 70%); }
+      .ledger tr.on td.t { color: var(--red); }
+      .ledger td.a { text-align: right; color: var(--ink-3); width: 90px; }
+      .ledger tr.on td.a { color: var(--red); }
     </style>
   </head>
   <body>
@@ -125,6 +159,64 @@
             <a class="card pin" style="--r:0.6deg" href="#"><small>Talk track</small><strong>Community Engagement Workshop Talk Track</strong><span>The workshop narrative and facilitation flow.</span><i class="by">Jodi Baumann</i></a>
           </div>
         </div>
+      </section>
+
+      <!-- C -->
+      <section class="sk" id="c">
+        <p class="sk-tag"><b>C</b>The index: numbered rows in four groups, a paper card floats beside the row you are on</p>
+        <div class="head">
+          <div><p class="eyebrow">Carry the Story with Confidence</p><h2>Ten things the team has made for you.</h2></div>
+          <p class="lede">Start with the first three. Everything opens in a new tab behind the Equinix sign-in.</p>
+        </div>
+        <div class="index">
+          <div class="index-group"><h3>Start here</h3>
+            <a class="index-row" href="#"><span class="n">01</span><span class="t">Community Engagement Employee Hub</span><span class="w">Everything community engagement, in one place.</span><span class="b">Jodi Baumann · Intranet</span><span class="a">↗</span></a>
+            <a class="index-row on" href="#"><span class="n">02</span><span class="t">STEPS: Sustainability &amp; Customer Conversations</span><span class="w">Sustainability as a customer value driver.</span><span class="b">Patricia Leyva · Webinar</span><span class="a">↗</span></a>
+            <a class="index-row" href="#"><span class="n">03</span><span class="t">Sustainability at Equinix: 2026 Q3 Update</span><span class="w">This quarter’s commitments and proof points.</span><span class="b">Patricia Leyva · Deck</span><span class="a">↗</span></a>
+          </div>
+          <div class="index-group"><h3>Resources</h3>
+            <a class="index-row" href="#"><span class="n">04</span><span class="t">Grant Partner Guide</span><span class="w">Trusted partners for community work.</span><span class="b">Jodi Baumann · Guide</span><span class="a">↗</span></a>
+            <a class="index-row" href="#"><span class="n">05</span><span class="t">Talking About Data Centers: Dinner Table Guide</span><span class="w">Straight answers for everyday conversations.</span><span class="b">Jodi Baumann · Card</span><span class="a">↗</span></a>
+            <a class="index-row" href="#"><span class="n">06</span><span class="t">Our Five Community Principles</span><span class="w">The five promises, as printed.</span><span class="b">Jodi Baumann · Brochure</span><span class="a">↗</span></a>
+            <a class="index-row" href="#"><span class="n">07</span><span class="t">FY25 Sustainability Metrics Cheat Sheet</span><span class="w">The numbers, when someone asks.</span><span class="b">Jodi Baumann · Cheat sheet</span><span class="a">↗</span></a>
+          </div>
+          <div class="index-group"><h3>Practice</h3>
+            <a class="index-row" href="#"><span class="n">08</span><span class="t">Practice a Community Conversation</span><span class="w">Realistic stakeholder moments to work through.</span><span class="b">Jodi Baumann · Scenario cards</span><span class="a">↗</span></a>
+            <a class="index-row" href="#"><span class="n">09</span><span class="t">Practice the Community Conversation in Yoodli</span><span class="w">Say it out loud and get feedback.</span><span class="b">Myriam Whalen · Yoodli</span><span class="a">↗</span></a>
+          </div>
+          <div class="index-group"><h3>Facilitator</h3>
+            <a class="index-row" href="#"><span class="n">10</span><span class="t">Community Engagement Workshop Talk Track</span><span class="w">Running the workshop yourself.</span><span class="b">Jodi Baumann · Talk track</span><span class="a">↗</span></a>
+          </div>
+          <div class="float"><div class="card"><div class="meta"><span>02 of 10</span><span>Webinar</span></div><strong>STEPS: Sustainability &amp; Customer Conversations</strong><span>Build confidence discussing sustainability and using it as a customer value driver.</span><i class="by">Patricia Leyva, SharePoint</i><div class="go">Open in a new tab ↗</div></div></div>
+        </div>
+      </section>
+
+      <!-- D -->
+      <section class="sk" id="d">
+        <p class="sk-tag"><b>D</b>The ledger: a true table, columns, a soft red wash on the row you are over</p>
+        <div class="head">
+          <div><p class="eyebrow">Carry the Story with Confidence</p><h2>Ten things the team has made for you.</h2></div>
+          <p class="lede">Start with the first three. Everything opens in a new tab behind the Equinix sign-in.</p>
+        </div>
+        <div class="ledger"><table>
+          <thead><tr><th></th><th>Resource</th><th>What it is for</th><th>From</th><th>Type</th><th></th></tr></thead>
+          <tbody>
+            <tr class="group"><td colspan="6">Start here</td></tr>
+            <tr><td class="n">01</td><td class="t">Community Engagement Employee Hub</td><td>Everything community engagement, in one place on the intranet.</td><td class="g">Jodi Baumann</td><td class="g">Intranet</td><td class="a">↗</td></tr>
+            <tr class="on"><td class="n">02</td><td class="t">STEPS: Sustainability &amp; Customer Conversations</td><td>Sustainability as a customer value driver.</td><td class="g">Patricia Leyva</td><td class="g">Webinar</td><td class="a">↗</td></tr>
+            <tr><td class="n">03</td><td class="t">Sustainability at Equinix: 2026 Q3 Update</td><td>This quarter’s commitments, reporting and proof points.</td><td class="g">Patricia Leyva</td><td class="g">Deck</td><td class="a">↗</td></tr>
+            <tr class="group"><td colspan="6">Resources</td></tr>
+            <tr><td class="n">04</td><td class="t">Grant Partner Guide</td><td>Trusted local, regional and global partners.</td><td class="g">Jodi Baumann</td><td class="g">Guide</td><td class="a">↗</td></tr>
+            <tr><td class="n">05</td><td class="t">Talking About Data Centers: Dinner Table Guide</td><td>Straight answers for everyday conversations.</td><td class="g">Jodi Baumann</td><td class="g">Card</td><td class="a">↗</td></tr>
+            <tr><td class="n">06</td><td class="t">Our Five Community Principles</td><td>The five promises, as printed.</td><td class="g">Jodi Baumann</td><td class="g">Brochure</td><td class="a">↗</td></tr>
+            <tr><td class="n">07</td><td class="t">FY25 Sustainability Metrics Cheat Sheet</td><td>The numbers, when someone asks.</td><td class="g">Jodi Baumann</td><td class="g">Cheat sheet</td><td class="a">↗</td></tr>
+            <tr class="group"><td colspan="6">Practice</td></tr>
+            <tr><td class="n">08</td><td class="t">Practice a Community Conversation</td><td>Realistic stakeholder moments to work through.</td><td class="g">Jodi Baumann</td><td class="g">Scenario cards</td><td class="a">↗</td></tr>
+            <tr><td class="n">09</td><td class="t">Practice the Community Conversation in Yoodli</td><td>Say it out loud and get feedback.</td><td class="g">Myriam Whalen</td><td class="g">Yoodli</td><td class="a">↗</td></tr>
+            <tr class="group"><td colspan="6">Facilitator</td></tr>
+            <tr><td class="n">10</td><td class="t">Community Engagement Workshop Talk Track</td><td>Running the workshop yourself.</td><td class="g">Jodi Baumann</td><td class="g">Talk track</td><td class="a">↗</td></tr>
+          </tbody>
+        </table></div>
       </section>
     </main>
     <script type="module">import '@fontsource-variable/inter-tight';</script>
