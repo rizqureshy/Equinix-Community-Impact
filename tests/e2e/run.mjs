@@ -420,6 +420,8 @@ try {
   await p.keyboard.press('Escape');
   await wait(600);
   await p.evaluate(() => document.querySelector('#explorer').scrollIntoView({ block: 'center' }));
+  // the room from the card check is still leaving while the frames are starved; wait for the labels to be back
+  await p.waitForFunction(() => window.__impact.room.phase === 'closed' && !!document.querySelector('.place-label[data-place="hospital"]'), null, { polling: 250, timeout: 90000 }).catch(() => {});
   await p.locator('.place-label[data-place="hospital"]').dispatchEvent('click');
   await p.waitForFunction(() => window.__impact.room.phase === 'inside', null, { polling: 100, timeout: 45000 }).catch(() => {});
   const phoneRoom = await p.evaluate(() => { const c = document.querySelector('.room-line').getBoundingClientRect(); return { phase: window.__impact.room.phase, fits: c.left >= 0 && c.right <= 390 && c.bottom <= 844 }; });
