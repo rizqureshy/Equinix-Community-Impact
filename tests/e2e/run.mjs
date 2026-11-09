@@ -235,7 +235,7 @@ try {
   check(hero.doors.join('|') === 'Explore the community|Find a story|Practice the conversation' && /neighbours who share our heat/.test(hero.lede), 'the hero opens three doors and carries the statement sentence', JSON.stringify(hero));
   // Carry the Story on the page: four columns of links between the hero and the community, nothing else
   const carry = await p.evaluate(() => { const sec = document.querySelector('#toolkit'); const hero = document.querySelector('.hero').getBoundingClientRect(), com = document.querySelector('#community').getBoundingClientRect(), me = sec.getBoundingClientRect(); const links = [...sec.querySelectorAll('a.carry-link')]; const tops = [...sec.querySelectorAll('.carry-col')].map((c) => Math.round(c.getBoundingClientRect().top)); const share = document.querySelector('#share').getBoundingClientRect(); return { cols: tops.length, oneRow: new Set(tops).size === 1, links: links.length, between: me.top > hero.top && me.bottom <= share.top + 2 && share.bottom <= com.top + 2, marble: !!sec.querySelector('[data-group="practice"] .is-marked .carry-link') && getComputedStyle(sec.querySelector('[data-group="practice"] .is-marked .carry-link')).color === 'rgb(255, 255, 255)', heading: document.querySelector('#carry-title').classList.contains('title'), newTab: links.every((l) => l.target === '_blank' && /noopener/.test(l.rel) && /^https:\/\//.test(l.href)), text: sec.textContent.replace(/\s+/g, ' ') }; });
-  check(carry.cols === 4 && carry.oneRow && carry.links === 10 && carry.between && carry.newTab && carry.marble && carry.heading && !/Baumann|Leyva|Whalen|made for you/.test(carry.text), 'Carry the Story sits under the hero with the stories beneath it and the community after: four columns of ten links, the Yoodli marble, the section heading', JSON.stringify({ ...carry, text: undefined }));
+  check(carry.cols === 4 && carry.oneRow && carry.links === 9 && carry.between && carry.newTab && carry.marble && carry.heading && !/Baumann|Leyva|Whalen|made for you/.test(carry.text), 'Carry the Story sits under the hero with the stories beneath it and the community after: four columns of nine links, the Yoodli marble, the section heading', JSON.stringify({ ...carry, text: undefined }));
   await p.locator('.hero .actions a[href="#/toolkit"]').dispatchEvent('click');
   await p.waitForFunction(() => Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 12000 }).catch(() => {});
   const landed2 = await p.evaluate(() => ({ hash: location.hash, top: Math.round(document.querySelector('#toolkit').getBoundingClientRect().top) }));
@@ -244,31 +244,8 @@ try {
   await wait(1200);
   check((await p.evaluate(() => window.__impact.store.get().section)) === 'journey', 'older explore links land on the community');
   await p.goto(`${SITE}#/principles`);
-  // the community model parses on arrival now, and on this machine that starves the frames the smooth scroll ticks on
-  await p.waitForFunction(() => Math.abs(document.querySelector('#promises').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 60000 }).catch(() => {});
-  const promisesTop = await p.evaluate(() => document.querySelector('#promises').getBoundingClientRect().top);
-  check(Math.abs(promisesTop) < 40, 'older principles links land on the promises', `${Math.round(promisesTop)}px`);
-  // The promises: five sheets on a white table. Arriving, the plans draw themselves in turn; choosing one brings it
-  // forward and the photograph of the promise kept develops through it; Listen has the narrator lead; Escape puts it back
-  await p.waitForFunction(() => window.__impact.promises?.state.ready, null, { polling: 250, timeout: 60000 }).catch(() => {});
-  await p.waitForFunction(() => window.__impact.promises?.state.drawn >= 5, null, { polling: 500, timeout: 60000 }).catch(() => {});
-  const tableStart = await p.evaluate(() => { const s = window.__impact.promises.state; return { ready: s.ready, drawn: s.drawn, phase: s.phase, canvas: !!document.querySelector('.table-host canvas'), tabs: document.querySelectorAll('[data-sheet]').length, play: !!document.querySelector('[data-promises-play]'), fallbackHidden: document.querySelector('.table-fallback').hidden, embedded: document.querySelectorAll('iframe').length, strokes: window.__impact.promises.sheets.map((sh) => sh.strokes?.strokes.length || 0), progress: window.__impact.promises.sheets.map((sh) => +sh.progress.toFixed(2)) }; });
-  check(tableStart.ready && tableStart.drawn === 5 && tableStart.phase === 'pile' && tableStart.canvas && tableStart.tabs === 5 && tableStart.play && tableStart.fallbackHidden && tableStart.embedded === 0 && tableStart.strokes.every((n) => n > 300) && tableStart.progress.every((v) => v === 1), 'five sheets lie on the table and every plan has drawn itself', JSON.stringify(tableStart));
-  await p.locator('[data-sheet="3"]').dispatchEvent('click');
-  await p.waitForFunction(() => window.__impact.promises.state.phase === 'kept', null, { polling: 300, timeout: 30000 }).catch(() => {});
-  await wait(700);
-  const picked = await p.evaluate(() => { const s = window.__impact.promises.state; const sh = window.__impact.promises.sheets[3]; return { front: s.front, phase: s.phase, develop: +sh.develop.toFixed(2), scale: +sh.mesh.scale.x.toFixed(2), y: +sh.mesh.position.y.toFixed(2), name: document.querySelector('.table-copy h3').textContent, kept: document.querySelector('.table-copy').classList.contains('is-kept'), pressed: document.querySelector('[data-sheet="3"]').getAttribute('aria-pressed') }; });
-  check(picked.front === 3 && picked.phase === 'kept' && picked.develop === 1 && picked.y > 1.5 && picked.name === 'Natural resource protection' && picked.kept && picked.pressed === 'true', 'a chosen sheet lifts off the table and comes up to face the reader, and the photograph of the promise kept develops through its plan', JSON.stringify(picked));
-  await p.locator('[data-listen]').dispatchEvent('click');
-  await wait(1500);
-  const voiced = await p.evaluate(() => ({ playing: window.__impact.promises.state.playing, label: document.querySelector('[data-listen] span').textContent }));
-  check(voiced.playing === 3 && voiced.label === 'Stop', 'Listen has the narrator read the promise that is forward', JSON.stringify(voiced));
-  await p.keyboard.press('Escape');
-  await wait(300);
-  check(await p.evaluate(() => window.__impact.promises.state.playing === -1), 'Escape stops the narrator');
-  await p.keyboard.press('Escape');
-  await p.waitForFunction(() => window.__impact.promises.state.front === -1 && window.__impact.promises.sheets[3].develop < 0.05, null, { polling: 200, timeout: 10000 }).catch(() => {});
-  check(await p.evaluate(() => window.__impact.promises.state.front === -1 && window.__impact.promises.state.phase === 'pile' && window.__impact.promises.sheets[3].develop < 0.05), 'Escape again puts the sheet back in the pile as a plan');
+  await p.waitForFunction(() => Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40, null, { polling: 250, timeout: 60000 }).catch(() => {});
+  check(await p.evaluate(() => !document.querySelector('#promises') && Math.abs(document.querySelector('#toolkit').getBoundingClientRect().top) < 40), 'the promises section is off the page and its old links land on Carry the Story');
   // The people: six colleagues in one line, all inside the stage, the chosen one forward with a translucent story card
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'center' }));
   await wait(1200);
@@ -341,7 +318,7 @@ try {
   p = await open(browser, `${SITE}#/share`);
   await wait(1500);
   const bar = await p.evaluate(() => ({ keystone: !!document.querySelector('.nav-keystone'), curtain: !!document.querySelector('#curtain'), pills: document.querySelectorAll('[data-curtain-open]').length, bars: document.querySelectorAll('.nav-bar').length, links: [...document.querySelectorAll('.site-nav a')].map((a) => a.textContent.trim()).join('|'), centred: Math.abs((document.querySelector('.site-header').getBoundingClientRect().left + document.querySelector('.site-header').getBoundingClientRect().right) / 2 - innerWidth / 2) < 4, fabric: !!document.querySelector('.fabric-layer canvas') }));
-  check(!bar.keystone && !bar.curtain && bar.pills === 0 && bar.bars === 1 && bar.links === 'Community|Stories|Promises|People|Engage' && bar.centred && bar.fabric, 'the header is one bar with the five links, no keystone and no curtain, and the fabric still flies', JSON.stringify(bar));
+  check(!bar.keystone && !bar.curtain && bar.pills === 0 && bar.bars === 1 && bar.links === 'Community|Stories|People|Engage' && bar.centred && bar.fabric, 'the header is one bar with the five links, no keystone and no curtain, and the fabric still flies', JSON.stringify(bar));
   await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
   await wait(1500);
   check(await p.evaluate(() => !document.querySelector('#curtain') && !document.body.classList.contains('curtain-open') && !document.querySelector('.sitemap') && document.querySelectorAll('.site-footer').length === 1), 'the foot of the page is the footer alone');
@@ -353,7 +330,7 @@ try {
   // ---- Engage page ----------------------------------------------------------
   p = await open(browser, `${BASE}engage.html`);
   await wait(1200);
-  check(await p.evaluate(() => !document.querySelector('.nav-keystone') && document.querySelectorAll('.nav-bar').length === 1 && [...document.querySelectorAll('.site-nav a')].map((a) => a.getAttribute('href')).join('|') === 'index.html#/community|index.html#/share|index.html#/promises|index.html#/people|engage.html'), 'the Engage page carries the same single bar');
+  check(await p.evaluate(() => !document.querySelector('.nav-keystone') && document.querySelectorAll('.nav-bar').length === 1 && [...document.querySelectorAll('.site-nav a')].map((a) => a.getAttribute('href')).join('|') === 'index.html#/community|index.html#/share|index.html#/people|engage.html'), 'the Engage page carries the same single bar');
   check(await p.locator('#engage-title').isVisible(), 'the Engage page opens on its title');
   check(await p.evaluate(() => { const f = document.querySelector('.engage-frame iframe'); return f && f.getAttribute('src').startsWith('https://engage.cloud.microsoft/embed/') && f.title === 'Viva Engage'; }), 'the Viva Engage feed is embedded');
   check(p.external.every((u) => u.startsWith('https://engage.cloud.microsoft/')), 'the Engage page reaches only Viva Engage', p.external.filter((u) => !u.startsWith('https://engage.cloud.microsoft/')).slice(0, 3).join(', '));
@@ -430,7 +407,6 @@ try {
   await p.waitForFunction(() => window.__impact.room.phase === 'closed', null, { polling: 100, timeout: 30000 }).catch(() => {});
   await p.keyboard.press('Escape');
   await wait(500);
-  check(await p.evaluate(() => { const host = document.querySelector('.table-host').getBoundingClientRect(); const tabs = [...document.querySelectorAll('[data-sheet]')]; return host.width <= innerWidth && host.height > 300 && tabs.length === 5 && tabs.every((t) => { const b = t.getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth; }); }), 'on phones the table fits the screen and the five tabs stack beneath it');
   await p.evaluate(() => document.querySelector('#people-stage').scrollIntoView({ block: 'start' }));
   await wait(1500);
   check(await p.evaluate(() => { const h = document.querySelector('.site-header').getBoundingClientRect(); return h.width > 0 && h.right <= innerWidth && [...document.querySelectorAll('.site-nav')].every((n) => n.offsetParent === null) && document.querySelector('.wordmark').offsetParent !== null; }), 'on phones the bar keeps the mark and hides the links');

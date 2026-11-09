@@ -11,7 +11,6 @@ import { $, $$, createToast, setupCopy, createStoryDialog, setupMotionToggle } f
 import { createSunlight } from './weather.js';
 import { createRoom } from './room.js';
 import { createPeopleLine } from './people-line.js';
-import { createPaperTable, supportsWebGL } from './paper-table.js';
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.ticker.lagSmoothing(0);
@@ -709,24 +708,12 @@ document.fonts?.ready.then(() => ScrollTrigger.refresh());
 // Exposed for automated checks only.
 // The people line: six colleagues, the one you look at steps forward with their story
 const peopleLine = createPeopleLine($('#people-stage'), { media: 'media/', motion: () => store.get().motion });
-// The promises: five plans on a white table; the narrator reads them on request and the music ducks under him.
-// Without WebGL the five drawings stand in a row instead.
-let promises = null;
-if (supportsWebGL()) promises = createPaperTable($('#promises'), { media: 'media/', motion: () => store.get().motion, onVoice: (on) => duck(on) });
-if (!promises) {
-  $('#promises .promises-table')?.setAttribute('hidden', '');
-  $('#promises .table-index')?.setAttribute('hidden', '');
-  $('#promises .table-fallback')?.removeAttribute('hidden');
-  $('#promises .promises-play')?.setAttribute('hidden', '');
-}
-
 window.__impact = { skyPlaces: SKY_PLACES,
   get curtain() {
     return curtain;
   },
   store,
   people: peopleLine,
-  promises,
   get lenis() {
     return lenis;
   },

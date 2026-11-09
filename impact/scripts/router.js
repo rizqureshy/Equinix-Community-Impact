@@ -5,12 +5,13 @@
 //                          since `community` is also a chapter topic)
 //   #/chapter/<topic>      an older chapter link, now the story collection
 //   #/story/<id>           a story opened in the detail view
-//   #/toolkit (Carry the Story) | #/promises | #/people | #/share
-//   #/explore and #/principles are older links, kept as aliases
+//   #/toolkit (Carry the Story) | #/people | #/share
+//   #/explore, #/principles and #/promises are older links, kept as aliases
 import { topics, getStory } from './content/stories.js';
 
-const SECTIONS = new Set(['journey', 'toolkit', 'promises', 'people', 'share']);
-const ALIASES = { community: 'journey', explore: 'journey', principles: 'promises', carry: 'toolkit' }; // #/carry opened the curtain; it lands on Carry the Story on the page
+const SECTIONS = new Set(['journey', 'toolkit', 'people', 'share']);
+// The promises section is off the page in this build; its old links land on Carry the Story, where the principles brochure is
+const ALIASES = { community: 'journey', explore: 'journey', principles: 'toolkit', promises: 'toolkit', carry: 'toolkit' }; // #/carry opened the curtain; it lands on Carry the Story on the page
 const TOPICS = new Set(topics.map((t) => t.id));
 
 export function parseHash(hash = '') {

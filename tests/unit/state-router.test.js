@@ -9,11 +9,12 @@ describe('router', () => {
     expect(parseHash('')).toEqual({ section: 'top' });
     expect(parseHash('#/')).toEqual({ section: 'top' });
     expect(parseHash('#/community')).toEqual({ section: 'journey' });
-    expect(parseHash('#/promises')).toEqual({ section: 'promises' });
+    expect(parseHash('#/toolkit')).toEqual({ section: 'toolkit' });
     // Older links keep working
     expect(parseHash('#/explore')).toEqual({ section: 'journey' });
     expect(parseHash('#/explore/discovery')).toEqual({ section: 'journey', topic: 'discovery' });
-    expect(parseHash('#/principles')).toEqual({ section: 'promises' });
+    expect(parseHash('#/principles')).toEqual({ section: 'toolkit' }); // the promises section is off the page
+    expect(parseHash('#/promises')).toEqual({ section: 'toolkit' });
     expect(parseHash('#/carry')).toEqual({ section: 'toolkit' }); // the curtain's old route lands on Carry the Story
     expect(parseHash('#/chapter/care')).toEqual({ section: 'share', topic: 'care' }); // the chapters became the collection
     expect(parseHash('#/story/pa10-heat')).toEqual({ story: 'pa10-heat', section: 'share', topic: 'resources' });
@@ -27,7 +28,7 @@ describe('router', () => {
   });
 
   it('round-trips hashes', () => {
-    for (const h of ['#/', '#/community', '#/promises', '#/story/3verest', '#/share']) {
+    for (const h of ['#/', '#/community', '#/toolkit', '#/story/3verest', '#/share']) {
       expect(hashFor(parseHash(h))).toBe(h);
     }
     expect(hashFor(parseHash('#/chapter/community'))).toBe('#/share');
